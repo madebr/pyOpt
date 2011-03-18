@@ -1,0 +1,75 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module mmfd__user__routines 
+    interface mmfd_user_interface 
+        subroutine objfun(ndv,ncon,xx,obj,g)
+            integer intent(in) :: ndv
+            integer intent(in) :: ncon
+            double precision dimension(ndv),intent(in),depend(ndv) :: xx
+            double precision intent(in,out) :: obj
+            double precision dimension(ncon),intent(in,out),depend(ncon) :: g
+        end subroutine objfun
+        subroutine objgrd(ndv,ncon,xx,obj,g,ddf,b)
+            integer intent(in) :: ndv
+            integer intent(in) :: ncon
+            double precision dimension(ndv),intent(in),depend(ndv) :: xx
+            double precision intent(in) :: obj
+            double precision dimension(ncon),intent(in),depend(ncon) :: g
+            double precision dimension(ndv),intent(in,out),depend(ndv) :: ddf
+            double precision dimension(ndv,ncon),intent(in,out),depend(ndv,ncon) :: b
+        end subroutine objgrd
+    end interface mmfd_user_interface
+end python module mmfd__user__routines
+python module mmfd ! in 
+    interface  ! in :mmfd
+        subroutine mmfd(iiopt,iioned,iiprint,ndv,ncon,xx,xl,xu,obj,g,idg,wk,nrwk,iwk,nriwk,ifile,ct,ctmin,dabobj,delobj,thetaz,pmlt,itmax,itrmop,nfun,ngrd,objfun,objgrd) ! in :mmfd:source/mmfd.f
+            use mmfd__user__routines
+            integer intent(in) :: iiopt
+            integer intent(in) :: iioned
+            integer intent(in) :: iiprint
+            integer intent(in) :: ndv
+            integer intent(in) :: ncon
+            double precision dimension(ndv),intent(inout),depend(ndv) :: xx
+            double precision dimension(ndv),depend(ndv) :: xl
+            double precision dimension(ndv),depend(ndv) :: xu
+            double precision intent(inout) :: obj
+            double precision dimension(ncon),intent(inout),depend(ncon) :: g
+            integer dimension(ncon),intent(in),depend(ncon) :: idg
+            double precision dimension(nrwk),intent(in),depend(nrwk) :: wk
+            integer intent(in) :: nrwk
+            integer dimension(nriwk),intent(in),depend(nriwk) :: iwk
+            integer intent(in) :: nriwk
+            character*(*) intent(in) :: ifile
+            double precision intent(in) :: ct
+            double precision intent(in) :: ctmin
+            double precision intent(in) :: dabobj
+            double precision intent(in) :: delobj
+            double precision intent(in) :: thetaz
+            double precision intent(in) :: pmlt
+            integer intent(in) :: itmax
+            integer intent(in) :: itrmop
+            integer intent(inout) :: nfun
+            integer intent(inout) :: ngrd
+            external objfun
+            external objgrd
+        end subroutine mmfd
+        subroutine openunit(unitnum,filename,filestatus,fileaction,ierror) ! in :mmfd:source/openunit.f
+            integer intent(in) :: unitnum
+            character*(*) intent(in) :: filename
+            character*(*) intent(in) :: filestatus
+            character*(*) intent(in) :: fileaction
+            integer intent(out) :: ierror
+        end subroutine openunit
+        subroutine pyflush(unitnum)
+          integer unitnum
+          return
+        end subroutine pyflush
+        subroutine closeunit(unitnum) ! in :mmfd:source/closeunit.f
+            integer intent(in) :: unitnum
+        end subroutine closeunit
+    end interface 
+end python module mmfd
+
+! This file was auto-generated with f2py (version:2_5972).
+! See http://cens.ioc.ee/projects/f2py2e/

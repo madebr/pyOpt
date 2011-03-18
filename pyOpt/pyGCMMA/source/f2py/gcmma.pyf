@@ -1,0 +1,96 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module gcmma__user__routines 
+    interface gcmma_user_interface 
+        subroutine func1(m,n,xmma,f0new,fnew) ! in :gcmma:source/gcmma.f:gcmma:unknown_interface
+            integer intent(in) :: m
+            integer intent(in) :: n
+            double precision intent(in),dimension(n),depend(n) :: xmma
+            double precision intent(in,out) :: f0new
+            double precision intent(in,out),dimension(m),depend(m) :: fnew
+        end subroutine func1
+        subroutine func2(m,n,xval,f0val,df0dx,fval,dfdx) ! in :gcmma:source/gcmma.f:gcmma:unknown_interface
+            integer intent(in) :: m
+            integer intent(in) :: n
+            double precision intent(in),dimension(n),depend(n) :: xval
+            double precision intent(in,out) :: f0val
+            double precision intent(in,out),dimension(n),depend(n) :: df0dx
+            double precision intent(in,out),dimension(m),depend(m) :: fval
+            double precision intent(in,out),dimension(m*n),depend(m,n) :: dfdx
+        end subroutine func2
+    end interface gcmma_user_interface
+end python module gcmma__user__routines
+python module gcmma ! in 
+    interface  ! in :gcmma
+        subroutine gcmma(n,m,innmax,iter,maxit,inntot,geps,dabobj,delobj,itrm,inform,xval,xmma,xmin,xmax,xlow,xupp,alfa,beta,f0val,fval,fmax,df0dx,dfdx,p,q,p0,q0,b,f0app,fapp,raa0,raa,y,z,a,c,ulam,gradf,dsrch,hessf,iyfree,iprint,iout,ifile,nfunc1,nfunc2,func1,func2) ! in :gcmma:source/mma.f
+            use gcmma__user__routines
+            integer intent(in) :: n
+            integer intent(in) :: m
+            integer intent(in) :: innmax
+            integer intent(inout) :: iter
+            integer intent(in) :: maxit
+            integer intent(inout) :: inntot
+            double precision intent(in) :: geps
+            double precision intent(in) :: dabobj
+            double precision intent(in) :: delobj
+            integer intent(in) :: itrm
+            integer intent(inout) :: inform
+            double precision intent(inout),dimension(n),depend(n) :: xval
+            double precision intent(inout),dimension(n),depend(n) :: xmma
+            double precision intent(inout),dimension(n),depend(n) :: xmin
+            double precision intent(inout),dimension(n),depend(n) :: xmax
+            double precision intent(in),dimension(n),depend(n) :: xlow
+            double precision intent(in),dimension(n),depend(n) :: xupp
+            double precision intent(in),dimension(n),depend(n) :: alfa
+            double precision intent(in),dimension(n),depend(n) :: beta
+            double precision intent(inout) :: f0val
+            double precision intent(inout),dimension(m),depend(m) :: fval
+            double precision intent(inout),dimension(m),depend(m) :: fmax
+            double precision intent(inout),dimension(n),depend(n) :: df0dx
+            double precision intent(inout),dimension(m*n),depend(n,m) :: dfdx
+            double precision dimension(m*n),depend(n,m) :: p
+            double precision dimension(m*n),depend(n,m) :: q
+            double precision dimension(n),depend(n) :: p0
+            double precision dimension(n),depend(n) :: q0
+            double precision dimension(m),depend(m) :: b
+            double precision :: f0app
+            double precision dimension(m),depend(m) :: fapp
+            double precision :: raa0
+            double precision dimension(m),depend(m) :: raa
+            double precision dimension(m),depend(m) :: y
+            double precision :: z
+            double precision dimension(m),depend(m) :: a
+            double precision dimension(m),depend(m) :: c
+            double precision dimension(m),depend(m) :: ulam
+            double precision dimension(m),depend(m) :: gradf
+            double precision dimension(m),depend(m) :: dsrch
+            double precision dimension(m*(m+1)/2),depend(m) :: hessf
+            integer dimension(m),depend(m) :: iyfree
+            integer intent(in) :: iprint
+            integer intent(in) :: iout
+            character*(*) intent(in) :: ifile
+            integer intent(inout) :: nfunc1
+            integer intent(inout) :: nfunc2
+            external func1
+            external func2
+        end subroutine gcmma
+        subroutine openunit(unitnum,filename,filestatus,fileaction,ierror) ! in :snopt:openunit.f
+            integer intent(in) :: unitnum
+            character*(*) intent(in) :: filename
+            character*(*) intent(in) :: filestatus
+            character*(*) intent(in) :: fileaction
+            integer intent(out) :: ierror
+        end subroutine openunit
+        subroutine pyflush(unitnum)
+          integer unitnum
+          return
+        end subroutine pyflush
+        subroutine closeunit(unitnum) ! in :snopt:closeunit.f
+            integer intent(in) :: unitnum
+        end subroutine closeunit
+    end interface 
+end python module gcmma
+
+! This file was auto-generated with f2py (version:2_4423).
+! See http://cens.ioc.ee/projects/f2py2e/

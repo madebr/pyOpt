@@ -1,0 +1,100 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module psqp__user__routines
+    interface psqp_user_interface
+        subroutine pobj(nf,x,ff) ! in :psqp
+            integer intent(in) :: nf
+            double precision dimension(nf),intent(in),depend(nf) :: x
+            double precision intent(in,out) :: ff
+        end subroutine pobj
+        subroutine pdobj(nf,x,gf) ! in :psqp
+            integer intent(in) :: nf
+            double precision dimension(nf),intent(in),depend(nf) :: x
+            double precision dimension(nf),intent(in,out),depend(nf) :: gf
+        end subroutine pdobj
+        subroutine pcon(nf,kc,x,fc) ! in :psqp
+            integer intent(in) :: nf
+            integer intent(in) :: kc
+            double precision dimension(nf),intent(in),depend(nf) :: x
+            double precision intent(in,out) :: fc
+        end subroutine pcon
+        subroutine pdcon(nf,kc,x,gc) ! in :psqp
+            integer intent(in) :: nf
+            integer intent(in) :: kc
+            double precision dimension(nf),intent(in),depend(nf) :: x
+            double precision dimension(nf),intent(in,out),depend(nf) :: gc
+        end subroutine pdcon
+    end interface psqp_user_interface
+end python module psqp__user__routines
+python module psqp ! in 
+    interface  ! in :psqp
+        subroutine psqpw(nf,nc,x,ix,xl,xu,cf,ic,cl,cu,cz,xmax,tolx,tolc,tolg,rpf,cmax,f,mit,mfv,met,mec,iprnt,iout,ifile,iterm,nres_,ndec_,nrem_,nadd_,nit_,nfv_,nfg_,nfh_,pobj,pdobj,pcon,pdcon) ! in :psqp:source/psqpw.f
+            use psqp__user__routines
+            integer intent(in) :: nf
+            integer intent(in) :: nc
+            double precision dimension(nf),intent(inout),depend(nf) :: x
+            integer dimension(nf),intent(in),depend(nf) :: ix
+            double precision dimension(nf),intent(in),depend(nf) :: xl
+            double precision dimension(nf),intent(in),depend(nf) :: xu
+            double precision dimension(nc+1),intent(inout),depend(nc) :: cf
+            integer dimension(nc),intent(in),depend(nc) :: ic
+            double precision dimension(nc),intent(in),depend(nc) :: cl
+            double precision dimension(nc),intent(in),depend(nc) :: cu
+            double precision dimension(nf),intent(inout),depend(nf) :: cz
+            double precision intent(in) :: xmax
+            double precision intent(in) :: tolx
+            double precision intent(in) :: tolc
+            double precision intent(in) :: tolg
+            double precision intent(in) :: rpf
+            double precision intent(in) :: cmax
+            double precision intent(inout) :: f
+            integer intent(in) :: mit
+            integer intent(in) :: mfv
+            integer intent(in) :: met
+            integer intent(in) :: mec
+            integer intent(in) :: iprnt
+            integer intent(in) :: iout
+            character*(*) intent(in) :: ifile
+            integer intent(inout) :: iterm
+            integer intent(inout) :: nres_
+            integer intent(inout) :: ndec_
+            integer intent(inout) :: nrem_
+            integer intent(inout) :: nadd_
+            integer intent(inout) :: nit_
+            integer intent(inout) :: nfv_
+            integer intent(inout) :: nfg_
+            integer intent(inout) :: nfh_
+            external pobj
+            external pdobj
+            external pcon
+            external pdcon
+            integer :: nres
+            integer :: ndec
+            integer :: nrem
+            integer :: nadd
+            integer :: nit
+            integer :: nfv
+            integer :: nfg
+            integer :: nfh
+            common /stat/ nres,ndec,nrem,nadd,nit,nfv,nfg,nfh
+        end subroutine psqpw
+        subroutine openunit(unitnum,filename,filestatus,fileaction,ierror) ! in :nlpql:source/openunit.f
+            integer intent(in) :: unitnum
+            character*(*) intent(in) :: filename
+            character*(*) intent(in) :: filestatus
+            character*(*) intent(in) :: fileaction
+            integer intent(out) :: ierror
+        end subroutine openunit
+        subroutine pyflush(unitnum)
+          integer unitnum
+          return
+        end subroutine pyflush
+        subroutine closeunit(unitnum) ! in :nlpql:source/closeunit.f
+            integer intent(in) :: unitnum
+        end subroutine closeunit
+    end interface
+end python module psqp
+
+! This file was auto-generated with f2py (version:2).
+! See http://cens.ioc.ee/projects/f2py2e/

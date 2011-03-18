@@ -1,0 +1,81 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module mma__user__routines 
+    interface mma_user_interface 
+        subroutine func(m,n,xval,f0val,df0dx,fval,dfdx) ! in :mma:source/mma.f:mma:unknown_interface
+            integer intent(in) :: m
+            integer intent(in) :: n
+            double precision intent(in),dimension(n),depend(n) :: xval
+            double precision intent(in,out) :: f0val
+            double precision intent(in,out),dimension(n),depend(n) :: df0dx
+            double precision intent(in,out),dimension(m),depend(m) :: fval
+            double precision intent(in,out),dimension(m*n),depend(m,n) :: dfdx
+        end subroutine func
+    end interface mma_user_interface
+end python module mma__user__routines
+python module mma ! in 
+    interface  ! in :mma
+        subroutine mma(n,m,iter,maxit,geps,dabobj,delobj,itrm,inform,xval,xmma,xmin,xmax,xlow,xupp,alfa,beta,f0val,fval,fmax,df0dx,dfdx,p,q,p0,q0,b,y,z,a,c,ulam,gradf,dsrch,hessf,iyfree,iprint,iout,ifile,nfunc,func) ! in :mma:source/mma.f
+            use mma__user__routines
+            integer intent(in) :: n
+            integer intent(in) :: m
+            integer intent(inout) :: iter
+            integer intent(in) :: maxit
+            double precision intent(in) :: geps
+            double precision intent(in) :: dabobj
+            double precision intent(in) :: delobj
+            integer intent(in) :: itrm
+            integer intent(inout) :: inform
+            double precision intent(inout),dimension(n),depend(n) :: xval
+            double precision intent(inout),dimension(n),depend(n) :: xmma
+            double precision intent(inout),dimension(n),depend(n) :: xmin
+            double precision intent(inout),dimension(n),depend(n) :: xmax
+            double precision intent(in),dimension(n),depend(n) :: xlow
+            double precision intent(in),dimension(n),depend(n) :: xupp
+            double precision intent(in),dimension(n),depend(n) :: alfa
+            double precision intent(in),dimension(n),depend(n) :: beta
+            double precision intent(inout) :: f0val
+            double precision intent(inout),dimension(m),depend(m) :: fval
+            double precision intent(inout),dimension(m),depend(m) :: fmax
+            double precision intent(inout),dimension(n),depend(n) :: df0dx
+            double precision intent(inout),dimension(m*n),depend(n,m) :: dfdx
+            double precision dimension(m*n),depend(n,m) :: p
+            double precision dimension(m*n),depend(n,m) :: q
+            double precision dimension(n),depend(n) :: p0
+            double precision dimension(n),depend(n) :: q0
+            double precision dimension(m),depend(m) :: b
+            double precision dimension(m),depend(m) :: y
+            double precision :: z
+            double precision dimension(m),depend(m) :: a
+            double precision dimension(m),depend(m) :: c
+            double precision dimension(m),depend(m) :: ulam
+            double precision dimension(m),depend(m) :: gradf
+            double precision dimension(m),depend(m) :: dsrch
+            double precision dimension(m*(m+1)/2),depend(m) :: hessf
+            integer dimension(m),depend(m) :: iyfree
+            integer intent(in) :: iprint
+            integer intent(in) :: iout
+            character*(*) intent(in) :: ifile
+            integer intent(inout) :: nfunc
+            external func
+        end subroutine mma
+        subroutine openunit(unitnum,filename,filestatus,fileaction,ierror) ! in :mma:source/openunit.f
+            integer intent(in) :: unitnum
+            character*(*) intent(in) :: filename
+            character*(*) intent(in) :: filestatus
+            character*(*) intent(in) :: fileaction
+            integer intent(out) :: ierror
+        end subroutine openunit
+        subroutine pyflush(unitnum)
+          integer unitnum
+          return
+        end subroutine pyflush
+        subroutine closeunit(unitnum) ! in :mma:source/closeunit.f
+            integer intent(in) :: unitnum
+        end subroutine closeunit
+    end interface
+end python module mma
+
+! This file was auto-generated with f2py (version:2_3974).
+! See http://cens.ioc.ee/projects/f2py2e/

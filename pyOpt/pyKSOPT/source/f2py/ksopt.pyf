@@ -1,0 +1,70 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module ksopt__user__routines 
+    interface ksopt_user_interface 
+        subroutine objfun(ndv,nobj,ncon,x,obj,g)
+            integer intent(in) :: ndv
+            integer intent(in) :: nobj
+            integer intent(in) :: ncon
+            double precision dimension(ndv),intent(in),depend(ndv) :: x
+            double precision dimension(nobj),intent(in,out),depend(nobj) :: obj
+            double precision dimension(ncon),intent(in,out),depend(ncon) :: g
+        end subroutine objfun
+        subroutine grdfun(ndv,nobj,ncon,x,obj,g,df,dg)
+            integer intent(in) :: ndv
+            integer intent(in) :: nobj
+            integer intent(in) :: ncon
+            double precision dimension(ndv),intent(in),depend(ndv) :: x
+            double precision dimension(nobj),intent(in),depend(nobj) :: obj
+            double precision dimension(ncon),intent(in),depend(ncon) :: g
+            double precision dimension(nobj,ndv),intent(in,out),depend(nobj,ndv) :: df
+            double precision dimension(ncon,ndv),intent(in,out),depend(ncon,ndv) :: dg
+        end subroutine grdfun
+    end interface ksopt_user_interface
+end python module ksopt__user__routines
+python module ksopt ! in 
+    interface  ! in :ksopt
+        subroutine ksmain(ndv,nobj,ncon,x,xlb,xub,obj,g,work,nwork,itmax,rdfun,rhomin,rhomax,iout,iprint,iname,nfeval,ngeval,objfun,grdfun) ! in :ksopt:source/ksmain.f
+            use ksopt__user__routines
+            integer intent(in) :: ndv
+            integer intent(in) :: nobj
+            integer intent(in) :: ncon
+            double precision dimension(ndv),intent(inout),depend(ndv) :: x
+            double precision dimension(ndv),intent(in),depend(ndv) :: xlb
+            double precision dimension(ndv),intent(in),depend(ndv) :: xub
+            double precision dimension(nobj),intent(inout),depend(nobj) :: obj
+            double precision dimension(ncon),intent(inout),depend(ncon) :: g
+            double precision dimension(nwork),intent(in),depend(nwork) :: work
+            integer intent(in) :: nwork
+            integer intent(in) :: itmax
+            double precision intent(in) :: rdfun
+            double precision intent(in) :: rhomin
+            double precision intent(in) :: rhomax
+            integer intent(in) :: iout
+            integer intent(in) :: iprint
+            character*(*) intent(in) :: iname
+            integer intent(inout) :: nfeval
+            integer intent(inout) :: ngeval
+            external objfun
+            external grdfun
+        end subroutine ksmain
+        subroutine openunit(unitnum,filename,filestatus,fileaction,ierror) ! in :mmfd:source/openunit.f
+            integer intent(in) :: unitnum
+            character*(*) intent(in) :: filename
+            character*(*) intent(in) :: filestatus
+            character*(*) intent(in) :: fileaction
+            integer intent(out) :: ierror
+        end subroutine openunit
+        subroutine pyflush(unitnum)
+          integer unitnum
+          return
+        end subroutine pyflush
+        subroutine closeunit(unitnum) ! in :mmfd:source/closeunit.f
+            integer intent(in) :: unitnum
+        end subroutine closeunit
+    end interface 
+end python module ksopt
+
+! This file was auto-generated with f2py (version:2_5972).
+! See http://cens.ioc.ee/projects/f2py2e/

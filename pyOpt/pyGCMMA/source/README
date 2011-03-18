@@ -1,0 +1,4 @@
+This directory contains the Fortran 77 source for GCMMA, 
+the main routine of the original program has been modified 
+to enable Python interfacing by Mr. Andrew Lambe with 
+updated functionality added by Dr. Ruben E. Perez.

@@ -1,0 +1,203 @@
+0a1,5
+>       SUBROUTINE MMA(N,M,ITER,MAXIT,GEPS,DABOBJ,DELOBJ,ITRM,
+>      1  INFORM,XVAL,XMMA,XMIN,XMAX,XLOW,XUPP,ALFA,BETA,F0VAL,
+>      2  FVAL,FMAX,DF0DX,DFDX,P,Q,P0,Q0,B,Y,Z,A,C,ULAM,GRADF,
+>      3	DSRCH,HESSF,IYFREE,IPRINT,IOUT,IFILE,NFUNC,FUNC)
+> C
+30c35
+<       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+---
+> C      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+32,39c37,53
+<       DIMENSION XVAL(100),XOLD1(100),XOLD2(100),XMMA(100),
+<      1          XMIN(100), XMAX(100), XLOW(100),XUPP(100),
+<      2          ALFA(100), BETA(100),DF0DX(100),
+<      3          A(60),B(60),C(60),Y(60),ULAM(60),
+<      4          FVAL(60),FMAX(60),
+<      5          DFDX(6000),P(6000),Q(6000),P0(100),Q0(100),
+<      6          UU(60),GRADF(60),DSRCH(60),HESSF(1830)
+<       INTEGER IYFREE(60)
+---
+>       INTEGER N,M
+>       DIMENSION XVAL(N),XOLD1(N),XOLD2(N),XMMA(N),
+>      1          XMIN(N),XMAX(N),XLOW(N),XUPP(N),
+>      2          ALFA(N),BETA(N),DF0DX(N),
+>      3          A(M),B(M),C(M),Y(M),ULAM(M),
+>      4          FVAL(M),FMAX(M),
+>      5          DFDX(M*N),P(M*N),Q(M*N),P0(N),Q0(N),
+>      6          UU(M),GRADF(M),DSRCH(M),HESSF(M*(M+1)/2),
+>      7          IYFREE(M)
+>       DOUBLE PRECISION XVAL,XOLD1,XOLD2,XMMA,XMIN,XMAX,
+>      1          XLOW,XUPP,ALFA,BETA,F0VAL,DF0DX,A,B,C,Y,
+>      2          Z,ULAM,FVAL,FMAX,DFDX,P,Q,P0,Q0,UU,GRADF,
+>      3          DSRCH,HESSF,GEPS,OBJ0,OBJ1,DABOBJ,DELOBJ
+>       INTEGER IYFREE,ITER,MAXIT,ITRM,INFORM,IPRINT,IOUT,
+>      1          IOBJ,KOBJ,NFUNC
+>       EXTERNAL FUNC
+>       CHARACTER*(*) IFILE
+43,44c57,63
+<       CALL INITI(M,N,GEPS,XVAL,XMIN,XMAX,FMAX,A,C)
+<       CALL FUNC2(M,N,XVAL,F0VAL,DF0DX,FVAL,DFDX)
+---
+> C   INITIAL COUNTERS
+> C
+>       NFUNC=0
+> C   
+> C
+>       CALL FUNC(M,N,XVAL,F0VAL,DF0DX,FVAL,DFDX)
+>       NFUNC=NFUNC+1
+46c65,67
+<       MAXITE=1
+---
+>       OBJ0=F0VAL
+>       IOBJ=0
+>       KOBJ=0
+48,49c69,95
+<       ITE=0
+<       CALL OUTXOF(ITER,M,N,XVAL,F0VAL,FVAL,FMAX)
+---
+> C
+> C     ------------------------------------------------------------------
+> C                           PRINT INITIAL INFO 
+> C     ------------------------------------------------------------------
+> C
+>       IF (IPRINT.LT.0) GO TO 30
+>       IF (IPRINT.EQ.0) GO TO 10
+>       IF (IPRINT.GT.0) GO TO 15
+>  10   WRITE (*,1440) OBJ0
+>       WRITE (*,1450)
+>       DO 11 I=1,N
+>  11   WRITE (*,1460) XVAL(I)
+> C      WRITE (*,1470)
+> C      DO 12 J=I,M
+> C 12   WRITE (*,1460) FVAL(J)
+>       GO TO 30
+>  15   OPEN(UNIT=IOUT,FILE=IFILE(1:LEN_TRIM(IFILE)),
+>      1     STATUS='UNKNOWN')
+>       WRITE (IOUT,1440) OBJ0
+>       WRITE (IOUT,1450)
+>       DO 16 I=1,N
+>  16   WRITE (IOUT,1460) XVAL(I)
+> C      WRITE (*,1470)
+> C      DO 17 J=I,M
+> C 17   WRITE (IOUT,1460) FVAL(J) 
+> C
+> C     ------------------------------------------------------------------
+52d97
+<       ITE=ITE+1
+65,66c110,111
+<       CALL FUNC2(M,N,XVAL,F0VAL,DF0DX,FVAL,DFDX)
+<       CALL OUTXOF(ITER,M,N,XVAL,F0VAL,FVAL,FMAX)
+---
+>       CALL FUNC(M,N,XVAL,F0VAL,DF0DX,FVAL,DFDX)
+>       NFUNC=NFUNC+1
+68c113
+<       IF(ITE.LT.MAXITE) GOTO 30
+---
+>       OBJ1=F0VAL
+70,76c115,154
+<       WRITE(*,89)
+<  89   FORMAT('  ')
+<       WRITE(*,90)
+<  90   FORMAT(' How many more iterations? (0 to stop)')
+<       READ(*,*) MAXITE
+<       IF(MAXITE.EQ.0) GOTO 100
+<       ITE=0
+---
+> C     ------------------------------------------------------------------
+> C                           PRINT ITERATION RESULTS 
+> C     ------------------------------------------------------------------
+> C
+>       IF (IPRINT.LT.0) GO TO 80
+>       IF (IPRINT.EQ.0) GO TO 72
+>       IF (IPRINT.GT.0) GO TO 75
+>  72   WRITE (*,1430) ITER,OBJ1
+>       WRITE (*,1450)
+>       DO 73 I=1,N
+>  73   WRITE (*,1460) XVAL(I)
+> C      WRITE (*,1470)
+> C      DO 74 J=I,M
+> C 74   WRITE (*,1460) FVAL(J)
+>       GO TO 80
+>  75   WRITE (IOUT,1430) ITER,OBJ1
+>       WRITE (IOUT,1450)
+>       DO 76 I=1,N
+>  76   WRITE (IOUT,1460) XVAL(I)
+> C      WRITE (IOUT,1470)
+> C      DO 77 J=I,M
+> C 77   WRITE (IOUT,1460) FVAL(J)
+> C
+> C     ------------------------------------------------------------------
+> C     CHECK CONVERGENCE
+> C     ------------------------------------------------------------------
+> C     STOP IF ITER EQUALS ITMAX.
+>  80   IF (ITER.GE.MAXIT) GO TO 95
+> C     ABSOLUTE CHANGE IN OBJECTIVE
+>       OBJD=OBJ1-OBJ0
+>       OBJB=ABS(OBJD)
+>       IF (OBJB.LT.DABOBJ) KOBJ=KOBJ+1
+>       IF (OBJB.GE.DABOBJ) KOBJ=0
+> C     RELATIVE CHANGE IN OBJECTIVE
+>       IF (ABS(OBJ1).GT.1.0E-10) AOBJD=OBJD/ABS(OBJ1)
+>       AOBJB=ABS(AOBJD)
+>       IF (AOBJB.LT.DELOBJ) IOBJ=IOBJ+1
+>       IF (AOBJB.GE.DELOBJ) IOBJ=0
+>       IF (KOBJ.GT.ITRM.OR.IOBJ.GT.ITRM) GO TO 90 
+>       OBJ0=F0VAL
+78a157,166
+> C     ------------------------------------------------------------------
+> C     INFORM FLAGS
+> C     ------------------------------------------------------------------
+> C
+>  90   INFORM=0
+>       GO TO 100
+>  95   INFORM=1
+> C
+> C     ------------------------------------------------------------------
+> C
+81,82c169,209
+<       STOP
+<       END
+\ No newline at end of file
+---
+> C     ------------------------------------------------------------------
+> C                           PRINT FINAL RESULTS 
+> C     ------------------------------------------------------------------
+> C
+>       IF (IPRINT.LT.0) GO TO 200
+>       IF (IPRINT.EQ.0) WRITE (*,1150)
+>       IF (IPRINT.GT.0) WRITE(IOUT,1150)
+>       IF (ITER.GE.MAXIT.AND.IPRINT.EQ.0) WRITE (*,1160) 
+>       IF (ITER.GE.MAXIT.AND.IPRINT.GT.0) WRITE(IOUT,1160)
+>       IF (IOBJ.GE.ITRM.AND.IPRINT.EQ.0) WRITE (*,1180) ITRM 
+>       IF (IOBJ.GE.ITRM.AND.IPRINT.GT.0) WRITE(IOUT,1180) ITRM
+>       IF (KOBJ.GE.ITRM.AND.IPRINT.EQ.0) WRITE (*,1190) ITRM 
+>       IF (KOBJ.GE.ITRM.AND.IPRINT.GT.0) WRITE(IOUT,1190) ITRM 
+>       IF (IPRINT.EQ.0) WRITE (*,1200) ITER
+>       IF (IPRINT.GT.0) WRITE(IOUT,1200) ITER
+>       IF (IPRINT.GT.0) WRITE(IOUT,1650) NFUNC
+> C
+>  200  CONTINUE
+> C     
+>       RETURN
+> C
+> C     ------------------------------------------------------------------
+> C                                FORMATS
+> C     ------------------------------------------------------------------
+> C  
+> 1430  FORMAT (//5X,6HITER =,I5,5X,5HOBJ =,7E16.8)
+> 1440  FORMAT (//5X,28HINITIAL FUNCTION INFORMATION//5X,5HOBJ =,7E16.8)
+> 1450  FORMAT (/5X,29HDECISION VARIABLES (X-VECTOR)) 
+> 1460  FORMAT (3X,7E13.4)
+> 1470  FORMAT (/5X,28HCONSTRAINT VALUES (G-VECTOR))
+> 1150  FORMAT (/5X,21HTERMINATION CRITERION) 
+> 1160  FORMAT (10X,17HITER EQUALS MAXIT)    
+> 1180  FORMAT (10X,43HABS(1-OBJ(I-1)/OBJ(I)) LESS THAN DELFUN FOR,I3,11H 
+>      1ITERATIONS) 
+> 1190  FORMAT (10X,43HABS(OBJ(I)-OBJ(I-1))   LESS THAN DABFUN FOR,I3,11H 
+>      1ITERATIONS) 
+> 1200  FORMAT (/5X,22HNUMBER OF ITERATIONS =,I5)
+> 1650  FORMAT(8X,30HNUMBER OF FUNC-CALLS:  NFUNC =,I4)
+> C
+>       END
+> C

@@ -1,0 +1,139 @@
+8c8,9
+<      *                  f,g,iw,iwsize,w,nwsize,obj,constr,gradob,gradcn)
+---
+>      *                  f,g,iw,iwsize,w,nwsize,obj,constr,gradob,gradcn,
+>      *                  iounit,ifile)
+14,15c15,16
+<       double  precision bl(1),bu(1),x(1),
+<      *        f(1),g(1),w(1)
+---
+>       double  precision bl(*),bu(*),x(*),
+>      *        f(*),g(*),w(*)
+24a26,29
+> C
+>       integer iounit
+>       character*(*) ifile
+> C
+216a222,227
+> C
+>       if(iprint.ge.1) then
+>         open(unit=iounit,file=ifile(1:len_trim(ifile)),
+>      *    status='unknown')
+>       endif
+> C
+220c231
+<       io=6
+---
+>       io=iounit
+580,581c591,592
+<       integer indxob(1),indxcn(1),iact(1),iskip(1),
+<      *        istore(1),iw(leniw)
+---
+>       integer indxob(*),indxcn(*),iact(*),iskip(1),
+>      *        istore(*),iw(leniw)
+586,591c597,602
+<      *        d(nparam+1),g(1),gm(1),gradg(nparam,1),
+<      *        f(1),gradf(nparam,1),grdpsf(nparam),penp(1),
+<      *        a(nrowa,1),bl(1),bu(1),clamda(1),
+<      *        cllamd(1),cvec(nparam+1),bj(1),
+<      *        hess(nparam,nparam),hess1(1),span(1),
+<      *        backup(1),signeq(1),w(lenw)
+---
+>      *        d(nparam+1),g(*),gm(*),gradg(nparam,*),
+>      *        f(*),gradf(nparam,*),grdpsf(nparam),penp(*),
+>      *        a(nrowa,1),bl(*),bu(*),clamda(*),
+>      *        cllamd(*),cvec(nparam+1),bj(*),
+>      *        hess(nparam,nparam),hess1(*),span(1),
+>      *        backup(*),signeq(*),w(lenw)
+858,860c869,871
+<      *        bl(1),bu(1),g(1),gradg(nparam,1),
+<      *        a(nrowa,1),cvec(nparam),hess(nparam,nparam),
+<      *        clamda(1),bj(1),w(lenw)
+---
+>      *        bl(*),bu(*),g(*),gradg(nparam,*),
+>      *        a(nrowa,*),cvec(nparam),hess(nparam,nparam),
+>      *        clamda(*),bj(*),w(lenw)
+937,938c948,949
+<       integer indxob(1),indxcn(1),iact(1),iskip(1),
+<      *        istore(1),iw(leniw)
+---
+>       integer indxob(*),indxcn(*),iact(*),iskip(1),
+>      *        istore(*),iw(leniw)
+944,946c955,957
+<      *        d(nparam+1),g(1),gradg(nparam,1),f(1),
+<      *        gradf(nparam,1),grdpsf(nparam),penp(1),
+<      *        a(nrowa,nparam+1),bl(1),bu(1),clamda(1),cllamd(1),
+---
+>      *        d(nparam+1),g(*),gradg(nparam,*),f(*),
+>      *        gradf(nparam,*),grdpsf(nparam),penp(*),
+>      *        a(nrowa,nparam+1),bl(*),bu(*),clamda(*),cllamd(*),
+949c960
+<      *        backup(1),signeq(1)
+---
+>      *        backup(*),signeq(*)
+1381,1386c1392,1397
+<       double  precision x0(nparam),di(1),xl(nparam),xu(nparam),
+<      *        f(1),gradf(nparam,1),grdpsf(nparam),g(1),
+<      *        gradg(nparam,1),
+<      *        a(nrowa,1),cvec(1),bl(1),bu(1),clamda(1),
+<      *        cllamd(1),bj(1),hess(nparam,nparam),
+<      *        hess1(nparam+1,nparam+1),x(1),w(lenw)
+---
+>       double  precision x0(nparam),di(*),xl(nparam),xu(nparam),
+>      *        f(*),gradf(nparam,*),grdpsf(nparam),g(*),
+>      *        gradg(nparam,*),
+>      *        a(nrowa,*),cvec(*),bl(*),bu(*),clamda(*),
+>      *        cllamd(*),bj(*),hess(nparam,nparam),
+>      *        hess1(nparam+1,nparam+1),x(*),w(lenw)
+1508,1511c1519,1522
+<      *        f(1),gradf(nparam,1),grdpsf(nparam),g(1),
+<      *        gradg(nparam,1),cvec(1),a(nrowa,1),
+<      *        bl(1),bu(1),clamda(1),bj(1),
+<      *        hess1(nparam+1,nparam+1),x(1),w(lenw)
+---
+>      *        f(*),gradf(nparam,*),grdpsf(nparam),g(*),
+>      *        gradg(nparam,*),cvec(*),a(nrowa,*),
+>      *        bl(*),bu(*),clamda(*),bj(*),
+>      *        hess1(nparam+1,nparam+1),x(*),w(lenw)
+1597,1598c1608,1609
+<       integer indxob(1),indxcn(1),iact(1),iskip(1),
+<      *        istore(1)
+---
+>       integer indxob(*),indxcn(*),iact(*),iskip(*),
+>      *        istore(*)
+1603,1604c1614,1615
+<      *        f(1),penp(1),g(1),w(1),backup(1),
+<      *        signeq(1)
+---
+>      *        f(*),penp(*),g(*),w(1),backup(*),
+>      *        signeq(*)
+1840,1842c1851,1853
+<      *        xnew(nparam),x(nparam),f(1),gradf(nparam,1),
+<      *        grdpsf(nparam),penp(1),g(1),gm(1),
+<      *        gradg(nparam,1),cllamd(1),delta(nparam),
+---
+>      *        xnew(nparam),x(nparam),f(*),gradf(nparam,*),
+>      *        grdpsf(nparam),penp(*),g(*),gm(*),
+>      *        gradg(nparam,*),cllamd(*),delta(nparam),
+1844c1855
+<      *        signeq(1),span(1),phess(1),psb(1),psmu(1),w(lenw)
+---
+>      *        signeq(*),span(1),phess(*),psb(*),psmu(*),w(lenw)
+2136c2147
+<       double  precision x(nparam),g(1),f(1)
+---
+>       double  precision x(nparam),g(*),f(*)
+2286,2288c2297,2299
+<       double precision bigbnd,hess(neqn,1),cvec(1),a(1),b(1),
+<      *                 gradh(nparam,1),psb(1),bl(1),bu(1),
+<      *                 x(1),w(lenw)
+---
+>       double precision bigbnd,hess(neqn,1),cvec(*),a(1),b(1),
+>      *                 gradh(nparam,*),psb(*),bl(1),bu(1),
+>      *                 x(*),w(lenw)
+2390,2391c2401,2402
+<       double precision psf,grdpsf(1),penp(1),g(1),gradg(n,1),
+<      *                 signeq(1)
+---
+>       double precision psf,grdpsf(*),penp(*),g(*),gradg(n,*),
+>      *                 signeq(*)

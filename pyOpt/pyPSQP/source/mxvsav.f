@@ -1,0 +1,24 @@
+* SUBROUTINE MXVSAV                ALL SYSTEMS                91/12/01
+* PORTABILITY : ALL SYSTEMS
+* 91/12/01 LU : ORIGINAL VERSION
+*
+* PURPOSE :
+* DIFFERENCE OF TWO VECTORS RETURNED IN THE SUBSTRACTED ONE.
+*
+* PARAMETERS :
+*  II  N  VECTOR DIMENSION.
+*  RI  X(N)  INPUT VECTOR.
+*  RU  Y(N)  UPDATE VECTOR WHERE Y:= X - Y.
+*
+      SUBROUTINE MXVSAV(N,X,Y)
+      INTEGER          N
+      DOUBLE PRECISION X(*),Y(*)
+      DOUBLE PRECISION TEMP
+      INTEGER          I
+      DO 10 I = 1,N
+          TEMP = Y(I)
+          Y(I) = X(I) - Y(I)
+          X(I) = TEMP
+   10 CONTINUE
+      RETURN
+      END

@@ -1,0 +1,95 @@
+ALPSO - Augmented Lagrangian Particle Swarm Optimizer
+Copyright (c) 2006-2011, Dr. Ruben E. Perez  (Ruben.Perez@rmc.ca)
+                         and Peter W. Jansen (Peter.Jansen@rmc.ca)
+
+
+                        ALPSO LICENSE
+
+This is a license for the Augmented Lagrangian Particle Swarm 
+Optimizer (ALPSO). The license for ALPSO is based on the 
+Simple Public License (SimPL). In the same spirit as the SimPL,
+the ALPSO License is a plain language implementation of GPL 2.0.
+The words are different, but the goal is the same - to guarantee
+for all users the freedom to share and change software. If anyone
+wonders about the meaning of the ALPSO License, they should 
+interpret it as consistent with GPL 2.0. By downloading, using, 
+modifying, or distributing ALPSO, you are agreeing to all of the 
+terms described in this license agreement. Your agreement with 
+this license gives you extremely generous rights, so if you do 
+not agree to the terms of this agreement, you may not proceed 
+further with using, modifying, or distributing ALPSO.
+
+The ALPSO License applies to the software's source and object code 
+and comes with any rights that I have in it (other than trademarks). 
+You agree to the ALPSO License simply by downloading, copying, 
+distributing, or making a derivative work of the software.
+
+You get the royalty free right to:
+
+  - Use the software for any non-commercial purpose;
+  - Make derivative works of it (this is called a "Derived Work");
+  - Copy and distribute it and any Derived Work, provided that the 
+    Derived work is also for non-commercial purposes 
+
+If you distribute the software or a Derived Work, you must give back 
+to the community by:
+
+  - Prominently noting the date of any changes you make;
+  - Leaving other people's copyright notices, warranty disclaimers, 
+    and license terms in place;
+  - Providing the source code, build scripts, installation scripts, 
+    and interface definitions in a form that is easy to get and best 
+    to modify;
+  - Licensing it to everyone under the terms of this license, without 
+    adding further restrictions to the rights provided;
+  - Conspicuously announcing that it is available under that license;
+  - Promising that you will not make a profit of any kind from the 
+    distribution or re-distribution of the software. 
+
+ALPSO is a completely free software for academic, not-for-profit, or 
+government use. Commercial use of ALPSO is strictly prohibited without
+permission. Permission may be obtained for a commercial organization 
+to use ALPSO by contacting Dr. Ruben E. Perez at Ruben.Perez@rmc.ca. 
+Potential commercial users of ALPSO are, however, permitted to 
+download the software for evaluation purposes for a period of 90 
+(ninety) days. After the 90-day evaluation period, a commercial user 
+must either terminate use of ALPSO or purchase a commercial license. 
+Under no circumstances may anyone except the copyright holders of 
+ALPSO profit from the use or distribution of ALPSO.
+
+There are some things that you must shoulder:
+
+  - THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
+    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+    NONINFRINGEMENT;
+  - IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR 
+    ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+    CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+The ALPSO License continues perpetually, except that your license 
+rights end automatically if:
+
+  - You do not abide by the "give back to the community" terms (your 
+    licensees get to keep their rights if they abide);
+  - Anyone prevents you from distributing the software under the 
+    terms of of this license agreement;
+  - You use any portion of the software for commercial purposes or 
+    sell any portion of the software (and, of course, are not one of
+    the copyright holders). 
+
+In addition, to the license given above, the following is a condition 
+of using or modifying the ALPSO software in any manner:
+
+  - Any results presented using ALPSO (i.e., conference papers, 
+    journal papers, oral presentations, or any other media) should 
+    include explicit citation to the fact that ALPSO was used to 
+    generate the results. In particular, it is mandatory to cite the 
+    following reference in any such media where results using ALPSO 
+    are presented:
+    
+      1. P. Jansen and R. Perez, "Constrained Structural Design 
+         Optimization via a Parallel Augmented Lagrangian Particle 
+         Swarm Optimization Approach", International Journal of 
+         Computer and Structures, Vol. xx, No. xx, pp. xx-xx, 2011.

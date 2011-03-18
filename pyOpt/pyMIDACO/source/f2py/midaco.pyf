@@ -1,0 +1,63 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module midaco__user__routines 
+    interface midaco_user_interface 
+        subroutine objfun(n,m,x,f,g)
+            integer intent(in) :: n
+            integer intent(in) :: m
+            double precision dimension(n),intent(in),depend(n) :: x
+            double precision intent(in,out) :: f
+            double precision dimension(m),intent(in,out),depend(m) :: g
+        end subroutine objfun
+    end interface midaco_user_interface
+end python module midaco__user__routines
+python module midaco ! in 
+    interface  ! in :midaco
+        subroutine midaco_wrap(n,nint,m,me,xl,xu,x,f,g,acc,iseed,ifail,qstart,istop,iprint,iout,ifile,eval,maxeval,maxtime,liw,iw,lrw,rw,objfun) ! in :midaco:source/midaco.f
+            use midaco__user__routines
+            integer intent(in) :: n
+            integer intent(in) :: nint
+            integer intent(in) :: m
+            integer intent(in) :: me
+            double precision dimension(n),intent(in),depend(n) :: xl
+            double precision dimension(n),intent(in),depend(n) :: xu
+            double precision dimension(n),intent(inout),depend(n) :: x
+            double precision intent(inout) :: f
+            double precision dimension(m),depend(m),intent(inout) :: g
+            double precision intent(in) :: acc
+            integer intent(in) :: iseed
+            integer intent(inout) :: ifail
+            integer intent(in) :: qstart
+            integer intent(inout) :: istop
+            integer intent(in) :: iprint
+            integer intent(in) :: iout
+            character*(*) intent(in) :: ifile
+            integer intent(inout) :: eval
+            integer intent(in) :: maxeval
+            double precision intent(in) :: maxtime
+            integer intent(in) :: liw
+            integer dimension(liw),intent(inout),depend(liw) :: iw
+            integer intent(in) :: lrw
+            double precision dimension(lrw),intent(inout),depend(lrw) :: rw
+            external objfun
+        end subroutine midaco
+        subroutine openunit(unitnum,filename,filestatus,fileaction,ierror) ! in :snopt:openunit.f
+            integer intent(in) :: unitnum
+            character*(*) intent(in) :: filename
+            character*(*) intent(in) :: filestatus
+            character*(*) intent(in) :: fileaction
+            integer intent(out) :: ierror
+        end subroutine openunit
+        subroutine pyflush(unitnum)
+          integer unitnum
+          return
+        end subroutine pyflush
+        subroutine closeunit(unitnum) ! in :snopt:closeunit.f
+            integer intent(in) :: unitnum
+        end subroutine closeunit
+    end interface 
+end python module midaco
+
+! This file was auto-generated with f2py (version:2_5972).
+! See http://cens.ioc.ee/projects/f2py2e/

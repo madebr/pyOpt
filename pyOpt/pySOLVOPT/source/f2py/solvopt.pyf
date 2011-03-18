@@ -1,0 +1,78 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module solvopt__user__routines 
+    interface solvopt_user_interface 
+        subroutine fun(n,x,f)
+			integer intent(in) :: n
+            double precision dimension(n),intent(in),depend(n) :: x
+            double precision intent(in,out) :: f
+        end subroutine fun
+        subroutine func(n,x,fc)
+			integer intent(in) :: n
+            double precision dimension(n),intent(in),depend(n) :: x
+            double precision intent(in,out) :: fc
+        end subroutine func
+        subroutine grad(n,x,g)
+			integer intent(in) :: n
+            double precision dimension(n),intent(in),depend(n) :: x
+            double precision dimension(n),intent(in,out),depend(n) :: g
+        end subroutine grad
+        subroutine gradc(n,x,gc)
+			integer intent(in) :: n
+            double precision dimension(n),intent(in),depend(n) :: x
+            double precision dimension(n),intent(in,out),depend(n) :: gc
+        end subroutine gradc
+    end interface solvopt_user_interface
+end python module solvopt__user__routines
+python module solvopt ! in 
+    interface  ! in :solvopt
+        subroutine solvopt(n,x,f,fun,flg,grad,options,flfc,func,flgc,gradc,b,g,g0,g1,gt,gc,z,x1,xopt,xrec,grec,xx,deltax,idx,iout,ifile) ! in :solvopt:source/solvopt.f
+            use solvopt__user__routines
+            integer intent(in) :: n
+            double precision dimension(n),depend(n),intent(in,out) :: x
+            double precision intent(inout) :: f
+            external fun
+            logical intent(in) :: flg
+            external grad
+            double precision dimension(13),intent(in,out) :: options
+            logical intent(in) :: flfc
+            external func
+            logical intent(in) :: flgc
+            external gradc
+            double precision dimension(n,n),depend(n,n),intent(in) :: b
+            double precision dimension(n),depend(n),intent(in) :: g
+            double precision dimension(n),depend(n),intent(in) :: g0
+            double precision dimension(n),depend(n),intent(in) :: g1
+            double precision dimension(n),depend(n),intent(in) :: gt
+            double precision dimension(n),depend(n),intent(in) :: gc
+            double precision dimension(n),depend(n),intent(in) :: z
+            double precision dimension(n),depend(n),intent(in) :: x1
+            double precision dimension(n),depend(n),intent(in) :: xopt
+            double precision dimension(n),depend(n),intent(in) :: xrec
+            double precision dimension(n),depend(n),intent(in) :: grec
+            double precision dimension(n),depend(n),intent(in) :: xx
+            double precision dimension(n),depend(n),intent(in) :: deltax
+            integer dimension(n),depend(n),intent(in) :: idx
+            integer intent(in) :: iout
+            character*(*) intent(in) :: ifile
+            include messages.inc
+        end subroutine solvopt
+        subroutine openunit(unitnum,filename,filestatus,fileaction,ierror) ! in :cobyla:source/openunit.f
+            integer intent(in) :: unitnum
+            character*(*) intent(in) :: filename
+            character*(*) intent(in) :: filestatus
+            character*(*) intent(in) :: fileaction
+            integer intent(out) :: ierror
+        end subroutine openunit
+        subroutine pyflush(unitnum) ! in :cobyla:source/openunit.f
+            integer :: unitnum
+        end subroutine pyflush
+        subroutine closeunit(unitnum) ! in :cobyla:source/closeunit.f
+            integer intent(in) :: unitnum
+        end subroutine closeunit
+    end interface 
+end python module solvopt
+
+! This file was auto-generated with f2py (version:2_5972).
+! See http://cens.ioc.ee/projects/f2py2e/
