@@ -38,7 +38,7 @@ To Do:
 try:
 	import mmfd
 except:
-	raise ImportError('Error: MMFD shared library failed to import')
+	raise ImportError('MMFD shared library failed to import')
 #end
 
 # =============================================================================
@@ -139,6 +139,8 @@ class MMFD(Optimizer):
 		- hot_start -> BOOL/STR: Flag/filename to read optimization history, *Default* = False
 		- sens_mode -> STR: Flag for parallel gradient calculation, *Default* = ''
 		- sens_step -> FLOAT: Sensitivity setp size, *Default* = {} [corresponds to 1e-6 (FD), 1e-20(CS)]
+		
+		Additional arguments and keyword arguments are passed to the objective function call.
 		
 		Documentation last updated:  February. 2, 2011 - Ruben E. Perez
 		'''
@@ -285,7 +287,7 @@ class MMFD(Optimizer):
 			#end
 			if self.h_start and self.pll:
 				[ff,gg,fail] = Bcast([ff,gg,fail],root=0)
-			else:	
+			elif not self.h_start:	
 				[ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
 			#end
 			

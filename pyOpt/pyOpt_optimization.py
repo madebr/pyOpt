@@ -72,7 +72,7 @@ class Optimization(object):
     Optimization Problem Class
     '''
     
-    def __init__(self, name, obj_fun, var_set={}, obj_set={}, con_set={}, use_groups=False, *args, **kwargs):
+    def __init__(self, name, obj_fun, var_set=None, obj_set=None, con_set=None, use_groups=False, *args, **kwargs):
         
         '''
         Optimization Problem Class Initialization
@@ -84,12 +84,12 @@ class Optimization(object):
         
         **Keyword arguments:**
         
-        - var_set -> INST: Variable set, *Default* = {}
-        - obj_set -> INST: Objective set, *Default* = {}
-        - con_set -> INST: Constraints set, *Default* = {}
+        - var_set -> INST: Variable set, *Default* = None
+        - obj_set -> INST: Objective set, *Default* = None
+        - con_set -> INST: Constraints set, *Default* = None
         - use_groups -> BOOL: Use of group identifiers flag, *Default* = False
         
-        Documentation last updated:  Feb. 03, 2011 - Peter W. Jansen
+        Documentation last updated:  May. 23, 2011 - Ruben E. Perez
         '''
         
         # 
@@ -98,17 +98,33 @@ class Optimization(object):
         self.use_groups = use_groups
         
         # Initialize Variable Set
-        self._variables = var_set
+        if var_set is None:
+            self._variables = {}
+        else:
+            self._variables = var_set
+        #end
         self._vargroups = {}
         
         # Initialize Objective Set
-        self._objectives = obj_set
+        if obj_set is None:
+            self._objectives = {}
+        else:
+            self._objectives = obj_set
+        #end
         
         # Initialize Constraint Set
-        self._constraints = con_set
+        if con_set is None:
+            self._constraints = {}
+        else:
+            self._constraints = con_set
+        #end
         
         ## Initialize Parameter Set
-        #self._parameters = par_set
+        #if par_set is None:
+        #    self._parameters = {}
+        #else:
+        #    self._parameters = par_set
+        ##end
         
         # Initialize Solution Set
         self._solutions = {}
@@ -292,8 +308,8 @@ class Optimization(object):
         del self._variables[i]
         
         # 
-        ngroups = len(self._vargroups)
-        for j in xrange(ngroups):
+        #ngroups = len(self._vargroups)
+        for j in self._vargroups.keys():
             keys = self._vargroups[j]['ids']
             nkeys = len(keys)
             for key in keys:

@@ -147,20 +147,21 @@ Optimizing
 
 Solving the Optimization Problem:
 
->>> opt(opt_prob, sens_type='FD', disp_opts=False, sens_mode='')
+>>> opt(opt_prob, sens_type='FD', disp_opts=False, sens_mode='',*args, **kwargs)
 
   disp_opts - flag for displaying the options in the solution output.
 	
-  sens_type - sensitivity type
+  sens_type - sensitivity type.
   - 'FD' = finite differences.        
   - 'CS' = complex step.
-  - grad_function = user provided function, 
+  - grad_function = user provided function. 
   
     format: grad_function(x,f,g)
-    returns g_obj,g_con,fail.
+    returns g_obj,g_con,fail
   
-  sens_mode - parallel sensitivity flag (''-serial,'pgc'-parallel)
-
+  sens_mode - parallel sensitivity flag (''-serial,'pgc'-parallel).
+  
+  Additional arguments and keyword arguments (e.g.: parameters) can be passed to the objective function.
 
 Output:
 

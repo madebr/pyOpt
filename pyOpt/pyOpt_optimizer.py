@@ -123,6 +123,8 @@ class Optimizer(object):
         
         - opt_problem -> INST: Optimization problem instance, *Default* = {}
         
+        Additional arguments and keyword arguments are passed to the objective function call
+        
         Documentation last updated:  Feb. 03, 2011 - Peter W. Jansen
         '''
         

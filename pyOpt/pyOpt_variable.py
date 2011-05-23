@@ -120,7 +120,7 @@ class Variable(object):
                 #end
             #end
             try:
-                self.value = self.choices[value]
+                self.value = self.choices[int(value)]
             except:
                 raise IOError('A discrete variable requires the value input to be a integer pointer value of the choices array')
             #end
@@ -151,7 +151,7 @@ class Variable(object):
         '''
         
         if (self.type == 'd'):
-            return ('Name    Type       Value       Lower Bound  Upper Bound\n'+'	 '+str(self.name).center(9) +'%5s	%14f %14.2e %12.2e \n' %(self.type, self.choices[self.value], self.lower, self.upper))
+            return ('Name    Type       Value       Lower Bound  Upper Bound\n'+'	 '+str(self.name).center(9) +'%5s	%14f %14.2e %12.2e \n' %(self.type, self.choices[int(self.value)], min(self.choices), max(self.choices)))
         else:
             return ('Name    Type       Value       Lower Bound  Upper Bound\n'+'	 '+str(self.name).center(9) +'%5s	%14f %14.2e %12.2e \n' %(self.type, self.value, self.lower, self.upper))
         #end

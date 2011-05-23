@@ -99,7 +99,7 @@ class ALPSO(Optimizer):
 		if (pll_type == None):
 			
 			try:
-				import alpso
+				import alpso as alpso
 			except:
 				raise ImportError('pyALPSO: ALPSO shared library failed to import')
 			#end
@@ -208,6 +208,8 @@ class ALPSO(Optimizer):
 		- xstart ->  :  , *Default* = []
 		- store_hst -> BOOL/STR: Flag/filename to store optimization history, *Default* = False
 		- hot_start -> BOOL/STR: Flag/filename to read optimization history, *Default* = False
+		
+		Additional arguments and keyword arguments are passed to the objective function call.
 		
 		Documentation last updated:  February. 2, 2011 - Ruben E. Perez
 		'''
@@ -480,6 +482,7 @@ class ALPSO(Optimizer):
 			rtol,atol,dtol,oout,iout,rinit,vinit,vmax,c1,c2,w1,w2,ns,nf,vcrazy,
 			fileout,filename,log_file,hos_file,seed,scale,nhs,objconfunc)
 		sol_time = time.time() - t0 
+		sol_evals = nfevals
 		
 		if (myrank == 0):
 			if self.sto_hst:
@@ -509,7 +512,6 @@ class ALPSO(Optimizer):
 			#sol_inform['value'] = inform
 			#sol_inform['text'] = self.getInform(inform)
 			
-			sol_evals = nfevals
 			
 			sol_vars = copy.deepcopy(opt_problem._variables)
 			i = 0

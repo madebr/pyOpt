@@ -133,6 +133,8 @@ class COBYLA(Optimizer):
 		- store_hst -> BOOL/STR: Flag/filename to store optimization history, *Default* = False
 		- hot_start -> BOOL/STR: Flag/filename to read optimization history, *Default* = False
 		
+		Additional arguments and keyword arguments are passed to the objective function call.
+		
 		Documentation last updated:  February. 2, 2011 - Peter W. Jansen
 		'''
 		
@@ -271,7 +273,7 @@ class COBYLA(Optimizer):
 			#end
 			if self.h_start and self.pll:
 				[ff,gg,fail] = Bcast([ff,gg,fail],root=0)
-			else:	
+			elif not self.h_start:	
 				[ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
 			#end
 			
@@ -302,6 +304,7 @@ class COBYLA(Optimizer):
 				#end
 				i += 1
 			#end
+			j = 0
 			for key in opt_problem._variables.keys():
 				if (opt_problem._variables[key].lower != -inf):
 					g[i] = x[j] - xl[j]
@@ -311,6 +314,7 @@ class COBYLA(Optimizer):
 					g[i] = xu[j] - x[j]
 					i += 1
 				#end
+				j += 1
 			#end
 			
 			return f,g

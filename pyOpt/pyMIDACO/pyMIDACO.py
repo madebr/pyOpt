@@ -133,6 +133,8 @@ class MIDACO(Optimizer):
 		- store_hst -> BOOL/STR: Flag/filename to store optimization history, *Default* = False
 		- hot_start -> BOOL/STR: Flag/filename to read optimization history, *Default* = False
 		
+		Additional arguments and keyword arguments are passed to the objective function call.
+		
 		Documentation last updated:  February. 17, 2011 - Peter W. Jansen
 		'''
 		#
@@ -269,7 +271,7 @@ class MIDACO(Optimizer):
 			#end
 			if self.h_start and self.pll:
 				[ff,gg,fail] = Bcast([ff,gg,fail],root=0)
-			else:	
+			elif not self.h_start:	
 				[ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
 			#end
 			
