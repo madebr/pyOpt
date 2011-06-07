@@ -70,6 +70,3 @@ python module slsqp ! in
         end subroutine closeunit
     end interface 
 end python module slsqp
-
-! This file was auto-generated with f2py (version:2_4423).
-! See http://cens.ioc.ee/projects/f2py2e/

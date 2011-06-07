@@ -38,6 +38,7 @@ __version__ = '$Revision: $'
 To Do:
 	- Migrate Inner Loop Printing Option
 	- Add Other Inertia and Velocity Updates to Inner Loop
+	- Fix Neighbourhood best from Lagrangian value
 '''
 
 # =============================================================================
@@ -84,6 +85,16 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 	Documentation last updated:  April. 29, 2008 - Ruben E. Perez
 	'''
 	
+	# 
+	if (x0 != []):
+		if isinstance(x0,list):
+			x0 = numpy.array(x0)
+		elif not isinstance(x0,numpy.ndarray):
+			print """Warning: Initial x must be either list or numpy.array,
+				all initial positions randomly generated"""
+		#end
+	#end
+	
 	#
 	if (hstfile != None):
 		h_start = True
@@ -124,7 +135,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 	#end
 	header = ''
 	header += ' '*37 + '======================\n'
-	header += ' '*39 + 'ALPSO 1.1 (Serial)\n'
+	header += ' '*39 + ' ALPSO 1.1 (Serial)\n'
 	header += ' '*37 + '======================\n\n'
 	header += 'Parameters:\n'
 	header += '-'*97 + '\n'
@@ -133,16 +144,25 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 	else:
 		diI = 0
 	#end
+	if (x0 != []):
+		if len(x0.shape) == 1:
+			nxi = 1
+		else:
+			nxi = x0.shape[0]
+		#end
+	else:
+		nxi = 0
+	#end
 	header += 'Swarmsize           :%9d'%(swarmsize) + '    MaxOuterIters     :%9d'%(maxOutIter) + '    Seed:%26.8f\n'%(rseed)
 	header += 'Cognitive Parameter :%9.3f'%(c1)  + '    MaxInnerIters     :%9d'%(maxInnIter) + '    Scaling            :%11d\n'%(scale)
 	header += 'Social Parameter    :%9.3f' %(c2)  + '    MinInnerIters     :%9d'%(minInnIter) + '    Stopping Criteria  :%11d\n'%(stopCriteria)
-	header += 'Inital Weight       :%9.3f' %(w1)  + '    DynInnerIters     :%9d'%(diI) + '    Number of Failures :%11d\n' %(ns)
+	header += 'Initial Weight      :%9.3f' %(w1)  + '    DynInnerIters     :%9d'%(diI) + '    Number of Failures :%11d\n' %(ns)
 	header += 'Final Weight        :%9.3f' %(w2)  + '    StoppingIters     :%9d'%(stopIters) + '    Number of Successes:%11d\n\n' %(nf)
 
-	header += 'Absolute Tolerance  : %1.2e' %(atol) + '    Number Initial Pos:%9d'%(len(x0)) + '    Neighbourhood Model:%11s\n' %(nhm)
+	header += 'Absolute Tolerance  : %1.2e' %(atol) + '    Number Initial Pos:%9d'%(nxi) + '    Neighbourhood Model:%11s\n' %(nhm)
 	header += 'Relative Tolerance  : %1.2e' %(rtol) + '    Initial Velocity  :%9d'%(vinit) + '    Neighbourhood Size :%11d\n' %(nhn)
 	header += 'Inequality Tolerance: %1.2e' %(itol) + '    Maximum Velocity  :%9d'%(vmax) + '    Selfless           :%11d\n' %(nhs)
-	header += 'Equality Tolerance  : %1.2e' %(etol) + '    Craciness Velocity: %1.2e'%(vcrazy) + '    Fileout            :%11d\n' %(fileout)
+	header += 'Equality Tolerance  : %1.2e' %(etol) + '    Craziness Velocity: %1.2e'%(vcrazy) + '    Fileout            :%11d\n' %(fileout)
 	header += 'Global Distance     : %1.2e' %(dtol) + '    Initial Penalty   :%9.2f' %(r0) + '    File Name          :%11s\n' %(filename)
 	header += '-'*97 + '\n\n'
 	
@@ -194,12 +214,6 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 		#end
 	#end
 	if (x0 != []):
-		if isinstance(x0,list):
-			x0 = numpy.array(x0)
-		#end
-		elif not isinstance(x0,numpy.ndarray):
-			print """Warning: Inital x must be either list or numpy.array,
-				all inital positions randomely generated"""
 		if len(x0.shape) == 1:
 			if (scale == 1):
 				x_k[0,:] = (x0[:] - space_centre)/space_halflen
@@ -208,7 +222,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 			#end
 		else:
 			if (x0.shape[0] > swarmsize):
-				print 'Warning: %d inital positions specified for %d particles, last %d positions ignored' %(x0.shape[0],swarmsize,x0.shape[0]-swarmsize)
+				print 'Warning: %d initial positions specified for %d particles, last %d positions ignored' %(x0.shape[0],swarmsize,x0.shape[0]-swarmsize)
 				x0 = x0[0:swarmsize,:]
 			#end
 			for i in xrange(x0.shape[0]):
@@ -810,7 +824,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 				# output to screen
 				print 'Outer Iteration: %d 	[%d. Inner Iteration]' %(k_out,k_inn)
 			#end
-			if (fileout == 1):
+			if (fileout == 1) or (fileout == 3):
 				# output to filename
 				pass
 			#end
@@ -844,12 +858,12 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 				# Equality Constraints
 				print("EQUALITY CONSTRAINTS VALUES:")
 				for l in xrange(neqcons):
-					print("\tG(%d) = %g" %(l,swarm_g[l]))
+					print("\tH(%d) = %g" %(l,swarm_g[l]))
 				#end
 				# Inequality Constraints
 				print("\nINEQUALITY CONSTRAINTS VALUES:")
 				for l in xrange(neqcons,constraints):
-					print("\tH(%d) = %g" %(l,swarm_g[l]))
+					print("\tG(%d) = %g" %(l,swarm_g[l]))
 				#end
 			#end
 			print("\nLAGRANGIAN MULTIPLIERS VALUES:")
@@ -887,12 +901,12 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 				# Equality Constraints
 				ofile.write("\nEQUALITY CONSTRAINTS VALUES:\n")
 				for l in xrange(neqcons):
-					ofile.write("\tG(%d) = %.16g\n" %(l,swarm_g[l]))
+					ofile.write("\tH(%d) = %.16g\n" %(l,swarm_g[l]))
 				#end
 				# Inequality Constraints
 				ofile.write("\nINEQUALITY CONSTRAINTS VALUES:\n")
 				for l in xrange(neqcons,constraints):
-					ofile.write("\tH(%d) = %.16g\n" %(l,swarm_g[l]))
+					ofile.write("\tG(%d) = %.16g\n" %(l,swarm_g[l]))
 				#end
 			#end
 			ofile.write("\nLAGRANGIAN MULTIPLIERS VALUES:\n")
@@ -1031,9 +1045,10 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 			cvL2 = cvss**0.5
 			if (stopCriteria == 1):
 				relL = abs(global_L[0]-global_L[stopIters-1])/abs(global_L[stopIters-1])
-				stext = '%9d%8d%8d%15.4e%13f%13f%17.4e%14.4e\n' %(k_out,k_inn,stop_con_num,cvL2,swarm_f,swarm_L,relL,global_distance[0])
+				stext = '%9d%8d%8d%15.4e%13f%13.4e%17.4e%14.4e\n' %(k_out,k_inn,stop_con_num,cvL2,swarm_f,swarm_L,relL,global_distance[0])
 			else:
-				stext = '%9d%8d%8d%15.4e%13f%13f%17s%14s\n' %(k_out,k_inn,stop_con_num,cvL2,swarm_f,swarm_L,'NA','NA')
+				stext = '%9d%8d%8d%15.4e%13f%13.4e%17s%14s\n' %(k_out,k_inn,stop_con_num,cvL2,swarm_f,swarm_L,'NA','NA')
+			#end
 			sfile.write(stext)
 			sfile.flush()
 		#end
@@ -1179,12 +1194,12 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 			# Equality Constraints
 			print("EQUALITY CONSTRAINTS VALUES:")
 			for l in xrange(neqcons):
-				print("\tG(%d) = %g" %(l,swarm_g[l]))
+				print("\tH(%d) = %g" %(l,swarm_g[l]))
 			#end
 			# Inequality Constraints
 			print("\nINEQUALITY CONSTRAINTS VALUES:")
 			for l in xrange(neqcons,constraints):
-				print("\tH(%d) = %g" %(l,swarm_g[l]))
+				print("\tG(%d) = %g" %(l,swarm_g[l]))
 			#end
 		#end
 		print("\nLAGRANGIAN MULTIPLIERS VALUES:")
@@ -1213,6 +1228,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 	#end
 	if (fileout == 1) or (fileout == 3):
 		ofile.close()
+	#end
 	if (fileout == 2) or (fileout == 3):
 		# Output to Summary
 		sfile.write("\n\nSolution:")
@@ -1225,12 +1241,12 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 			# Equality Constraints
 			sfile.write("\nEQUALITY CONSTRAINTS VALUES:\n")
 			for l in xrange(neqcons):
-				sfile.write("\tG(%d) = %.16g\n" %(l,swarm_g[l]))
+				sfile.write("\tH(%d) = %.16g\n" %(l,swarm_g[l]))
 			#end
 			# Inequality Constraints
 			sfile.write("\nINEQUALITY CONSTRAINTS VALUES:\n")
 			for l in xrange(neqcons,constraints):
-				sfile.write("\tH(%d) = %.16g\n" %(l,swarm_g[l]))
+				sfile.write("\tG(%d) = %.16g\n" %(l,swarm_g[l]))
 			#end
 		#end
 		sfile.write("\nLAGRANGIAN MULTIPLIERS VALUES:\n")
@@ -1282,264 +1298,6 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 	return opt_x,opt_f,opt_g,opt_lambda,nfevals,'%.8f' %(rseed)
 	
 
-
-# =============================================================================
-# pso Function
-# =============================================================================
-def pso(fun, x0, lb, ub, *args, **kwargs):
-	
-	'''
-	PSO function - Python Version of the Generic Particle Swarm Optimizer
-	
-	Inputs
-	fun - Objective function
-	x0 - Initial point
-	lb - Variables lower bounds 
-	ub - Variables upper bounds 
-	options - PSO options
-	p1,p2,... - Additional data to be passed to fitness (optional).
-	
-	Outputs
-	x - Best particle position
-	fval - Objective value
-	
-	Documentation last updated:  April. 29, 2008 - Peter Jansen
-	'''
-	
-	# Check options parameters - Default Options if None 
-	options = {}
-	if len(args) < 1:	
-		# Default Inputs
-		options['Display'] = 'iter'   # 'none' , 'final'  
-		options['SwarmSize'] = 40
-		options['MaxIter'] = 200
-		options['vUpdate'] = 'Inertia'
-		options['wUpdate'] = 'Dynamic' # 'Linear' , 'Fixed'
-		options['c1'] = 2.0
-		options['c2'] = 1.0
-#		options['MaxFunEvals'] = options['SwarmSize']*options['MaxIter']
-#		options['TolFun'] = 1e-4
-#		options['TolX'] = 1e-4
-		options['RandSeed'] = 'auto'
-	elif isinstance(args,dict):
-		options = args[0]
-	else:
-		raise ValueError(str(args[0]) + ' is not a dictionary of Options')
-	#end
-	
-	if len(kwargs) > 0:
-		inp_keys = kwargs.keys()
-		for key in inp_keys:
-			options[key] = kwargs[key]
-		#end
-	#end
-
-	# Define Inputs
-	swarmsize = options['SwarmSize']          # Population size
-	maxIter = options['MaxIter']              # Maximum number of iterations
-	#TolFun = options.TolFun                  # Termination tolerance on the function value
-	#TolX = options.TolX                      # Termination tolerance on x
-	#maxFunEvals = options.MaxFunEvals        # Maximum number of function evaluations allowed
-	dimensions = len(ub)                      # Number of dimensions
-	wo = 0.95                                 # Initial weight for Dynamic inertia update
-	wf = 0.55                                 # Final weight for Dynamic inertia update
-	c1 = options['c1']                        # Vel. update 'trust' parameter - Cognitive Acceleration (confidence in itself)
-	c2 = options['c2']                        # Vel. update 'trust' parameter - Social Acceleration (confidence in the swarm)
-#	ki = 10^8                                 # Penalty function parameter
-	dt = 1                                    # Unit time step (Constriction Factor)
-	xmin = lb                                 # Variables lower bounds
-	xmax = ub                                 # Variables upper bounds
-	vmax = xmax-xmin                          # Maximum velocity allowed
-
-	w = wo
-
-
-	# Set random number seed
-	rand = random.Random()
-	if options['RandSeed'] == 'auto':	
-		rand.seed()
-	else:
-		rand.seed(options['RandSeed'])
-	#end
-	
-	
-	# Randomize the positions and velocities for entire population
-	x_k = numpy.zeros((swarmsize,dimensions), float)
-	v_k = numpy.zeros((swarmsize,dimensions), float)
-	v_k1 = numpy.zeros((swarmsize,dimensions), float)
-	p = numpy.zeros((swarmsize,dimensions))
-	for i in xrange(swarmsize):
-		for j in xrange(dimensions):
-			x_k[i,j] = xmin[j] + rand.random()*(xmax[j]-xmin[j])
-			v_k[i,j] = (xmin[j] + rand.random()*(xmax[j]-xmin[j]))/dt
-			p[i,j] = x_k[i,j]
-		#end
-	#end
-	ind = (math.ceil(rand.random()*swarmsize-1)+1)
-	if x0 != []:
-		x_k[ind,:] = x0[:]
-	#end
-
-	# Print Initial Header
-	if options['Display'] == 'iter':
-		print(' Iteration   Func-count     min f(x)\n');    
-	#end
-
-	# Iterations Loop
-	numFunEvals = 0
-	k = 0
-	status = 0
-	gbest = [0]
-	ff = numpy.zeros((swarmsize,maxIter+1), float)
-	pbest = numpy.zeros(swarmsize,float)
-	while status != 1:
-		
-		# Initial index at iteration k for global best particle
-		if k != 0:
-			gbest.append(gbest[k-1])
-		#end
-		
-		# Evaluates objective function and constraints
-		for i in xrange(swarmsize):
-			ff[i,k] = fun(x_k[i,:])#,varargin[:])
-			numFunEvals += 1
-		#end
-		
-		# Swarm Analysis
-		if k == 0:   
-			# Initial index for global best particle
-			pbest[:] = ff[:,k]
-			gbest[k] = ff[:,k].argmin()
-		else:       
-			# Particle and Global Best Updates
-			for i in xrange(swarmsize):
-				# Update pbest and gbest
-				if ff[i,k] < pbest[i]:
-					pbest[i] = ff[i,k]
-					for j in xrange(dimensions):   
-						p[i,j] = x_k[i,j]
-					#end
-					if pbest[i] < pbest[gbest[k]] :
-						gbest[k] = i
-					#end
-				#end
-			#end
-		#end
-		
-		# Update inertia weight 
-		if options['vUpdate'] == 'Inertia':	
-			if options['wUpdate'] == 'Fixed':	
-				w = 0.875;	
-			elif options['wUpdate'] == 'Linear':     
-				# Linear time variant update	
-				w = ((wf-wo)/(maxIter-1))*(k-1) + wo	
-			elif options['wUpdate'] == 'Dynamic':    
-				# Dynamic update	
-				fw = 0.975
-				h = 5
-				if k > h:
-					if pbest[gbest[k]] >= pbest[gbest[k-h]]:
-						w *= fw
-						w = numpy.max(w,wf)
-					#end 
-				#end
-			elif options['wUpdate'] == 'Covariance':
-				# Covariance update	
-				fw = 0.975
-				COV = numpy.cov(ff[:,k])       #std(ff(:,k))/mean(ff(:,k));
-				if COV < 1:
-					w *= fw
-					w = max(w,wf)
-				#end	
-			#end
-		#end
-		
-		# Swarm Update
-		for i in xrange(swarmsize):	
-			# Update velocity vector
-			for j in xrange(dimensions):	
-				if (options['vUpdate'] == 'Inertia'):
-					#Traditional velocity update	
-					v_k1[i,j] = w * v_k[i,j]+c1*rand.random()*(p[i,j]-x_k[i,j])/dt+c2*rand.random()*(p[gbest[k],j]-x_k[i,j])/dt
-				elif (options['vUpdate'] == 'Constriction'):
-					# Constriction velocity update	
-					K = 2/(abs(2-(c1+c2) - ((abs((c1+c2)**2)-4*(c1+c2)))**0.5))
-					v_k1[i,j] = K*(v_k[i,j]+c1*rand.random()*(p[i,j]-x_k[i,j])/dt+c2*rand.random()*(p[gbest[k],j]-x_k[i,j])/dt)
-				#end
-				
-				# Constraints violation mofification
-				#if (max(0,gi(i,:)) > 0)
-				#    v(i,j,k+1) = c1*rand*(p(i,j)-x(i,j,k))/dt+c2*rand*(p(gbest(k),j)-x(i,j,k))/dt;
-				#end         
-				
-				# Check for velocity vector out of range
-				if (v_k1[i,j] > vmax[j]):
-					v_k1[i,j] = vmax[j]
-				elif (v_k1[i,j] < -vmax[j]):
-					v_k1[i,j] = -vmax[j]
-				#end
-				#v_k1[i,j] = numpy.min(v_k1[i,j],vmax[j])
-				#v_k1[i,j] = numpy.max(v_k1[i,j],-vmax[j])
-				
-			#end
-			
-			# If it's going the right way, keep going in the same velocity vector
-			if i == gbest[k]:
-				v_k[i,:] = v_k[i,:]
-			else:
-				v_k[i,:] = v_k1[i,:]
-			#end
-			
-			# Define new positions for all dimensions
-			for j in xrange(dimensions):  
-				x_k[i,j] = x_k[i,j] + v_k[i,j]*dt
-				# Check for positions out of range
-				if (x_k[i,j] > xmax[j]): 
-					x_k[i,j] = xmax[j]
-				elif (x_k[i,j] < xmin[j]):
-					x_k[i,j] = xmin[j]
-				#end
-				#x_k[i,j] = numpy.min(x_k[i,j],xmax[j])
-				#x_k[i,j] = numpy.max(x_k[i,j],xmin[j])
-			#end
-			
-		#end 
-		
-		# Print
-		if (options['Display'] == 'iter'):
-			print ' %5.0f           %5.0f       %12.6g         \n' %(k, numFunEvals, pbest[gbest[k]])
-		#end
-		
-		# Test Convergence
-		if k == maxIter-1:
-			print '\nMaximum number of iterations exceeded\n'
-			print 'increase OPTIONS.MaxIter\n'
-			status = 1
-#		elif numFunEvals > maxFunEvals:
-#			print '\nMaximum number of function evaluations exceeded\n'
-#			print 'increase OPTIONS.MaxFunEvals\n'
-#			status = 1
-#		elif k > 1 and (abs(p[gbest[1],:]-p[gbest[k],:])) <= TolX and (abs(pbest[gbest[1])-pbest[gbest[k]]) <= TolFun :
-#			print '\nOptimization terminated successfully\n')
-#			print ' the current x satisfies the termination criteria using OPTIONS.TolX of %s \n' %(TolX)
-#			print ' and f(x) satisfies the convergence criteria using OPTIONS.TolFun of %s \n' %(TolFun)
-#			status = 1
-		else:
-			k = k + 1
-		#end
-		
-	#end
-
-	fval = pbest[gbest[k]]
-	x = p[gbest[k],:]
-
-	# Print
-	print '\nNumber of function evaluations = %f\n' %(numFunEvals)
-	
-	return (x,fval)
-	
-
-
 #==============================================================================
 # Optimizers Test
 #==============================================================================
@@ -1550,8 +1308,4 @@ if __name__ == '__main__':
 	# Test alpso
 	alpso = alpso()
 	print alpso
-	
-	# Test pso
-	pso = pso()
-	print pso
 	

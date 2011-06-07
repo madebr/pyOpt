@@ -1,12 +1,6 @@
 !    -*- f90 -*-
-!
-! Originally written by Joaquim R. R. A. Martins 2000
-! Updates by Patrick LeGresley 2003-2005
-! Last updated: February 13, 2005
-! Tested to work with F2PY Version 2.45.241_1926 on:
-!         Mac OS X with xlf
-! Modified for Snopt 7 by C. Marriage 2007
-!
+! Note: the context of this file is case sensitive.
+
 python module snopt__user__routines 
     interface snopt_user_interface 
             subroutine fgobj( mode, nnObj, x, fObj, gObj, nState, cu, lencu, iu, leniu, ru, lenru)
@@ -274,6 +268,3 @@ python module snopt ! in
         end subroutine snoptc
     end interface 
 end python module snopt
-
-! This file was auto-generated with f2py (version:2.37.233-1545).
-! See http://cens.ioc.ee/projects/f2py2e/

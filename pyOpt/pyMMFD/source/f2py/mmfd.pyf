@@ -70,6 +70,3 @@ python module mmfd ! in
         end subroutine closeunit
     end interface 
 end python module mmfd
-
-! This file was auto-generated with f2py (version:2_5972).
-! See http://cens.ioc.ee/projects/f2py2e/

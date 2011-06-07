@@ -1,0 +1,17 @@
+Release 1.0.1 (June 10, 2011)
+=============================
+
+* Fix minor issue with Optimizers warm-start.
+
+* Updated QUICKGUIDE.
+
+* Fix minor issue with SNOPT no print-out option.
+
+* Updated Optimization class to address minor issue 
+  with multiple optimization problem instances.
+
+
+Release 1.0.0 (Mar 17, 2011)
+============================
+
+* First public release.

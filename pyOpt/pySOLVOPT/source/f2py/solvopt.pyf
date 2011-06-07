@@ -4,22 +4,22 @@
 python module solvopt__user__routines 
     interface solvopt_user_interface 
         subroutine fun(n,x,f)
-			integer intent(in) :: n
+            integer intent(in) :: n
             double precision dimension(n),intent(in),depend(n) :: x
             double precision intent(in,out) :: f
         end subroutine fun
         subroutine func(n,x,fc)
-			integer intent(in) :: n
+            integer intent(in) :: n
             double precision dimension(n),intent(in),depend(n) :: x
             double precision intent(in,out) :: fc
         end subroutine func
         subroutine grad(n,x,g)
-			integer intent(in) :: n
+            integer intent(in) :: n
             double precision dimension(n),intent(in),depend(n) :: x
             double precision dimension(n),intent(in,out),depend(n) :: g
         end subroutine grad
         subroutine gradc(n,x,gc)
-			integer intent(in) :: n
+            integer intent(in) :: n
             double precision dimension(n),intent(in),depend(n) :: x
             double precision dimension(n),intent(in,out),depend(n) :: gc
         end subroutine gradc
@@ -73,6 +73,3 @@ python module solvopt ! in
         end subroutine closeunit
     end interface 
 end python module solvopt
-
-! This file was auto-generated with f2py (version:2_5972).
-! See http://cens.ioc.ee/projects/f2py2e/

@@ -114,6 +114,3 @@ python module nlpql ! in
         end subroutine closeunit
     end interface
 end python module nlpql
-
-! This file was auto-generated with f2py (version:2_3974).
-! See http://cens.ioc.ee/projects/f2py2e/

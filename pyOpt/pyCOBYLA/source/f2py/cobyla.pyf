@@ -48,6 +48,3 @@ python module cobyla ! in
         end subroutine closeunit
     end interface 
 end python module cobyla
-
-! This file was auto-generated with f2py (version:2.39.235_1703).
-! See http://cens.ioc.ee/projects/f2py2e/

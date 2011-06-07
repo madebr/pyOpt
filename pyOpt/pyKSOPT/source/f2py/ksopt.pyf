@@ -65,6 +65,3 @@ python module ksopt ! in
         end subroutine closeunit
     end interface 
 end python module ksopt
-
-! This file was auto-generated with f2py (version:2_5972).
-! See http://cens.ioc.ee/projects/f2py2e/

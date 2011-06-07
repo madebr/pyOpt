@@ -113,6 +113,3 @@ python module ffsqp ! in
         end subroutine closeunit
     end interface 
 end python module ffsqp
-
-! This file was auto-generated with f2py (version:2_3979).
-! See http://cens.ioc.ee/projects/f2py2e/

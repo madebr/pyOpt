@@ -95,6 +95,3 @@ python module psqp ! in
         end subroutine closeunit
     end interface
 end python module psqp
-
-! This file was auto-generated with f2py (version:2).
-! See http://cens.ioc.ee/projects/f2py2e/

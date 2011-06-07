@@ -123,6 +123,20 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 		fileout = 0
 	#end
 	
+	# 
+	if (x0 != []):
+		if isinstance(x0,list):
+			x0 = numpy.array(x0)
+		elif not isinstance(x0,numpy.ndarray):
+			if myrank == master:
+				print """Warning: Initial x must be either list or numpy.array,
+					all initial positions randomly generated"""
+			else:
+				pass
+			#end
+		#end
+	#end
+	
 	#
 	if (hstfile != None):
 		h_start = True
@@ -151,10 +165,6 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 	ofname = ''
 	sfname = ''
 	fntmp = filename.split('.')
-	for sp in xrange(len(fntmp)-1):
-		ofname += fntmp[sp]
-		sfname += fntmp[sp]
-	#end
 	if (len(fntmp) == 1):
 		ofname += fntmp[0] + '_print.out'
 		sfname += fntmp[0] + '_summary.out'
@@ -177,16 +187,25 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 	else:
 		diI = 0
 	#end
+	if (x0 != []):
+		if len(x0.shape) == 1:
+			nxi = 1
+		else:
+			nxi = x0.shape[0]
+		#end
+	else:
+		nxi = 0
+	#end
 	header += 'Swarmsize           :%9d'%(swarmsize) + '    MaxOuterIters     :%9d'%(maxOutIter) + '    Seed:%26.8f\n'%(rseed)
 	header += 'Cognitive Parameter :%9.3f'%(c1)  + '    MaxInnerIters     :%9d'%(maxInnIter) + '    Scaling            :%11d\n'%(scale)
 	header += 'Social Parameter    :%9.3f' %(c2)  + '    MinInnerIters     :%9d'%(minInnIter) + '    Stopping Criteria  :%11d\n'%(stopCriteria)
-	header += 'Inital Weight       :%9.3f' %(w1)  + '    DynInnerIters     :%9d'%(diI) + '    Number of Failures :%11d\n' %(ns)
+	header += 'Initial Weight      :%9.3f' %(w1)  + '    DynInnerIters     :%9d'%(diI) + '    Number of Failures :%11d\n' %(ns)
 	header += 'Final Weight        :%9.3f' %(w2)  + '    StoppingIters     :%9d'%(stopIters) + '    Number of Successes:%11d\n\n' %(nf)
 
-	header += 'Absolute Tolerance  : %1.2e' %(atol) + '    Number Initial Pos:%9d'%(len(x0)) + '    Neighbourhood Model:%11s\n' %(nhm)
+	header += 'Absolute Tolerance  : %1.2e' %(atol) + '    Number Initial Pos:%9d'%(nxi) + '    Neighbourhood Model:%11s\n' %(nhm)
 	header += 'Relative Tolerance  : %1.2e' %(rtol) + '    Initial Velocity  :%9d'%(vinit) + '    Neighbourhood Size :%11d\n' %(nhn)
 	header += 'Inequality Tolerance: %1.2e' %(itol) + '    Maximum Velocity  :%9d'%(vmax) + '    Selfless           :%11d\n' %(nhs)
-	header += 'Equality Tolerance  : %1.2e' %(etol) + '    Craciness Velocity: %1.2e'%(vcrazy) + '    Fileout            :%11d\n' %(fileout)
+	header += 'Equality Tolerance  : %1.2e' %(etol) + '    Craziness Velocity: %1.2e'%(vcrazy) + '    Fileout            :%11d\n' %(fileout)
 	header += 'Global Distance     : %1.2e' %(dtol) + '    Initial Penalty   :%9.2f' %(r0) + '    File Name          :%11s\n' %(filename)
 	header += '-'*97 + '\n\n'
 	
@@ -237,12 +256,6 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 		#end
 	#end
 	if (x0 != []):
-		if isinstance(x0,list):
-			x0 = numpy.array(x0)
-		#end
-		elif not isinstance(x0,numpy.ndarray):
-			print """Warning: Inital x must be either list or numpy.array,
-				all inital positions randomely generated"""
 		if len(x0.shape) == 1:
 			if (scale == 1):
 				x_k[0,:] = (x0[:] - space_centre)/space_halflen
@@ -251,7 +264,9 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 			#end
 		else:
 			if (x0.shape[0] > swarmsize):
-				print 'Warning: %d inital positions specified for %d particles, last %d positions ignored' %(x0.shape[0],swarmsize,x0.shape[0]-swarmsize)
+				if myrank == master:
+					print 'Warning: %d initial positions specified for %d particles, last %d positions ignored' %(x0.shape[0],swarmsize,x0.shape[0]-swarmsize)
+				#end
 				x0 = x0[0:swarmsize,:]
 			#end
 			for i in xrange(x0.shape[0]):
@@ -973,7 +988,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 				# output to screen
 				print '%d Inner Iteration of %d Outer Iteration' %(k_inn,k_out)
 			#end
-			if (fileout == 1):
+			if (fileout == 1) or (fileout == 3):
 				# output to filename
 				pass
 			#end
@@ -1011,12 +1026,12 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 					# Equality Constraints
 					print("EQUALITY CONSTRAINTS VALUES:")
 					for l in xrange(neqcons):
-						print("\tG(%d) = %g" %(l,swarm_g[l]))
+						print("\tH(%d) = %g" %(l,swarm_g[l]))
 					#end
 					# Inequality Constraints
 					print("\nINEQUALITY CONSTRAINTS VALUES:")
 					for l in xrange(neqcons,constraints):
-						print("\tH(%d) = %g" %(l,swarm_g[l]))
+						print("\tG(%d) = %g" %(l,swarm_g[l]))
 					#end
 				#end
 				print("\nLAGRANGIAN MULTIPLIERS VALUES:")
@@ -1054,12 +1069,12 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 					# Equality Constraints
 					ofile.write("\nEQUALITY CONSTRAINTS VALUES:\n")
 					for l in xrange(neqcons):
-						ofile.write("\tG(%d) = %g\n" %(l,swarm_g[l]))
+						ofile.write("\tH(%d) = %g\n" %(l,swarm_g[l]))
 					#end
 					# Inequality Constraints
 					ofile.write("\nINEQUALITY CONSTRAINTS VALUES:\n")
 					for l in xrange(neqcons,constraints):
-						ofile.write("\tH(%d) = %g\n" %(l,swarm_g[l]))
+						ofile.write("\tG(%d) = %g\n" %(l,swarm_g[l]))
 					#end
 				#end
 				ofile.write("\nLAGRANGIAN MULTIPLIERS VALUES:\n")
@@ -1177,9 +1192,10 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 				cvL2 = cvss**0.5
 				if (stopCriteria == 1):
 					relL = abs(global_L[0]-global_L[stopIters-1])/abs(global_L[stopIters-1])
-					stext = '%9d%8d%8d%15.4e%13f%13f%17.4e%14.4e\n' %(k_out,k_inn,stop_con_num,cvL2,swarm_f,swarm_L,relL,global_distance[0])
+					stext = '%9d%8d%8d%15.4e%13f%13.4e%17.4e%14.4e\n' %(k_out,k_inn,stop_con_num,cvL2,swarm_f,swarm_L,relL,global_distance[0])
 				else:
-					stext = '%9d%8d%8d%15.4e%13f%13f%17s%14s\n' %(k_out,k_inn,stop_con_num,cvL2,swarm_f,swarm_L,'NA','NA')
+					stext = '%9d%8d%8d%15.4e%13f%13.4e%17s%14s\n' %(k_out,k_inn,stop_con_num,cvL2,swarm_f,swarm_L,'NA','NA')
+				#end
 				sfile.write(stext)
 				sfile.flush()
 			#end
@@ -1330,12 +1346,12 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 				# Equality Constraints
 				print("EQUALITY CONSTRAINTS VALUES:")
 				for l in xrange(neqcons):
-					print("\tG(%d) = %g" %(l,swarm_g[l]))
+					print("\tH(%d) = %g" %(l,swarm_g[l]))
 				#end
 				# Inequality Constraints
 				print("\nINEQUALITY CONSTRAINTS VALUES:")
 				for l in xrange(neqcons,constraints):
-					print("\tH(%d) = %g" %(l,swarm_g[l]))
+					print("\tG(%d) = %g" %(l,swarm_g[l]))
 				#end
 			#end
 			print("\nLAGRANGIAN MULTIPLIERS VALUES:")
@@ -1364,6 +1380,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 		#end
 		if (fileout == 1) or (fileout == 3):
 			ofile.close()
+		#end
 		if (fileout == 2) or (fileout == 3):
 			# Output to Summary
 			sfile.write("\n\nSolution:")
@@ -1376,12 +1393,12 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 				# Equality Constraints
 				sfile.write("\nEQUALITY CONSTRAINTS VALUES:\n")
 				for l in xrange(neqcons):
-					sfile.write("\tG(%d) = %g\n" %(l,swarm_g[l]))
+					sfile.write("\tH(%d) = %g\n" %(l,swarm_g[l]))
 				#end
 				# Inequality Constraints
 				sfile.write("\nINEQUALITY CONSTRAINTS VALUES:\n")
 				for l in xrange(neqcons,constraints):
-					sfile.write("\tH(%d) = %g\n" %(l,swarm_g[l]))
+					sfile.write("\tG(%d) = %g\n" %(l,swarm_g[l]))
 				#end
 			#end
 			sfile.write("\nLAGRANGIAN MULTIPLIERS VALUES:\n")
