@@ -42,12 +42,17 @@ this will compile all available optimizers and place the libraries in the corres
 
 Notes:
     
+    * You may want to uninstall any previous version of pyOpt before installing a new 
+      version, as there may be conflicts.
     * Some optimizers are licensed and their sources are not included with this distribution. 
       To use them, please request their sources from the authors as indicated in the optimizer 
       LICENSE files, and place them in their respective source folders before installing the package.
-    * In Windows, if MinGW is used make sure to install for it the C, C++, and Fortran compilers
+    * In Windows, if MinGW is used make sure to install for it the C, C++, and Fortran compilers and run:
+      
+      >>> python setup.py install --compiler=mingw32
+      
     * Installing to site-packages/ requires root privileges on Linux.
     * By default pyOpt will attempt to use compilers available on the system. To get a list of 
-    available compilers and their corresponding flag on a specific system use:
-    
+      available compilers and their corresponding flag on a specific system use:
+      
       >>> python setup.py compilers
