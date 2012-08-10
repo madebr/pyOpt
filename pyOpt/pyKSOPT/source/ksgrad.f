@@ -2,8 +2,8 @@
      1                   delx,ndv,ncon,nobj,nside,fdelt,fdmin,nodim,
      2                   ncdim)
       implicit double precision (a-h,o-z)
-      dimension x(1),x0(1),xlb(1),xub(1),g(1),g0(1)
-      dimension obj(1),obj0(1),df(nodim,1),dg(ncdim,1),scale(ndv,2)
+      dimension x(*),x0(*),xlb(*),xub(*),g(*),g0(*)
+      dimension obj(*),obj0(*),df(nodim,*),dg(ncdim,*),scale(ndv,2)
 c
 c          routine to determine df and dg by finite differences
 c
@@ -12,7 +12,7 @@ c          location - Lockheed Engineering and Sciences Co.
 c                     144 Research Drive
 c                     Hampton, Va. 23666
 c
-c          last modification - 28 March 1991
+c          last modification - 19 July 1996
 c
       if (inext .gt. 0) go to 40
 c

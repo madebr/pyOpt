@@ -1,6 +1,6 @@
       subroutine kshmul (a,b,x,nrow)
       implicit double precision (a-h,o-z)
-      dimension a(1),b(1),x(1)
+      dimension a(*),b(*),x(*)
 c
 c          routine to perform matrix multiplication a * b = x
 c          for a triangular matrix a
@@ -10,7 +10,7 @@ c          location - Lockheed Engineering and Sciences Co.
 c                     144 Research Drive
 c                     Hampton, Va. 23666
 c
-c          last modification -  3 August 1990
+c          last modification - 17 July 1996
 c
       k = 0
       do 10 i = 1,nrow

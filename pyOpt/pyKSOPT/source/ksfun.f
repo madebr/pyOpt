@@ -1,6 +1,6 @@
       subroutine ksfun (fun,obj,g,rho,fscale,offset,ncon,nobj,temp)
       implicit double precision (a-h,o-z)
-      dimension obj(1),g(1),fscale(1),offset(1),temp(1)
+      dimension obj(*),g(*),fscale(*),offset(*),temp(*)
 c
 c          routine to compute unconstrained function to be minimized
 c
@@ -9,7 +9,7 @@ c          location - Lockheed Engineering and Sciences Co.
 c                     144 Research Drive
 c                     Hampton, Va. 23666
 c
-c          last modification -  9 July 1988
+c          last modification - 17 July 1996
 c
       do 10 i = 1,nobj
         temp(i) = obj(i) / fscale(i) + offset(i)

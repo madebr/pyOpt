@@ -18,7 +18,7 @@ c          location - Lockheed Engineering and Sciences Co.
 c                     144 Research Drive
 c                     Hampton, Va. 23666
 c
-c          last modification -  24 July 1992
+c          last modification - 19 July 1996
 c
       work(1)  = rdf
       work(2)  = adf

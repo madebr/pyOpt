@@ -11,7 +11,7 @@
      6                itmp1 ,itmp2 ,inext ,jnext ,jsel  ,itcnt ,icntr ,
      7                icnta ,isdflg,isdrst,ifncl ,nunit ,ndv   ,ncon  ,
      8                nobj  ,nside ,nscale,iprnt ,itmax ,igrad ,limit
-      dimension x(1),xlb(1),xub(1),scale(1),work(1)
+      dimension x(*),xlb(*),xub(*),scale(*),work(*)
 c
 c          routine to initialize optimization parameters
 c          for routine ksopt
@@ -115,7 +115,7 @@ c          location - Lockheed Engineering and Sciences Co.
 c                     144 Research Drive
 c                     Hampton, Va. 23666
 c
-c          last modification -  24 July 1992
+c          last modification - 19 July 1996
 c
 c          these subroutines are compatible with fortran 77
 c
@@ -246,7 +246,7 @@ c
      1        21x,40h=                                      =/
      2        21x,40h=    KSOPT Multiobjective Optimizer    =/
      3        21x,40h=                                      =/
-     4        21x,40h=    Version 2.7       24 July 1992    =/
+     4        21x,40h=    Version 2.8         19 July 96    =/
      5        21x,40h=                                      =/
      6        21x,40h=    Written by    Gregory A. Wrenn    =/
      7        21x,40h=                                      =/

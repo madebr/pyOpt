@@ -1,6 +1,6 @@
       subroutine ksscal (x,x0,xlb,xub,scale,ndv,nside,nscale)
       implicit double precision (a-h,o-z)
-      dimension x(1),x0(1),xlb(1),xub(1),scale(ndv,2)
+      dimension x(*),x0(*),xlb(*),xub(*),scale(ndv,2)
 c
 c          routine to compute new scaling vector and re-scale
 c          design variables and lower and upper bounds
@@ -10,7 +10,7 @@ c          location - Lockheed Engineering and Sciences Co.
 c                     144 Research Drive
 c                     Hampton, Va. 23666
 c
-c          last modification -  4 October 1990
+c          last modification - 17 July 1996
 c
       do 10 i = 1,ndv
         xx    = x(i)
@@ -18,6 +18,7 @@ c
         sold  = scale(i,1)
         snew  = sold
         if (nscale .gt. 0) snew = abs(xx * sold)
+        if (nscale .lt. 0) snew = abs(scale(i,2))
         if (snew .lt. 1.0e-08) snew = 1.0
         scale(i,1) = snew
         x(i)    = xx  * sold / snew

@@ -9,7 +9,7 @@
      6                itmp1 ,itmp2 ,inext ,jnext ,jsel  ,itcnt ,icntr ,
      7                icnta ,isdflg,isdrst,ifncl ,nunit ,ndv   ,ncon  ,
      8                nobj  ,nside ,nscale,iprnt ,itmax ,igrad ,limit
-      dimension x(1),obj(1),g(1),df(nomax,1),dg(ngmax,1),work(1)
+      dimension x(*),obj(*),g(*),df(nomax,*),dg(ngmax,*),work(*)
 c
 c          KSOPT is a general purpose multiobjective optimization
 c          program which performs a constrained to unconstrained
@@ -39,10 +39,10 @@ c          location - Lockheed Engineering and Sciences Co.
 c                     144 Research Drive
 c                     Hampton, Va. 23666
 c
-c          last modification -  24 July 1992
+c          last modification - 19 July 1996
 c
 c
-c          choose path based on value of jsel
+c          choose a path based on the value of jsel
 c
       call kscomg (work(1))
       iprnt3 = iprnt / 100
@@ -142,10 +142,10 @@ c
      1             work(idobj),work(ig0),work(idg),rho,ndv,ncon,nobj,
      2             work(itmp1),work(itmp2),nodim,ncdim)
 c
-c          compute an initial hessian matrix
+c          compute an initial or restart hessian matrix
 c
       call kshess (work(ihess),work(iobj0),work(ifscl),work(ifoff),
-     1             work(idobj),work(ig0),work(idg),work(iscl),rho,
+     1             work(idobj),work(ig0),work(idg),rho,
      2             ndv,ncon,nobj,work(itmp1),work(itmp2),nodim,ncdim)
 c
 c          check for side constraint violation

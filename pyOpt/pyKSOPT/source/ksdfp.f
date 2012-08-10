@@ -1,8 +1,8 @@
-      subroutine ksdfp (x,iside,isact,dfun,ndv,s,slope,y,p,h,hess,
+      subroutine ksdfp (x,side,act,dfun,ndv,s,slope,y,p,h,hess,
      1                  isdflg)
       implicit double precision (a-h,o-z)
-      dimension x(1),iside(1),isact(1),dfun(1),s(1),y(1),p(1),h(1)
-      dimension hess(1)
+      dimension x(*),side(*),act(*),dfun(*),s(*),y(*),p(*),h(*)
+      dimension hess(*)
 c
 c          routine to compute search direction using the
 c          davidon-fletcher-powell method
@@ -12,7 +12,7 @@ c          location - Lockheed Engineering and Sciences Co.
 c                     144 Research Drive
 c                     Hampton, Va. 23666
 c
-c          last modification -  3 August 1990
+c          last modification - 19 July 1996
 c
       if (isdflg .gt. 0) go to 40
 c
@@ -28,7 +28,7 @@ c
         h(i) = hess(i)
    20 continue
       do 30 i = 1,ndv
-        isact(i) = iside(i)
+        act(i) = side(i)
    30 continue
       go to 80
 c
@@ -40,7 +40,7 @@ c          check for validity of hessian matrix
 c          in the case of side constraints
 c
       do 50 i = 1,ndv
-        if (iside(i) .ne. isact(i)) go to 10
+        if (side(i) .ne. act(i)) go to 10
    50 continue
 c
 c          compute vectors p and y

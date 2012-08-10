@@ -4,7 +4,7 @@
      3                   scale,temp,isdflg)
       implicit double precision (a-h,o-z)
       character*4 ip1
-      dimension x(1),x0(1),xlb(1),xub(1),s(1),scale(ndv,2),temp(1)
+      dimension x(*),x0(*),xlb(*),xub(*),s(*),scale(ndv,2),temp(*)
       data ip1 /'(   '/
       data rtoler /0.00001/
       data atoler /0.001/
@@ -17,7 +17,7 @@ c          location - Lockheed Engineering and Sciences Co.
 c                     144 Research Drive
 c                     Hampton, Va. 23666
 c
-c          last modification - 28 March 1991
+c          last modification - 19 July 1996
 c
       if (inext .gt. 0) go to 50
 c
@@ -138,7 +138,7 @@ c
       inext = 3
       go to 600
 c
-c          perform quadratic interpolation
+c          perform quadratic or cubic interpolation
 c
   350 continue
       if (a4 .le. 0.0) call ksquad (a1,a2,a3,f1,f2,f3,astar,fstar)

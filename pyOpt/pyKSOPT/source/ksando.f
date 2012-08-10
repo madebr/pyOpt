@@ -1,6 +1,6 @@
       subroutine ksando (obj,g,fscale,offset,ncon,nobj)
       implicit double precision (a-h,o-z)
-      dimension obj(1),g(1),fscale(1),offset(1)
+      dimension obj(*),g(*),fscale(*),offset(*)
       data eps/1.0e-6/
 c
 c          routine to compute scale and offset for obj
@@ -10,7 +10,7 @@ c          location - Lockheed Engineering and Sciences Co.
 c                     144 Research Drive
 c                     Hampton, Va. 23666
 c
-c          last modification - 12 September 1988
+c          last modification - 17 July 1996
 c
       if (ncon .le. 0) go to 20
       gmax = g(1)

@@ -1,5 +1,5 @@
-      subroutine ksprnt (ipflag,iprnt1,iprnt2,x,obj,g,df,dg,isid,scale,
-     1                   nodim,ncdim,itemp,work)
+      subroutine ksprnt (ipflag,iprnt1,iprnt2,x,obj,g,df,dg,side,scale,
+     1                   nodim,ncdim,temp,work)
       implicit double precision (a-h,o-z)
       common /kscomm/ rdf   ,adf   ,fdl   ,fdm   ,rho   ,drho  ,rhomax,
      1                fun0  ,slope ,delx  ,alpha ,alpmax,a1    ,a2    ,
@@ -11,8 +11,8 @@
      7                icnta ,isdflg,isdrst,ifncl ,nunit ,ndv   ,ncon  ,
      8                nobj  ,nside ,nscale,iprnt ,itmax ,igrad ,limit
       character*4 ip1
-      dimension x(1),obj(1),g(1),df(nodim,1),dg(ncdim,1)
-      dimension isid(1),scale(1),itemp(1),work(1)
+      dimension x(*),obj(*),g(*),df(nodim,*),dg(ncdim,*)
+      dimension side(*),scale(*),temp(*),work(*)
       data ip1 /'(   '/
 c
 c          main print routine
@@ -24,7 +24,7 @@ c          location - Lockheed Engineering and Sciences Co.
 c                     144 Research Drive
 c                     Hampton, Va. 23666
 c
-c          last modification - 30 August 1991
+c          last modification - 19 July 1996
 c
       if (ipflag .ne. 1) go to 200
 c
@@ -76,18 +76,18 @@ c
       if (nside .eq. 0) go to 160
       m = 0
       do 150 i = 1,ndv
-        if (isid(i) .eq. 0) go to 150
+        if (side(i) .eq. 0.0) go to 150
         m = m + 1
-        if (isid(i) .eq.  -1) itemp(m) = -i
-        if (isid(i) .eq.   1) itemp(m) =  i
-        if (isid(i) .ne. 999) go to 150
-        itemp(m) = -i
+        if (side(i) .eq.  -1.0) temp(m) = float(-i)
+        if (side(i) .eq.   1.0) temp(m) = float(i)
+        if (side(i) .ne. 999.0) go to 150
+        temp(m) = float(-i)
         m = m + 1
-        itemp(m) =  i
+        temp(m) = float(i)
   150 continue
       if (m .eq. 0) go to 160
       write (nunit,1180)
-      write (nunit,1190) (itemp(i),i=1,m)
+      write (nunit,1190) (int(temp(i)),i=1,m)
   160 continue
 c
 c          print search direction and slope
@@ -130,18 +130,18 @@ c
       if (nside .eq. 0) go to 240
       m = 0
       do 230 i = 1,ndv
-        if (isid(i) .eq. 0) go to 230
+        if (side(i) .eq. 0.0) go to 230
         m = m + 1
-        if (isid(i) .eq.  -1) itemp(m) = -i
-        if (isid(i) .eq.   1) itemp(m) =  i
-        if (isid(i) .ne. 999) go to 230
-        itemp(m) = -i
+        if (side(i) .eq.  -1.0) temp(m) = float(-i)
+        if (side(i) .eq.   1.0) temp(m) = float(i)
+        if (side(i) .ne. 999.0) go to 230
+        temp(m) = float(-i)
         m = m + 1
-        itemp(m) =  i
+        temp(m) = float(i)
   230 continue
       if (m .eq. 0) go to 240
       write (nunit,1250)
-      write (nunit,1260) (itemp(i),i=1,m)
+      write (nunit,1260) (int(temp(i)),i=1,m)
   240 continue
       write (nunit,1270)
       write (nunit,1280) itcnt
