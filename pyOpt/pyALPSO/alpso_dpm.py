@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 '''
 alpso_dpm - Parallel Python Version of the Augmented Lagrangian Particle Swarm Optimizer
 
@@ -169,12 +169,13 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 		ofname += fntmp[0] + '_print.out'
 		sfname += fntmp[0] + '_summary.out'
 	else:
-		for sp in xrange(len(fntmp)-1):
-			ofname += fntmp[sp]
-			sfname += fntmp[sp]
+		if '/' not in fntmp[-1] and '\\' not in fntmp[-1]:
+			ofname += filename[:filename.rfind('.')]+  '_print.' + fntmp[-1]
+			sfname += filename[:filename.rfind('.')]+'_summary.' + fntmp[-1]
+		else:
+			ofname += filename + '_print.out'
+			sfname += filename + '_summary.out'
 		#end
-		ofname += '_print.' + fntmp[-1]
-		sfname += '_summary.' + fntmp[-1]
 	#end
 	header = ''
 	header += ' '*37 + '======================\n'

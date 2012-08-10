@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 '''
 pyALPSO - A Python pyOpt interface to ALPSO.
 
@@ -59,7 +59,6 @@ import numpy
 # Extension modules
 # =============================================================================
 from pyOpt import Optimizer
-from pyOpt import History
 
 # =============================================================================
 # Misc Definitions
@@ -225,69 +224,9 @@ class ALPSO(Optimizer):
 		myrank = self.myrank
 		
 		#
-		if (myrank == 0):
-			tmp_file = False
-			def_fname = self.options['filename'][1].split('.out')[0]
-			if isinstance(store_hst,str):
-				if isinstance(hot_start,str):
-					if (store_hst == hot_start):
-						hos_file = History(hot_start, 'r', self)
-						log_file = History(store_hst+'_tmp', 'w', self, opt_problem.name)
-						tmp_file = True
-					else:
-						hos_file = History(hot_start, 'r', self)
-						log_file = History(store_hst, 'w', self, opt_problem.name)
-					#end
-					self.sto_hst = True
-					self.h_start = True
-				elif hot_start:
-					hos_file = History(store_hst, 'r', self)
-					log_file = History(store_hst+'_tmp', 'w', self, opt_problem.name)
-					self.sto_hst = True
-					self.h_start = True
-					tmp_file = True
-				else:
-					hos_file = None
-					log_file = History(store_hst, 'w', self, opt_problem.name)
-					self.sto_hst = True
-					self.h_start = False
-				#end
-			elif store_hst:
-				if isinstance(hot_start,str):
-					if (hot_start == def_fname):
-						hos_file = History(hot_start, 'r', self)
-						log_file = History(def_fname+'_tmp', 'w', self, opt_problem.name)
-						tmp_file = True
-					else:
-						hos_file = History(hot_start, 'r', self)
-						log_file = History(def_fname, 'w', self, opt_problem.name)
-					#end
-					self.sto_hst = True
-					self.h_start = True
-				elif hot_start:
-					hos_file = History(def_fname, 'r', self)
-					log_file = History(def_fname+'_tmp', 'w', self, opt_problem.name)
-					self.sto_hst = True
-					self.h_start = True
-					tmp_file = True
-				else:
-					hos_file = None
-					log_file = History(def_fname, 'w', self, opt_problem.name)
-					self.sto_hst = True
-					self.h_start = False
-				#end
-			else:
-				hos_file = None
-				log_file = None
-				self.sto_hst = False
-				self.h_start = False
-			#end
-		else:
-			hos_file = None
-			log_file = None
-			self.sto_hst = False
-			self.h_start = False
-		#end
+		def_fname = self.options['filename'][1].split('.out')[0]
+		hos_file, log_file, tmp_file = self._setHistory(opt_problem.name, store_hst, hot_start, def_fname)
+		
 		
 		#======================================================================
 		# ALPSO - Objective/Constraint Values Function
@@ -349,7 +288,6 @@ class ALPSO(Optimizer):
 		type = numpy.zeros(n,int)
 		i = 0
 		for key in opt_problem._variables.keys():
-			#alpso.doubleArray_setitem(x,i,opt_problem._variables[key].value)
 			xl[i] = opt_problem._variables[key].lower
 			xu[i] = opt_problem._variables[key].upper
 			if opt_problem._variables[key].type == 'c':
@@ -380,7 +318,6 @@ class ALPSO(Optimizer):
 				if opt_problem._constraints[key].type == 'e':
 					me += 1
 				#end
-				#alpso.doubleArray_setitem(g,j,opt_problem._constraints[key].value)
 			#end
 			#i += 1
 		#end
@@ -388,12 +325,6 @@ class ALPSO(Optimizer):
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
 		nobj = len(opt_problem._objectives.keys())
-		#f = alpso.new_doubleArray(nobj)
-		#i = 0
-		#for key in opt_problem._objectives.keys():
-		#	alpso.doubleArray_setitem(f,k,opt_problem._objectives[key].value)
-		#	i += 1
-		##end
 		
 		
 		# Setup argument list values

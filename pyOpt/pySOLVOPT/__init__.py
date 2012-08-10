@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 
 try:
     from pySOLVOPT import SOLVOPT

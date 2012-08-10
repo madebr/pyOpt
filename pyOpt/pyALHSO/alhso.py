@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 '''
 alhso - Python Version of the Augmented Lagrangian Harmony Search Optimizer
 

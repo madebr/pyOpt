@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 '''
 pyNSGA2 - A Python pyOpt interface to NSGA-II. 
 
@@ -55,7 +55,6 @@ import numpy
 # Extension modules
 # =============================================================================
 from pyOpt import Optimizer
-from pyOpt import History
 
 # =============================================================================
 # Misc Definitions
@@ -162,72 +161,9 @@ class NSGA2(Optimizer):
 		myrank = self.myrank
 		
 		# 
-		tmp_file = False
 		def_fname = 'nsga2'
-		if isinstance(store_hst,str):
-			if isinstance(hot_start,str):
-				if (myrank == 0):
-					if (store_hst == hot_start):
-						hos_file = History(hot_start, 'r', self)
-						log_file = History(store_hst+'_tmp', 'w', self, opt_problem.name)
-						tmp_file = True
-					else:
-						hos_file = History(hot_start, 'r', self)
-						log_file = History(store_hst, 'w', self, opt_problem.name)
-					#end
-				#end
-				self.sto_hst = True
-				self.h_start = True
-			elif hot_start:
-				if (myrank == 0):
-					hos_file = History(store_hst, 'r', self)
-					log_file = History(store_hst+'_tmp', 'w', self, opt_problem.name)
-					tmp_file = True
-				#end
-				self.sto_hst = True
-				self.h_start = True
-			else:
-				if (myrank == 0):
-					log_file = History(store_hst, 'w', self, opt_problem.name)
-				#end
-				self.sto_hst = True
-				self.h_start = False
-			#end
-		elif store_hst:
-			if isinstance(hot_start,str):
-				if (hot_start == def_fname):
-					if (myrank == 0):
-						hos_file = History(hot_start, 'r', self)
-						log_file = History(def_fname+'_tmp', 'w', self, opt_problem.name)
-						tmp_file = True
-					#end
-				else:
-					if (myrank == 0):
-						hos_file = History(hot_start, 'r', self)
-						log_file = History(def_fname, 'w', self, opt_problem.name)
-					#end
-				#end
-				self.sto_hst = True
-				self.h_start = True
-			elif hot_start:
-				if (myrank == 0):
-					hos_file = History(def_fname, 'r', self)
-					log_file = History(def_fname+'_tmp', 'w', self, opt_problem.name)
-					tmp_file = True
-				#end
-				self.sto_hst = True
-				self.h_start = True
-			else:
-				if (myrank == 0):
-					log_file = History(def_fname, 'w', self, opt_problem.name)
-				#end
-				self.sto_hst = True
-				self.h_start = False
-			#end
-		else:
-			self.sto_hst = False
-			self.h_start = False
-		#end
+		hos_file, log_file, tmp_file = self._setHistory(opt_problem.name, store_hst, hot_start, def_fname)
+		
 		
 		#======================================================================
 		# NSGA-II - Objective/Constraint Values Function
@@ -251,6 +187,8 @@ class NSGA2(Optimizer):
 			
 			# Evaluate User Function
 			fail = 0
+			ff = []
+			gg = []
 			if (myrank == 0):
 				if self.h_start:
 					[vals,hist_end] = hos_file.read(ident=['obj', 'con', 'fail'])
@@ -491,7 +429,7 @@ class NSGA2(Optimizer):
 		
 		inform = {}
 		
-		return fstar, xstar, inform
+		return fstar, xstar, {'fevals':nfeval,'time':sol_time,'inform':inform}
 		
 		
 		

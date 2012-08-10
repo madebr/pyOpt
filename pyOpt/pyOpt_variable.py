@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 '''
 pyOpt_variable
 
@@ -73,7 +73,7 @@ class Variable(object):
         - value -> INT/FLOAT: Variable Value, *Default* = 0.0
         - lower -> INT/FLOAT: Variable Lower Value
         - upper -> INT/FLOAT: Variable Upper Value
-        - choices -> DICT: Variable Choices
+        - choices -> LIST: Variable Choices
         
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
         '''

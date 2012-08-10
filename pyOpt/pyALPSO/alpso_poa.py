@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 '''
 alpso_poa - Python Version of the Augmented Lagrangian Particle Swarm Optimizer
 
@@ -150,12 +150,13 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 		ofname += fntmp[0] + '_print.out'
 		sfname += fntmp[0] + '_summary.out'
 	else:
-		for sp in xrange(len(fntmp)-1):
-			ofname += fntmp[sp]
-			sfname += fntmp[sp]
+		if '/' not in fntmp[-1] and '\\' not in fntmp[-1]:
+			ofname += filename[:filename.rfind('.')]+  '_print.' + fntmp[-1]
+			sfname += filename[:filename.rfind('.')]+'_summary.' + fntmp[-1]
+		else:
+			ofname += filename + '_print.out'
+			sfname += filename + '_summary.out'
 		#end
-		ofname += '_print.' + fntmp[-1]
-		sfname += '_summary.' + fntmp[-1]
 	#end
 	header = ''
 	header += ' '*37 + '======================\n'
@@ -930,27 +931,31 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 			print("="*80 + "\n")
 		#end
 		if (fileout == 1) or (fileout == 3):
-			# Output to filename
+			# Output to Print File
 			ofile.write("\n" + "="*80 + "\n")
 			ofile.write("\nNUMBER OF ITERATIONS: %d\n" %(k_out))
 			ofile.write("\nNUMBER OF OBJECTIVE FUNCTION EVALUATIONS: %d\n" %(nfevals))
 			ofile.write("\nOBJECTIVE FUNCTION VALUE:\n")
-			ofile.write("\tF = %16.8e\n" %(float(swarm_f)))
+			ofile.write("\tF = %.16e\n" %(float(swarm_f)))
 			if (constraints > 0):
 				# Equality Constraints
 				ofile.write("\nEQUALITY CONSTRAINTS VALUES:\n")
 				for l in xrange(neqcons):
-					ofile.write("\tH(%d) = %g\n" %(l,swarm_g[l]))
+					ofile.write("\tH(%d) = %.16g\n" %(l,swarm_g[l]))
 				#end
 				# Inequality Constraints
 				ofile.write("\nINEQUALITY CONSTRAINTS VALUES:\n")
 				for l in xrange(neqcons,constraints):
-					ofile.write("\tG(%d) = %g\n" %(l,swarm_g[l]))
+					ofile.write("\tG(%d) = %.16g\n" %(l,swarm_g[l]))
 				#end
 			#end
 			ofile.write("\nLAGRANGIAN MULTIPLIERS VALUES:\n")
 			for l in xrange(constraints):
-				ofile.write("\tL(%d) = %g\n" %(l,lambda_val[l]))
+				ofile.write("\tL(%d) = %.16g\n" %(l,lambda_val[l]))
+			#end
+			ofile.write("\nPENALTY FACTOR:\n")
+			for l in xrange(constraints):
+				ofile.write("\trp(%d) = %.16g\n" %(l,rp[l]))
 			#end
 			
 			ofile.write("\nBEST POSITION:\n")
@@ -1253,26 +1258,30 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 	if (fileout == 2) or (fileout == 3):
 		# Output to Summary
 		sfile.write("\n\nSolution:")
-		sfile.write("\n" + "="*97 + "\n")
+		sfile.write("\n" + "="*94 + "\n")
 		sfile.write("\nNUMBER OF ITERATIONS: %d\n" %(k_out))
 		sfile.write("\nNUMBER OF OBJECTIVE FUNCTION EVALUATIONS: %d\n" %(nfevals))
 		sfile.write("\nOBJECTIVE FUNCTION VALUE:\n")
-		sfile.write("\tF = %16.8e\n" %(float(swarm_f)))
+		sfile.write("\tF = %.16e\n" %(float(swarm_f)))
 		if (constraints > 0):
 			# Equality Constraints
 			sfile.write("\nEQUALITY CONSTRAINTS VALUES:\n")
 			for l in xrange(neqcons):
-				sfile.write("\tH(%d) = %g\n" %(l,swarm_g[l]))
+				sfile.write("\tH(%d) = %.16g\n" %(l,swarm_g[l]))
 			#end
 			# Inequality Constraints
 			sfile.write("\nINEQUALITY CONSTRAINTS VALUES:\n")
 			for l in xrange(neqcons,constraints):
-				sfile.write("\tG(%d) = %g\n" %(l,swarm_g[l]))
+				sfile.write("\tG(%d) = %.16g\n" %(l,swarm_g[l]))
 			#end
 		#end
 		sfile.write("\nLAGRANGIAN MULTIPLIERS VALUES:\n")
 		for l in xrange(constraints):
-			sfile.write("\tL(%d) = %g\n" %(l,float(lambda_val[l])))
+			sfile.write("\tL(%d) = %.16g\n" %(l,float(lambda_val[l])))
+		#end
+		sfile.write("\nPENALTY FACTOR:\n")
+		for l in xrange(constraints):
+			sfile.write("\trp(%d) = %.16g\n" %(l,rp[l]))
 		#end
 		
 		sfile.write("\nBEST POSITION:\n")
@@ -1292,7 +1301,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 			#end
 		#end
 		sfile.write(text)
-		sfile.write("\n" + "="*97 + "\n")
+		sfile.write("\n" + "="*94 + "\n")
 		sfile.flush()
 		sfile.close()
 	#end
@@ -1304,7 +1313,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 		opt_x = swarm_x
 	#end
 	for m in discrete_i:
-		opt_x[m] = floor(opt_x[m] + 0.5)
+		opt_x[m] = int(floor(opt_x[m] + 0.5))
 	#end
 	opt_f = swarm_f
 	opt_g = swarm_g
