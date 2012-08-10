@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 '''
 pyOpt_optimizer
 
@@ -48,7 +48,8 @@ import pdb
 # =============================================================================
 # Extension modules
 # =============================================================================
-from pyOpt_optimization import Optimization
+from pyOpt import Optimization
+from pyOpt import History
 
 # =============================================================================
 # Misc Definitions
@@ -261,7 +262,7 @@ class Optimizer(object):
         raise NotImplementedError()
         
         
-    def getInform(self, infocode={}):
+    def getInform(self, infocode=None):
         
         '''
         Get Optimizer Result Information (Calling Routine)
@@ -274,7 +275,7 @@ class Optimizer(object):
         '''
         
         # 
-        if (infocode == {}):
+        if (infocode == None):
             return self.informs
         else:
             return self._on_getInform(infocode)
@@ -303,6 +304,95 @@ class Optimizer(object):
         self._on_flushFiles()       
         
         
+    def _setHistory(self, probname, store_hst, hot_start, def_fname):
+        
+        '''
+        Setup Optimizer History and/or Hot-start instances
+        
+        **Arguments:**
+        
+        - probname  -> STR: Optimization problem name
+        - store_hst -> BOOL/STR: Flag/filename to store optimization history
+        - hot_start -> BOOL/STR: Flag/filename to read optimization history
+        - def_fname -> STR: Default file name
+        
+        Documentation last updated:  Oct. 12, 2011 - Peter W. Jansen
+        '''
+        
+        #
+        myrank = self.myrank
+        
+        hos_file = None
+        log_file = None
+        tmp_file = False
+        if (myrank == 0):
+            if isinstance(store_hst,str):
+                if isinstance(hot_start,str):
+                    if (store_hst == hot_start):
+                        hos_file = History(hot_start, 'r', self)
+                        log_file = History(store_hst+'_tmp', 'w', self, probname)
+                        tmp_file = True
+                    else:
+                        hos_file = History(hot_start, 'r', self)
+                        log_file = History(store_hst, 'w', self, probname)
+                    #end
+                    self.sto_hst = True
+                    self.h_start = True
+                elif hot_start:
+                    hos_file = History(store_hst, 'r', self)
+                    log_file = History(store_hst+'_tmp', 'w', self, probname)
+                    self.sto_hst = True
+                    self.h_start = True
+                    tmp_file = True
+                else:
+                    log_file = History(store_hst, 'w', self, probname)
+                    self.sto_hst = True
+                    self.h_start = False
+                #end
+            elif store_hst:
+                if isinstance(hot_start,str):
+                    if (hot_start == def_fname):
+                        hos_file = History(hot_start, 'r', self)
+                        log_file = History(def_fname+'_tmp', 'w', self, probname)
+                        tmp_file = True
+                    else:
+                        hos_file = History(hot_start, 'r', self)
+                        log_file = History(def_fname, 'w', self, probname)
+                    #end
+                    self.sto_hst = True
+                    self.h_start = True
+                elif hot_start:
+                    hos_file = History(def_fname, 'r', self)
+                    log_file = History(def_fname+'_tmp', 'w', self, probname)
+                    self.sto_hst = True
+                    self.h_start = True
+                    tmp_file = True
+                else:
+                    log_file = History(def_fname, 'w', self, probname)
+                    self.sto_hst = True
+                    self.h_start = False
+                #end
+            else:
+                if isinstance(hot_start,str):
+                    hos_file = History(hot_start, 'r', self)
+                    self.h_start = True
+                elif hot_start:
+                    hos_file = History(def_fname, 'r', self)
+                    self.h_start = True
+                else:
+                    self.h_start = False
+                #end
+                self.sto_hst = False
+            #end
+        else:
+            
+            self.sto_hst = False
+            self.h_start = False
+        #end
+        
+        return hos_file, log_file, tmp_file
+    
+    
     def ListAttributes(self):
         
         '''
