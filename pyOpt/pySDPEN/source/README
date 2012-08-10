@@ -1,0 +1,4 @@
+This directory contains the Fortran 90 source of 
+SDPEN extended to work with pyOpt, plus two helper 
+files called openunit.f90 and closeunit.f90 to 
+manipulate Fortran units from Python.

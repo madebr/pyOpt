@@ -1,0 +1,67 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+
+python module sdpen__user__routines 
+    interface sdpen_user_interface 
+        subroutine fobcon(n,m,x,f,g)
+            intent(callback) fobcon
+            external fobcon
+            integer intent(in) :: n
+            integer intent(in) :: m
+            real*8 intent(in),dimension(n),depend(n) :: x
+            real*8 intent(in,out) :: f
+            real*8 intent(in,out),dimension(m),depend(m) :: g
+        end subroutine fobcon
+    end interface sdpen_user_interface
+end python module sdpen__user__routines
+python module sdpen ! in 
+    interface  ! in :sdpen
+        subroutine penseq(n,m,x,lb,ub,fob,constr,alfa_stop,nf_max,iprint,iout,ifile,istop,num_funct) ! in :sdpen:source/penseq.f90
+            use sdpen__user__routines
+            integer intent(in) :: n
+            integer intent(in) :: m
+            real*8 intent(inout),dimension(n),depend(n) :: x
+            real*8 intent(in),dimension(n),depend(n) :: lb
+            real*8 intent(in),dimension(n),depend(n) :: ub
+            real*8 intent(inout) :: fob
+            real*8 intent(inout),dimension(m),depend(m) :: constr
+            real*8 intent(in) :: alfa_stop
+            integer intent(in) :: nf_max
+            integer intent(in) :: iprint
+            integer intent(in) :: iout
+            character*(*) intent(in) :: ifile
+            integer intent(inout) :: istop
+            integer intent(inout) :: num_funct
+            real*8 :: f
+            real*8 :: alfamax
+            intent(callback) fobcon
+            external fobcon
+            common /num/ f
+            common /calfamax/ alfamax
+        end subroutine penseq
+        subroutine funct(n,m,x,eps,f) ! in :tsfoil:source/funct.f90
+            use sdpen__user__routines
+            integer intent(in) :: n
+            integer intent(in) :: m
+            real*8 dimension(n),depend(n) :: x
+            real*8 dimension(m),depend(m) :: eps
+            real*8 :: f
+            intent(callback) fobcon
+            external fobcon
+        end subroutine funct
+        subroutine openunit(unitnum,filename,filestatus,fileaction,ierror) ! in :sdpen:source/openunit.f90
+            integer intent(in) :: unitnum
+            character*(*) intent(in) :: filename
+            character*(*) intent(in) :: filestatus
+            character*(*) intent(in) :: fileaction
+            integer intent(out) :: ierror
+        end subroutine openunit
+        subroutine pyflush(unitnum) ! in :sdpen:source/openunit.f90
+          integer unitnum
+        end subroutine pyflush
+        subroutine closeunit(unitnum) ! in :sdpen:source/closeunit.f90
+            integer intent(in) :: unitnum
+        end subroutine closeunit
+    end interface 
+end python module sdpen
