@@ -7,6 +7,8 @@ Release 1.1.0 (August 17, 2012)
 
 * Update KSOPT optimizer to version 2.8
 
+* Added ALGENCAN optimizer functionality
+
 * Added SDPEN optimizer functionality
 
 

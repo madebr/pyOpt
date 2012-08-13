@@ -1,0 +1,860 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module algencan__user__routines 
+    interface algencan_user_interface
+        subroutine evalf(n,x,f,flag)
+            intent(callback) evalf
+            external evalf
+            integer intent(in) :: n
+            double precision dimension(n),intent(in),depend(n) :: x
+            double precision intent(in,out) :: f
+            integer intent(in,out) :: flag
+        end subroutine evalf
+        subroutine evalg(n,x,g,flag)
+            intent(callback) evalg
+            external evalg
+            integer intent(in) :: n
+            double precision dimension(n),intent(in),depend(n) :: x
+            double precision dimension(n),intent(in,out),depend(n) :: g
+            integer intent(in,out) :: flag
+        end subroutine evalg
+        subroutine evalh(n,x,hlin,hcol,hval,hnnz,flag)
+            intent(callback) evalh
+            external evalh
+            integer intent(in) :: n
+            double precision dimension(n),intent(in),depend(n) :: x
+            integer dimension(*) :: hlin
+            integer dimension(*) :: hcol
+            double precision dimension(*) :: hval
+            integer :: hnnz
+            integer intent(in,out) :: flag
+        end subroutine evalh
+        subroutine evalc(n,x,ind,c,flag)
+            intent(callback) evalc
+            external evalc
+            integer intent(in) :: n
+            double precision dimension(n),intent(in),depend(n) :: x
+            integer intent(in) :: ind
+            double precision intent(in,out) :: c
+            integer intent(in,out) :: flag
+        end subroutine evalc
+        subroutine evaljac(n,x,ind,jcvar,jcval,jcnnz,flag)
+            intent(callback) evaljac
+            external evaljac
+            integer intent(in) :: n
+            double precision dimension(n),intent(in),depend(n) :: x
+            integer intent(in) :: ind
+            integer dimension(n),depend(n) :: jcvar
+            double precision dimension(n),depend(n) :: jcval
+            integer intent(in,out) :: jcnnz
+            integer intent(in,out) :: flag
+        end subroutine evaljac
+        subroutine evalhc(n,x,ind,hclin,hccol,hcval,hcnnz,flag)
+            intent(callback) evalhc
+            external evalhc
+            integer intent(in) :: n
+            double precision dimension(n),intent(in),depend(n) :: x
+            integer intent(in) :: ind
+            integer dimension(*) :: hclin
+            integer dimension(*) :: hccol
+            double precision dimension(*) :: hcval
+            integer intent(in,out) :: hcnnz
+            integer intent(in,out) :: flag
+        end subroutine evalhc
+        subroutine evalfc(n,x,f,m,c,flag)
+            intent(callback) evalfc
+            external evalfc
+            integer intent(in) :: n
+            double precision dimension(n),intent(in),depend(n) :: x
+            double precision intent(in,out) :: f
+            integer intent(in) :: m
+            double precision dimension(m),intent(in,out),depend(m) :: c
+            integer intent(in,out) :: flag
+        end subroutine evalfc
+        subroutine evalgjac(n,x,g,m,jcfun,jcvar,jcval,jcnnz,flag)
+            intent(callback) evalgjac
+            external evalgjac
+            integer intent(in) :: n
+            double precision dimension(n),intent(in),depend(n) :: x
+            double precision dimension(n),intent(in,out),depend(n) :: g
+            integer intent(in) :: m
+            integer dimension(n*m),intent(in,out),depend(n,m) :: jcfun
+            integer dimension(n*m),intent(in,out),depend(n,m) :: jcvar
+            double precision dimension(n*m),intent(in,out),depend(n,m) :: jcval
+            integer intent(in,out) :: jcnnz
+            integer intent(in,out) :: flag
+        end subroutine evalgjac
+        subroutine evalhl(n,x,m,lambda,scalef,scalec,hllin,hlcol,hlval,hlnnz,flag)
+            intent(callback) evalhl
+            external evalhl
+            integer intent(in) :: n
+            double precision dimension(n),intent(in),depend(n) :: x
+            integer intent(in) :: m
+            double precision dimension(m) :: lambda
+            double precision :: scalef
+            double precision dimension(m),depend(m) :: scalec
+            integer dimension(*) :: hllin
+            integer dimension(*) :: hlcol
+            double precision dimension(*) :: hlval
+            integer intent(in,out) :: hlnnz
+            integer intent(in,out) :: flag
+        end subroutine evalhl
+        subroutine evalhlp(n,x,m,lambda,sf,sc,p,hp,goth,flag)
+            intent(callback) evalhlp
+            external evalhlp
+            integer intent(in) :: n
+            double precision dimension(n),intent(in),depend(n) :: x
+            integer intent(in) :: m
+            double precision dimension(m),intent(in),depend(m) :: lambda
+            double precision intent(in) :: sf
+            double precision dimension(m),intent(in),depend(m) :: sc
+            double precision dimension(n),intent(in),depend(n) :: p
+            double precision dimension(n),intent(in,out),depend(n) :: hp
+            logical intent(in,out) :: goth
+            integer intent(in,out) :: flag
+        end subroutine evalhlp
+    end interface algencan_user_interface
+end python module algencan__user__routines
+python module algencan ! in 
+    interface  ! in :algencan
+        subroutine algencan(epsfeas,epsopt,iprint,ncomp,n,x,l,u,m,lambda,equatn,linear,coded,checkder,fu,cnormu,snorm,nlpsupn,inform,ifile) ! in :algencan:source/algencan.f
+            use algencan__user__routines
+            double precision intent(in) :: epsfeas
+            double precision intent(in) :: epsopt
+            integer intent(in) :: iprint
+            integer intent(in) :: ncomp
+            integer intent(in) :: n
+            double precision dimension(n),intent(in),depend(n) :: x
+            double precision dimension(n),intent(in),depend(n) :: l
+            double precision dimension(n),intent(in),depend(n) :: u
+            integer intent(in) :: m
+            double precision dimension(m),intent(inout),depend(m) :: lambda
+            logical dimension(m),intent(in),depend(m) :: equatn
+            logical dimension(m),intent(in),depend(m) :: linear
+            logical dimension(10),intent(in) :: coded
+            logical intent(in) :: checkder
+            double precision intent(inout) :: fu
+            double precision intent(inout) :: cnormu
+            double precision intent(inout) :: snorm
+            double precision intent(inout) :: nlpsupn
+            integer intent(inout) :: inform
+            character*(*) intent(in) :: ifile
+            logical dimension(7) :: iprintctl
+            integer :: iprintinn
+            integer :: iprintout
+            integer :: nprint
+            integer :: mprint
+            double precision :: bignum
+            double precision :: macheps
+            double precision :: macheps12
+            double precision :: macheps13
+            double precision :: macheps23
+            integer dimension(5000) :: slaind
+            integer :: nws
+            logical :: slacks
+            double precision dimension(5000) :: y
+            integer dimension(5000) :: ycor
+            integer dimension(5001) :: yind
+            logical :: yset
+            logical :: rmfixv
+            logical :: fcoded
+            logical :: gcoded
+            logical :: hcoded
+            logical :: ccoded
+            logical :: jaccoded
+            logical :: hccoded
+            logical :: hlcoded
+            logical :: hlpcoded
+            logical :: fccoded
+            logical :: gjaccoded
+            logical :: firstde
+            logical :: truehl
+            logical :: ignoref
+            logical :: skipacc
+            logical :: sclsys
+            logical :: innercall
+            logical :: useustp
+            character :: innslvr
+            character :: hptype
+            logical :: safemode
+            double precision dimension(5000) :: sc
+            double precision dimension(5000) :: usc
+            double precision :: sf
+            double precision :: usf
+            logical :: scale
+            integer dimension(5000) :: eccnt
+            integer dimension(5000) :: ehccnt
+            integer dimension(5000) :: ejccnt
+            integer :: efcnt
+            integer :: efccnt
+            integer :: egcnt
+            integer :: egjccnt
+            integer :: ehcnt
+            integer :: ehlcnt
+            integer :: ehlpcnt
+            integer :: fcnt
+            intent(callback) evalf
+            external evalf
+            intent(callback) evalg
+            external evalg
+            intent(callback) evalh
+            external evalh
+            intent(callback) evalc
+            external evalc
+            intent(callback) evaljac
+            external evaljac
+            intent(callback) evalhc
+            external evalhc
+            intent(callback) evalfc
+            external evalfc
+            intent(callback) evalgjac
+            external evalgjac
+            intent(callback) evalhl
+            external evalhl
+            intent(callback) evalhlp
+            external evalhlp
+            common /outdat/ iprintctl,iprintinn,iprintout,nprint,mprint
+            common /machcon/ bignum,macheps,macheps12,macheps13,macheps23
+            common /sladat/ slaind,nws,slacks
+            common /fixvar/ y,ycor,yind,yset,rmfixv
+            common /algparam/ fcoded,gcoded,hcoded,ccoded,jaccoded,hccoded,hlcoded,hlpcoded,fccoded,gjaccoded,firstde,truehl,ignoref,skipacc,sclsys,innercall,useustp,innslvr,hptype,safemode
+            common /scadat/ sc,usc,sf,usf,scale
+            common /counters/ eccnt,ehccnt,ejccnt,efcnt,efccnt,egcnt,egjccnt,ehcnt,ehlcnt,ehlpcnt,fcnt
+        end subroutine algencan
+        subroutine vevalf(n,x,f,inform) ! in :algencan:source/vevalus.f
+            use algencan__user__routines
+            integer optional,check(len(x)>=n),depend(x) :: n=len(x)
+            double precision dimension(n) :: x
+            double precision :: f
+            integer :: inform
+            logical dimension(7) :: iprintctl
+            integer :: iprintinn
+            integer :: iprintout
+            integer :: nprint
+            integer :: mprint
+            logical :: fcoded
+            logical :: gcoded
+            logical :: hcoded
+            logical :: ccoded
+            logical :: jaccoded
+            logical :: hccoded
+            logical :: hlcoded
+            logical :: hlpcoded
+            logical :: fccoded
+            logical :: gjaccoded
+            logical :: firstde
+            logical :: truehl
+            logical :: ignoref
+            logical :: skipacc
+            logical :: sclsys
+            logical :: innercall
+            logical :: useustp
+            character*2 :: innslvr
+            character*6 :: hptype
+            logical :: safemode
+            integer dimension(5000) :: eccnt
+            integer dimension(5000) :: ehccnt
+            integer dimension(5000) :: ejccnt
+            integer :: efcnt
+            integer :: efccnt
+            integer :: egcnt
+            integer :: egjccnt
+            integer :: ehcnt
+            integer :: ehlcnt
+            integer :: ehlpcnt
+            integer :: fcnt
+            intent(callback) evalf
+            external evalf
+            common /outdat/ iprintctl,iprintinn,iprintout,nprint,mprint
+            common /algparam/ fcoded,gcoded,hcoded,ccoded,jaccoded,hccoded,hlcoded,hlpcoded,fccoded,gjaccoded,firstde,truehl,ignoref,skipacc,sclsys,innercall,useustp,innslvr,hptype,safemode
+            common /counters/ eccnt,ehccnt,ejccnt,efcnt,efccnt,egcnt,egjccnt,ehcnt,ehlcnt,ehlpcnt,fcnt
+        end subroutine vevalf
+        subroutine vevalg(n,x,g,inform) ! in :algencan:source/vevalus.f
+            use algencan__user__routines
+            integer optional,check(len(x)>=n),depend(x) :: n=len(x)
+            double precision dimension(n) :: x
+            double precision dimension(n),depend(n) :: g
+            integer :: inform
+            logical dimension(7) :: iprintctl
+            integer :: iprintinn
+            integer :: iprintout
+            integer :: nprint
+            integer :: mprint
+            logical :: fcoded
+            logical :: gcoded
+            logical :: hcoded
+            logical :: ccoded
+            logical :: jaccoded
+            logical :: hccoded
+            logical :: hlcoded
+            logical :: hlpcoded
+            logical :: fccoded
+            logical :: gjaccoded
+            logical :: firstde
+            logical :: truehl
+            logical :: ignoref
+            logical :: skipacc
+            logical :: sclsys
+            logical :: innercall
+            logical :: useustp
+            character*2 :: innslvr
+            character*6 :: hptype
+            logical :: safemode
+            integer dimension(5000) :: eccnt
+            integer dimension(5000) :: ehccnt
+            integer dimension(5000) :: ejccnt
+            integer :: efcnt
+            integer :: efccnt
+            integer :: egcnt
+            integer :: egjccnt
+            integer :: ehcnt
+            integer :: ehlcnt
+            integer :: ehlpcnt
+            integer :: fcnt
+            intent(callback) evalg
+            external evalg
+            common /outdat/ iprintctl,iprintinn,iprintout,nprint,mprint
+            common /algparam/ fcoded,gcoded,hcoded,ccoded,jaccoded,hccoded,hlcoded,hlpcoded,fccoded,gjaccoded,firstde,truehl,ignoref,skipacc,sclsys,innercall,useustp,innslvr,hptype,safemode
+            common /counters/ eccnt,ehccnt,ejccnt,efcnt,efccnt,egcnt,egjccnt,ehcnt,ehlcnt,ehlpcnt,fcnt
+        end subroutine vevalg
+        subroutine ivevalg(n,x,g,inform) ! in :algencan:source/vevalus.f
+            use algencan__user__routines
+            integer optional,check(len(x)>=n),depend(x) :: n=len(x)
+            double precision dimension(n) :: x
+            double precision dimension(n),depend(n) :: g
+            integer :: inform
+            double precision :: bignum
+            double precision :: macheps
+            double precision :: macheps12
+            double precision :: macheps13
+            double precision :: macheps23
+            intent(callback) evalg
+            external evalg
+            common /machcon/ bignum,macheps,macheps12,macheps13,macheps23
+        end subroutine ivevalg
+        subroutine vevalh(n,x,hlin,hcol,hval,hnnz,inform) ! in :algencan:source/vevalus.f
+            use algencan__user__routines
+            integer optional,check(len(x)>=n),depend(x) :: n=len(x)
+            double precision dimension(n) :: x
+            integer dimension(*) :: hlin
+            integer dimension(*) :: hcol
+            double precision dimension(*) :: hval
+            integer :: hnnz
+            integer :: inform
+            logical dimension(7) :: iprintctl
+            integer :: iprintinn
+            integer :: iprintout
+            integer :: nprint
+            integer :: mprint
+            logical :: fcoded
+            logical :: gcoded
+            logical :: hcoded
+            logical :: ccoded
+            logical :: jaccoded
+            logical :: hccoded
+            logical :: hlcoded
+            logical :: hlpcoded
+            logical :: fccoded
+            logical :: gjaccoded
+            logical :: firstde
+            logical :: truehl
+            logical :: ignoref
+            logical :: skipacc
+            logical :: sclsys
+            logical :: innercall
+            logical :: useustp
+            character*2 :: innslvr
+            character*6 :: hptype
+            logical :: safemode
+            integer dimension(5000) :: eccnt
+            integer dimension(5000) :: ehccnt
+            integer dimension(5000) :: ejccnt
+            integer :: efcnt
+            integer :: efccnt
+            integer :: egcnt
+            integer :: egjccnt
+            integer :: ehcnt
+            integer :: ehlcnt
+            integer :: ehlpcnt
+            integer :: fcnt
+            intent(callback) evalh
+            external evalh
+            common /outdat/ iprintctl,iprintinn,iprintout,nprint,mprint
+            common /algparam/ fcoded,gcoded,hcoded,ccoded,jaccoded,hccoded,hlcoded,hlpcoded,fccoded,gjaccoded,firstde,truehl,ignoref,skipacc,sclsys,innercall,useustp,innslvr,hptype,safemode
+            common /counters/ eccnt,ehccnt,ejccnt,efcnt,efccnt,egcnt,egjccnt,ehcnt,ehlcnt,ehlpcnt,fcnt
+        end subroutine vevalh
+        subroutine vevalc(n,x,ind,c,inform) ! in :algencan:source/vevalus.f
+            use algencan__user__routines
+            integer optional,check(len(x)>=n),depend(x) :: n=len(x)
+            double precision dimension(n) :: x
+            integer :: ind
+            double precision :: c
+            integer :: inform
+            logical dimension(7) :: iprintctl
+            integer :: iprintinn
+            integer :: iprintout
+            integer :: nprint
+            integer :: mprint
+            logical :: fcoded
+            logical :: gcoded
+            logical :: hcoded
+            logical :: ccoded
+            logical :: jaccoded
+            logical :: hccoded
+            logical :: hlcoded
+            logical :: hlpcoded
+            logical :: fccoded
+            logical :: gjaccoded
+            logical :: firstde
+            logical :: truehl
+            logical :: ignoref
+            logical :: skipacc
+            logical :: sclsys
+            logical :: innercall
+            logical :: useustp
+            character*2 :: innslvr
+            character*6 :: hptype
+            logical :: safemode
+            integer dimension(5000) :: eccnt
+            integer dimension(5000) :: ehccnt
+            integer dimension(5000) :: ejccnt
+            integer :: efcnt
+            integer :: efccnt
+            integer :: egcnt
+            integer :: egjccnt
+            integer :: ehcnt
+            integer :: ehlcnt
+            integer :: ehlpcnt
+            integer :: fcnt
+            intent(callback) evalc
+            external evalc
+            common /outdat/ iprintctl,iprintinn,iprintout,nprint,mprint
+            common /algparam/ fcoded,gcoded,hcoded,ccoded,jaccoded,hccoded,hlcoded,hlpcoded,fccoded,gjaccoded,firstde,truehl,ignoref,skipacc,sclsys,innercall,useustp,innslvr,hptype,safemode
+            common /counters/ eccnt,ehccnt,ejccnt,efcnt,efccnt,egcnt,egjccnt,ehcnt,ehlcnt,ehlpcnt,fcnt
+        end subroutine vevalc
+        subroutine vevaljac(n,x,ind,jcvar,jcval,jcnnz,inform) ! in :algencan:source/vevalus.f
+            use algencan__user__routines
+            integer optional,check(len(x)>=n),depend(x) :: n=len(x)
+            double precision dimension(n) :: x
+            integer :: ind
+            integer dimension(n),depend(n) :: jcvar
+            double precision dimension(n),depend(n) :: jcval
+            integer :: jcnnz
+            integer :: inform
+            logical dimension(7) :: iprintctl
+            integer :: iprintinn
+            integer :: iprintout
+            integer :: nprint
+            integer :: mprint
+            logical :: fcoded
+            logical :: gcoded
+            logical :: hcoded
+            logical :: ccoded
+            logical :: jaccoded
+            logical :: hccoded
+            logical :: hlcoded
+            logical :: hlpcoded
+            logical :: fccoded
+            logical :: gjaccoded
+            logical :: firstde
+            logical :: truehl
+            logical :: ignoref
+            logical :: skipacc
+            logical :: sclsys
+            logical :: innercall
+            logical :: useustp
+            character*2 :: innslvr
+            character*6 :: hptype
+            logical :: safemode
+            integer dimension(5000) :: eccnt
+            integer dimension(5000) :: ehccnt
+            integer dimension(5000) :: ejccnt
+            integer :: efcnt
+            integer :: efccnt
+            integer :: egcnt
+            integer :: egjccnt
+            integer :: ehcnt
+            integer :: ehlcnt
+            integer :: ehlpcnt
+            integer :: fcnt
+            intent(callback) evaljac
+            external evaljac
+            common /outdat/ iprintctl,iprintinn,iprintout,nprint,mprint
+            common /algparam/ fcoded,gcoded,hcoded,ccoded,jaccoded,hccoded,hlcoded,hlpcoded,fccoded,gjaccoded,firstde,truehl,ignoref,skipacc,sclsys,innercall,useustp,innslvr,hptype,safemode
+            common /counters/ eccnt,ehccnt,ejccnt,efcnt,efccnt,egcnt,egjccnt,ehcnt,ehlcnt,ehlpcnt,fcnt
+        end subroutine vevaljac
+        subroutine ivevaljac(n,x,ind,jcvar,jcval,jcnnz,inform) ! in :algencan:source/vevalus.f
+            use algencan__user__routines
+            integer optional,check(len(x)>=n),depend(x) :: n=len(x)
+            double precision dimension(n) :: x
+            integer :: ind
+            integer dimension(n),depend(n) :: jcvar
+            double precision dimension(n),depend(n) :: jcval
+            integer :: jcnnz
+            integer :: inform
+            double precision :: bignum
+            double precision :: macheps
+            double precision :: macheps12
+            double precision :: macheps13
+            double precision :: macheps23
+            intent(callback) evaljac
+            external evaljac
+            common /machcon/ bignum,macheps,macheps12,macheps13,macheps23
+        end subroutine ivevaljac
+        subroutine vevalhc(n,x,ind,hlin,hcol,hval,hnnz,inform) ! in :algencan:source/vevalus.f
+            use algencan__user__routines
+            integer optional,check(len(x)>=n),depend(x) :: n=len(x)
+            double precision dimension(n) :: x
+            integer :: ind
+            integer dimension(*) :: hlin
+            integer dimension(*) :: hcol
+            double precision dimension(*) :: hval
+            integer :: hnnz
+            integer :: inform
+            logical dimension(7) :: iprintctl
+            integer :: iprintinn
+            integer :: iprintout
+            integer :: nprint
+            integer :: mprint
+            logical :: fcoded
+            logical :: gcoded
+            logical :: hcoded
+            logical :: ccoded
+            logical :: jaccoded
+            logical :: hccoded
+            logical :: hlcoded
+            logical :: hlpcoded
+            logical :: fccoded
+            logical :: gjaccoded
+            logical :: firstde
+            logical :: truehl
+            logical :: ignoref
+            logical :: skipacc
+            logical :: sclsys
+            logical :: innercall
+            logical :: useustp
+            character*2 :: innslvr
+            character*6 :: hptype
+            logical :: safemode
+            integer dimension(5000) :: eccnt
+            integer dimension(5000) :: ehccnt
+            integer dimension(5000) :: ejccnt
+            integer :: efcnt
+            integer :: efccnt
+            integer :: egcnt
+            integer :: egjccnt
+            integer :: ehcnt
+            integer :: ehlcnt
+            integer :: ehlpcnt
+            integer :: fcnt
+            intent(callback) evalhc
+            external evalhc
+            common /outdat/ iprintctl,iprintinn,iprintout,nprint,mprint
+            common /algparam/ fcoded,gcoded,hcoded,ccoded,jaccoded,hccoded,hlcoded,hlpcoded,fccoded,gjaccoded,firstde,truehl,ignoref,skipacc,sclsys,innercall,useustp,innslvr,hptype,safemode
+            common /counters/ eccnt,ehccnt,ejccnt,efcnt,efccnt,egcnt,egjccnt,ehcnt,ehlcnt,ehlpcnt,fcnt
+        end subroutine vevalhc
+        subroutine vevalhl(n,x,m,lambda,sf,sc,hlin,hcol,hval,hnnz,inform) ! in :algencan:source/vevalus.f
+            use algencan__user__routines
+            integer optional,check(len(x)>=n),depend(x) :: n=len(x)
+            double precision dimension(n) :: x
+            integer optional,check(len(lambda)>=m),depend(lambda) :: m=len(lambda)
+            double precision dimension(m) :: lambda
+            double precision :: sf
+            double precision dimension(m),depend(m) :: sc
+            integer dimension(*) :: hlin
+            integer dimension(*) :: hcol
+            double precision dimension(*) :: hval
+            integer :: hnnz
+            integer :: inform
+            logical dimension(7) :: iprintctl
+            integer :: iprintinn
+            integer :: iprintout
+            integer :: nprint
+            integer :: mprint
+            logical :: fcoded
+            logical :: gcoded
+            logical :: hcoded
+            logical :: ccoded
+            logical :: jaccoded
+            logical :: hccoded
+            logical :: hlcoded
+            logical :: hlpcoded
+            logical :: fccoded
+            logical :: gjaccoded
+            logical :: firstde
+            logical :: truehl
+            logical :: ignoref
+            logical :: skipacc
+            logical :: sclsys
+            logical :: innercall
+            logical :: useustp
+            character*2 :: innslvr
+            character*6 :: hptype
+            logical :: safemode
+            integer dimension(5000) :: eccnt
+            integer dimension(5000) :: ehccnt
+            integer dimension(5000) :: ejccnt
+            integer :: efcnt
+            integer :: efccnt
+            integer :: egcnt
+            integer :: egjccnt
+            integer :: ehcnt
+            integer :: ehlcnt
+            integer :: ehlpcnt
+            integer :: fcnt
+            intent(callback) evalhl
+            external evalhl
+            common /outdat/ iprintctl,iprintinn,iprintout,nprint,mprint
+            common /algparam/ fcoded,gcoded,hcoded,ccoded,jaccoded,hccoded,hlcoded,hlpcoded,fccoded,gjaccoded,firstde,truehl,ignoref,skipacc,sclsys,innercall,useustp,innslvr,hptype,safemode
+            common /counters/ eccnt,ehccnt,ejccnt,efcnt,efccnt,egcnt,egjccnt,ehcnt,ehlcnt,ehlpcnt,fcnt
+        end subroutine vevalhl
+        subroutine ivevalhl(n,x,m,lambda,sf,sc,hlin,hcol,hval,hnnz,inform) ! in :algencan:source/vevalus.f
+            use algencan__user__routines
+            integer optional,check(len(x)>=n),depend(x) :: n=len(x)
+            double precision dimension(n) :: x
+            integer optional,check(len(lambda)>=m),depend(lambda) :: m=len(lambda)
+            double precision dimension(m) :: lambda
+            double precision :: sf
+            double precision dimension(m),depend(m) :: sc
+            integer dimension(*) :: hlin
+            integer dimension(*) :: hcol
+            double precision dimension(*) :: hval
+            integer :: hnnz
+            integer :: inform
+            logical :: fcoded
+            logical :: gcoded
+            logical :: hcoded
+            logical :: ccoded
+            logical :: jaccoded
+            logical :: hccoded
+            logical :: hlcoded
+            logical :: hlpcoded
+            logical :: fccoded
+            logical :: gjaccoded
+            logical :: firstde
+            logical :: truehl
+            logical :: ignoref
+            logical :: skipacc
+            logical :: sclsys
+            logical :: innercall
+            logical :: useustp
+            character*2 :: innslvr
+            character*6 :: hptype
+            logical :: safemode
+            intent(callback) evalhl
+            external evalhl
+            common /algparam/ fcoded,gcoded,hcoded,ccoded,jaccoded,hccoded,hlcoded,hlpcoded,fccoded,gjaccoded,firstde,truehl,ignoref,skipacc,sclsys,innercall,useustp,innslvr,hptype,safemode
+        end subroutine ivevalhl
+        subroutine vevalhlp(n,x,m,lambda,sf,sc,p,hp,gothl,inform) ! in :algencan:source/vevalus.f
+            use algencan__user__routines
+            integer optional,check(len(x)>=n),depend(x) :: n=len(x)
+            double precision dimension(n) :: x
+            integer optional,check(len(lambda)>=m),depend(lambda) :: m=len(lambda)
+            double precision dimension(m) :: lambda
+            double precision :: sf
+            double precision dimension(m),depend(m) :: sc
+            double precision dimension(n),depend(n) :: p
+            double precision dimension(n),depend(n) :: hp
+            logical :: gothl
+            integer :: inform
+            logical dimension(7) :: iprintctl
+            integer :: iprintinn
+            integer :: iprintout
+            integer :: nprint
+            integer :: mprint
+            logical :: fcoded
+            logical :: gcoded
+            logical :: hcoded
+            logical :: ccoded
+            logical :: jaccoded
+            logical :: hccoded
+            logical :: hlcoded
+            logical :: hlpcoded
+            logical :: fccoded
+            logical :: gjaccoded
+            logical :: firstde
+            logical :: truehl
+            logical :: ignoref
+            logical :: skipacc
+            logical :: sclsys
+            logical :: innercall
+            logical :: useustp
+            character*2 :: innslvr
+            character*6 :: hptype
+            logical :: safemode
+            integer dimension(5000) :: eccnt
+            integer dimension(5000) :: ehccnt
+            integer dimension(5000) :: ejccnt
+            integer :: efcnt
+            integer :: efccnt
+            integer :: egcnt
+            integer :: egjccnt
+            integer :: ehcnt
+            integer :: ehlcnt
+            integer :: ehlpcnt
+            integer :: fcnt
+            intent(callback) evalhlp
+            external evalhlp
+            common /outdat/ iprintctl,iprintinn,iprintout,nprint,mprint
+            common /algparam/ fcoded,gcoded,hcoded,ccoded,jaccoded,hccoded,hlcoded,hlpcoded,fccoded,gjaccoded,firstde,truehl,ignoref,skipacc,sclsys,innercall,useustp,innslvr,hptype,safemode
+            common /counters/ eccnt,ehccnt,ejccnt,efcnt,efccnt,egcnt,egjccnt,ehcnt,ehlcnt,ehlpcnt,fcnt
+        end subroutine vevalhlp
+        subroutine ivevalhlp(n,x,m,lambda,sf,sc,p,hp,gothl,inform) ! in :algencan:source/vevalus.f
+            use algencan__user__routines
+            integer optional,check(len(x)>=n),depend(x) :: n=len(x)
+            double precision dimension(n) :: x
+            integer optional,check(len(lambda)>=m),depend(lambda) :: m=len(lambda)
+            double precision dimension(m) :: lambda
+            double precision :: sf
+            double precision dimension(m),depend(m) :: sc
+            double precision dimension(n),depend(n) :: p
+            double precision dimension(n),depend(n) :: hp
+            logical :: gothl
+            integer :: inform
+            double precision dimension(100000) :: hval
+            integer dimension(100000) :: hlin
+            integer dimension(100000) :: hcol
+            integer :: hnnz
+            intent(callback) evalhlp
+            external evalhlp
+            common /hdata/ hval,hlin,hcol,hnnz
+        end subroutine ivevalhlp
+        subroutine vevalfc(n,x,f,m,c,inform) ! in :algencan:source/vevalus.f
+            use algencan__user__routines
+            integer optional,check(len(x)>=n),depend(x) :: n=len(x)
+            double precision dimension(n) :: x
+            double precision :: f
+            integer optional,check(len(c)>=m),depend(c) :: m=len(c)
+            double precision dimension(m) :: c
+            integer :: inform
+            logical dimension(7) :: iprintctl
+            integer :: iprintinn
+            integer :: iprintout
+            integer :: nprint
+            integer :: mprint
+            logical :: fcoded
+            logical :: gcoded
+            logical :: hcoded
+            logical :: ccoded
+            logical :: jaccoded
+            logical :: hccoded
+            logical :: hlcoded
+            logical :: hlpcoded
+            logical :: fccoded
+            logical :: gjaccoded
+            logical :: firstde
+            logical :: truehl
+            logical :: ignoref
+            logical :: skipacc
+            logical :: sclsys
+            logical :: innercall
+            logical :: useustp
+            character*2 :: innslvr
+            character*6 :: hptype
+            logical :: safemode
+            integer dimension(5000) :: eccnt
+            integer dimension(5000) :: ehccnt
+            integer dimension(5000) :: ejccnt
+            integer :: efcnt
+            integer :: efccnt
+            integer :: egcnt
+            integer :: egjccnt
+            integer :: ehcnt
+            integer :: ehlcnt
+            integer :: ehlpcnt
+            integer :: fcnt
+            intent(callback) evalfc
+            external evalfc
+            common /outdat/ iprintctl,iprintinn,iprintout,nprint,mprint
+            common /algparam/ fcoded,gcoded,hcoded,ccoded,jaccoded,hccoded,hlcoded,hlpcoded,fccoded,gjaccoded,firstde,truehl,ignoref,skipacc,sclsys,innercall,useustp,innslvr,hptype,safemode
+            common /counters/ eccnt,ehccnt,ejccnt,efcnt,efccnt,egcnt,egjccnt,ehcnt,ehlcnt,ehlpcnt,fcnt
+        end subroutine vevalfc
+        subroutine vevalgjac(n,x,g,m,jcfun,jcvar,jcval,jcnnz,inform) ! in :algencan:source/vevalus.f
+            use algencan__user__routines
+            integer optional,check(len(x)>=n),depend(x) :: n=len(x)
+            double precision dimension(n) :: x
+            double precision dimension(n),depend(n) :: g
+            integer :: m
+            integer dimension(*) :: jcfun
+            integer dimension(*) :: jcvar
+            double precision dimension(*) :: jcval
+            integer :: jcnnz
+            integer :: inform
+            logical dimension(7) :: iprintctl
+            integer :: iprintinn
+            integer :: iprintout
+            integer :: nprint
+            integer :: mprint
+            logical :: fcoded
+            logical :: gcoded
+            logical :: hcoded
+            logical :: ccoded
+            logical :: jaccoded
+            logical :: hccoded
+            logical :: hlcoded
+            logical :: hlpcoded
+            logical :: fccoded
+            logical :: gjaccoded
+            logical :: firstde
+            logical :: truehl
+            logical :: ignoref
+            logical :: skipacc
+            logical :: sclsys
+            logical :: innercall
+            logical :: useustp
+            character*2 :: innslvr
+            character*6 :: hptype
+            logical :: safemode
+            integer dimension(5000) :: eccnt
+            integer dimension(5000) :: ehccnt
+            integer dimension(5000) :: ejccnt
+            integer :: efcnt
+            integer :: efccnt
+            integer :: egcnt
+            integer :: egjccnt
+            integer :: ehcnt
+            integer :: ehlcnt
+            integer :: ehlpcnt
+            integer :: fcnt
+            intent(callback) evalgjac
+            external evalgjac
+            common /outdat/ iprintctl,iprintinn,iprintout,nprint,mprint
+            common /algparam/ fcoded,gcoded,hcoded,ccoded,jaccoded,hccoded,hlcoded,hlpcoded,fccoded,gjaccoded,firstde,truehl,ignoref,skipacc,sclsys,innercall,useustp,innslvr,hptype,safemode
+            common /counters/ eccnt,ehccnt,ejccnt,efcnt,efccnt,egcnt,egjccnt,ehcnt,ehlcnt,ehlpcnt,fcnt
+        end subroutine vevalgjac
+        subroutine ivevalgjac(n,x,g,m,jcfun,jcvar,jcval,jcnnz,inform) ! in :algencan:source/vevalus.f
+            use algencan__user__routines
+            integer optional,check(len(x)>=n),depend(x) :: n=len(x)
+            double precision dimension(n) :: x
+            double precision dimension(n),depend(n) :: g
+            integer :: m
+            integer dimension(*) :: jcfun
+            integer dimension(*) :: jcvar
+            double precision dimension(*) :: jcval
+            integer :: jcnnz
+            integer :: inform
+            double precision :: bignum
+            double precision :: macheps
+            double precision :: macheps12
+            double precision :: macheps13
+            double precision :: macheps23
+            intent(callback) evalgjac
+            external evalgjac
+            common /machcon/ bignum,macheps,macheps12,macheps13,macheps23
+        end subroutine ivevalgjac
+        subroutine openunit(unitnum,filename,filestatus,fileaction,ierror) ! in :cobyla:source/openunit.f
+            integer intent(in) :: unitnum
+            character*(*) intent(in) :: filename
+            character*(*) intent(in) :: filestatus
+            character*(*) intent(in) :: fileaction
+            integer intent(out) :: ierror
+        end subroutine openunit
+        subroutine pyflush(unitnum) ! in :cobyla:source/openunit.f
+            integer :: unitnum
+        end subroutine pyflush
+        subroutine closeunit(unitnum) ! in :cobyla:source/closeunit.f
+            integer intent(in) :: unitnum
+        end subroutine closeunit
+    end interface 
+end python module algencan

@@ -9,6 +9,7 @@ def configuration(parent_package='',top_path=None):
     config = Configuration('pyOpt',parent_package,top_path)
     
     # need: auto add_subpackage from source availability
+    config.add_subpackage('pyALGENCAN')
     config.add_subpackage('pyALHSO')
     config.add_subpackage('pyALPSO')
     config.add_subpackage('pyCOBYLA')

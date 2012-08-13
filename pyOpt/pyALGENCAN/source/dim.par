@@ -1,0 +1,11 @@
+C     PARAMETERS
+
+      integer mmax,nmax,nsmax,nsysmax,nnzmax,jcnnzmax,hnnzmax
+
+      parameter ( mmax      =   5000 )
+      parameter ( nmax      =   5000 )
+      parameter ( nsmax     =   1000 )
+      parameter ( nsysmax   =   5000 )
+      parameter ( nnzmax    = 100000 )
+      parameter ( jcnnzmax  = 100000 )
+      parameter ( hnnzmax   = 100000 )
