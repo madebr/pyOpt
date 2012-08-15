@@ -2,6 +2,9 @@ MIDACO - Mixed Integer Distributed Ant Colony Optimization
 Copyright (c) 2009, Martin Schlueter (info@midaco-solver.com)
 MIDACO interface for pyOpt - 2012, Ruben E. Perez
 
-MIDACO is a licensed software, for term and conditions of use 
-please refer to the specific commercial or academic agreement 
-made with the code developers.
+MIDACO is a licensed software, it is redistributed within 
+pyOpt with a limited license that enable optimizations with
+up to four variables. To obtain an unlimited license, as 
+well as for term and conditions of use, please refer to 
+the specific commercial or academic agreement made with 
+the code developers.
