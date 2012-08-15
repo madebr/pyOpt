@@ -1,48 +1,51 @@
 !    -*- f90 -*-
 ! Note: the context of this file is case sensitive.
 
-python module midaco__user__routines 
-    interface midaco_user_interface 
+python module midaco__user__routines
+    interface midaco_user_interface
         subroutine objfun(n,m,x,f,g)
             integer intent(in) :: n
             integer intent(in) :: m
             double precision dimension(n),intent(in),depend(n) :: x
-            double precision intent(in,out) :: f
+            double precision dimension(1),intent(in,out) :: f
             double precision dimension(m),intent(in,out),depend(m) :: g
         end subroutine objfun
     end interface midaco_user_interface
 end python module midaco__user__routines
 python module midaco ! in 
     interface  ! in :midaco
-        subroutine midaco_wrap(n,nint,m,me,xl,xu,x,f,g,acc,iseed,ifail,qstart,istop,iprint,iout,ifile,eval,maxeval,maxtime,liw,iw,lrw,rw,objfun) ! in :midaco:source/midaco.f
+        subroutine midaco_wrap(n,nint,m,me,x,xl,xu,f,g,acc,param,maxeval,maxtime,ifail,eval,iprint,printeval,printbest,iout1,iout2,ifile1,ifile2,license_key,liw,iw,lrw,rw,objfun)
             use midaco__user__routines
             integer intent(in) :: n
             integer intent(in) :: nint
             integer intent(in) :: m
             integer intent(in) :: me
+            double precision dimension(n),intent(inout),depend(n) :: x
             double precision dimension(n),intent(in),depend(n) :: xl
             double precision dimension(n),intent(in),depend(n) :: xu
-            double precision dimension(n),intent(inout),depend(n) :: x
-            double precision intent(inout) :: f
-            double precision dimension(m),depend(m),intent(inout) :: g
+            double precision dimension(1),intent(inout) :: f
+            double precision dimension(m),intent(inout),depend(m) :: g
             double precision intent(in) :: acc
-            integer intent(in) :: iseed
-            integer intent(inout) :: ifail
-            integer intent(in) :: qstart
-            integer intent(inout) :: istop
-            integer intent(in) :: iprint
-            integer intent(in) :: iout
-            character*(*) intent(in) :: ifile
-            integer intent(inout) :: eval
+            double precision dimension(7),intent(in) :: param
             integer intent(in) :: maxeval
             double precision intent(in) :: maxtime
+            integer intent(inout) :: ifail
+            integer intent(inout) :: eval
+            integer intent(in) :: iprint
+            integer intent(in) :: printeval
+            integer intent(in) :: printbest
+            integer intent(in) :: iout1
+            integer intent(in) :: iout2
+            character*(*) intent(in) :: ifile1
+            character*(*) intent(in) :: ifile2
+            character*60 intent(in) :: license_key
             integer intent(in) :: liw
             integer dimension(liw),intent(inout),depend(liw) :: iw
             integer intent(in) :: lrw
             double precision dimension(lrw),intent(inout),depend(lrw) :: rw
             external objfun
-        end subroutine midaco
-        subroutine openunit(unitnum,filename,filestatus,fileaction,ierror) ! in :snopt:openunit.f
+        end subroutine midaco_wrap
+        subroutine openunit(unitnum,filename,filestatus,fileaction,ierror)
             integer intent(in) :: unitnum
             character*(*) intent(in) :: filename
             character*(*) intent(in) :: filestatus
@@ -50,10 +53,9 @@ python module midaco ! in
             integer intent(out) :: ierror
         end subroutine openunit
         subroutine pyflush(unitnum)
-          integer unitnum
-          return
+            integer :: unitnum
         end subroutine pyflush
-        subroutine closeunit(unitnum) ! in :snopt:closeunit.f
+        subroutine closeunit(unitnum)
             integer intent(in) :: unitnum
         end subroutine closeunit
     end interface 

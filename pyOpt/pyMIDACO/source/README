@@ -1,4 +1,5 @@
-This directory contains the Fortran 95 source for MIDACO,
-It also contains a wrapping routine midaco_wrap.f developed 
-by Dr. Ruben E. Perez and two helper files called openunit.f 
-and closeunit.f to manipulate Fortran units from Python.
+This directory contains the Fortran source for MIDACO where
+the original print subroutine has been modified for pyOpt. 
+The directory also contains a wrapping routine for pyOpt, 
+midaco_wrap.f, and two helper files called openunit.f and 
+closeunit.f to manipulate Fortran units from Python.
