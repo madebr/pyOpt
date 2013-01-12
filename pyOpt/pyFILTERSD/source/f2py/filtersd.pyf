@@ -1,0 +1,101 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module filtersd__user__routines 
+    interface filtersd_user_interface
+        subroutine functions(n,m,x,f,c,user,iuser)
+            intent(callback) functions
+            external functions
+            integer intent(in) :: n
+            integer intent(in) :: m
+            double precision dimension(n),intent(in),depend(n) :: x
+            double precision intent(in,out) :: f
+            double precision dimension(m),intent(in,out),depend(m) :: c
+            double precision dimension(*),intent(in) :: user
+            integer dimension(*),intent(in) :: iuser
+        end subroutine functions
+        subroutine gradients(n,m,x,a,user,iuser)
+            intent(callback) gradients
+            external gradients
+            integer intent(in) :: n
+            integer intent(in) :: m
+            double precision dimension(n),intent(in),depend(n) :: x
+            double precision dimension(n,0:m),intent(in,out),depend(n,m) :: a
+            double precision dimension(*),intent(in) :: user
+            integer dimension(*),intent(in) :: iuser
+        end subroutine gradients
+    end interface filtersd_user_interface
+end python module filtersd__user__routines
+python module filtersd ! in 
+    interface  ! in :filtersd
+        subroutine filtersd_wrap(n,m,xx,xl,xu,lm,f,g,ainf,ubgv,rho,htol,rgtol,maxit,mxgs,dchk,dtol,iprint,iout,ifile,ifail,nfs,ngs)
+            use filtersd__user__routines
+            integer intent(in) :: n
+            integer intent(in) :: m
+            double precision dimension(n),intent(in),depend(n) :: xx
+            double precision dimension(n),intent(in),depend(n) :: xl
+            double precision dimension(n),intent(in),depend(n) :: xu
+            double precision dimension(m),intent(inout),depend(m) :: lm
+            double precision intent(inout) :: f
+            double precision dimension(m),intent(inout),depend(m) :: g
+            double precision intent(in) :: ainf
+            double precision intent(in) :: ubgv
+            double precision intent(in) :: rho
+            double precision intent(in) :: htol
+            double precision intent(in) :: rgtol
+            integer intent(in) :: maxit
+            integer intent(in) :: mxgs
+            integer intent(in) :: dchk
+            double precision intent(in) :: dtol
+            integer intent(in) :: iprint
+            integer intent(in) :: iout
+            character*(*) intent(in) :: ifile
+            integer intent(inout) :: ifail
+            integer intent(inout) :: nfs
+            integer intent(inout) :: ngs
+            integer :: mxgr
+            integer :: kk
+            integer :: ll
+            integer :: kkk
+            integer :: lll
+            integer :: mxws
+            integer :: mxlws
+            double precision :: dnorm
+            double precision :: h
+            double precision :: hjt
+            double precision :: hj
+            integer :: ipeq
+            integer :: k
+            integer :: itn
+            integer :: nft
+            integer :: ngt
+            double precision :: ainfty
+            double precision :: ubd
+            integer :: mlp
+            integer :: mxf
+            integer :: mxm1
+            intent(callback) functions
+            external functions
+            intent(callback) gradients
+            external gradients
+            common /ngrc/ mxgr
+            common /wsc/ kk,ll,kkk,lll,mxws,mxlws
+            common /statsc/ dnorm,h,hjt,hj,ipeq,k,itn,nft,ngt
+            common /defaultc/ ainfty,ubd,mlp,mxf
+            common /mxm1c/ mxm1
+        end subroutine filtersd_wrap
+        subroutine openunit(unitnum,filename,filestatus,fileaction,ierror) ! in :sdpen:source/openunit.f90
+            integer intent(in) :: unitnum
+            character*(*) intent(in) :: filename
+            character*(*) intent(in) :: filestatus
+            character*(*) intent(in) :: fileaction
+            integer intent(out) :: ierror
+        end subroutine openunit
+        subroutine pyflush(unitnum) ! in :sdpen:source/openunit.f90
+          integer unitnum
+        end subroutine pyflush
+        subroutine closeunit(unitnum) ! in :sdpen:source/closeunit.f90
+            integer intent(in) :: unitnum
+        end subroutine closeunit
+    end interface 
+end python module filtersd
