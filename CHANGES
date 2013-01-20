@@ -11,13 +11,15 @@ Release 1.1.0 (January 12, 2013)
   source is now included with a trial license
   that allows to test problems up to four variables.
 
+* Update SLSQP optimizer to make it thread-safe
+
+* Update package __init__ to fix circular dependencies.
+
 * Added ALGENCAN optimizer functionality.
 
 * Added SDPEN optimizer functionality.
 
-* Added FilterSD Optimizer functionality.
-
-* Update package __init__ to fix circular dependencies.
+* Added FilterSD optimizer functionality.
 
 
 Release 1.0.1 (June 10, 2011)
