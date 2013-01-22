@@ -343,7 +343,7 @@ class COBYLA(Optimizer):
 		#end
 		maxfun = numpy.array([self.options['MAXFUN'][1]], numpy.int)
 		w = numpy.zeros([n*(3*n+2*m+11)+4*m+6], numpy.float)
-		iact = numpy.zeros([m+1], numpy.int)
+		iact = numpy.zeros([m+1], numpy.intc)
 		ifail = numpy.array([0], numpy.int)
 		nfvals = numpy.array([0], numpy.int)
 		iout = numpy.array([self.options['IOUT'][1]], numpy.int)

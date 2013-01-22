@@ -25,7 +25,7 @@ python module cobyla ! in
             integer intent(in) :: iprint
             integer intent(in) :: maxfun
             double precision dimension(n*(3*n+2*m+11)+4*m+6),intent(in),depend(n,m) :: w
-            integer dimension(m+1),intent(in),depend(m) :: iact
+            integer dimension(m+1),intent(inout),depend(m) :: iact
             integer intent(inout) :: ifail
             integer intent(inout) :: nfvals
             integer intent(in) :: iout
