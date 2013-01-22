@@ -1,4 +1,6 @@
-0a1,7
+1c1,7
+< 
+---
 >       SUBROUTINE GCMMA(N,M,INNMAX,ITER,MAXIT,INNTOT,GEPS,
 >      1  DABOBJ,DELOBJ,ITRM,INFORM,XVAL,XMMA,XMIN,XMAX,XLOW,
 >      2  XUPP,ALFA,BETA,F0VAL,FVAL,FMAX,DF0DX,DFDX,P,Q,P0,
@@ -6,11 +8,9 @@
 >      4  HESSF,IYFREE,IPRINT,IOUT,IFILE,NFUNC1,NFUNC2,FUNC1,
 >      5  FUNC2)
 > C
-44c51
+39,48c45,62
 <       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
----
-> C      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
-46,53c53,70
+< C
 <       DIMENSION XVAL(100),XOLD1(100),XOLD2(100),XMMA(100),
 <      1          XMIN(100), XMAX(100), XLOW(100),XUPP(100),
 <      2          ALFA(100), BETA(100),DF0DX(100),
@@ -38,30 +38,34 @@
 >      1          IPRINT,IOUT,IOBJ,KOBJ,NFUNC1,NFUNC2
 >       EXTERNAL FUNC1,FUNC2
 >       CHARACTER*(*) IFILE
-125d141
-<       CALL INITI(M,N,INNMAX,GEPS,XVAL,XMIN,XMAX,FMAX,A,C)
-127a144,150
-> C
-> C   INITIAL COUNTERS
-> C
+102,103c116,117
+< C    RAA0   = Parameter raa_0 in the MMA subproblem. 
+< C    RAA(i) = Parameter raa_i in the MMA subproblem. 
+---
+> C    RAA0   = Parameter raa_0 in the MMA subproblem.
+> C    RAA(i) = Parameter raa_i in the MMA subproblem.
+119,124d132
+< C  The USER should now give values to the parameters
+< C  M, N, GEPS, XVAL (starting point),
+< C  XMIN, XMAX, FMAX, A and C.
+< C
+<       CALL INITI(M,N,GEPS,XVAL,XMIN,XMAX,FMAX,A,C)
+< C
+127,128d134
+<       INNMAX=15
+<       MAXITE=1
+130d135
+<       ITE=0
+132a138,142
 >       NFUNC1=0
 >       NFUNC2=0
-> C
-> C
-128a152,153
->       NFUNC1=NFUNC1+1
->       NFUNC2=NFUNC2+1
-131c156,158
-<       MAXITE=1
----
->       OBJ0=F0VAL
 >       IOBJ=0
->       KOBJ=0
-134,135c161,188
-<       ITE=0
-<       CALL OUTXOF(ITER,INNER,M,N,XVAL,F0VAL,FVAL,FMAX)
----
->       INNTOT=0
+>       KOBJ=0 
+> C
+136a147,174
+>       NFUNC1=NFUNC1+1
+> C
+>       OBJ0=F0VAL
 > C
 > C     ------------------------------------------------------------------
 > C                           PRINT INITIAL INFO 
@@ -87,24 +91,30 @@
 > C      WRITE (*,1470)
 > C      DO 17 J=I,M
 > C 17   WRITE (IOUT,1460) FVAL(J) 
-> C
-> C     ------------------------------------------------------------------
-138d190
-<       ITE=ITE+1
-153a206
->       NFUNC1=NFUNC1+1
-168a222
->       INNTOT=INNTOT+INNER
-175a230,231
->       NFUNC1=NFUNC1+1
->       NFUNC2=NFUNC2+1
-178d233
+138,140c176
+< C  The USER may now write the current (starting) solution.
+< C 
 <       CALL OUTXOF(ITER,INNER,M,N,XVAL,F0VAL,FVAL,FMAX)
-180c235
-< CC      WRITE(*,*) RESNOR,RESMAX
 ---
+> C     ------------------------------------------------------------------
+147d182
+<       ITE=ITE+1
+152a188,190
+>       NFUNC2=NFUNC2+1
+> C
 >       OBJ1=F0VAL
-182,188c237,276
+178a217,219
+>       NFUNC1=NFUNC1+1
+> C
+>       OBJ1=F0NEW
+205,218c246,285
+< C  The USER may now write the current solution.
+< C 
+<       CALL OUTXOF(ITER,INNER,M,N,XVAL,F0VAL,FVAL,FMAX)
+< C
+< C  One more outer iteration is started as long as
+< C  ITE is less than MAXITE:
+< C
 <       IF(ITE.LT.MAXITE) GOTO 30
 < C
 <       WRITE(*,90)
@@ -153,7 +163,7 @@
 >       IF (AOBJB.GE.DELOBJ) IOBJ=0
 >       IF (KOBJ.GT.ITRM.OR.IOBJ.GT.ITRM) GO TO 90 
 >       OBJ0=F0VAL
-190a279,288
+220a288,297
 > C     ------------------------------------------------------------------
 > C     INFORM FLAGS
 > C     ------------------------------------------------------------------
@@ -164,10 +174,9 @@
 > C
 > C     ------------------------------------------------------------------
 > C
-193,194c291,333
+223,224c300,339
 <       STOP
 <       END
-\ No newline at end of file
 ---
 > C     ------------------------------------------------------------------
 > C                           PRINT FINAL RESULTS 
@@ -209,6 +218,7 @@
 > 1200  FORMAT (/5X,22HNUMBER OF ITERATIONS =,I5)
 > 1650  FORMAT(8X,30HNUMBER OF FUNC-CALLS:  NFUNC =,I4)
 > 1750  FORMAT(8X,30HNUMBER OF GRAD-CALLS:  NGRAD =,I4)
-> C
+226c341
+< 
+---
 >       END
-> C

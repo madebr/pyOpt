@@ -3,7 +3,7 @@
 
 python module mma__user__routines 
     interface mma_user_interface 
-        subroutine func(m,n,xval,f0val,df0dx,fval,dfdx) ! in :mma:source/mma.f:mma:unknown_interface
+        subroutine func(m,n,xval,f0val,df0dx,fval,dfdx)
             integer intent(in) :: m
             integer intent(in) :: n
             double precision intent(in),dimension(n),depend(n) :: xval
@@ -16,7 +16,7 @@ python module mma__user__routines
 end python module mma__user__routines
 python module mma ! in 
     interface  ! in :mma
-        subroutine mma(n,m,iter,maxit,geps,dabobj,delobj,itrm,inform,xval,xmma,xmin,xmax,xlow,xupp,alfa,beta,f0val,fval,fmax,df0dx,dfdx,p,q,p0,q0,b,y,z,a,c,ulam,gradf,dsrch,hessf,iyfree,iprint,iout,ifile,nfunc,func) ! in :mma:source/mma.f
+        subroutine mma(n,m,iter,maxit,geps,dabobj,delobj,itrm,inform,xval,xmma,xmin,xmax,xlow,xupp,alfa,beta,f0val,fval,fmax,df0dx,dfdx,p,q,p0,q0,b,y,z,a,c,ulam,gradf,dsrch,hessf,iyfree,iprint,iout,ifile,nfunc,func) ! in :mma:source/ksmmamain.f
             use mma__user__routines
             integer intent(in) :: n
             integer intent(in) :: m

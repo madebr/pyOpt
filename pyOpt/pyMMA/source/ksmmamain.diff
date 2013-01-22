@@ -2,13 +2,11 @@
 >       SUBROUTINE MMA(N,M,ITER,MAXIT,GEPS,DABOBJ,DELOBJ,ITRM,
 >      1  INFORM,XVAL,XMMA,XMIN,XMAX,XLOW,XUPP,ALFA,BETA,F0VAL,
 >      2  FVAL,FMAX,DF0DX,DFDX,P,Q,P0,Q0,B,Y,Z,A,C,ULAM,GRADF,
->      3	DSRCH,HESSF,IYFREE,IPRINT,IOUT,IFILE,NFUNC,FUNC)
+>      3	DSRCH,HESSF,IYFREE,IPRINT,IOUT,IFILE,NFUNC,FUNC2)
 > C
-30c35
+37,46c42,58
 <       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
----
-> C      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
-32,39c37,53
+< C
 <       DIMENSION XVAL(100),XOLD1(100),XOLD2(100),XMMA(100),
 <      1          XMIN(100), XMAX(100), XLOW(100),XUPP(100),
 <      2          ALFA(100), BETA(100),DF0DX(100),
@@ -33,29 +31,31 @@
 >      3          DSRCH,HESSF,GEPS,OBJ0,OBJ1,DABOBJ,DELOBJ
 >       INTEGER IYFREE,ITER,MAXIT,ITRM,INFORM,IPRINT,IOUT,
 >      1          IOBJ,KOBJ,NFUNC
->       EXTERNAL FUNC
+>       EXTERNAL FUNC2
 >       CHARACTER*(*) IFILE
-43,44c57,63
+109,113d120
+< C  The USER should now give values to the parameters
+< C  M, N, GEPS, XVAL (starting point),
+< C  XMIN, XMAX, FMAX, A and C.
+< C
 <       CALL INITI(M,N,GEPS,XVAL,XMIN,XMAX,FMAX,A,C)
-<       CALL FUNC2(M,N,XVAL,F0VAL,DF0DX,FVAL,DFDX)
----
-> C   INITIAL COUNTERS
+116d122
+<       MAXITE=1
+118d123
+<       ITE=0
+119a125,128
 > C
 >       NFUNC=0
-> C   
-> C
->       CALL FUNC(M,N,XVAL,F0VAL,DF0DX,FVAL,DFDX)
->       NFUNC=NFUNC+1
-46c65,67
-<       MAXITE=1
----
->       OBJ0=F0VAL
 >       IOBJ=0
 >       KOBJ=0
-48,49c69,95
-<       ITE=0
-<       CALL OUTXOF(ITER,M,N,XVAL,F0VAL,FVAL,FMAX)
+124a134
+>       NFUNC=NFUNC+1
+126,128c136,163
+< C  The USER may now write the current (starting) solution.
+< C 
+<       CALL OUTXOF(ITER,INNER,M,N,XVAL,F0VAL,FVAL,FMAX)
 ---
+>       OBJ0=F0VAL
 > C
 > C     ------------------------------------------------------------------
 > C                           PRINT INITIAL INFO 
@@ -83,21 +83,22 @@
 > C 17   WRITE (IOUT,1460) FVAL(J) 
 > C
 > C     ------------------------------------------------------------------
-52d97
+135d169
 <       ITE=ITE+1
-65,66c110,111
-<       CALL FUNC2(M,N,XVAL,F0VAL,DF0DX,FVAL,DFDX)
-<       CALL OUTXOF(ITER,M,N,XVAL,F0VAL,FVAL,FMAX)
----
->       CALL FUNC(M,N,XVAL,F0VAL,DF0DX,FVAL,DFDX)
+154a189,191
 >       NFUNC=NFUNC+1
-68c113
-<       IF(ITE.LT.MAXITE) GOTO 30
----
+> C
 >       OBJ1=F0VAL
-70,76c115,154
-<       WRITE(*,89)
-<  89   FORMAT('  ')
+156,169c193,232
+< C  The USER may now write the current solution.
+< C 
+<       CALL OUTXOF(ITER,INNER,M,N,XVAL,F0VAL,FVAL,FMAX)
+< C
+< C  One more outer iteration is started as long as
+< C  ITE is less than MAXITE:
+< C
+<       IF(ITE.LT.MAXITE) GOTO 30
+< C
 <       WRITE(*,90)
 <  90   FORMAT(' How many more iterations? (0 to stop)')
 <       READ(*,*) MAXITE
@@ -144,7 +145,7 @@
 >       IF (AOBJB.GE.DELOBJ) IOBJ=0
 >       IF (KOBJ.GT.ITRM.OR.IOBJ.GT.ITRM) GO TO 90 
 >       OBJ0=F0VAL
-78a157,166
+171a235,244
 > C     ------------------------------------------------------------------
 > C     INFORM FLAGS
 > C     ------------------------------------------------------------------
@@ -155,10 +156,9 @@
 > C
 > C     ------------------------------------------------------------------
 > C
-81,82c169,209
+174,175c247,262
 <       STOP
 <       END
-\ No newline at end of file
 ---
 > C     ------------------------------------------------------------------
 > C                           PRINT FINAL RESULTS 
@@ -176,7 +176,7 @@
 >       IF (IPRINT.EQ.0) WRITE (*,1200) ITER
 >       IF (IPRINT.GT.0) WRITE(IOUT,1200) ITER
 >       IF (IPRINT.GT.0) WRITE(IOUT,1650) NFUNC
-> C
+176a264,286
 >  200  CONTINUE
 > C     
 >       RETURN
@@ -200,4 +200,3 @@
 > 1650  FORMAT(8X,30HNUMBER OF FUNC-CALLS:  NFUNC =,I4)
 > C
 >       END
-> C
