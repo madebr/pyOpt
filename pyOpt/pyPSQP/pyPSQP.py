@@ -2,7 +2,7 @@
 '''
 pyPSQP - A Python pyOpt interface to PSQP. 
 
-Copyright (c) 2008-2011 by pyOpt Developers
+Copyright (c) 2008-2013 by pyOpt Developers
 All rights reserved.
 Revision: 1.0   $Date: 30/12/2010 21:00$
 
@@ -89,6 +89,7 @@ class PSQP(Optimizer):
 		
 		Documentation last updated:  Feb. 16, 2010 - Peter W. Jansen
 		'''
+		
 		#
 		if (pll_type == None):
 			self.poa = False
@@ -395,7 +396,7 @@ class PSQP(Optimizer):
 				group_ids[opt_problem._vargroups[key]['name']] = [k,k+group_len]
 				k += group_len
 			#end
-		#end		
+		#end
 		
 		# Constraints Handling
 		ncon = len(opt_problem._constraints.keys())
@@ -430,20 +431,19 @@ class PSQP(Optimizer):
 		# Setup argument list values
 		nf = numpy.array([nvar], numpy.int)
 		nc = numpy.array([ncon], numpy.int)
-		cz = numpy.zeros([nf], numpy.float)
+		mit = numpy.array([self.options['MIT'][1]], numpy.int)
+		mfv = numpy.array([self.options['MFV'][1]], numpy.int)
+		met = numpy.array([self.options['MET'][1]], numpy.int)
+		mec = numpy.array([self.options['MEC'][1]], numpy.int)
 		xmax = numpy.array([self.options['XMAX'][1]], numpy.float)
 		tolx = numpy.array([self.options['TOLX'][1]], numpy.float)
 		tolc = numpy.array([self.options['TOLC'][1]], numpy.float)
 		tolg = numpy.array([self.options['TOLG'][1]], numpy.float)
 		rpf = numpy.array([self.options['RPF'][1]], numpy.float)
+		gmax = numpy.array([0], numpy.float)		
 		cmax = numpy.array([0], numpy.float)
-		gmax = numpy.array([0], numpy.float)
-		mit = numpy.array([self.options['MIT'][1]], numpy.int)
-		mfv = numpy.array([self.options['MFV'][1]], numpy.int)
-		met = numpy.array([self.options['MET'][1]], numpy.int)
-		mec = numpy.array([self.options['MEC'][1]], numpy.int)
 		if (myrank == 0):
-			if (self.options['IPRINT'][1]>=0):
+			if (self.options['IPRINT'][1] <= 2):
 				iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
 			else:
 				raise IOError('Incorrect Output Level Setting')
@@ -454,21 +454,13 @@ class PSQP(Optimizer):
 		iout = numpy.array([self.options['IOUT'][1]], numpy.int)
 		ifile = self.options['IFILE'][1]
 		if (myrank == 0):
-			if (iprint >= 0):
+			if (iprint != 0):
 				if os.path.isfile(ifile):
 					os.remove(ifile)
 				#end
 			#end
 		#end
 		iterm = numpy.array([0], numpy.int)
-		nres = numpy.array([0], numpy.int)
-		ndec = numpy.array([0], numpy.int)
-		nrem = numpy.array([0], numpy.int)
-		nadd = numpy.array([0], numpy.int)
-		nit = numpy.array([0], numpy.int)
-		nfv = numpy.array([0], numpy.int)
-		nfg = numpy.array([0], numpy.int)
-		nfh = numpy.array([0], numpy.int)
 		
 		
 		# Storage Arrays 
@@ -482,9 +474,9 @@ class PSQP(Optimizer):
 		
 		# Run PSQP
 		t0 = time.time()
-		psqp.psqpw(nf,nc,xx,xi,xl,xu,gg,gi,gl,gu,cz,xmax,tolx,tolc,tolg,
-			rpf,cmax,ff,mit,mfv,met,mec,iprint,iout,ifile,iterm,nres,
-			ndec,nrem,nadd,nit,nfv,nfg,nfh,pobj,pdobj,pcon,pdcon)
+		psqp.psqp_wrap(nf,nc,xx,xi,xl,xu,gg,gi,gl,gu,mit,mfv,
+			met,mec,xmax,tolx,tolc,tolg,rpf,ff,gmax,cmax,
+			iprint,iout,ifile,iterm,pobj,pdobj,pcon,pdcon)
 		sol_time = time.time() - t0
 		
 		if (myrank == 0):
@@ -498,11 +490,7 @@ class PSQP(Optimizer):
 					os.rename(name+'_tmp.cue',name+'.cue')
 					os.rename(name+'_tmp.bin',name+'.bin')
 				#end
-			#end		
-		#end
-		
-		if (iprint > 0):
-			psqp.closeunit(self.options['IOUT'][1])
+			#end
 		#end
 		
 		
@@ -520,7 +508,7 @@ class PSQP(Optimizer):
 				del sol_options['defaults']
 			#end
 			
-			sol_evals = nfv[0] + nfg[0]*nvar
+			sol_evals = psqp.stat.nfv + psqp.stat.nfg*nvar
 			
 			sol_vars = copy.deepcopy(opt_problem._variables)
 			i = 0
@@ -547,14 +535,7 @@ class PSQP(Optimizer):
 				sol_cons = {}
 			#end
 			
-			if ncon > 0:
-				sol_lambda = numpy.zeros(ncon,float)
-				for i in xrange(ncon):
-					sol_lambda[i] = cz[i]
-				#end
-			else:
-				sol_lambda = {}
-			#end
+			sol_lambda = {}
 			
 			
 			opt_problem.addSol(self.__class__.__name__, sol_name, objfunc, sol_time, 
