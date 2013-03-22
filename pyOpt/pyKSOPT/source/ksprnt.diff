@@ -1,0 +1,6 @@
+9c9
+<      5                ip    ,ih    ,ihess ,sidee ,isact ,idobj ,idg   ,
+---
+>      5                ip    ,ih    ,ihess ,iside ,isact ,idobj ,idg   ,
+115a116
+>       if (iprnt1 .eq. 0) go to 300

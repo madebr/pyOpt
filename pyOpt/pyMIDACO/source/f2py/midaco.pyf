@@ -3,28 +3,30 @@
 
 python module midaco__user__routines
     interface midaco_user_interface
-        subroutine objfun(n,m,x,f,g)
+        subroutine objfun(l,n,m,x,f,g)
+            integer intent(in) :: l
             integer intent(in) :: n
             integer intent(in) :: m
-            double precision dimension(n),intent(in),depend(n) :: x
-            double precision dimension(1),intent(in,out) :: f
-            double precision dimension(m),intent(in,out),depend(m) :: g
+            double precision dimension(l*n),intent(in),depend(l,n) :: x
+            double precision dimension(l),intent(in,out),depend(l) :: f
+            double precision dimension(l*m),intent(in,out),depend(l,m) :: g
         end subroutine objfun
     end interface midaco_user_interface
 end python module midaco__user__routines
 python module midaco ! in 
     interface  ! in :midaco
-        subroutine midaco_wrap(n,nint,m,me,x,xl,xu,f,g,acc,param,maxeval,maxtime,ifail,eval,iprint,printeval,printbest,iout1,iout2,ifile1,ifile2,license_key,liw,iw,lrw,rw,objfun)
+        subroutine midaco_wrap(l,n,nint,m,me,x,xl,xu,f,g,acc,param,maxeval,maxtime,ifail,eval,iprint,printeval,printbest,iout1,iout2,ifile1,ifile2,license_key,liw,iw,lrw,rw,objfun)
             use midaco__user__routines
+            integer intent(in) :: l
             integer intent(in) :: n
             integer intent(in) :: nint
             integer intent(in) :: m
             integer intent(in) :: me
-            double precision dimension(n),intent(inout),depend(n) :: x
+            double precision dimension(l*n),intent(inout),depend(l,n) :: x
             double precision dimension(n),intent(in),depend(n) :: xl
             double precision dimension(n),intent(in),depend(n) :: xu
-            double precision dimension(1),intent(inout) :: f
-            double precision dimension(m),intent(inout),depend(m) :: g
+            double precision dimension(l),intent(inout),depend(l) :: f
+            double precision dimension(l*m),intent(inout),depend(l,m) :: g
             double precision intent(in) :: acc
             double precision dimension(7),intent(in) :: param
             integer intent(in) :: maxeval
@@ -40,7 +42,7 @@ python module midaco ! in
             character*(*) intent(in) :: ifile2
             character*60 intent(in) :: license_key
             integer intent(in) :: liw
-            integer dimension(liw),intent(inout),depend(liw) :: iw
+            integer dimension(liw),intent(in,out),depend(liw) :: iw
             integer intent(in) :: lrw
             double precision dimension(lrw),intent(inout),depend(lrw) :: rw
             external objfun

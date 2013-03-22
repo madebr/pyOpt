@@ -2,7 +2,7 @@
 '''
 pyCOBYLA - A Python pyOpt interface to COBYLA.
 
-Copyright (c) 2008-2011 by pyOpt Developers
+Copyright (c) 2008-2013 by pyOpt Developers
 All rights reserved.
 Revision: 1.2   $Date: 29/03/2010 21:00$
 

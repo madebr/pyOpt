@@ -93,10 +93,15 @@ class MIDACO(Optimizer):
 		#
 		if (pll_type == None):
 			self.poa = False
+			self.spm = False
 		elif (pll_type.upper() == 'POA'):
 			self.poa = True
+			self.spm = False
+		elif (pll_type.upper() == 'SPM'):
+			self.poa = False
+			self.spm = True
 		else:
-			raise ValueError("pll_type must be either None or 'POA'")
+			raise ValueError("pll_type must be either None, 'POA' or 'SPM'")
 		#end
 		
 		#
@@ -121,7 +126,7 @@ class MIDACO(Optimizer):
 		'IOUT2':[int,37],					# Best solution output unit number
 		'IFILE1':[str,'MIDACO_HIST.out'],	# History output file name
 		'IFILE2':[str,'MIDACO_BEST.out'],	# Best output file name
-		'LKEY':[str,'FREE_TEST_VERSION________________[LIMITED_UP_TO_4_VARIABLES]'],	# License Key
+		'LKEY':[str,'FREE_TEST_VERSION________________[LIMITED_UP_TO_4_VARIABLES]'],	# License Key - 'FREE_TEST_VERSION________________[LIMITED_UP_TO_4_VARIABLES]'
 		}
 		informs = {
 		1 : 'Feasible solution,   MIDACO was stopped by the user submitting ISTOP=1',
@@ -191,7 +196,7 @@ class MIDACO(Optimizer):
 		Documentation last updated:  February. 17, 2011 - Peter W. Jansen
 		'''
 		#
-		if self.poa:
+		if self.poa or self.spm:
 			try:
 				import mpi4py
 				from mpi4py import MPI
@@ -199,16 +204,27 @@ class MIDACO(Optimizer):
 				print 'pyMIDACO: Parallel objective Function Analysis requires mpi4py'
 			#end
 			comm = MPI.COMM_WORLD
-			nproc = comm.Get_size()
 			if (mpi4py.__version__[0] == '0'):
 				Bcast = comm.Bcast
+				Barrier = comm.Barrier
+				Send = comm.Send
+				Recv = comm.Recv
 			elif (mpi4py.__version__[0] == '1'):
 				Bcast = comm.bcast
+				Barrier = comm.barrier
+				Send = comm.send
+				Recv = comm.recv
 			#end
 			self.pll = True
 			self.myrank = comm.Get_rank()
+			if self.poa:
+				nproc = 1
+			else:
+				nproc = comm.Get_size()
+			#end
 		else:
 			self.pll = False
+			nproc = 1
 			self.myrank = 0
 		#end
 		
@@ -222,21 +238,30 @@ class MIDACO(Optimizer):
 		#======================================================================
 		# MIDACO - Objective/Constraint Values Function
 		#======================================================================
-		def objfun(n,m,x,f,g):
+		def objfun(l,n,m,x,f,g):
+			
+			x = numpy.reshape(x,(l,-1))
+			f = numpy.reshape(f,(l,-1))
+			g = numpy.reshape(g,(l,-1))
 			
 			# Variables Groups Handling
+			if not self.poa:
+				mxi = myrank
+			else:
+				mxi = 0
+			#end
 			if opt_problem.use_groups:
 				xg = {}
 				for group in group_ids.keys():
 					if (group_ids[group][1]-group_ids[group][0] == 1):
-						xg[group] = x[group_ids[group][0]]
+						xg[group] = x[mxi,group_ids[group][0]]
 					else:
-						xg[group] = x[group_ids[group][0]:group_ids[group][1]]
+						xg[group] = x[mxi,group_ids[group][0]:group_ids[group][1]]
 					#end
 				#end
 				xn = xg
 			else:
-				xn = x
+				xn = x[mxi,:]
 			#end
 			
 			# Flush Output Files
@@ -248,59 +273,92 @@ class MIDACO(Optimizer):
 			gg = []
 			if (myrank == 0):
 				if self.h_start:
-					[vals,hist_end] = hos_file.read(ident=['obj', 'con', 'fail'])
-					if hist_end:
-						self.h_start = False
-						hos_file.close()
-					else:
-						[ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
+					for proc in xrange(l):
+						[vals,hist_end] = hos_file.read(ident=['obj', 'con', 'fail'])
+						if hist_end:
+							self.h_start = False
+							hos_file.close()
+						else:
+							[ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
+							f[proc] = ff
+							g[proc,:] = gg[:]
+						#end
 					#end
 				#end
 			#end
-			
+				
 			if self.pll:
 				self.h_start = Bcast(self.h_start,root=0)
 			#end
 			if self.h_start and self.pll:
-				[ff,gg,fail] = Bcast([ff,gg,fail],root=0)
+				[f,g] = Bcast([f,g],root=0)
 			elif not self.h_start:	
 				[ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
+				
+				# 
+				if (fail == 1):
+					# Objective Assigment
+					f[mxi] = inf
+					# Constraints Assigment (negative gg as midaco uses g(x) >= 0)
+					for i in xrange(len(opt_problem._constraints.keys())):
+						g[mxi,i] = -inf
+					#end
+				else:
+					# Objective Assigment
+					if isinstance(ff,complex):
+						f[mxi] = ff.astype(float)
+					else:
+						f[mxi] = ff
+					#end
+					# Constraints Assigment (negative gg as midaco uses g(x) >= 0)
+					for i in xrange(len(opt_problem._constraints.keys())):
+						if isinstance(gg[i],complex):
+							g[mxi,i] = -gg[i].astype(float)
+						else:
+							g[mxi,i] = -gg[i]
+						#end
+					#end
+				#end
+				
+				if self.spm:
+					send_buf = {}
+					send_buf[myrank] = {'fi':f[mxi],'gi':g[mxi]}
+					if myrank != 0:
+						Send(send_buf,dest=0)
+					else:
+						p_results = []
+						for proc in xrange(1,nproc):
+							p_results.append(Recv(source=proc))
+						#end
+					#end
+					
+					if myrank == 0:
+						for proc in xrange(nproc-1):
+							for i in p_results[proc].keys():
+								f[i] = p_results[proc][i]['fi']
+								g[i,:] = p_results[proc][i]['gi']
+							#end
+						#end
+					#end
+					
+					[f,g] = Bcast([f,g],root=0)
+				#end
 			#end
 			
 			# Store History
 			if (myrank == 0):
 				if self.sto_hst:
-					log_file.write(x,'x')
-					log_file.write(ff,'obj')
-					log_file.write(gg,'con')
-					log_file.write(fail,'fail')
-				#end
-			#end
-			
-			# 
-			if (fail == 1):
-				# Objective Assigment
-				f = inf
-				# Constraints Assigment (negative gg as midaco uses g(x) >= 0)
-				for i in xrange(len(opt_problem._constraints.keys())):
-					g[i] = -inf
-				#end
-			else:
-				# Objective Assigment
-				if isinstance(ff,complex):
-					f = ff.astype(float)
-				else:
-					f = ff
-				#end
-				# Constraints Assigment (negative gg as midaco uses g(x) >= 0)
-				for i in xrange(len(opt_problem._constraints.keys())):
-					if isinstance(gg[i],complex):
-						g[i] = -gg[i].astype(float)
-					else:
-						g[i] = -gg[i]
+					for proc in xrange(l):
+						log_file.write(x[proc],'x')
+						log_file.write(f[proc],'obj')
+						log_file.write(g[proc],'con')
+						log_file.write(fail,'fail')
 					#end
 				#end
 			#end
+			
+			f = numpy.reshape(f,l)
+			g = numpy.reshape(g,l*m)
 			
 			return f,g
 		
@@ -322,7 +380,7 @@ class MIDACO(Optimizer):
 		#end
 		xl = numpy.array(xl)
 		xu = numpy.array(xu)
-		xx = numpy.array(xx)
+		xx = numpy.array(xx*nproc)
 		
 		# Variables Groups Handling 
 		if opt_problem.use_groups:
@@ -347,7 +405,7 @@ class MIDACO(Optimizer):
 				gg.append(opt_problem._constraints[key].value)
 			#end
 		#end
-		gg = numpy.array(gg)
+		gg = numpy.array(gg*nproc)
 		
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
@@ -357,10 +415,11 @@ class MIDACO(Optimizer):
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
 		#end
-		ff = numpy.array(ff)
+		ff = numpy.array(ff*nproc)
 		
 		
 		# Setup argument list values
+		ll = numpy.array([nproc], numpy.int)
 		nn = numpy.array([nvar], numpy.int)
 		ni = numpy.array([nint], numpy.int)
 		mm = numpy.array([ncon], numpy.int)
@@ -409,7 +468,7 @@ class MIDACO(Optimizer):
 			#end
 		#end
 		lkey = self.options['LKEY'][1]
-		liw0 = 2*nn + 1 + 100
+		liw0 = 2*nn + ll + 100
 		liw = numpy.array([liw0], numpy.int)
 		iw = numpy.zeros([liw], numpy.int)
 		lrw0 = 2*nn**2 + 23*nn + 2*mm + 70
@@ -419,7 +478,7 @@ class MIDACO(Optimizer):
 		
 		# Run MIDACO
 		t0 = time.time()
-		midaco.midaco_wrap(nn,ni,mm,me,xx,xl,xu,ff,gg,acc,param,maxeval,maxtime,ifail,eval,iprint,printeval,printbest,iout1,iout2,ifile1,ifile2,lkey,liw,iw,lrw,rw,objfun)
+		midaco.midaco_wrap(ll,nn,ni,mm,me,xx,xl,xu,ff,gg,acc,param,maxeval,maxtime,ifail,eval,iprint,printeval,printbest,iout1,iout2,ifile1,ifile2,lkey,liw,iw,lrw,rw,objfun)
 		sol_time = time.time() - t0
 		
 		if (myrank == 0):

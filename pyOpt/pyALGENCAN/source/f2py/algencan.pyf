@@ -843,17 +843,17 @@ python module algencan ! in
             external evalgjac
             common /machcon/ bignum,macheps,macheps12,macheps13,macheps23
         end subroutine ivevalgjac
-        subroutine openunit(unitnum,filename,filestatus,fileaction,ierror) ! in :cobyla:source/openunit.f
+        subroutine openunit(unitnum,filename,filestatus,fileaction,ierror)
             integer intent(in) :: unitnum
             character*(*) intent(in) :: filename
             character*(*) intent(in) :: filestatus
             character*(*) intent(in) :: fileaction
             integer intent(out) :: ierror
         end subroutine openunit
-        subroutine pyflush(unitnum) ! in :cobyla:source/openunit.f
+        subroutine pyflush(unitnum)
             integer :: unitnum
         end subroutine pyflush
-        subroutine closeunit(unitnum) ! in :cobyla:source/closeunit.f
+        subroutine closeunit(unitnum)
             integer intent(in) :: unitnum
         end subroutine closeunit
     end interface 

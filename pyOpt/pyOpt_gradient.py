@@ -4,7 +4,7 @@ pyOpt_gradient
 
 Holds the Python Design Optimization Gradient Calculation Class.
 
-Copyright (c) 2008-2011 by pyOpt Developers
+Copyright (c) 2008-2013 by pyOpt Developers
 All rights reserved.
 Revision: 1.0   $Date: 20/06/2010 21:00$
 

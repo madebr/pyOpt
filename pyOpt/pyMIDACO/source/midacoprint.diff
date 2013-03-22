@@ -1,0 +1,319 @@
+8,10c8,10
+<       SUBROUTINE MIDACOPRINT(C,PRINTEVAL,SAVESCREEN,IFAIL,EVAL,F,G,X,XL,
+<      &           N,NINT,M,ME,TIME,STARTTIME,RW,LRW,ACC,SAVEBESTX,
+<      &           MAXEVAL,MAXTIME,PARAM,LICENSE_KEY)           
+---
+>       SUBROUTINE MIDACOPRINT(C,IPRINT,PRINTEVAL,PRINTBEST,IOUT1,IOUT2,
+>      &    IFILE1,IFILE2,IFAIL,EVAL,F,G,X,XL,N,NINT,M,ME,TIME,STARTTIME,
+>      &    RW,LRW,ACC,MAXEVAL,MAXTIME,PARAM,LICENSE_KEY)
+14,15c14,15
+<       INTEGER C,PRINTEVAL,SAVESCREEN,IFAIL,EVAL,N,NINT,M,ME,LRW
+<       INTEGER TIC,TOC,R,I,IOUT1,IOUT2,SAVEBESTX,MAXEVAl
+---
+>       INTEGER C,PRINTEVAL,IPRINT,IFAIL,EVAL,N,NINT,M,ME,LRW
+>       INTEGER TIC,TOC,R,I,IOUT1,IOUT2,PRINTBEST,MAXEVAL
+17c17
+<       DOUBLE PRECISION TIME,STARTTIME,RW(LRW),BESTF,BESTR,F,G(M),X(N)
+---
+>       DOUBLE PRECISION TIME,STARTTIME,RW(LRW),BESTF,BESTR,F(1),G(M),X(N)
+20c20,21
+<       DATA KFRES,WFRES /0,0/      
+---
+>       CHARACTER*(*) IFILE1,IFILE2
+>       DATA KFRES,WFRES /0,0/
+22d22
+<       DATA IOUT1,IOUT2 /0,0/
+111c111
+<    47 FORMAT(/,' ') 
+---
+>    47 FORMAT(/,' ')
+124,135c124,133
+<       IF(C.EQ.1)THEN 
+<           IF(SAVESCREEN.GE.1)THEN
+<               IOUT1 = 36          
+<               OPEN(IOUT1,FILE='MIDACO_SCREEN.TXT',STATUS='UNKNOWN')
+<           ENDIF  
+<           IF(SAVEBESTX.GE.1)THEN
+<               IOUT2 = 37
+<               OPEN(IOUT2,FILE='MIDACO_BESTX.TXT',STATUS='UNKNOWN')
+<               BESTF = 1.0D+32
+<               BESTR = 1.0D+32              
+<           ENDIF  
+<       ENDIF  
+---
+>       IF(C.EQ.1)THEN
+>           IF(IPRINT.GE.1)THEN
+>               OPEN(IOUT1,FILE=IFILE1,STATUS='UNKNOWN')
+>               IF(PRINTBEST.GE.1)THEN
+>                   OPEN(IOUT2,FILE=IFILE2,STATUS='UNKNOWN')
+>                   BESTF = 1.0D+32
+>                   BESTR = 1.0D+32
+>               ENDIF  
+>           ENDIF
+>       ENDIF
+138,152c136,152
+<       IF(C.EQ.1)THEN 
+<           IF(PRINTEVAL.GE.1) WRITE(*,1) LICENSE_KEY,N,ACC,NINT,MAXEVAL,
+<      &                                  M,MAXTIME,ME,PRINTEVAL
+<           DO I = 1,7
+<               IF(PARAM(I).NE.0.0D0) GOTO 66
+<           ENDDO
+<           IF(PRINTEVAL.GE.1) WRITE(*,101)     
+<           GOTO 67
+<    66     IF(PRINTEVAL.GE.1) WRITE(*,102) PARAM(1),PARAM(2),PARAM(3),
+<      &                           PARAM(4),PARAM(5),PARAM(6),PARAM(7)
+<    67     CONTINUE
+<           IF(PRINTEVAL.GE.1) WRITE(*,103)           
+<           IF(PRINTEVAL.GE.1.AND.SAVESCREEN.GE.1)THEN
+<               WRITE(IOUT1,1) LICENSE_KEY,N,ACC,NINT,MAXEVAL,
+<      &                                  M,MAXTIME,ME,PRINTEVAL    
+---
+>       IF(C.EQ.1)THEN
+>           IF(IPRINT.EQ.0)THEN
+>               IF(PRINTEVAL.GE.1) WRITE(*,1) LICENSE_KEY,N,ACC,
+>      &                     NINT,MAXEVAL,M,MAXTIME,ME,PRINTEVAL
+>               DO I = 1,7
+>                   IF(PARAM(I).NE.0.0D0) GOTO 66
+>               ENDDO
+>               IF(PRINTEVAL.GE.1) WRITE(*,101)     
+>               GOTO 67
+>    66         IF(PRINTEVAL.GE.1) WRITE(*,102) PARAM(1),PARAM(2),
+>      &              PARAM(3),PARAM(4),PARAM(5),PARAM(6),PARAM(7)
+>    67         CONTINUE
+>               IF(PRINTEVAL.GE.1) WRITE(*,103)
+>           ENDIF 
+>           IF (IPRINT.GT.0)THEN
+>               IF(PRINTEVAL.GE.1) WRITE(IOUT1,1) LICENSE_KEY,N,ACC,
+>      &                         NINT,MAXEVAL,M,MAXTIME,ME,PRINTEVAL
+160c160,162
+<   671         CONTINUE                    
+---
+>   671         CONTINUE
+>               IF(PRINTEVAL.GE.1) WRITE(IOUT1,104)
+>               IF(PRINTBEST.GE.1) WRITE(IOUT2,3) PRINTBEST
+162,164c164
+<           IF(SAVESCREEN.GE.1) WRITE(IOUT1,104)
+<           IF(SAVEBESTX.GE.1) WRITE(IOUT2,3) SAVEBESTX
+<       ENDIF  
+---
+>       ENDIF
+180,181c180,183
+<               WRITE(*,2) EVAL,TIME-STARTTIME,RW(WF),RW(WRES) 
+<               IF(SAVESCREEN.GE.1)THEN
+---
+>               IF(IPRINT.EQ.0)THEN
+>                   WRITE(*,2) EVAL,TIME-STARTTIME,RW(WF),RW(WRES)
+>               ENDIF
+>               IF(IPRINT.GT.0)THEN
+188,189c190,193
+<               WRITE(*,2) EVAL,TIME-STARTTIME,RW(KF),RW(KRES)
+<               IF(SAVESCREEN.GE.1)THEN
+---
+>               IF(IPRINT.EQ.0)THEN
+>                   WRITE(*,2) EVAL,TIME-STARTTIME,RW(KF),RW(KRES)
+>               ENDIF
+>               IF(IPRINT.GT.0)THEN
+201c205
+<       ENDIF       
+---
+>       ENDIF
+204c208
+<       IF(C.EQ.2.AND.SAVEBESTX.GE.1)THEN      
+---
+>       IF(C.EQ.2.AND.PRINTBEST.GE.1)THEN
+206c210
+<           IF(TOC.GE.SAVEBESTX.OR.EVAL.EQ.1.OR.IFAIL.GE.1)THEN
+---
+>           IF(TOC.GE.PRINTBEST.OR.EVAL.EQ.1.OR.IFAIL.GE.1)THEN
+211,217c215,223
+<                           WRITE(IOUT2,31) EVAL,TIME-STARTTIME,IFAIL
+<                           WRITE(IOUT2,32) BESTF,BESTR  
+<                           DO I = 1,N
+<                               WRITE(IOUT2,33) I,RW(WX+I)
+<                           ENDDO
+<                           GOTO 555   
+<               ENDIF              
+---
+>                           IF(IPRINT.GT.0)THEN
+>                               WRITE(IOUT2,31) EVAL,TIME-STARTTIME,IFAIL
+>                               WRITE(IOUT2,32) BESTF,BESTR  
+>                               DO I = 1,N
+>                                 WRITE(IOUT2,33) I,RW(WX+I)
+>                               ENDDO
+>                               GOTO 555
+>                           ENDIF
+>               ENDIF
+223,227c229,235
+<                           WRITE(IOUT2,31) EVAL,TIME-STARTTIME,IFAIL
+<                           WRITE(IOUT2,32) BESTF,BESTR  
+<                           DO I = 1,N
+<                               WRITE(IOUT2,33) I,RW(KX+I)
+<                           ENDDO 
+---
+>                           IF(IPRINT.GT.0)THEN
+>                               WRITE(IOUT2,31) EVAL,TIME-STARTTIME,IFAIL
+>                               WRITE(IOUT2,32) BESTF,BESTR  
+>                               DO I = 1,N
+>                                   WRITE(IOUT2,33) I,RW(KX+I)
+>                               ENDDO
+>                           ENDIF
+233,237c241,247
+<                           WRITE(IOUT2,31) EVAL,TIME-STARTTIME,IFAIL
+<                           WRITE(IOUT2,32) BESTF,BESTR  
+<                           DO I = 1,N
+<                               WRITE(IOUT2,33) I,RW(WX+I)
+<                           ENDDO 
+---
+>                           IF(IPRINT.GT.0)THEN
+>                               WRITE(IOUT2,31) EVAL,TIME-STARTTIME,IFAIL
+>                               WRITE(IOUT2,32) BESTF,BESTR  
+>                               DO I = 1,N
+>                                   WRITE(IOUT2,33) I,RW(WX+I)
+>                               ENDDO
+>                           ENDIF
+246,250c256,262
+<                           WRITE(IOUT2,31) EVAL,TIME-STARTTIME,IFAIL
+<                           WRITE(IOUT2,32) BESTF,BESTR  
+<                           DO I = 1,N
+<                               WRITE(IOUT2,33) I,RW(KX+I)
+<                           ENDDO 
+---
+>                           IF(IPRINT.GT.0)THEN
+>                               WRITE(IOUT2,31) EVAL,TIME-STARTTIME,IFAIL
+>                               WRITE(IOUT2,32) BESTF,BESTR  
+>                               DO I = 1,N
+>                                   WRITE(IOUT2,33) I,RW(KX+I)
+>                               ENDDO
+>                           ENDIF
+257,261c269,275
+<                           WRITE(IOUT2,31) EVAL,TIME-STARTTIME,IFAIL
+<                           WRITE(IOUT2,32) BESTF,BESTR  
+<                           DO I = 1,N
+<                               WRITE(IOUT2,33) I,RW(WX+I)
+<                           ENDDO 
+---
+>                           IF(IPRINT.GT.0)THEN
+>                               WRITE(IOUT2,31) EVAL,TIME-STARTTIME,IFAIL
+>                               WRITE(IOUT2,32) BESTF,BESTR  
+>                               DO I = 1,N
+>                                   WRITE(IOUT2,33) I,RW(WX+I)
+>                               ENDDO
+>                           ENDIF
+271c285
+<   555 CONTINUE       
+---
+>   555 CONTINUE
+275,324c289,340
+<           WRITE(*,4)
+<           WRITE(*,41) EVAL,TIME-STARTTIME,IFAIL
+<           WRITE(*,42) F  
+<           IF(M.GT.0) WRITE(*,142)          
+<               DO I = 1,ME
+<                   IF(DABS(G(I)).LE.ACC)THEN
+<                       WRITE(*,43) I,G(I)
+<                   ELSE
+<                       WRITE(*,431) I,G(I)                  
+<                   ENDIF
+<               ENDDO
+<               DO I = ME+1,M
+<                   IF(G(I).GE.-ACC)THEN
+<                       WRITE(*,44) I,G(I)
+<                   ELSE
+<                       WRITE(*,441) I,G(I)                  
+<                   ENDIF
+<               ENDDO              
+<               WRITE(*,145)
+<               DO I = 1,N
+<                  IF(XL(I).EQ. 0.0D0) WRITE(*,400) I,X(I)
+<                  IF(XL(I).EQ. 1.0D0) WRITE(*,401) I,X(I)
+<                  IF(XL(I).EQ. 2.0D0) WRITE(*,402) I,X(I)
+<                  IF(XL(I).EQ. 3.0D0) WRITE(*,403) I,X(I)
+<                  IF(XL(I).EQ. 4.0D0) WRITE(*,404) I,X(I)
+<                  IF(XL(I).EQ. 5.0D0) WRITE(*,405) I,X(I)
+<                  IF(XL(I).EQ. 6.0D0) WRITE(*,406) I,X(I)
+<                  IF(XL(I).EQ. 7.0D0) WRITE(*,407) I,X(I)
+<                  IF(XL(I).EQ. 8.0D0) WRITE(*,408) I,X(I)
+<                  IF(XL(I).EQ. 9.0D0) WRITE(*,409) I,X(I)
+<                  IF(XL(I).EQ.10.0D0) WRITE(*,410) I,X(I)
+<                  IF(XL(I).EQ.11.0D0) WRITE(*,411) I,X(I)
+<                  IF(XL(I).EQ.12.0D0) WRITE(*,412) I,X(I)
+<                  IF(XL(I).EQ.13.0D0) WRITE(*,413) I,X(I)
+<                  IF(XL(I).EQ.14.0D0) WRITE(*,414) I,X(I)
+<                  IF(XL(I).EQ.15.0D0) WRITE(*,415) I,X(I)
+<                  IF(XL(I).EQ.16.0D0) WRITE(*,416) I,X(I)
+<                  IF(XL(I).EQ.17.0D0) WRITE(*,417) I,X(I)
+<                  IF(XL(I).EQ.18.0D0) WRITE(*,418) I,X(I)
+<                  IF(XL(I).EQ.19.0D0) WRITE(*,419) I,X(I)
+<                  IF(XL(I).EQ.20.0D0) WRITE(*,420) I,X(I)    
+<                  IF(XL(I).EQ.21.0D0) WRITE(*,421) I,X(I)
+<                  IF(XL(I).EQ.22.0D0) WRITE(*,422) I,X(I)  
+<                  IF(XL(I).EQ.90.0D0) WRITE(*,490) I,X(I)
+<                  IF(XL(I).EQ.91.0D0) WRITE(*,491) I,X(I)
+<                  IF(XL(I).EQ.92.0D0) WRITE(*,492) I,X(I)
+<                  IF(XL(I).EQ.93.0D0) WRITE(*,493) I,X(I)         
+<               ENDDO
+<           WRITE(*,47)       
+<           IF(SAVESCREEN.GT.0)THEN
+---
+>           IF(IPRINT.EQ.0)THEN
+>               WRITE(*,4)
+>               WRITE(*,41) EVAL,TIME-STARTTIME,IFAIL
+>               WRITE(*,42) F  
+>               IF(M.GT.0) WRITE(*,142)          
+>                   DO I = 1,ME
+>                       IF(DABS(G(I)).LE.ACC)THEN
+>                           WRITE(*,43) I,G(I)
+>                       ELSE
+>                           WRITE(*,431) I,G(I)                  
+>                       ENDIF
+>                   ENDDO
+>                   DO I = ME+1,M
+>                       IF(G(I).GE.-ACC)THEN
+>                           WRITE(*,44) I,G(I)
+>                       ELSE
+>                           WRITE(*,441) I,G(I)                  
+>                       ENDIF
+>                   ENDDO              
+>                   WRITE(*,145)
+>                   DO I = 1,N
+>                      IF(XL(I).EQ. 0.0D0) WRITE(*,400) I,X(I)
+>                      IF(XL(I).EQ. 1.0D0) WRITE(*,401) I,X(I)
+>                      IF(XL(I).EQ. 2.0D0) WRITE(*,402) I,X(I)
+>                      IF(XL(I).EQ. 3.0D0) WRITE(*,403) I,X(I)
+>                      IF(XL(I).EQ. 4.0D0) WRITE(*,404) I,X(I)
+>                      IF(XL(I).EQ. 5.0D0) WRITE(*,405) I,X(I)
+>                      IF(XL(I).EQ. 6.0D0) WRITE(*,406) I,X(I)
+>                      IF(XL(I).EQ. 7.0D0) WRITE(*,407) I,X(I)
+>                      IF(XL(I).EQ. 8.0D0) WRITE(*,408) I,X(I)
+>                      IF(XL(I).EQ. 9.0D0) WRITE(*,409) I,X(I)
+>                      IF(XL(I).EQ.10.0D0) WRITE(*,410) I,X(I)
+>                      IF(XL(I).EQ.11.0D0) WRITE(*,411) I,X(I)
+>                      IF(XL(I).EQ.12.0D0) WRITE(*,412) I,X(I)
+>                      IF(XL(I).EQ.13.0D0) WRITE(*,413) I,X(I)
+>                      IF(XL(I).EQ.14.0D0) WRITE(*,414) I,X(I)
+>                      IF(XL(I).EQ.15.0D0) WRITE(*,415) I,X(I)
+>                      IF(XL(I).EQ.16.0D0) WRITE(*,416) I,X(I)
+>                      IF(XL(I).EQ.17.0D0) WRITE(*,417) I,X(I)
+>                      IF(XL(I).EQ.18.0D0) WRITE(*,418) I,X(I)
+>                      IF(XL(I).EQ.19.0D0) WRITE(*,419) I,X(I)
+>                      IF(XL(I).EQ.20.0D0) WRITE(*,420) I,X(I)    
+>                      IF(XL(I).EQ.21.0D0) WRITE(*,421) I,X(I)
+>                      IF(XL(I).EQ.22.0D0) WRITE(*,422) I,X(I)  
+>                      IF(XL(I).EQ.90.0D0) WRITE(*,490) I,X(I)
+>                      IF(XL(I).EQ.91.0D0) WRITE(*,491) I,X(I)
+>                      IF(XL(I).EQ.92.0D0) WRITE(*,492) I,X(I)
+>                      IF(XL(I).EQ.93.0D0) WRITE(*,493) I,X(I)         
+>                   ENDDO
+>               WRITE(*,47)
+>           ENDIF
+>           IF(IPRINT.GT.0)THEN
+375,378c391,394
+<       ENDIF          
+< CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC 
+<       END      
+< C     END OF FILE
+---
+>       ENDIF 
+> CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+>       RETURN
+>       END

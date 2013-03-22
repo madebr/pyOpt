@@ -2,7 +2,7 @@
 '''
 pyFSQP - A Python pyOpt interface to FSQP. 
 
-Copyright (c) 2008-2011 by pyOpt Developers
+Copyright (c) 2008-2013 by pyOpt Developers
 All rights reserved.
 Revision: 1.4   $Date: 21/06/2010 21:00$
 
@@ -589,7 +589,7 @@ class FSQP(Optimizer):
 			opt_problem.addSol(self.__class__.__name__, sol_name, objfunc, sol_time, 
 				sol_evals, sol_inform, sol_vars, sol_objs, sol_cons, sol_options, 
 				display_opts=disp_opts, Lambda=sol_lambda, Sensitivities=sens_type, 
-				arguments=args, **kwargs)
+				myrank=myrank, arguments=args, **kwargs)
 			
 		#end
 		

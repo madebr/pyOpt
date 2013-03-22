@@ -2,7 +2,7 @@
 '''
 pyALHSO - A Python interface to ALHSO.
 
-Copyright (c) 2008-2011 by pyOpt Developers
+Copyright (c) 2008-2013 by pyOpt Developers
 All rights reserved.
 Revision: 1.1   $Date: 19/02/2009 21:00$
 

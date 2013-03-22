@@ -1,0 +1,428 @@
+1,2c1,3
+<       subroutine solvopt(n,x,f,fun,flg,grad,options,
+<      *                   flfc,func,flgc,gradc)
+---
+>       subroutine solvopt(n,x,f,fun,flg,grad,options,flfc,func,flgc,
+>      1     gradc,B,g,g0,g1,gt,gc,z,x1,xopt,xrec,grec,xx,deltax,idx,
+>      2     iout,ifile)
+94c95,96
+<       integer iterlimit, kg,k1,k2, kless,   allocerr
+---
+>       integer iterlimit, kg,k1,k2, kless
+>       integer m1
+109,123c111,118
+<       double precision, dimension(:,:), allocatable :: B
+<       double precision, dimension(:), allocatable :: g
+<       double precision, dimension(:), allocatable :: g0
+<       double precision, dimension(:), allocatable :: g1
+<       double precision, dimension(:), allocatable :: gt
+<       double precision, dimension(:), allocatable :: gc
+<       double precision, dimension(:), allocatable :: z
+<       double precision, dimension(:), allocatable :: x1
+<       double precision, dimension(:), allocatable :: xopt
+<       double precision, dimension(:), allocatable :: xrec
+<       double precision, dimension(:), allocatable :: grec
+<       double precision, dimension(:), allocatable :: xx
+<       double precision, dimension(:), allocatable :: deltax
+<       integer, dimension(:), allocatable :: idx
+<       character endwarn*100, allocerrstr*19
+---
+>       double precision B,g,g0,g1,gt,gc,z
+>       double precision x1,xopt,xrec,grec,xx,deltax
+>       integer idx
+>       dimension B(n,n),g(n),g0(n),g1(n),gt(n),gc(n),z(n)
+>       dimension x1(n),xopt(n),xrec(n),grec(n),xx(n),deltax(n)
+>       dimension idx(n)
+>       
+>       character endwarn*100
+125a121,123
+>       integer iout
+>       character*(*) ifile
+>       
+130,131c128,133
+<      4    infty /1.d100/, epsnorm /1.d-15/,  epsnorm2 /1.d-30/,
+<      5    allocerrstr/'Allocation Error = '/
+---
+>      4    infty /1.d100/, epsnorm /1.d-15/,  epsnorm2 /1.d-30/
+>      
+>       if (options(5).gt.-one) then
+>         open(unit=iout,file=ifile(1:len_trim(ifile)),status='unknown')
+>       endif
+>      
+134,135c136,139
+<           print *, errmes
+<           print *, error2
+---
+> 		if (options(5).gt.-one) then
+>           write(iout,*) errmes
+>           write(iout,*) error2
+>         endif
+140,210d143
+< c allocate working arrays:
+<       allocate (B(n,n),stat=allocerr)
+<       if (allocerr.ne.0) then
+<          options(9)=-one
+<          print *,allocerrstr,allocerr
+<       endif   
+<       allocate (g(n),stat=allocerr)
+<       if (allocerr.ne.0) then
+<          options(9)=-one
+<          print *,allocerrstr,allocerr
+<       endif   
+<       allocate (g0(n),stat=allocerr)
+<       if (allocerr.ne.0) then
+<          options(9)=-one
+<          print *,allocerrstr,allocerr
+<       endif   
+<       allocate (g1(n),stat=allocerr)
+<       if (allocerr.ne.0) then
+<          options(9)=-one
+<          print *,allocerrstr,allocerr
+<       endif   
+<       allocate (gt(n),stat=allocerr)
+<       if (allocerr.ne.0) then
+<          options(9)=-one
+<          print *,allocerrstr,allocerr
+<       endif   
+<       allocate (gc(n),stat=allocerr)
+<       if (allocerr.ne.0) then
+<          options(9)=-one
+<          print *,allocerrstr,allocerr
+<       endif   
+<       allocate (z(n),stat=allocerr)
+<       if (allocerr.ne.0) then
+<          options(9)=-one
+<          print *,allocerrstr,allocerr
+<       endif   
+<       allocate (x1(n),stat=allocerr)
+<       if (allocerr.ne.0) then
+<          options(9)=-one
+<          print *,allocerrstr,allocerr
+<       endif   
+<       allocate (xopt(n),stat=allocerr)
+<       if (allocerr.ne.0) then
+<          options(9)=-one
+<          print *,allocerrstr,allocerr
+<       endif   
+<       allocate (xrec(n),stat=allocerr)
+<       if (allocerr.ne.0) then
+<          options(9)=-one
+<          print *,allocerrstr,allocerr
+<       endif   
+<       allocate (grec(n),stat=allocerr)
+<       if (allocerr.ne.0) then
+<          options(9)=-one
+<          print *,allocerrstr,allocerr
+<       endif   
+<       allocate (xx(n),stat=allocerr)
+<       if (allocerr.ne.0) then
+<          options(9)=-one
+<          print *,allocerrstr,allocerr
+<       endif   
+<       allocate (deltax(n),stat=allocerr)
+<       if (allocerr.ne.0) then
+<          options(9)=-one
+<          print *,allocerrstr,allocerr
+<       endif   
+<       allocate (idx(n),stat=allocerr)
+<       if (allocerr.ne.0) then
+<          options(9)=-one
+<          print *,allocerrstr,allocerr
+<       endif   
+258c191
+<          dispdata=0  
+---
+>          dispdata=0
+260c193
+<             dispwarn=.false. 
+---
+>             dispwarn=.false.
+262c195
+<             dispwarn=.true. 
+---
+>             dispwarn=.true.
+310c243,245
+<       call fun(x,f)
+---
+>       call fun(n,x,f)
+> c	  write(iout,*) 'f'
+> c	  write(iout,*) f
+314,316c249,251
+<             print *,errmes
+<             print *,error32
+<             print *,error6
+---
+>             write(iout,*) errmes
+>             write(iout,*) error32
+>             write(iout,*) error6
+329c264,266
+<           call func(x,fc)
+---
+>           call func(n,x,fc)
+> c		  write(iout,*) 'g'
+> c		  write(iout,*) fc
+333,335c270,272
+<                 print *,errmes
+<                 print *,error52
+<                 print *,error6
+---
+>                 write(iout,*) errmes
+>                 write(iout,*) error52
+>                 write(iout,*) error6
+363c300,302
+<         call grad(x,g)
+---
+>         call grad(n,x,g)
+> c	    write(iout,*) 'gf'
+> c	    write(iout,*) g
+373,375c312,314
+<             print *,errmes
+<             print *,error42
+<             print *,error6
+---
+>             write(iout,*) errmes
+>             write(iout,*) error42
+>             write(iout,*) error6
+381,383c320,322
+<             print *,errmes
+<             print *,error43
+<             print *,error6
+---
+>             write(iout,*) errmes
+>             write(iout,*) error43
+>             write(iout,*) error6
+401c340,342
+<             call gradc(x,gc)  
+---
+>             call gradc(n,x,gc)
+> c	        write(iout,*) 'dg'
+> c	        write(iout,*) gc
+410,412c351,353
+<                print *,errmes
+<                print *,error62
+<                print *,error6
+---
+>                write(iout,*) errmes
+>                write(iout,*) error62
+>                write(iout,*) error6
+418,419c359,360
+<                print *,errmes
+<                print *,error63
+---
+>                write(iout,*) errmes
+>                write(iout,*) error63
+469a411,416
+>         if (options(5).gt.zero) then
+>           write(iout,*) 
+>      1        'Iteration # ..... Function Value ..... ',
+>      2        'Step Value ..... Gradient Norm'
+>         endif
+>         
+514,515c461,462
+<                 print *,wrnmes
+<                 print *,warn08
+---
+>                 write(iout,*) wrnmes
+>                 write(iout,*) warn08
+592,593c539,540
+<                   print *,wrnmes
+<                   print *,warn20
+---
+>                   write(iout,*) wrnmes
+>                   write(iout,*) warn20
+638c585,587
+<          call fun(x,f)
+---
+>          call fun(n,x,f)
+> c	     write(iout,*) 'f'
+> c	     write(iout,*) f
+642,643c591,592
+<               print *,errmes 
+<               print *,error5
+---
+>               write(iout,*) errmes 
+>               write(iout,*) error5
+650c599,601
+<            call func(x,fc)
+---
+>            call func(n,x,fc)
+> c	       write(iout,*) 'g'
+> c	       write(iout,*) fc
+654,656c605,607
+<                   print *,errmes
+<                   print *,error52
+<                   print *,error6
+---
+>                   write(iout,*) errmes
+>                   write(iout,*) error52
+>                   write(iout,*) error6
+689,690c640,641
+<                print *,wrnmes
+<                print *,error32
+---
+>                write(iout,*) wrnmes
+>                write(iout,*) error32
+715,716c666,667
+<                        print *,termwarn1
+<                        print *,endwarn4 
+---
+>                        write(iout,*) termwarn1
+>                        write(iout,*) endwarn4 
+818c769,771
+<           call grad(x,g)
+---
+>           call grad(n,x,g)
+> c	      write(iout,*) 'df'
+> c	      write(iout,*) g
+828,829c781,782
+<            print *,errmes
+<            print *,error42
+---
+>            write(iout,*) errmes
+>            write(iout,*) error42
+835,836c788,789
+<            print *,wrnmes
+<            print *,warn1
+---
+>            write(iout,*) wrnmes
+>            write(iout,*) warn1
+865c818,820
+<                  call gradc(x,gc)  
+---
+>                  call gradc(n,x,gc)
+> c			     write(iout,*) 'dg'
+> c	             write(iout,*) gc
+875,876c830,831
+<                      print *,errmes
+<                      print *,error62
+---
+>                      write(iout,*) errmes
+>                      write(iout,*) error62
+882,883c837,838
+<                      print *,errmes
+<                      print *,error63
+---
+>                      write(iout,*) errmes
+>                      write(iout,*) error63
+898,899c853,854
+<                  print *,wrnmes
+<                  print *,warn21 
+---
+>                  write(iout,*) wrnmes
+>                  write(iout,*) warn21 
+939,942c894,901
+<          print *,
+<      1        'Iteration # ..... Function Value ..... ',
+<      2        'Step Value ..... Gradient Norm'
+<          print '(5x,i5,7x,g13.5,6x,g13.5,7x,g13.5)', k,f,dx,ng
+---
+> c         write(iout,*) 
+> c     1        'Iteration # ..... Function Value ..... ',
+> c     2        'Step Value ..... Gradient Norm'
+>          write(iout,'(5x,i5,7x,f13.5,6x,f13.5,7x,f13.5)') k,f,dx,ng
+>          do i=1,n,6
+>           m1=min0(n,i+5)
+>           write(iout,'(3x,a,2x,6e13.5)') '  X =',(x(j),j=1,m1)
+>          enddo
+990,991c949,950
+<                         print *,wrnmes
+<                         print *,warn09
+---
+>                         write(iout,*) wrnmes
+>                         write(iout,*) warn09
+1033,1035c992,994
+<                          print *,termwarn1
+<                          print *,endwarn
+<                          if (app) print *,appwarn
+---
+>                          write(iout,*) termwarn1
+>                          write(iout,*) endwarn
+>                          if (app) write(iout,*) appwarn
+1039c998
+<                        if (dispwarn) print *,termwarn0
+---
+>                        if (dispwarn) write(iout,*) termwarn0
+1050,1052c1009,1011
+<                        print *,termwarn1 
+<                        print *,endwarn4
+<                        if (app) print *,appwarn
+---
+>                        write(iout,*) termwarn1 
+>                        write(iout,*) endwarn4
+>                        if (app) write(iout,*) appwarn
+1066,1067c1025,1026
+<                   print *,wrnmes
+<                   print *,warn4 
+---
+>                   write(iout,*) wrnmes
+>                   write(iout,*) warn4 
+1076,1077c1035,1036
+<                   print *,termwarn1
+<                   print *,warn1
+---
+>                   write(iout,*) termwarn1
+>                   write(iout,*) warn1
+1086,1087c1045,1046
+<                print *,wrnmes
+<                print *,warn1
+---
+>                write(iout,*) wrnmes
+>                write(iout,*) warn1
+1100c1059,1061
+<                call fun(x,f)
+---
+>                call fun(n,x,f)
+> c			   write(iout,*) 'f'
+> c			   write(iout,*) f
+1104,1105c1065,1066
+<                    print *,errmes
+<                    print *,error32
+---
+>                    write(iout,*) errmes
+>                    write(iout,*) error32
+1122c1083,1085
+<                    call grad(x,g)
+---
+>                    call grad(n,x,g)
+> c	               write(iout,*) 'df'
+> c	               write(iout,*) g
+1132,1133c1095,1096
+<                       print *,errmes
+<                       print *,error42
+---
+>                       write(iout,*) errmes
+>                       write(iout,*) error42
+1142,1143c1105,1106
+<                   print *,termwarn1
+<                   print *,warn1
+---
+>                   write(iout,*) termwarn1
+>                   write(iout,*) warn1
+1168,1169c1131,1132
+<                 print *,wrnmes
+<                 print *,warn31
+---
+>                 write(iout,*) wrnmes
+>                 write(iout,*) warn31
+1190c1153,1155
+<                call fun(x1,f1)
+---
+>                call fun(n,x1,f1)
+> c			   write(iout,*) 'f1'
+> c			   write(iout,*) f1
+1215c1180,1182
+<                 call grad(x1,gt)
+---
+>                 call grad(n,x1,gt)
+> c			    write(iout,*) 'df'
+> c			    write(iout,*) gt
+1223c1190
+<                 if (dispwarn) print *,warn32
+---
+>                 if (dispwarn) write(iout,*) warn32
+1243,1247d1209
+< c deallocate working arrays:
+<        deallocate (idx,deltax,xx,grec,xrec,xopt,x1,z,gc,gt,g1,g0,g,B)
+<       
+<       end 
+<       subroutine null

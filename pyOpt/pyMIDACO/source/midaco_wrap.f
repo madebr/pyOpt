@@ -21,7 +21,7 @@ C   URL: www.pyopt.org
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-      subroutine midaco_wrap(N,NINT,M,ME,X,XL,XU,F,G,
+      subroutine midaco_wrap(L,N,NINT,M,ME,X,XL,XU,F,G,
      &  ACC,PARAM,MAXEVAL,MAXTIME,IFAIL,EVAL,
      &  IPRINT,PRINTEVAL,PRINTBEST,IOUT1,IOUT2,IFILE1,IFILE2,
      &  LICENSE_KEY,
@@ -31,11 +31,11 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       IMPLICIT NONE
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC 
 C     Dimensions of optimization problem        
-      INTEGER N,NINT,M,ME
+      INTEGER L,N,NINT,M,ME
 C     Lower and upper bounds ('XL' and 'XU') and optimization variable 'X'   
-      DOUBLE PRECISION X(N),XL(N),XU(N)
+      DOUBLE PRECISION X(L*N),XL(N),XU(N)
 C     Objective 'F(X)' and constraints 'G(X)' 
-      DOUBLE PRECISION F(1),G(M)
+      DOUBLE PRECISION F(L),G(L*M)
 C     MIDACO flags, parameters and counters
       INTEGER MAXEVAL,IFAIL,ISTOP,EVAL
       INTEGER IPRINT,PRINTEVAL,PRINTBEST,IOUT1,IOUT2
@@ -71,8 +71,8 @@ C     Call MIDACO solver by reverse communication
   100 CONTINUE
 
 C     Evaluate objective function
-      CALL OBJFUN(N,M,X,F,G)                     ! Evaluate F(X) and G(X)
-      EVAL = EVAL + 1                            ! Count evaluation
+      CALL OBJFUN(L,N,M,X,F,G)                   ! Evaluate F(X) and G(X)
+      EVAL = EVAL + L                            ! Count evaluation
 
 C     Stopping criteria      
       CALL CPU_TIME(TIME)                        ! Get current time	  
@@ -80,7 +80,7 @@ C     Stopping criteria
       IF(TIME-STARTTIME.GE.MAXTIME)  ISTOP = 1   ! MAXTIME criteria	  
 
 C     MIDACO call within the rev.com.loop
-      CALL MIDACO(1,N,NINT,M,ME,X,F,G,XL,XU,ACC,
+      CALL MIDACO(L,N,NINT,M,ME,X,F,G,XL,XU,ACC,
      &     IFAIL,ISTOP,PARAM,RW,LRW,IW,LIW,LICENSE_KEY)
 
 C     Check if MIDACO returns WARNING or ERROR message
@@ -108,7 +108,7 @@ C     Continue rev.com.loop
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC 
 C     Independent check of the MIDACO solution 
-  999 CALL OBJFUN(N,M,X,F,G)
+  999 CALL OBJFUN(L,N,M,X,F,G)
 
 C     Print the MIDACO solution
       IF (IPRINT.GE.0)THEN

@@ -2,7 +2,7 @@
 '''
 pyNSGA2 - A Python pyOpt interface to NSGA-II. 
 
-Copyright (c) 2008-2011 by pyOpt Developers
+Copyright (c) 2008-2013 by pyOpt Developers
 All rights reserved.
 Revision: 1.1   $Date: 22/07/2008 21:00$
 

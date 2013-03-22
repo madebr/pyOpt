@@ -4,7 +4,7 @@ pyOpt_optimization
 
 Holds the Python Design Optimization Classes (base and inherited).
 
-Copyright (c) 2008-2011 by pyOpt Developers
+Copyright (c) 2008-2013 by pyOpt Developers
 All rights reserved.
 Revision: 1.4   $Date: 22/06/2009 21:00$
 
@@ -882,6 +882,8 @@ class Optimization(object):
                 lines = str(self._constraints[con]).split('\n')
                 text+= lines[1] + '\n'
             #end
+        #end
+        
         return (text)
         
         
@@ -1019,7 +1021,7 @@ class Solution(Optimization):
         text0 = Optimization.__str__(self)
         text1 = ''
         lines = text0.split('\n')
-        lines[1] = lines[1].lstrip('Optimization Problem --')
+        lines[1] = lines[1][len('Optimization Problem -- '):]
         for i in xrange(5):
             text1 += lines[i] + '\n'
         #end

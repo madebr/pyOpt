@@ -2,7 +2,7 @@
 '''
 pySDPEN - A Python pyOpt interface to SDPEN.
 
-Copyright (c) 2008-2012 by pyOpt Developers
+Copyright (c) 2008-2013 by pyOpt Developers
 All rights reserved.
 Revision: 1.0   $Date: 09/08/2012 21:00$
 
@@ -303,13 +303,13 @@ class SDPEN(Optimizer):
 		alfa_stop = numpy.array([self.options['alfa_stop'][1]], numpy.float)
 		nf_max = numpy.array([self.options['nf_max'][1]], numpy.float)
 		if (myrank == 0):
-			if (self.options['iprint'][1]>=0):
+			if (self.options['iprint'][1]<=2):
 				iprint = numpy.array([self.options['iprint'][1]], numpy.int)
 			else:
 				raise IOError('Incorrect Output Level Setting')
 			#end
 		else:
-			iprint = numpy.array([0], numpy.int)
+			iprint = numpy.array([-1], numpy.int)
 		#end
 		nfvals = numpy.array([0], numpy.int)
 		iout = numpy.array([self.options['iout'][1]], numpy.int)

@@ -2,7 +2,7 @@
 '''
 pyALGENCAN - A Python pyOpt interface to ALGENCAN. 
 
-Copyright (c) 2008-2011 by pyOpt Developers
+Copyright (c) 2008-2013 by pyOpt Developers
 All rights reserved.
 Revision: 1.0   $Date: 30/12/2011 21:00$
 

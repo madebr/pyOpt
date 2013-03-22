@@ -621,7 +621,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 		stext = ''
 		stext += 'Global Best Particle:\n'
 		stext += '-'*94 + '\n'
-		stext += '    Major   Minor   nFCon   Violation(L2)   Objective   Lagrangian   Rel Lagrangian   Global Dist\n'
+		stext += '    Major   Minor   nFCon   Violation(L2)     Objective   Lagrangian   Rel Lagrangian   Global Dist\n'
 		stext += '-'*94 + '\n'
 		sfile.write(stext)
 		sfile.flush()
@@ -1022,7 +1022,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 				print("NUMBER OF ITERATIONS: %d\n" %(k_out))
 				print("NUMBER OF OBJECTIVE FUNCTION EVALUATIONS: %d\n" %(nfevals))
 				print("OBJECTIVE FUNCTION VALUE:")
-				print("\tF = %16.8e\n" %(float(swarm_f)))
+				print("\tF = %.16g\n" %(float(swarm_f)))
 				if (constraints > 0):
 					# Equality Constraints
 					print("EQUALITY CONSTRAINTS VALUES:")
@@ -1051,7 +1051,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 				#end
 				text = ''
 				for j in xrange(dimensions):
-					text += ("\tP(%d) = %9.3e\t" %(j,xtmp[j]))
+					text += ("\tP(%d) = %.16g\t" %(j,xtmp[j]))
 					if (numpy.mod(j+1,3) == 0):
 						text +=("\n")
 					#end
@@ -1065,7 +1065,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 				ofile.write("\nNUMBER OF ITERATIONS: %d\n" %(k_out))
 				ofile.write("\nNUMBER OF OBJECTIVE FUNCTION EVALUATIONS: %d\n" %(nfevals))
 				ofile.write("\nOBJECTIVE FUNCTION VALUE:\n")
-				ofile.write("\tF = %16.8e\n" %(float(swarm_f)))
+				ofile.write("\tF = %.16g\n" %(float(swarm_f)))
 				if (constraints > 0):
 					# Equality Constraints
 					ofile.write("\nEQUALITY CONSTRAINTS VALUES:\n")
@@ -1094,7 +1094,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 				#end
 				text = ''
 				for j in xrange(dimensions):
-					text += ("\tP(%d) = %9.3e\t" %(j,xtmp[j]))
+					text += ("\tP(%d) = %.16g\t" %(j,xtmp[j]))
 					if (numpy.mod(j+1,3) == 0):
 						text +=("\n")
 					#end
@@ -1193,9 +1193,9 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 				cvL2 = cvss**0.5
 				if (stopCriteria == 1):
 					relL = abs(global_L[0]-global_L[stopIters-1])/abs(global_L[stopIters-1])
-					stext = '%9d%8d%8d%15.4e%13f%13.4e%17.4e%14.4e\n' %(k_out,k_inn,stop_con_num,cvL2,swarm_f,swarm_L,relL,global_distance[0])
+					stext = '%9d%8d%8d%15.4e%15f%13.4e%16.4e%14.4e\n' %(k_out,k_inn,stop_con_num,cvL2,swarm_f,swarm_L,relL,global_distance[0])
 				else:
-					stext = '%9d%8d%8d%15.4e%13f%13.4e%17s%14s\n' %(k_out,k_inn,stop_con_num,cvL2,swarm_f,swarm_L,'NA','NA')
+					stext = '%9d%8d%8d%15.4e%15f%13.4e%16s%14s\n' %(k_out,k_inn,stop_con_num,cvL2,swarm_f,swarm_L,'NA','NA')
 				#end
 				sfile.write(stext)
 				sfile.flush()
@@ -1222,6 +1222,9 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 					for l in xrange(constraints):
 						lambda_old[l] = lambda_val[l]
 						lambda_val[l] += 2*rp[l]*tau_new[l]
+						if (abs(lambda_val[l]) < eps):
+							lambda_val[l] = 0.0
+						#end
 					#end
 					
 					# Update Penalty Factor
@@ -1342,7 +1345,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 			print("NUMBER OF ITERATIONS: %d\n" %(k_out))
 			print("NUMBER OF OBJECTIVE FUNCTION EVALUATIONS: %d\n" %(nfevals))
 			print("OBJECTIVE FUNCTION VALUE:")
-			print("\tF = %16.8e\n" %(float(swarm_f)))
+			print("\tF = %.16g\n" %(float(swarm_f)))
 			if (constraints > 0):
 				# Equality Constraints
 				print("EQUALITY CONSTRAINTS VALUES:")
@@ -1371,7 +1374,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 			#end
 			text = ''
 			for j in xrange(dimensions):
-				text += ("\tP(%d) = %9.3e\t" %(j,xtmp[j]))
+				text += ("\tP(%d) = %.16g\t" %(j,xtmp[j]))
 				if (numpy.mod(j+1,3) == 0):
 					text +=("\n")
 				#end
@@ -1389,7 +1392,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 			sfile.write("\nNUMBER OF ITERATIONS: %d\n" %(k_out))
 			sfile.write("\nNUMBER OF OBJECTIVE FUNCTION EVALUATIONS: %d\n" %(nfevals))
 			sfile.write("\nOBJECTIVE FUNCTION VALUE:\n")
-			sfile.write("\tF = %16.8e\n" %(float(swarm_f)))
+			sfile.write("\tF = %.16g\n" %(float(swarm_f)))
 			if (constraints > 0):
 				# Equality Constraints
 				sfile.write("\nEQUALITY CONSTRAINTS VALUES:\n")
@@ -1418,7 +1421,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 			#end
 			text = ''
 			for j in xrange(dimensions):
-				text += ("\tP(%d) = %9.5e\t" %(j,xtmp[j]))
+				text += ("\tP(%d) = %.16g\t" %(j,xtmp[j]))
 				if (numpy.mod(j+1,3) == 0):
 					text +=("\n")
 				#end

@@ -2,7 +2,7 @@
 '''
 pyMMFD - A Python pyOpt interface to MMFD (part of NASA's ADS). 
 
-Copyright (c) 2008-2011 by pyOpt Developers
+Copyright (c) 2008-2013 by pyOpt Developers
 All rights reserved.
 Revision: 1.2   $Date: 21/06/2010 21:00$
 
