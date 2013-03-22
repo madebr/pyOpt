@@ -28,8 +28,6 @@ c  set values
 c
       mxm1=min(m+1,n)
       maxa=n*(m+1)
-      mxws=300
-      mxlws=100
       maxg=min(n,mbar)+1
       kmax=n
       mlp=max(m,50)
@@ -84,7 +82,7 @@ c
           al(i)=0.0
         enddo
       endif
-      if(ifail.lt.0) stop
+      if(ifail.lt.0) return
 c  
 c  call filterSD
 c

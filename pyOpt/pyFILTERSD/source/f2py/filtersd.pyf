@@ -84,17 +84,206 @@ python module filtersd ! in
             common /defaultc/ ainfty,ubd,mlp,mxf
             common /mxm1c/ mxm1
         end subroutine filtersd_wrap
-        subroutine openunit(unitnum,filename,filestatus,fileaction,ierror) ! in :sdpen:source/openunit.f90
+        subroutine filter_sd(n,f,fmin,cstype,bl,bu,ws,lws,v,nv,maxa,kmax,maxg,d,dl,du,g,r,w,e,ls,alp,lp,filh,filf,rho,htol,rgtol,maxit,iprint,nout,ifail) ! in :filtersd:source/filtersd.f
+            use filtersd__user__routines
+            integer :: n
+            double precision :: f
+            double precision :: fmin
+            character dimension(*) :: cstype
+            double precision dimension(*) :: bl
+            double precision dimension(*) :: bu
+            double precision dimension(*) :: ws
+            integer dimension(*) :: lws
+            double precision dimension(*) :: v
+            integer :: nv
+            integer :: maxa
+            integer :: kmax
+            integer :: maxg
+            double precision dimension(*) :: d
+            double precision dimension(*) :: dl
+            double precision dimension(*) :: du
+            double precision dimension(*) :: g
+            double precision dimension(*) :: r
+            double precision dimension(*) :: w
+            double precision dimension(*) :: e
+            integer dimension(*) :: ls
+            double precision dimension(*) :: alp
+            integer dimension(*) :: lp
+            double precision dimension(*) :: filh
+            double precision dimension(*) :: filf
+            double precision :: rho
+            double precision :: htol
+            double precision :: rgtol
+            integer :: maxit
+            integer :: iprint
+            integer :: nout
+            integer :: ifail
+            double precision :: fxd
+            double precision :: alc
+            integer :: m
+            integer :: iph
+            integer :: last1
+            integer :: next1
+            integer :: nx
+            integer :: nx1
+            integer :: nal
+            integer :: nal1
+            integer :: naal
+            integer :: naal1
+            integer :: nxd
+            integer :: nxd1
+            integer :: ncx
+            integer :: ncx1
+            integer :: ncxd
+            integer :: ncxd1
+            integer :: nla1
+            double precision :: dnorm
+            double precision :: h
+            double precision :: hjt
+            double precision :: hj
+            integer :: ipeq
+            integer :: k
+            integer :: itn
+            integer :: nft
+            integer :: ngt
+            double precision :: ainfty
+            double precision :: ubd
+            integer :: mlp
+            integer :: mxf
+            double precision :: rgnorm
+            double precision :: vstep
+            integer :: iter
+            integer :: npv
+            integer :: nfn
+            integer :: ngr
+            double precision :: eps
+            double precision :: tol
+            double precision :: emin
+            integer :: mxgr
+            double precision :: sgnf
+            integer :: nrep
+            integer :: npiv
+            integer :: nres
+            intent(callback) functions
+            external functions
+            intent(callback) gradients
+            external gradients
+            common /functc/ fxd,alc,m,iph,last1,next1,nx,nx1,nal,nal1,naal,naal1,nxd,nxd1,ncx,ncx1,ncxd,ncxd1,nla1
+            common /statsc/ dnorm,h,hjt,hj,ipeq,k,itn,nft,ngt
+            common /defaultc/ ainfty,ubd,mlp,mxf
+            common /infoc/ rgnorm,vstep,iter,npv,nfn,ngr
+            common /epsc/ eps,tol,emin
+            common /ngrc/ mxgr
+            common /repc/ sgnf,nrep,npiv,nres
+        end subroutine filter_sd
+        subroutine funct(n,d,phi,ws,lws,cstype) ! in :filtersd:source/filtersd.f
+            use filtersd__user__routines
+            integer :: n
+            double precision dimension(*) :: d
+            double precision :: phi
+            double precision dimension(*) :: ws
+            integer dimension(*) :: lws
+            character dimension(*) :: cstype
+            double precision :: fxd
+            double precision :: alc
+            integer :: m
+            integer :: iph
+            integer :: last1
+            integer :: next1
+            integer :: nx
+            integer :: nx1
+            integer :: nal
+            integer :: nal1
+            integer :: naal
+            integer :: naal1
+            integer :: nxd
+            integer :: nxd1
+            integer :: ncx
+            integer :: ncx1
+            integer :: ncxd
+            integer :: ncxd1
+            integer :: nla1
+            double precision :: ainfty
+            double precision :: ubd
+            integer :: mlp
+            integer :: mxf
+            intent(callback) functions
+            external functions
+            common /functc/ fxd,alc,m,iph,last1,next1,nx,nx1,nal,nal1,naal,naal1,nxd,nxd1,ncx,ncx1,ncxd,ncxd1,nla1
+            common /defaultc/ ainfty,ubd,mlp,mxf
+        end subroutine funct
+        subroutine grad(n,d,g,ws,lws,cstype) ! in :filtersd:source/filtersd.f
+            use filtersd__user__routines
+            integer :: n
+            double precision dimension(*) :: d
+            double precision dimension(*) :: g
+            double precision dimension(*) :: ws
+            integer dimension(*) :: lws
+            character dimension(*) :: cstype
+            double precision :: fxd
+            double precision :: alc
+            integer :: m
+            integer :: iph
+            integer :: last1
+            integer :: next1
+            integer :: nx
+            integer :: nx1
+            integer :: nal
+            integer :: nal1
+            integer :: naal
+            integer :: naal1
+            integer :: nxd
+            integer :: nxd1
+            integer :: ncx
+            integer :: ncx1
+            integer :: ncxd
+            integer :: ncxd1
+            integer :: nla1
+            integer :: maxa
+            double precision :: ainfty
+            double precision :: ubd
+            integer :: mlp
+            integer :: mxf
+            intent(callback) gradients
+            external gradients
+            common /functc/ fxd,alc,m,iph,last1,next1,nx,nx1,nal,nal1,naal,naal1,nxd,nxd1,ncx,ncx1,ncxd,ncxd1,nla1
+            common /maxac/ maxa
+            common /defaultc/ ainfty,ubd,mlp,mxf
+        end subroutine grad
+        subroutine checkd(n,m,x,al,ws,lws,maxa,maxla,maxu,maxiu,mxws,mxlws,tol,iprint,nout,ifail) ! in :filtersd:source/checkd.f
+            use filtersd__user__routines
+            integer :: n
+            integer :: m
+            double precision dimension(*) :: x
+            double precision dimension(*) :: al
+            double precision dimension(*) :: ws
+            integer dimension(*) :: lws
+            integer :: maxa
+            integer :: maxla
+            integer :: maxu
+            integer :: maxiu
+            integer :: mxws
+            integer :: mxlws
+            double precision :: tol
+            integer :: iprint
+            integer :: nout
+            integer :: ifail
+            intent(callback) functions
+            external functions
+            intent(callback) gradients
+            external gradients
+        end subroutine checkd
+        subroutine openunit(unitnum,filename,filestatus,fileaction,ierror) ! in :filtersd:source/openunit.f90
             integer intent(in) :: unitnum
             character*(*) intent(in) :: filename
             character*(*) intent(in) :: filestatus
             character*(*) intent(in) :: fileaction
             integer intent(out) :: ierror
         end subroutine openunit
-        subroutine pyflush(unitnum) ! in :sdpen:source/openunit.f90
+        subroutine pyflush(unitnum) ! in :filtersd:source/openunit.f90
           integer unitnum
         end subroutine pyflush
-        subroutine closeunit(unitnum) ! in :sdpen:source/closeunit.f90
+        subroutine closeunit(unitnum) ! in :filtersd:source/closeunit.f90
             integer intent(in) :: unitnum
         end subroutine closeunit
     end interface 

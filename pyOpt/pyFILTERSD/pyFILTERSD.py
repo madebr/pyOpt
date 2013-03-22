@@ -25,8 +25,7 @@ __version__ = '$Revision: $'
 
 '''
 To Do:
-	- Check python segfault leak with filtersd wrapper
-	- Add posibility for sparse version of filterSD
+	- 
 '''
 
 # =============================================================================
@@ -152,7 +151,7 @@ class FILTERSD(Optimizer):
 		
 		Additional arguments and keyword arguments are passed to the objective function call.
 		
-		Documentation last updated:  February. 2, 2011 - Ruben E. Perez
+		Documentation last updated:  February. 2, 2013 - Ruben E. Perez
 		'''
 		
 		# 
@@ -501,6 +500,7 @@ class FILTERSD(Optimizer):
 				display_opts=disp_opts, Lambda=sol_lambda, Sensitivities=sens_type, 
 				myrank=myrank, arguments=args, **kwargs)
 			
+			time.sleep(0)
 		#end
 		
 		return ff, xx, sol_inform
@@ -554,7 +554,7 @@ class FILTERSD(Optimizer):
 		
 		# 
 		iprint = self.options['iprint'][1]
-		if (iprint > 1):
+		if (iprint > 0):
 			filtersd.pyflush(self.options['iout'][1])	
 		#end
 	
