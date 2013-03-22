@@ -1,0 +1,4 @@
+This directory contains the Fortran 77 source for NLPQLP;
+it also contains a wrapping routine nlpqlp_wrap.for developed 
+by Dr. Ruben E. Perez and two helper files called openunit.for 
+and closeunit.for to manipulate Fortran units from Python.

@@ -1,0 +1,89 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module nlpqlp__user__routines
+    interface nlpqlp_user_interface
+        subroutine nlfunc(l,nmax,mmax,x,lactiv,active,f,g)
+            integer intent(in) :: l
+            integer intent(in) :: nmax
+            integer intent(in) :: mmax
+            double precision dimension(nmax,l),intent(in),depend(nmax,l) :: x
+            integer intent(in) :: lactiv
+            logical dimension(lactiv),intent(in),depend(lactiv) :: active
+            double precision dimension(l),intent(in,out),depend(l) :: f
+            double precision dimension(mmax,l),intent(in,out),depend(mmax,l) :: g
+        end subroutine nlfunc
+        subroutine nlgrad(l,nmax,mmax,x,lactiv,active,f,g,df,dg)
+            integer intent(in) :: l
+            integer intent(in) :: nmax
+            integer intent(in) :: mmax
+            double precision dimension(nmax,l),intent(in),depend(nmax,l) :: x
+            integer intent(in) :: lactiv
+            logical dimension(lactiv),intent(in),depend(lactiv) :: active
+            double precision dimension(l),intent(in),depend(l) :: f
+            double precision dimension(mmax,l),intent(in),depend(mmax,l) :: g
+            double precision dimension(nmax),intent(in,out),depend(nmax) :: df
+            double precision dimension(mmax,nmax),intent(in,out),depend(mmax,nmax) :: dg
+        end subroutine nlgrad
+    end interface nlpqlp_user_interface
+end python module nlpqlp__user__routines
+python module nlpqlp ! in 
+    interface  ! in :nlpqlp
+        subroutine nlpqlp_wrap(l,m,me,mmax,n,nmax,mnn2,x,f,g,df,dg,u,xl,xu,c,d,acc,accqp,stpmin,maxfun,maxit,maxnm,rhob,mode,ifail,iprint,iout,ifile,wa,lwa,kwa,lkwa,active,lactiv,lql,nfun,ngrd,nlfunc,nlgrad) ! in :nlpqlp:source/nlpqlp_wrap.for
+            use nlpqlp__user__routines
+            integer intent(in) :: l
+            integer intent(in) :: m
+            integer intent(in) :: me
+            integer intent(in) :: mmax
+            integer intent(in) :: n
+            integer intent(in) :: nmax
+            integer intent(in) :: mnn2
+            double precision dimension(nmax,l),intent(in,out),depend(nmax,l) :: x
+            double precision dimension(l),intent(in,out),depend(l) :: f
+            double precision dimension(mmax,l),intent(in,out),depend(mmax,l) :: g
+            double precision dimension(nmax),intent(in),depend(nmax) :: df
+            double precision dimension(mmax,nmax),intent(in),depend(mmax,nmax) :: dg
+            double precision dimension(mnn2),intent(in,out),depend(mnn2) :: u
+            double precision dimension(nmax),intent(in),depend(nmax) :: xl
+            double precision dimension(nmax),intent(in),depend(nmax) :: xu
+            double precision dimension(nmax,nmax),intent(in),depend(nmax,nmax) :: c
+            double precision dimension(nmax),intent(in),depend(nmax) :: d
+            double precision intent(in) :: acc
+            double precision intent(in) :: accqp
+            double precision intent(in) :: stpmin
+            integer intent(in) :: maxfun
+            integer intent(in) :: maxit
+            integer intent(in) :: maxnm
+            double precision intent(in) :: rhob
+            integer intent(in) :: mode
+            integer intent(in) :: ifail
+            integer intent(in) :: iprint
+            integer intent(in) :: iout
+            character*(*) intent(in) :: ifile
+            double precision dimension(lwa),intent(in),depend(lwa) :: wa
+            integer intent(in) :: lwa
+            integer dimension(lkwa),intent(in),depend(lkwa) :: kwa
+            integer intent(in) :: lkwa
+            logical dimension(lactiv),intent(in),depend(lactiv) :: active
+            integer intent(in) :: lactiv
+            logical intent(in) :: lql
+            integer intent(in,out) :: nfun
+            integer intent(in,out) :: ngrd
+            external nlfunc
+            external nlgrad
+        end subroutine nlpqlp_wrap
+        subroutine openunit(unitnum,filename,filestatus,fileaction,ierror) ! in :nlpqlp:source/openunit.f
+            integer intent(in) :: unitnum
+            character*(*) intent(in) :: filename
+            character*(*) intent(in) :: filestatus
+            character*(*) intent(in) :: fileaction
+            integer intent(out) :: ierror
+        end subroutine openunit
+        subroutine pyflush(unitnum) ! in :nlpqlp:source/openunit.f
+            integer :: unitnum
+        end subroutine pyflush
+        subroutine closeunit(unitnum) ! in :nlpqlp:source/closeunit.f
+            integer intent(in) :: unitnum
+        end subroutine closeunit
+    end interface 
+end python module nlpqlp
