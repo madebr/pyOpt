@@ -126,7 +126,7 @@ class MIDACO(Optimizer):
 		'IOUT2':[int,37],					# Best solution output unit number
 		'IFILE1':[str,'MIDACO_HIST.out'],	# History output file name
 		'IFILE2':[str,'MIDACO_BEST.out'],	# Best output file name
-		'LKEY':[str,'FREE_TEST_VERSION________________[LIMITED_UP_TO_4_VARIABLES]'],	# License Key - 'FREE_TEST_VERSION________________[LIMITED_UP_TO_4_VARIABLES]'
+		'LKEY':[str,'FREE_TEST_VERSION________________[LIMITED_UP_TO_4_VARIABLES]'],	# License Key
 		}
 		informs = {
 		1 : 'Feasible solution,   MIDACO was stopped by the user submitting ISTOP=1',
