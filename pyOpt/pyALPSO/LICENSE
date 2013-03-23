@@ -1,5 +1,5 @@
 ALPSO - Augmented Lagrangian Particle Swarm Optimizer
-Copyright (c) 2006-2011, Dr. Ruben E. Perez  (Ruben.Perez@rmc.ca)
+Copyright (c) 2006-2013, Dr. Ruben E. Perez  (Ruben.Perez@rmc.ca)
                          and Peter W. Jansen (Peter.Jansen@rmc.ca)
 
 
@@ -93,3 +93,4 @@ of using or modifying the ALPSO software in any manner:
          Optimization via a Parallel Augmented Lagrangian Particle 
          Swarm Optimization Approach", International Journal of Computer 
          and Structures, Vol. 89, No. 13-14, pp. 1352–1366, 2011.
+

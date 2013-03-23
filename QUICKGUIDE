@@ -173,7 +173,7 @@ Output:
   
   >>> print opt_prob._solutions[key]
   
-  key - index in order of optimzer call.
+  key - index in order of optimizer call.
   
 * File output of the Optimization problem:
   

@@ -1,4 +1,5 @@
-SDPEN - Sequential Penalty Derivative-free method for Nonlinear constrained optimization
+SDPEN - Sequential Penalty Derivative-free method for 
+        Nonlinear constrained optimization
 Copyright (C) 2011  G.Liuzzi, S.Lucidi, M.Sciandrone
 Modified for pyOpt - 2012, Ruben E. Perez (Ruben.Perez@rmc.ca)
 

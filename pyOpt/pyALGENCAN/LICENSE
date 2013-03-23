@@ -1,6 +1,6 @@
 ALGENCAN - Augmented Lagrangian with GENCAN
-Copyright (c) 2008, J. M. Martínez (martinez@ime.unicamp.br)
-                    and E. G. Birgin (egbirgin@ime.usp.br)
+Copyright (c) 2008, J. M. Martinez (martinez@ime.unicamp.br)
+                and E. G. Birgin (egbirgin@ime.usp.br)
 Modified for pyOpt - 2012, Ruben E. Perez (Ruben.Perez@rmc.ca)
 
 All the TANGO Project components are free software; you can 
@@ -19,7 +19,7 @@ License along with this program; if not, see
 <http://www.gnu.org/copyleft/gpl.html>.
 
 Non-free versions of TANGO are available under terms different from
-those of the General Public License. Professors J. M. Martínez
+those of the General Public License. Professors J. M. Martinez
 (martinez@ime.unicamp.br, martinezimecc@gmail.com) or E. G. Birgin
 (egbirgin@ime.usp.br, egbirgin@gmail.com) should be contacted for more
 information related to such a license, future developments and/or
@@ -30,36 +30,36 @@ authors in any program or publication in which you use of the TANGO
 Project components. For published works that use ALGENCAN we suggest
 referencing:
 
-R. Andreani, E. G. Birgin, J. M. Martínez and M. L. Schuverdt, "On
+R. Andreani, E. G. Birgin, J. M. Martinez and M. L. Schuverdt, "On
 Augmented Lagrangian methods with general lower-level constraints",
 SIAM Journal on Optimization 18, pp. 1286-1309, 2007.
 
-R. Andreani, E. G. Birgin, J. M. Martínez and M. L. Schuverdt,
+R. Andreani, E. G. Birgin, J. M. Martinez and M. L. Schuverdt,
 "Augmented Lagrangian methods under the Constant Positive Linear
 Dependence constraint qualification", Mathematical Programming 111,
 pp. 5-32, 2008
 
 For published works that use GENCAN we suggest referencing:
 
-E. G. Birgin and J. M. Martínez, "Large-scale active-set
+E. G. Birgin and J. M. Martinez, "Large-scale active-set
 box-constrained optimization method with spectral projected gradients",
 Computational Optimization and Applications 23, pp. 101-125, 2002.
 
-M. Andretta, E. G. Birgin and J. M. Martínez, "Practical active-set
+M. Andretta, E. G. Birgin and J. M. Martinez, "Practical active-set
 Euclidian trust-region method with spectral projected gradients for
 bound-constrained minimization", Optimization 54, pp. 305-325, 2005.
 
-E. G. Birgin and J. M. Martínez, "A box-constrained optimization
+E. G. Birgin and J. M. Martinez, "A box-constrained optimization
 algorithm with negative curvature directions and spectral projected
 gradients", Computing [Suppl] 15, pp. 49-60, 2001.
 
 For published works that use SPG we suggest referencing:
 
-E. G. Birgin, J. M. Martínez and M. Raydan, "Nonmonotone spectral
+E. G. Birgin, J. M. Martinez and M. Raydan, "Nonmonotone spectral
 projected gradient methods on convex sets", SIAM Journal on
 Optimization 10, pp. 1196-1211, 2000.
 
-E. G. Birgin, J. M. Martínez and M. Raydan, "Algorithm 813: SPG -
+E. G. Birgin, J. M. Martinez and M. Raydan, "Algorithm 813: SPG -
 software for convex-constrained optimization", ACM Transactions on
 Mathematical Software 27, pp. 340-349, 2001.
 
