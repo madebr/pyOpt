@@ -51,9 +51,8 @@ import numpy
 # =============================================================================
 # Extension modules
 # =============================================================================
-sys.path.append(os.path.abspath('../'))
-from pyOpt_optimizer import Optimizer
-from pyOpt_gradient import Gradient
+from pyOpt import Optimizer
+from pyOpt import Gradient
 
 # =============================================================================
 # Misc Definitions
