@@ -4,7 +4,7 @@ pyNSGA2 - A Python pyOpt interface to NSGA-II.
 
 Copyright (c) 2008-2013 by pyOpt Developers
 All rights reserved.
-Revision: 1.1   $Date: 22/07/2008 21:00$
+Revision: 1.2   $Date: 08/07/2012 21:00$
 
 
 Tested on:
@@ -21,6 +21,7 @@ History
 -------
 	v. 1.0	- Initial Class Creation (RP, 2008)
 	v. 1.1	- Integrate to pyOpt Framework (RP, 2008)
+	v. 1.2  - Added Initial Solution Support (RP, 2013)
 '''
 
 __version__ = '$Revision: $'
@@ -113,6 +114,7 @@ class NSGA2(Optimizer):
 		'pMut_bin':[float,0],			# 
 		'PrintOut':[int,1],				# Flag to Turn On Output to filename (0 - , 1 - , 2 - )
 		'seed':[float,0],				# Random Number Seed (0 - Auto-Seed based on time clock)
+		'xinit':[int,0],				# Use Initial Solution Flag (0 - random population, 1 - use given solution)
 		}
 		informs = {}
 		Optimizer.__init__(self, name, category, def_opts, informs, *args, **kwargs)
@@ -265,7 +267,7 @@ class NSGA2(Optimizer):
 		i = 0
 		for key in opt_problem._variables.keys():
 			if (opt_problem._variables[key].type == 'c'):
-				#nsga2.doubleArray_setitem(x,i,opt_problem._variables[key].value)
+				nsga2.doubleArray_setitem(x,i,opt_problem._variables[key].value)
 				nsga2.doubleArray_setitem(xl,i,opt_problem._variables[key].lower)
 				nsga2.doubleArray_setitem(xu,i,opt_problem._variables[key].upper)
 			elif (opt_problem._variables[key].type == 'i'):
@@ -343,12 +345,13 @@ class NSGA2(Optimizer):
 		if self.sto_hst and (myrank == 0):
 			log_file.write(seed,'seed')
 		#end
+		xinit = self.options['xinit'][1]
 		
 		# Run NSGA-II
 		nsga2.set_pyfunc(objconfunc)
 		t0 = time.time()
 		nsga2.nsga2(n,m,l,f,x,g,nfeval,xl,xu,popsize,ngen,pcross_real,
-			pmut_real,eta_c,eta_m,pcross_bin,pmut_bin,printout,seed)
+			pmut_real,eta_c,eta_m,pcross_bin,pmut_bin,printout,seed,xinit)
 		sol_time = time.time() - t0 
 		
 		if (myrank == 0):

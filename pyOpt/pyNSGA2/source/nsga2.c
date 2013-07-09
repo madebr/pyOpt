@@ -72,7 +72,7 @@
 int nsga2(int nvar, int ncon, int nobj, double f[], double x[], double g[],
     int nfeval, double xl[], double xu[],	int popsize, int ngen, 
     double pcross_real, double pmut_real, double eta_c, double eta_m, 
-    double pcross_bin, double pmut_bin, int printout, double seed)
+    double pcross_bin, double pmut_bin, int printout, double seed, int xinit)
 {
 	/* declaration of local variables and structures */
     int i, j;
@@ -233,6 +233,16 @@ int nsga2(int nvar, int ncon, int nobj, double f[], double x[], double g[],
     allocate_memory_pop (mixed_pop, 2*popsize, global);
     randomize();
     initialize_pop (parent_pop, global);
+    
+	// 
+    if (xinit!=0)
+    {
+      i=0;
+      for (j=0; j<nreal; j++)
+      {
+          parent_pop->ind[i].xreal[j] = x[j];
+      }
+    }
     
     // First Generation
     if (printout >= 1)

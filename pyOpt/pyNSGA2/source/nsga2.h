@@ -84,7 +84,7 @@ Global;
 /* -------------------------------------------------------------------------------
  * Headers
  * ---------------------------------------------------------------------------- */
-int nsga2(int nvar, int ncon, int nobj, double f[], double x[], double g[], int nfeval, double xl[], double xu[],	int popsize, int ngen, double pcross_real, double pmut_real, double eta_c, double eta_m, double pcross_bin, double pmut_bin, int printout, double seed);
+int nsga2(int nvar, int ncon, int nobj, double f[], double x[], double g[], int nfeval, double xl[], double xu[],	int popsize, int ngen, double pcross_real, double pmut_real, double eta_c, double eta_m, double pcross_bin, double pmut_bin, int printout, double seed, int xinit);
 
 void allocate_memory_pop (population *pop, int size, Global global);
 void allocate_memory_ind (individual *ind, Global global);
