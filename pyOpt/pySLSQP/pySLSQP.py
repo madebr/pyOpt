@@ -252,7 +252,7 @@ class SLSQP(Optimizer):
 				f = ff
 			#end
 			
-			# Constraints Assignment (negative gg as nlpql uses g(x) >= 0)
+			# Constraints Assignment (negative gg as slsqp uses g(x) >= 0)
 			for i in xrange(len(opt_problem._constraints.keys())):
 				if isinstance(gg[i],complex):
 					g[i] = -gg[i].astype(float)
@@ -325,9 +325,9 @@ class SLSQP(Optimizer):
 				xu.append(opt_problem._variables[key].upper)
 				xx.append(opt_problem._variables[key].value)
 			elif (opt_problem._variables[key].type == 'i'):
-				raise IOError('NLPQL cannot handle integer design variables')
+				raise IOError('SLSQP cannot handle integer design variables')
 			elif (opt_problem._variables[key].type == 'd'):
-				raise IOError('NLPQL cannot handle discrete design variables')
+				raise IOError('SLSQP cannot handle discrete design variables')
 			#end
 		#end
 		xl = numpy.array(xl)
