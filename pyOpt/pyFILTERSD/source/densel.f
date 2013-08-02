@@ -2,7 +2,7 @@ christen this file denseL.f
 
 c  Copyright (C) 1996 Roger Fletcher
 
-c  Current version dated 16 April 2002
+c  Current version dated 4 October 2011
 
 c  THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THE ECLIPSE PUBLIC
 c  LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM
@@ -82,6 +82,7 @@ c  documented below.
         ifail=7
         return
       endif
+      nup=0
       small=max(1.D1*tol,sqrt(eps))
       smallish=max(eps/tol,1.D1*small)
 c  set storage map for dense factors

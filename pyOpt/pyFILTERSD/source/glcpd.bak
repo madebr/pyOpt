@@ -244,7 +244,7 @@ c     common/epsc/eps,tol,emin
       do i=1,nm
         t=bu(i)-bl(i)
         if(t.lt.-tol)then
-c         print *,'i,bl(i),bu(i)',i,bl(i),bu(i)
+          print *,'i,bl(i),bu(i)',i,bl(i),bu(i)
           ifail=2
           return
         elseif(t.le.tol)then
@@ -460,7 +460,7 @@ c  allow for changes to norm(g)
         gtol=sgnf*gnorm
         rgtol=max(rgt0l,gtol)
       endif
-c     if(iprint.eq.3)print 2,'gtol,rgtol,rgnorm,rp',gtol,rgtol,rgnorm,rp
+      if(iprint.eq.3)print 2,'gtol,rgtol,rgnorm,rp',gtol,rgtol,rgnorm,rp
 
       if((rgnorm.le.rgtol.and.abs(rp).le.gtol).or.ngr.gt.mxgr)then
 c  optimal at current level: first tidy up x

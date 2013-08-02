@@ -8,6 +8,8 @@
 
 c  Copyright (C) 2010 Roger Fletcher
 
+c  Current version dated 5 October 2011
+
 c  THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THE ECLIPSE PUBLIC
 c  LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM
 c  CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT
@@ -247,6 +249,7 @@ c  note x and al are just used as workspace: the true values are those in ws
      *  ws(ialp1),lws(ilp1),ws(ifilh1),ws(ifilf1),rho,htol,rgtol,
      *  maxit,iprint,nout,ifail)
 
+      if(ifail.ge.7)return
 c  scatter ws(nx.. and ws(nal.. and bound multipliers into x and al
       do i=1,n
         al(i)=0.D0
@@ -316,8 +319,6 @@ c   4 format(A/(6E13.5))
       itn=0
       nft=0
       ngt=0
-      nv=1
-      v(1)=1.D0
 
 c  evaluate f,c and a
       call functions(n,m,ws(nx1),f,ws(ncx1),ws,lws)
@@ -374,7 +375,7 @@ c  set up LP subproblem
       k=0
 c     print *,'solve LP subproblem',itn
       iii=0
-c     if(itn.eq.164)iii=1
+c     if(itn.eq.14)iii=1
       call glcpd(n,m,k,kmax,maxg,ws(last1),lws(nla1),d,dl,du,phi,
      *  -ainfty,g,r,w,e,ls,alp,lp,mlp,ipeq,ws,lws,cstype,v,nv,rgtol,
      *  mode,ifail,infty,iii,0)
@@ -698,6 +699,7 @@ c  check for situations where the l1 partition needs recalculating ...
 c  if there are any active relaxed c/s
       do j=1,n
         i=abs(ls(j))-n
+c       if(i.gt.0.and.cstype(i).ne.'N')print 1,'active relaxed c/s',i
         if(i.gt.0.and.cstype(i).ne.'N')goto10
       enddo
 c  or any infeasible relaxed c/s

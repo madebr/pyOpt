@@ -2,7 +2,7 @@ christen this file util.f
 
 c  Copyright (C) 1996 Roger Fletcher
 
-c  Current version dated 06 January 1998
+c  Current version dated 26 May 2011
 
 c  THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THE ECLIPSE PUBLIC
 c  LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM

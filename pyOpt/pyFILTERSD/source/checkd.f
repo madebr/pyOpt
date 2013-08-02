@@ -112,7 +112,7 @@ c     endif
      *        'derivative inconsistency in constraint/variable',j,i
             write(nout,*) 'deriv at x, diff quotient, deriv at x+h =',
      *          a_ij,dfi,ah_ij
-            write(nout,*) 'c at x+h, c at h',ws(ncxd0+j),ws(ncx0+j)
+            write(nout,*) 'c at x+h, c at x',ws(ncxd0+j),ws(ncx0+j)
 c           write(nout,1) 'la(0) =',la(0)
 c           write(nout,1) 'c/s j pointer =',la(la(0)+j)
 c           write(nout,3) 'c/s j indices',

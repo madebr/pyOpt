@@ -95,7 +95,7 @@ c     print 4,'ws_0',(ws(j),j=last1,last1+7)
           print 1,'derivative inconsistency in constraint/variable',j,i
           print *,'deriv at x, diff quotient, deriv at x+h =',
      *        a_ij,dfi,ah_ij
-          print *,'c at x+h, c at h',ws(ncxd0+j),ws(ncx0+j)
+          print *,'c at x+h, c at x',ws(ncxd0+j),ws(ncx0+j)
 c         print 1,'la(0) =',la(0)
 c         print 1,'c/s j pointer =',la(la(0)+j)
 c         print 3,'c/s j indices',(la(k),k=la(la(0)+j),la(la(0)+j+1)-1)
