@@ -491,7 +491,7 @@ class NLPQLP(Optimizer):
 		#end
 		lwa = numpy.array([23*nmax+4*mmax+3*mmax+150+3*nmax*nmax/2+10*nmax+nmax+mmax+1], numpy.int)
 		wa = numpy.zeros([lwa], numpy.float)
-		lkwa = numpy.array([20+nmax], numpy.int)
+		lkwa = numpy.array([25+nmax], numpy.int)
 		kwa = numpy.zeros([lkwa], numpy.intc)
 		lactiv = numpy.array([2*mmax+10], numpy.int)
 		active = numpy.zeros([lactiv], numpy.bool)
@@ -530,7 +530,7 @@ class NLPQLP(Optimizer):
 		
 		if store_sol:
 			
-			sol_name = 'FILTERSD Solution to ' + opt_problem.name
+			sol_name = 'NLPQLP Solution to ' + opt_problem.name
 			
 			sol_options = copy.copy(self.options)
 			if sol_options.has_key('defaults'):
