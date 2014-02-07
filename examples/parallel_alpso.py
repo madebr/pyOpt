@@ -57,7 +57,7 @@ def objfunc(x):
 # =============================================================================
 
 # Instantiate Optimization Problem 
-opt_prob = Optimization('G08 Global Constraint Problem',objfunc)
+opt_prob = Optimization('G08 Global Constrained Problem',objfunc)
 opt_prob.addVar('x1','c',lower=5.0,upper=1e-6,value=10.0)
 opt_prob.addVar('x2','c',lower=5.0,upper=1e-6,value=10.0)
 opt_prob.addObj('f')

@@ -45,7 +45,7 @@ def objfunc(xn):
 # ============================================================================= 
 
 # Instantiate Optimization Problem
-opt_prob = Optimization('TOY Constraint Problem',objfunc,use_groups=True)
+opt_prob = Optimization('TOY Constrained Problem',objfunc,use_groups=True)
 opt_prob.addVarGroup('a',2,'c',value=1.0, lower=0.0, upper=10)
 opt_prob.delVarGroup('a')
 opt_prob.addVar('x','c',value=1.0, lower=0.0, upper=10)

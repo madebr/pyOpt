@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 '''
-Solves Schittkowski's TP37 Problem.
+Solves Schittkowski's TP37 Constrained Problem.
 
     min 	-x1*x2*x3
     s.t.:	x1 + 2.*x2 + 2.*x3 - 72 <= 0
@@ -49,7 +49,7 @@ def objfunc(x):
 # =============================================================================
 
 # Instantiate Optimization Problem 
-opt_prob = Optimization('TP37 Constraint Problem',objfunc)
+opt_prob = Optimization('TP37 Constrained Problem',objfunc)
 opt_prob.addVar('x1','c',lower=0.0,upper=42.0,value=10.0)
 opt_prob.addVar('x2','c',lower=0.0,upper=42.0,value=10.0)
 opt_prob.addVar('x3','c',lower=0.0,upper=42.0,value=10.0)

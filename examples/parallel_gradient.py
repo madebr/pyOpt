@@ -55,7 +55,7 @@ def objfunc(x):
 # =============================================================================
 
 # Instantiate Optimization Problem 
-opt_prob = Optimization('TP37 Constraint Problem',objfunc)
+opt_prob = Optimization('TP37 Constrained Problem',objfunc)
 opt_prob.addVar('x1','c',lower=0.0,upper=42.0,value=10.0)
 opt_prob.addVar('x2','c',lower=0.0,upper=42.0,value=10.0)
 opt_prob.addVar('x3','c',lower=0.0,upper=42.0,value=10.0)

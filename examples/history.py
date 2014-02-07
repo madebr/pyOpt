@@ -42,7 +42,7 @@ def objfunc(x):
 # =============================================================================
 
 # Instanciate Optimization Problem 
-opt_prob = Optimization('TOY Constraint Problem',objfunc)
+opt_prob = Optimization('TOY Constrained Problem',objfunc)
 opt_prob.addVar('x1','c',value=1.0,lower=0.0,upper=10.0)
 opt_prob.addVar('x2','c',value=1.0,lower=0.0,upper=10.0)
 opt_prob.addObj('f')
