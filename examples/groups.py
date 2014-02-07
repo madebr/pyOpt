@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 '''
-Solves Constrainted Toy Problem Using Variable Groups.
+Solves Constrained Toy Problem Using Variable Groups.
 
     min 	x1^2 + x2^2
     s.t.:	3 - x1 <= 0
@@ -59,7 +59,7 @@ opt_prob.addCon('g1','i')
 opt_prob.addCon('g2','i')
 print opt_prob
 
-# Instantiate Optimizer (PSQP) & Solve Problem
+# Instantiate Optimizer (SLSQP) & Solve Problem
 slsqp = SLSQP()
 slsqp(opt_prob)
 print opt_prob.solution(0)

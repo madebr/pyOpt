@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 '''
-Solves Constrainted Toy Problem Storing Optimization History.
+Solves Constrained Toy Problem Storing Optimization History.
 
 	min 	x1^2 + x2^2
 	s.t.:	3 - x1 <= 0
@@ -50,7 +50,7 @@ opt_prob.addCon('g1','i')
 opt_prob.addCon('g2','i')
 print opt_prob
 
-# Instanciate Optimizer (ALPSO) & Solve Problem Storing History
+# Instanciate Optimizer (SLSQP) & Solve Problem Storing History
 slsqp = SLSQP()
 slsqp.setOption('IFILE','slsqp1.out')
 slsqp(opt_prob,store_hst=True)
