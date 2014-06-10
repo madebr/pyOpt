@@ -1,14 +1,14 @@
 C     ******************************************************************
 C     ******************************************************************
 
-      subroutine dogleg(n,g,hnnz,hlin,hcol,hval,pd,delta,p,dlinfo)
+      subroutine dogleg(n,g,hnnz,hlin,hcol,hval,l,pd,delta,p,dlinfo)
 
       implicit none
 
 C     SCALAR ARGUMENTS
       logical pd
       integer dlinfo,hnnz,n
-      double precision delta
+      double precision delta,l
 
 C     ARRAY ARGUMENTS
       integer hcol(hnnz),hlin(hnnz)
@@ -29,7 +29,7 @@ C     1: successfull exit.
 
 C     LOCAL SCALARS
       integer col,i,lin
-      double precision a,b,c,coef,d,delta2,geucn,geucn2,gthg,pbeucn2,
+      double precision a,b,c,d,delta2,geucn,geucn2,gthg,pbeucn2,
      +        pueucn,pueucn2,putpb,r
 
 C     LOCAL ARRAYS
@@ -76,8 +76,15 @@ C     Compute g^T H g
           lin = hlin(i)
           col = hcol(i)
 
-          pu(lin) = pu(lin) + hval(i) * g(col)
-          if ( lin .ne. col ) then
+c         pu(lin) = pu(lin) + hval(i) * g(col)
+c         if ( lin .ne. col ) then
+c             pu(col) = pu(col) + hval(i) * g(lin)
+c         end if
+
+          if ( lin .eq. col ) then
+              pu(lin) = pu(lin) + ( hval(i) + l ) * g(col)
+          else
+              pu(lin) = pu(lin) + hval(i) * g(col)
               pu(col) = pu(col) + hval(i) * g(lin)
           end if
       end do
@@ -94,11 +101,10 @@ C     Compute g^T g.
           geucn2 = geucn2 + g(i)**2
       end do
 
-C     Compute pu = coef * g.
+C     Compute pu
 
-      coef = - geucn2 / gthg
       do i = 1,n
-          pu(i) = coef * g(i)
+          pu(i) = - geucn2 * g(i) / gthg
       end do
 
 C     If uncontrained minimizer is outside the trust region, it is
@@ -165,8 +171,15 @@ C     Compute g^T H g
           lin = hlin(i)
           col = hcol(i)
 
-          pu(lin) = pu(lin) + hval(i) * g(col)
-          if ( lin .ne. col ) then
+c         pu(lin) = pu(lin) + hval(i) * g(col)
+c         if ( lin .ne. col ) then
+c             pu(col) = pu(col) + hval(i) * g(lin)
+c         end if
+
+          if ( lin .eq. col ) then
+              pu(lin) = pu(lin) + ( hval(i) + l ) * g(col)
+          else
+              pu(lin) = pu(lin) + hval(i) * g(col)
               pu(col) = pu(col) + hval(i) * g(lin)
           end if
       end do
@@ -184,10 +197,9 @@ C     Compute g^T g
       end do
       geucn = sqrt( geucn2 )
 
-C     Compute step length coef
+C     Compute step length
 
- 200  if ( ( abs( gthg ) .le. macheps23 ) .and.
-     +     ( geucn .le. macheps23 ) ) then
+ 200  if ( abs( gthg ) .le. macheps23 .and. geucn .le. macheps23 ) then
 
           dlinfo = 0
 
@@ -199,18 +211,17 @@ C     Compute step length coef
           return
       end if
 
-      if ( ( gthg .le. 0.0d0 ) .or.
-     +     ( geucn2*geucn .lt. delta*gthg ) ) then
-          coef = - delta / geucn
-      else
-          coef = - geucn2 / gthg
-      end if
-
 C     Compute p = coef * g
 
-      do i = 1,n
-          p(i) = coef * g(i)
-      end do
+      if ( gthg .le. 0.0d0 .or. geucn2 * geucn .lt. delta * gthg ) then
+          do i = 1,n
+              p(i) = - delta * g(i) / geucn
+          end do
+      else
+          do i = 1,n
+              p(i) = - geucn2 * g(i) / gthg
+          end do
+      end if
 
 C     Termination
 

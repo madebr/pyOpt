@@ -30,8 +30,6 @@ C     LOCAL ARRAYS
 C     EXTERNAL FUNCTIONS
       external drand
 
-      call vunsetp()
-
 C     SET A RANDOM POINT
 
       seed = 123456.0d0
@@ -236,15 +234,43 @@ C     CHECK GRADIENT OF OBJECTIVE FUNCTION PLUS JACOBIAN OF CONSTRAINTS
           if ( inform .lt. 0 ) return
       end if
 
-C     CHECK HESSIAN OF THE LAGRANGIAN
+C     CHECK GRADIENT OF OBJECTIVE FUNCTION PLUS PRODUCT OF 
+C     JACOBIAN OF CONSTRAINTS TIMES A GIVEN VECTOR
 
  1060 continue
+
+      if ( .not. gjacpcoded ) then
+          write(* ,120) 'evalgjacp'
+          write(10,120) 'evalgjacp'
+
+          go to 1070
+      end if
+
+      write(* ,130) 'evalgjacp'
+      write(10,130) 'evalgjacp'
+
+      read(*,*) answer
+
+      if ( answer .eq. 'A' .or. answer .eq. 'a' ) then
+          return
+
+      else if ( answer .eq. 'S' .or. answer .eq. 's' ) then
+          go to 1070
+
+      else if ( answer .eq. 'Y' .or. answer .eq. 'y' ) then
+          write(* ,*) 'Test of evalgjacp not implemented yet!'
+          write(10,*) 'Test of evalgjacp not implemented yet!'
+      end if
+
+C     CHECK HESSIAN OF THE LAGRANGIAN
+
+ 1070 continue
 
       if ( .not. hlcoded ) then
           write(* ,120) 'evalhl'
           write(10,120) 'evalhl'
 
-          go to 1070
+          go to 1080
       end if
 
       write(* ,130) 'evalhl'
@@ -256,7 +282,7 @@ C     CHECK HESSIAN OF THE LAGRANGIAN
           return
 
       else if ( answer .eq. 'S' .or. answer .eq. 's' ) then
-          go to 1070
+          go to 1080
 
       else if ( answer .eq. 'Y' .or. answer .eq. 'y' ) then
           write(* ,*) 'Test of evalhl not implemented yet!'
@@ -265,13 +291,13 @@ C     CHECK HESSIAN OF THE LAGRANGIAN
 
 C     CHECK HESSIAN OF THE LAGRANGIAN TIMES A VECTOR
 
- 1070 continue
+ 1080 continue
 
       if ( .not. hlpcoded ) then
           write(* ,120) 'evalhlp'
           write(10,120) 'evalhlp'
 
-          go to 1080
+          go to 1090
       end if
 
       write(* ,130) 'evalhlp'
@@ -283,7 +309,7 @@ C     CHECK HESSIAN OF THE LAGRANGIAN TIMES A VECTOR
           return
 
       else if ( answer .eq. 'S' .or. answer .eq. 's' ) then
-          go to 1080
+          go to 1090
 
       else if ( answer .eq. 'Y' .or. answer .eq. 'y' ) then
           write(* ,*) 'Test of evalhlp not implemented yet!'
@@ -292,12 +318,12 @@ C     CHECK HESSIAN OF THE LAGRANGIAN TIMES A VECTOR
 
 C     NON-EXECUTABLE STATEMENTS
 
- 1080 continue
+ 1090 continue
 
  100  format(/,1X,'Derivatives will be tested at the random point: ')
  110  format(  1X,'x(',I6,') = ',1P,D15.8)
- 120  format(/,1X,'Skipping checking of uncoded ',A8,' subroutine.')
- 130  format(/,1X,'Would you like to ckeck subroutine ',A8,'?',
+ 120  format(/,1X,'Skipping checking of uncoded ',A9,' subroutine.')
+ 130  format(/,1X,'Would you like to ckeck subroutine ',A9,'?',
      +       /,1X,'Type Y(es), N(o), A(bort checking) or ',
      +            'S(kip checking this subroutine): ')
 
@@ -342,6 +368,7 @@ C     LOCAL SCALARS
 C     LOCAL ARRAYS
       double precision g(nmax)
 
+      call vsetp(n,x)
       call vevalg(n,x,g,inform)
       if ( inform .lt. 0 ) return
 
@@ -356,10 +383,12 @@ C     LOCAL ARRAYS
           step1 = macheps13 * max( abs( tmp ), 1.0d0 )
 
           x(i) = tmp + step1
+          call vsetp(n,x)
           call vevalf(n,x,fplus,inform)
           if ( inform .lt. 0 ) return
 
           x(i) = tmp - step1
+          call vsetp(n,x)
           call vevalf(n,x,fminus,inform)
           if ( inform .lt. 0 ) return
 
@@ -368,10 +397,12 @@ C     LOCAL ARRAYS
           step2 = macheps13 * max( abs( tmp ), 1.0d-03 )
 
           x(i) = tmp + step2
+          call vsetp(n,x)
           call vevalf(n,x,fplus,inform)
           if ( inform .lt. 0 ) return
 
           x(i) = tmp - step2
+          call vsetp(n,x)
           call vevalf(n,x,fminus,inform)
           if ( inform .lt. 0 ) return
 
@@ -442,6 +473,7 @@ C     Check viability of the test
 
 C     Compute the gradient of the objective function at x
 
+      call vsetp(n,x)
       call vevalg(n,x,g,inform)
       if ( inform .lt. 0 ) return
 
@@ -475,12 +507,14 @@ C     Test column by column
           step1 = macheps12 * max( abs( tmp ), 1.0d0 )
 
           x(j) = tmp + step1
+          call vsetp(n,x)
           call vevalg(n,x,gplus1,inform)
           if ( inform .lt. 0 ) return
 
           step2 = macheps12 * max( abs( tmp ), 1.0d-03 )
 
           x(j) = tmp + step2
+          call vsetp(n,x)
           call vevalg(n,x,gplus2,inform)
           if ( inform .lt. 0 ) return
 
@@ -591,6 +625,7 @@ C     LOCAL ARRAYS
 C     COMPUTE THE GRADIENT OF THE CONSTRAINT AND SAVE IT INTO A DENSE
 C     VECTOR
 
+      call vsetp(n,x)
       call vevaljac(n,x,ind,jcvar,jcval,jcnnz,inform)
       if ( inform .lt. 0 ) return
 
@@ -617,10 +652,12 @@ C     COMPARE WITH CENTRAL FINITE DIFFERENCES
           step1 = macheps13 * max( abs( tmp ), 1.0d0 )
 
           x(i) = tmp + step1
+          call vsetp(n,x)
           call vevalc(n,x,ind,cplus,inform)
           if ( inform .lt. 0 ) return
 
           x(i) = tmp - step1
+          call vsetp(n,x)
           call vevalc(n,x,ind,cminus,inform)
           if ( inform .lt. 0 ) return
 
@@ -629,10 +666,12 @@ C     COMPARE WITH CENTRAL FINITE DIFFERENCES
           step2 = macheps13 * max( abs( tmp ), 1.0d-03 )
 
           x(i) = tmp + step2
+          call vsetp(n,x)
           call vevalc(n,x,ind,cplus,inform)
           if ( inform .lt. 0 ) return
 
           x(i) = tmp - step2
+          call vsetp(n,x)
           call vevalc(n,x,ind,cminus,inform)
           if ( inform .lt. 0 ) return
 
@@ -717,6 +756,7 @@ C     Check viability of the test
 C     Compute the gradient of constraint ind at x and save it in a
 C     dense vector
 
+      call vsetp(n,x)
       call vevaljac(n,x,ind,jcvar,jcval,jcnnz,inform)
       if ( inform .lt. 0 ) return
 
@@ -759,6 +799,7 @@ C         save in a dense vector
           step1 = macheps12 * max( abs( tmp ), 1.0d0 )
 
           x(j) = tmp + step1
+          call vsetp(n,x)
           call vevaljac(n,x,ind,jcvar,jcval,jcnnz,inform)
           if ( inform .lt. 0 ) return
 
@@ -776,6 +817,7 @@ C         save in a dense vector
           step2 = macheps12 * max( abs( tmp ), 1.0d-03 )
 
           x(j) = tmp + step2
+          call vsetp(n,x)
           call vevaljac(n,x,ind,jcvar,jcval,jcnnz,inform)
           if ( inform .lt. 0 ) return
 
@@ -898,6 +940,7 @@ C     LOCAL ARRAYS
 C     COMPUTE GRADIENT OF OBJECTIVE FUNCTION AND JACOBIAN OF 
 C     CONSTRAINTS AT THE CURRENT POINT
 
+      call vsetp(n,x)
       call vevalgjac(n,x,g,m,jcfun,jcvar,jcval,jcnnz,inform)
       if ( inform .lt. 0 ) return
 
@@ -914,10 +957,12 @@ C     CHECK GRADIENT OF THE OBJECTIVE FUNCTION
           step1 = macheps13 * max( abs( tmp ), 1.0d0 )
 
           x(i) = tmp + step1
+          call vsetp(n,x)
           call vevalfc(n,x,fplus,m,cplus,inform)
           if ( inform .lt. 0 ) return
 
           x(i) = tmp - step1
+          call vsetp(n,x)
           call vevalfc(n,x,fminus,m,cminus,inform)
           if ( inform .lt. 0 ) return
 
@@ -926,10 +971,12 @@ C     CHECK GRADIENT OF THE OBJECTIVE FUNCTION
           step2 = macheps13 * max( abs( tmp ), 1.0d-03 )
 
           x(i) = tmp + step2
+          call vsetp(n,x)
           call vevalfc(n,x,fplus,m,cplus,inform)
           if ( inform .lt. 0 ) return
 
           x(i) = tmp - step2
+          call vsetp(n,x)
           call vevalfc(n,x,fminus,m,cminus,inform)
           if ( inform .lt. 0 ) return
 
@@ -980,10 +1027,12 @@ C         COMPARE WITH CENTRAL FINITE DIFFERENCES
               step1 = macheps13 * max( abs( tmp ), 1.0d0 )
 
               x(i) = tmp + step1
+              call vsetp(n,x)
               call vevalfc(n,x,fplus,m,cplus,inform)
               if ( inform .lt. 0 ) return
 
               x(i) = tmp - step1
+              call vsetp(n,x)
               call vevalfc(n,x,fminus,m,cminus,inform)
               if ( inform .lt. 0 ) return
 
@@ -992,10 +1041,12 @@ C         COMPARE WITH CENTRAL FINITE DIFFERENCES
               step2 = macheps13 * max( abs( tmp ), 1.0d-03 )
 
               x(i) = tmp + step2
+              call vsetp(n,x)
               call vevalfc(n,x,fplus,m,cplus,inform)
               if ( inform .lt. 0 ) return
 
               x(i) = tmp - step2
+              call vsetp(n,x)
               call vevalfc(n,x,fminus,m,cminus,inform)
               if ( inform .lt. 0 ) return
 

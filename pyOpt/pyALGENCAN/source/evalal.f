@@ -85,49 +85,107 @@ C     ARRAY ARGUMENTS
       include "graddat.inc"
 
 C     LOCAL SCALARS
+      logical alllin,allnol
       integer i,ind,j,jcnnz
+      double precision dum
 
 C     LOCAL ARRAYS
       integer jcfun(jcnnzmax)
+      double precision p(mmax)
 
       if ( fccoded ) then
 
-C         COMPUTE THE GRADIENT OF THE OBJECTIVE FUNCTION AND JACOBIAN
-C         OF CONSTRAINTS
-          call sevalgjac(n,x,g,m,jcfun,jcvar,jcval,jcnnz,inform)
-          if ( inform .lt. 0 ) return
+          if ( gjacpcoded ) then
 
-          do i = 1,n
-              nl(i)    = g(i)
-              gparc(i) = g(i)
-          end do
-
-C         CONVERT JACOBIAN OF CONSTRAINTS FROM COORDINATE FORMAT TO
-C         COMPRESSED SPARSE ROW FORMAT
-          call coo2csr(m,jcnnz,jcfun,jcvar,jcval,jclen,jcsta)
-
-C         COMPUTE \nabla L = \nabla f + \sum_j lambda_j * \nabla c_j
-          constrc = .false.
-
-          do j = 1,m
-              if ( equatn(j) .or. lambda(j) .gt. 0.0d0 ) then
-
-C                 ADD lambda_j * \nabla c_j
-                  do i = jcsta(j),jcsta(j) + jclen(j) - 1
-                      nl(jcvar(i)) = nl(jcvar(i)) + lambda(j) * jcval(i)
-                  end do
-
-                  if ( .not. linear(j) ) then
-                      do i = jcsta(j),jcsta(j) + jclen(j) - 1
-                          gparc(jcvar(i)) =
-     +                    gparc(jcvar(i)) + lambda(j) * jcval(i)
-                      end do
+C             COMPUTE p
+              constrc = .false.
+              do j = 1,m
+                  if ( equatn(j) .or. lambda(j) .gt. 0.0d0 ) then
+                      p(j) = lambda(j)
+                      constrc = .true.
+                  else
+                      p(j) = 0.0d0
                   end if
+              end do
 
-                  constrc = .true.
+C             COMPUTE nl = Jacobian^T p
+              call sevalgjacp(n,x,g,m,p,nl,'T',gotj,inform)
+              if ( inform .lt. 0 ) return
 
+C             COMPUTE gparc = Jacobian^t p IGNORING LINEAR CONSTRAINTS
+              allnol = .true.
+              alllin = .true.
+              do j = 1,m
+                  if ( linear(j) ) then
+                      p(j) = 0.0d0
+                      allnol = .false.
+                  else
+                      alllin = .false.
+                  end if
+              end do
+
+              if ( allnol ) then
+                  do i = 1,n
+                      gparc(i) = nl(i)
+                  end do
+              else if ( alllin ) then
+                  do i = 1,n
+                      gparc(i) = 0.0d0
+                  end do
+              else
+                  call sevalgjacp(n,x,dum,m,p,gparc,'t',gotj,inform)
+                  if ( inform .lt. 0 ) return
               end if
-          end do
+
+C             ADD THE GRADIENT OF THE OBJECTIVE FUNCTION
+              do i = 1,n
+                  nl(i)    = nl(i)    + g(i)
+                  gparc(i) = gparc(i) + g(i)
+              end do
+
+          else ! if ( gjaccoded ) then
+C         In fact, this else is the choice for gjaccoded or 'not 
+C         gjacpcoded and not gjaccoded', in which case the calling 
+C         sequence starting with sevalgjac below will end up using 
+C         finite differences to approximate first derivatives of the 
+C         objective function and the constraints
+
+C             COMPUTE THE GRADIENT OF THE OBJECTIVE FUNCTION AND 
+C             JACOBIAN OF CONSTRAINTS
+              call sevalgjac(n,x,g,m,jcfun,jcvar,jcval,jcnnz,inform)
+              if ( inform .lt. 0 ) return
+
+C             CONVERT JACOBIAN OF CONSTRAINTS FROM COORDINATE FORMAT TO
+C             COMPRESSED SPARSE ROW FORMAT
+              call coo2csr(m,jcnnz,jcfun,jcvar,jcval,jclen,jcsta)
+
+C             COMPUTE \nabla L = \nabla f + \sum_j lambda_j * \nabla c_j
+              constrc = .false.
+
+              do i = 1,n
+                  nl(i)    = g(i)
+                  gparc(i) = g(i)
+              end do
+
+              do j = 1,m
+                  if ( equatn(j) .or. lambda(j) .gt. 0.0d0 ) then
+                      do i = jcsta(j),jcsta(j) + jclen(j) - 1
+                          nl(jcvar(i)) = 
+     +                    nl(jcvar(i)) + lambda(j) * jcval(i)
+                      end do
+
+                      if ( .not. linear(j) ) then
+                          do i = jcsta(j),jcsta(j) + jclen(j) - 1
+                              gparc(jcvar(i)) =
+     +                        gparc(jcvar(i)) + lambda(j) * jcval(i)
+                          end do
+                      end if
+
+                      constrc = .true.
+                  end if
+              end do
+
+          end if
 
       else if ( fcoded .and. ( ccoded .or. m .eq. 0 ) ) then
 
@@ -140,7 +198,7 @@ C         COMPUTE THE GRADIENT OF THE OBJECTIVE FUNCTION
               gparc(i) = g(i)
           end do
 
-C         COMPUTE \nabla L = \nabla f + \sum_j lambda_j * \nabla c_j
+C         ADD nl = Jacobian^T lambda
           constrc = .false.
 
           ind = 0
@@ -159,7 +217,8 @@ C                 COMPUTE THE GRADIENT OF THE j-TH CONSTRAINT
 
 C                 ADD lambda_j * \nabla c_j
                   do i = jcsta(j),jcsta(j) + jclen(j) - 1
-                      nl(jcvar(i)) = nl(jcvar(i)) + lambda(j) * jcval(i)
+                      nl(jcvar(i)) = 
+     +                nl(jcvar(i)) + lambda(j) * jcval(i)
                   end do
 
                   if ( .not. linear(j) ) then
@@ -175,6 +234,8 @@ C                 ADD lambda_j * \nabla c_j
           end do
 
       end if
+
+      gotj = .true.
 
       end
 
@@ -212,28 +273,22 @@ C         COMPUTE CONSTRAINTS
               if ( inform .lt. 0 ) return
           end if
 
-          do j = 1,m
-C             COMPUTE dP/dc
-              call evaldpdy(c(j),rho(j),lambda(j),equatn(j),dpdc(j))
-          end do
-
       else if ( fcoded .and. ( ccoded .or. m .eq. 0 ) ) then
+C         COMPUTE CONSTRAINTS ONE BY ONE
           if ( .not. gotc ) then
               do j = 1,m
-C                 COMPUTE THE j-TH CONSTRAINT
                   call sevalc(n,x,j,c(j),inform)
                   if ( inform .lt. 0 ) return
               end do
           end if
-
-          do j = 1,m
-C             COMPUTE dP/dc
-              call evaldpdy(c(j),rho(j),lambda(j),equatn(j),dpdc(j))
-          end do
-
       end if
 
       gotc = .true.
+
+C     COMPUTE dP/dc
+      do j = 1,m
+          call evaldpdy(c(j),rho(j),lambda(j),equatn(j),dpdc(j))
+      end do
 
 C     COMPUTE GRADIENT OF THE LAGRANGIAN WITH DPDC INSTEAD OF LAMBDA
       call sevalnl(n,x,m,dpdc,equatn,linear,nal,inform)
@@ -286,133 +341,153 @@ C     SCALAR ARGUMENTS
 C     *****************************************************************
 C     *****************************************************************
 
-      subroutine ievalnal(n,xp,m,lambda,rho,equatn,linear,nalp,nalpparc,
+      subroutine ievalnal(n,xp,m,lambda,rho,equatn,linear,iglin,nalp,
      +inform)
 
       implicit none
 
 C     SCALAR ARGUMENTS
+      logical iglin
       integer inform,m,n
 
 C     ARRAY ARGUMENTS
       logical equatn(m),linear(m)
-      double precision lambda(m),nalp(n),nalpparc(n),rho(m),xp(n)
+      double precision lambda(m),nalp(n),rho(m),xp(n)
 
 C     This subroutine computes the gradient of the Augmented Lagrangian
 C     function at a point xp, which is near to x, taking care of the
-C     non-differentiability. The Augmented Lagrangian gradient must be
-C     previously computed at x.
+C     non-differentiability (i.e. considering the contribution of the 
+C     same constraints that contributed to compute the gradient of the 
+C     augmented Lagrangian at x). The augmented Lagrangian gradient must 
+C     have been previously computed at x. If iglin = true, linear 
+C     constraints are ignored.
 
       include "dim.par"
       include "algparam.inc"
       include "graddat.inc"
 
 C     LOCAL SCALARS
+      logical alllin,allnol
       integer i,j,jcpnnz
-      double precision cpj,dpdcp,dum
+      double precision cpj,dpdcpj,dum
 
 C     LOCAL ARRAYS
       integer jcpfun(jcnnzmax),jcplen(mmax),jcpsta(mmax),
      +        jcpvar(jcnnzmax)
-      double precision cp(mmax),gp(nmax),jcpval(jcnnzmax)
+      double precision cp(mmax),gp(nmax),jcpval(jcnnzmax),dpdcp(mmax)
 
       if ( innercall ) then
           call minsqg(n,xp,nalp,inform)
           return
       end if
 
-c     call ssetp(n,xp)
-
       if ( fccoded ) then
 
-C         COMPUTE CONSTRAINTS AT xp
-          if ( m .gt. 0 ) then
-              call sevalfc(n,xp,dum,m,cp,inform)
+C         COMPUTE nalp = gp + Jacobian^T dpdcp IGNORING THE LINEAR 
+C         CONSTRAINTS IF iglin IS TRUE
+
+          if ( gjacpcoded ) then
+
+C             COMPUTE CONSTRAINTS AT xp
+              if ( m .gt. 0 ) then
+                  call sevalfc(n,xp,dum,m,cp,inform)
+                  if ( inform .lt. 0 ) return
+              end if
+
+C             COMPUTE dpdcp
+              do j = 1,m
+                  if ( ( equatn(j) .or. dpdc(j) .gt. 0.0d0 ) .and.
+     +                 .not. ( iglin .and. linear(j) ) ) then
+                      dpdcp(j) = lambda(j) + rho(j) * cp(j)
+                  else
+                      dpdcp(j) = 0.0d0
+                  end if
+              end do
+
+C             COMPUTE nalp = Jacobian^T dpdcp
+              call sevalgjacp(n,xp,gp,m,dpdcp,nalp,'T',gotj,inform)
               if ( inform .lt. 0 ) return
-          end if
 
-C         COMPUTE THE GRADIENT OF THE OBJECTIVE FUNCTION AND JACOBIAN
-C         OF CONSTRAINTS AT xp
-          call sevalgjac(n,xp,gp,m,jcpfun,jcpvar,jcpval,jcpnnz,inform)
-          if ( inform .lt. 0 ) return
+C             ADD THE GRADIENT OF THE OBJECTIVE FUNCTION
+              do i = 1,n
+                  nalp(i) = nalp(i) + gp(i)
+              end do
 
-          do i = 1,n
-              nalp(i)     = gp(i)
-              nalpparc(i) = gp(i)
-          end do
+          else ! if ( gjaccoded ) then
+C         In fact, this else is the choice for gjaccoded or 'not 
+C         gjacpcoded and not gjaccoded', in which case the calling 
+C         sequence starting with sevalgjac below will end up using 
+C         finite differences to approximate first derivatives of the 
+C         objective function and the constraints
 
-C         CONVERT JACOBIAN OF CONSTRAINTS FROM COODINATE FORMAT TO
-C         COMPRESSED SPARSE ROW FORMAT
-          call coo2csr(m,jcpnnz,jcpfun,jcpvar,jcpval,jcplen,jcpsta)
+C             COMPUTE CONSTRAINTS AT xp
+              if ( m .gt. 0 ) then
+                  call sevalfc(n,xp,dum,m,cp,inform)
+                  if ( inform .lt. 0 ) return
+              end if
 
-C         COMPUTE \nabla L = \nabla f + \sum_j dPdc * dcdx
-          do j = 1,m
-              if ( equatn(j) .or. dpdc(j) .gt. 0.0d0 ) then
+C             COMPUTE THE GRADIENT OF THE OBJECTIVE FUNCTION AND JACOBIAN
+C             OF CONSTRAINTS AT xp
+              call sevalgjac(n,xp,gp,m,jcpfun,jcpvar,jcpval,jcpnnz,
+     +        inform)
+              if ( inform .lt. 0 ) return
 
-C                 COMPUTE dP/dc
-                  dpdcp = lambda(j) + rho(j) * cp(j)
+              do i = 1,n
+                  nalp(i) = gp(i)
+              end do
 
-C                 ADD dPdc * dcdx
-                  if ( dpdcp .ne. 0.0d0 ) then
+C             CONVERT JACOBIAN OF CONSTRAINTS FROM COODINATE FORMAT TO
+C             COMPRESSED SPARSE ROW FORMAT
+              call coo2csr(m,jcpnnz,jcpfun,jcpvar,jcpval,jcplen,jcpsta)
+
+C             COMPUTE dpdcp AND ADD dPdc * dcdx
+              do j = 1,m
+                  if ( ( equatn(j) .or. dpdc(j) .gt. 0.0d0 ) .and.
+     +                 .not. ( iglin .and. linear(j) ) ) then
+                      dpdcpj = lambda(j) + rho(j) * cp(j)
+
                       do i = jcpsta(j),jcpsta(j) + jcplen(j) - 1
                           nalp(jcpvar(i)) =
-     +                    nalp(jcpvar(i)) + dpdcp * jcpval(i)
+     +                    nalp(jcpvar(i)) + dpdcpj * jcpval(i)
                       end do
-
-                      if ( .not. linear(j) ) then
-                          do i = jcpsta(j),jcpsta(j) + jcplen(j) - 1
-                              nalpparc(jcpvar(i)) =
-     +                        nalpparc(jcpvar(i)) + dpdcp * jcpval(i)
-                          end do
-                      end if
                   end if
-
-              end if
-          end do
+              end do
+          end if
 
       else if ( fcoded .and. ( ccoded .or. m .eq. 0 ) ) then
 
-C         COMPUTE THE GRADIENT OF THE OBJECTIVE FUNCTION AT xp
+C         COMPUTE GRADIENT OF THE OBJECTIVE FUNCTION
           call sevalg(n,xp,gp,inform)
           if ( inform .lt. 0 ) return
 
           do i = 1,n
-              nalp(i)     = gp(i)
-              nalpparc(i) = gp(i)
+              nalp(i) = gp(i)
           end do
 
-C         COMPUTE \nabla L = \nabla f + \sum_j dPdc * dcdx
+C         ADD Jacobian^T dpdcp IGNORING THE LINEAR CONSTRAINTS 
+C         IF iglin IS TRUE
           do j = 1,m
-              if ( equatn(j) .or. dpdc(j) .gt. 0.0d0 ) then
+              if ( ( equatn(j) .or. dpdc(j) .gt. 0.0d0 ) .and.
+     +             .not. ( iglin .and. linear(j) ) ) then
 
-C                 COMPUTE THE i-TH CONSTRAINT
+C                 COMPUTE j-TH CONSTRAINT
                   call sevalc(n,xp,j,cpj,inform)
                   if ( inform .lt. 0 ) return
 
-C                 COMPUTE dP/dc
-                  dpdcp = lambda(j) + rho(j) * cpj
+                  dpdcpj = lambda(j) + rho(j) * cpj
 
-                  if ( dpdcp .ne. 0.0d0 ) then
-C                     COMPUTE THE GRADIENT OF THE j-TH CONSTRAINT
-                      call sevaljac(n,xp,j,jcpvar,jcpval,jcpnnz,inform)
-                      if ( inform .lt. 0 ) return
+C                 COMPUTE THE GRADIENT OF THE j-TH CONSTRAINT
+                  call sevaljac(n,xp,j,jcpvar,jcpval,jcpnnz,inform)
+                  if ( inform .lt. 0 ) return
 
-C                     ADD dPdc * dcdx
-                      do i = 1,jcpnnz
-                          nalp(jcpvar(i)) =
-     +                    nalp(jcpvar(i)) + dpdcp * jcpval(i)
-                      end do
-
-                      if ( .not. linear(j) ) then
-                          do i = 1,jcpnnz
-                              nalpparc(jcpvar(i)) =
-     +                        nalpparc(jcpvar(i)) + dpdcp * jcpval(i)
-                          end do
-                      end if
-                  end if
-
+C                 ADD dPdc * dcdx
+                  do i = 1,jcpnnz
+                      nalp(jcpvar(i)) = 
+     +                nalp(jcpvar(i)) + dpdcpj * jcpval(i)
+                  end do
               end if
           end do
+
       end if
 
       end
@@ -565,7 +640,10 @@ C     ARRAY ARGUMENTS
 
 C     LOCAL SCALARS
       integer i,j
-      double precision atp
+      double precision ajtp,dum
+
+C     LOCAL ARRAYS
+      double precision ap(mmax),atap(nmax)
 
       if ( innercall ) then
           call minsqhp(n,x,p,hp,gothl,inform)
@@ -603,22 +681,39 @@ C         instead of lambda
 
 C         Add rho A^T A
 
-          do j = 1,m
-              if ( equatn(j) .or. dpdc(j) .gt. 0.0d0 ) then
+          if ( gjacpcoded ) then
+              call sevalgjacp(n,x,dum,m,ap,p,'j',gotj,inform)
+              if ( inform .lt. 0 ) return
 
-                  atp = 0.0d0
-                  do i = jcsta(j),jcsta(j) + jclen(j) - 1
-                      atp = atp + jcval(i) * p(jcvar(i))
-                  end do
+              do j = 1,m
+                  ap(j) = ap(j) * rho(j)
+              end do
 
-                  atp = atp * rho(j)
+              call sevalgjacp(n,x,dum,m,ap,atap,'t',gotj,inform)
+              if ( inform .lt. 0 ) return
 
-                  do i = jcsta(j),jcsta(j) + jclen(j) - 1
-                      hp(jcvar(i)) = hp(jcvar(i)) + atp * jcval(i)
-                  end do
+              do i = 1,n
+                  hp(i) = hp(i) + atap(i)
+              end do
 
-              end if
-          end do
+          else
+              do j = 1,m
+                  if ( equatn(j) .or. dpdc(j) .gt. 0.0d0 ) then
+
+                      ajtp = 0.0d0
+                      do i = jcsta(j),jcsta(j) + jclen(j) - 1
+                          ajtp = ajtp + jcval(i) * p(jcvar(i))
+                      end do
+
+                      ajtp = ajtp * rho(j)
+
+                      do i = jcsta(j),jcsta(j) + jclen(j) - 1
+                          hp(jcvar(i)) = hp(jcvar(i)) + ajtp * jcval(i)
+                      end do
+
+                  end if
+              end do
+          end if
 
       end if
 
@@ -644,13 +739,16 @@ C     Augmented Lagrangian times a vector using incremental quotients.
       include "machconst.inc"
       include "dim.par"
       include "graddat.inc"
+      include "algparam.inc"
 
 C     LOCAL SCALARS
+      logical iglin
       integer i,j
-      double precision atp,psupn,step,xsupn
+      double precision ajtp,dum,psupn,step,xsupn
 
 C     LOCAL  ARRAYS
-      double precision gpparc(nmax),dum(nmax),xp(nmax)
+      double precision ap(mmax),atap(nmax),gpparc(nmax),ptmp(nmax),
+     +        xp(nmax)
 
 C     ------------------------------------------------------------------
 C     Set auxiliary point
@@ -676,7 +774,8 @@ C     ------------------------------------------------------------------
 
       call ssetp(n,xp)
 
-      call ievalnal(n,xp,m,lambda,rho,equatn,linear,dum,gpparc,inform)
+      iglin = .true.
+      call ievalnal(n,xp,m,lambda,rho,equatn,linear,iglin,gpparc,inform)
       if ( inform .lt. 0 ) return
 
 C     ------------------------------------------------------------------
@@ -691,26 +790,51 @@ C     ------------------------------------------------------------------
 C     Add contribution of linear constraints
 C     ------------------------------------------------------------------
 
-      do j = 1,m
-          if ( equatn(j) .or. dpdc(j) .gt. 0.0d0 ) then
-              if ( linear(j) ) then
-
-C                 Compute inner product <a,p>
-                  atp = 0.0d0
-                  do i = jcsta(j),jcsta(j) + jclen(j) - 1
-                      atp = atp + jcval(i) * p(jcvar(i))
-                  end do
-
-                  atp = atp * rho(j)
-
-C                 Add rho * atp * a
-                  do i = jcsta(j),jcsta(j) + jclen(j) - 1
-                      hp(jcvar(i)) = hp(jcvar(i)) + atp * jcval(i)
-                  end do
-
+      if ( gjacpcoded ) then
+          do i = 1,n
+              if ( linear(i) ) then
+                  ptmp(i) = p(i)
+              else
+                  ptmp(i) = 0.0d0
               end if
-          end if
-      end do
+          end do
+
+          call sevalgjacp(n,x,dum,m,ap,ptmp,'j',gotj,inform)
+          if ( inform .lt. 0 ) return
+
+          do j = 1,m
+              ap(j) = ap(j) * rho(j)
+          end do
+
+          call sevalgjacp(n,x,dum,m,ap,atap,'t',gotj,inform)
+          if ( inform .lt. 0 ) return
+
+          do i = 1,n
+              hp(i) = hp(i) + atap(i)
+          end do
+
+      else
+          do j = 1,m
+              if ( equatn(j) .or. dpdc(j) .gt. 0.0d0 ) then
+                  if ( linear(j) ) then
+
+C                     Compute inner product <a,p>
+                      ajtp = 0.0d0
+                      do i = jcsta(j),jcsta(j) + jclen(j) - 1
+                          ajtp = ajtp + jcval(i) * p(jcvar(i))
+                      end do
+
+                      ajtp = ajtp * rho(j)
+
+C                     Add rho * ajtp * a
+                      do i = jcsta(j),jcsta(j) + jclen(j) - 1
+                          hp(jcvar(i)) = hp(jcvar(i)) + ajtp * jcval(i)
+                      end do
+
+                  end if
+              end if
+          end do
+      end if
 
       end
 

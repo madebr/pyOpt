@@ -13,7 +13,7 @@ C     SCALAR ARGUMENTS
       integer inform,m,n
 
 C     ARRAY ARGUMENTS
-      logical coded(6),equatn(m),linear(m)
+      logical coded(11),equatn(m),linear(m)
       double precision l(n),lambda(m),u(n),x(n)
 
       include "dim.par"
@@ -68,7 +68,7 @@ C     ARRAY ARGUMENTS
 C     LOCAL SCALARS
       integer i
 
-      if ( iprintctl(5) ) then
+      if ( iprintctl(2) ) then
 
 C         Save solution
 
@@ -90,7 +90,7 @@ C         Lagrange multipliers
               end do
           end if
 
-C          close(20)
+          close(20)
 
       end if
 
@@ -144,7 +144,7 @@ C              write(* ,100)
           end if
 
           if ( safemode ) then
-              inform = - 90
+              inform = - 80
               call reperr(inform)
               return
           end if
@@ -159,7 +159,7 @@ C              write(* ,300) f
           end if
 
           if ( safemode ) then
-              inform = - 90
+              inform = - 80
               call reperr(inform)
               return
           end if
@@ -212,12 +212,12 @@ C     EXTERNAL SUBROUTINES
 
           if ( flag .ne. 0 ) then
               if ( iprintctl(3) ) then
-C                 write(* ,100)
+C                  write(* ,100)
                   write(10,100)
               end if
 
               if ( safemode ) then
-                  inform = - 92
+                  inform = - 81
                   call reperr(inform)
                   return
               end if
@@ -233,7 +233,7 @@ C                      write(* ,300) n,i,g(i)
                   end if
 
                   if ( safemode ) then
-                      inform = - 92
+                      inform = - 81
                       call reperr(inform)
                       return
                   end if
@@ -283,7 +283,7 @@ C     INTRINSIC FUNCTIONS
       intrinsic abs,max
 
 C     EXTERNAL SUBROUTINES
-      external setp,vevalf
+      external vsetp,vevalf
 
       do j = 1,n
           tmp  = x(j)
@@ -291,12 +291,12 @@ C     EXTERNAL SUBROUTINES
           step = macheps13 * max( 1.0d0, abs( tmp ) )
 
           x(j) = tmp + step
-          call setp(n,x)
+          call vsetp(n,x)
           call vevalf(n,x,fplus,inform)
           if ( inform .lt. 0 ) return
 
           x(j) = tmp - step
-          call setp(n,x)
+          call vsetp(n,x)
           call vevalf(n,x,fminus,inform)
           if ( inform .lt. 0 ) return
 
@@ -347,7 +347,7 @@ C              write(* ,100)
           end if
 
           if ( safemode ) then
-              inform = - 94
+              inform = - 82
               call reperr(inform)
               return
           end if
@@ -379,7 +379,7 @@ C                  write(* ,400) n,i,hlin(i),hcol(i),hval(i)
               end if
 
               if ( safemode ) then
-                  inform = - 94
+                  inform = - 82
                   call reperr(inform)
                   return
               end if
@@ -448,7 +448,7 @@ C              write(* ,100)
           end if
 
           if ( safemode ) then
-              inform = - 91
+              inform = - 83
               call reperr(inform)
               return
           end if
@@ -463,7 +463,7 @@ C              write(* ,300) c
           end if
 
           if ( safemode ) then
-              inform = - 91
+              inform = - 83
               call reperr(inform)
               return
           end if
@@ -522,7 +522,7 @@ C                  write(* ,100)
               end if
 
               if ( safemode ) then
-                  inform = - 93
+                  inform = - 84
                   call reperr(inform)
                   return
               end if
@@ -551,7 +551,7 @@ C                      write(* ,400) n,i,jcvar(i),jcval(i)
                   end if
 
                   if ( safemode ) then
-                      inform = - 93
+                      inform = - 84
                       call reperr(inform)
                       return
                   end if
@@ -609,7 +609,7 @@ C     INTRINSEC FUNCTIONS
       intrinsic abs,max
 
 C     EXTERNAL SUBROUTINES
-      external setp,vevalc
+      external vsetp,vevalc
 
       jcnnz = 0
 
@@ -619,12 +619,12 @@ C     EXTERNAL SUBROUTINES
           step = macheps13 * max( 1.0d0, abs( tmp ) )
 
           x(j) = tmp + step
-          call setp(n,x)
+          call vsetp(n,x)
           call vevalc(n,x,ind,cplus,inform)
           if ( inform .lt. 0 ) return
 
           x(j) = tmp - step
-          call setp(n,x)
+          call vsetp(n,x)
           call vevalc(n,x,ind,cminus,inform)
           if ( inform .lt. 0 ) return
 
@@ -680,7 +680,7 @@ C              write(* ,100)
           end if
 
           if ( safemode ) then
-              inform = - 95
+              inform = - 85
               call reperr(inform)
               return
           end if
@@ -712,7 +712,7 @@ C                  write(* ,400) n,i,hlin(i),hcol(i),hval(i)
               end if
 
               if ( safemode ) then
-                  inform = - 95
+                  inform = - 85
                   call reperr(inform)
                   return
               end if
@@ -738,6 +738,435 @@ C     NON-EXECUTABLE STATEMENTS
      +       /,1X,'Row      : ',I16,
      +       /,1X,'Column   : ',I16,
      +       /,1X,'Value    : ',1P,D24.16)
+
+      end
+
+C     ******************************************************************
+C     ******************************************************************
+
+      subroutine vevalfc(n,x,f,m,c,inform)
+
+      implicit none
+
+C     SCALAR ARGUMENTS
+      integer inform,m,n
+      double precision f
+
+C     ARRAY ARGUMENTS
+      double precision c(m),x(n)
+
+      include "dim.par"
+      include "algparam.inc"
+      include "counters.inc"
+      include "outtyp.inc"
+
+C     LOCAL SCALARS
+      integer flag,i
+
+C     EXTERNAL FUCNTIONS
+      logical IsANumber
+      external IsANumber
+
+C     EXTERNAL SUBROUTINES
+      external evalfc,reperr
+
+      call evalfc(n,x,f,m,c,flag)
+
+      efccnt = efccnt + 1
+      fcnt   = fcnt   + 1
+
+      if ( flag .ne. 0 ) then
+          if ( iprintctl(3) ) then
+C              write(* ,100)
+              write(10,100)
+          end if
+
+          if ( safemode ) then
+              inform = - 86
+              call reperr(inform)
+              return
+          end if
+      end if
+
+      if ( .not. IsANumber(f) ) then
+          if ( iprintctl(3) ) then
+C              write(* ,200)
+C              write(* ,400) f
+              write(10,200)
+              write(10,400) f
+          end if
+
+          if ( safemode ) then
+              inform = - 86
+              call reperr(inform)
+              return
+          end if
+      end if
+
+      do i = 1,m
+          if ( .not. IsANumber(c(i)) ) then
+              if ( iprintctl(3) ) then
+C                  write(* ,300)
+C                  write(* ,500) n,m,i,c(i)
+                  write(10,300)
+                  write(10,500) n,m,i,c(i)
+              end if
+
+              if ( safemode ) then
+                  inform = - 86
+                  call reperr(inform)
+                  return
+              end if
+          end if
+      end do
+
+C     NON-EXECUTABLE STATEMENTS
+
+ 100  format(/,1X,'VEVALFC WARNING: A non-null flag was returned.',/)
+
+ 200  format(/,1X,'VEVALFC WARNING: The objective function value ',
+     +            'computed by the user-supplied',/,1X,'subroutine ',
+     +            'EVALFC is +Inf, -Inf or NaN.')
+
+ 300  format(/,1X,'VEVALFC WARNING: The value of a constraint ',
+     +            'computed by the user-supplied',/,1X,'subroutine ',
+     +            'EVALFC is +Inf, -Inf or NaN.')
+
+ 400  format(/,1X,'Value: ',1P,D24.16)
+
+ 500  format(/,1X,'Dimension of the space: ',I16,
+     +       /,1X,'Number of constraints : ',I16,
+     +       /,1X,'Constraint            : ',I16,
+     +       /,1X,'Value                 : ',1P,D24.16)
+
+      end
+
+C     ******************************************************************
+C     ******************************************************************
+
+      subroutine vevalgjac(n,x,g,m,jcfun,jcvar,jcval,jcnnz,inform)
+
+      implicit none
+
+C     SCALAR ARGUMENTS
+      integer inform,jcnnz,m,n
+
+C     ARRAY ARGUMENTS
+      integer jcfun(*),jcvar(*)
+      double precision g(n),jcval(*),x(n)
+
+      include "dim.par"
+      include "algparam.inc"
+      include "counters.inc"
+      include "outtyp.inc"
+
+C     LOCAL SCALARS
+      integer flag,i
+
+C     EXTERNAL FUCNTIONS
+      logical IsANumber
+      external IsANumber
+
+C     EXTERNAL SUBROUTINES
+      external evalgjac,ivevalgjac,reperr
+
+      if ( gjaccoded ) then
+          call evalgjac(n,x,g,m,jcfun,jcvar,jcval,jcnnz,flag)
+
+          egjccnt = egjccnt + 1
+
+          if ( flag .ne. 0 ) then
+              if ( iprintctl(3) ) then
+C                  write(* ,100)
+                  write(10,100)
+              end if
+
+              if ( safemode ) then
+                  inform = - 87
+                  call reperr(inform)
+                  return
+              end if
+          end if
+
+          do i = 1,n
+              if ( .not. IsANumber(g(i)) ) then
+                  if ( iprintctl(3) ) then
+C                      write(* ,300)
+C                      write(* ,400) n,i,g(i)
+                      write(10,300)
+                      write(10,400) n,i,g(i)
+                  end if
+
+                  if ( safemode ) then
+                      inform = - 87
+                      call reperr(inform)
+                      return
+                  end if
+              end if
+          end do
+
+          do i = 1,jcnnz
+              if ( jcfun(i) .lt. 1 .or. jcfun(i) .gt. m .or.
+     +             jcvar(i) .lt. 1 .or. jcvar(i) .gt. n ) then
+
+                  if ( iprintctl(3) ) then
+C                      write(* ,200)
+C                      write(* ,500) n,m,i,jcfun(i),jcvar(i),jcval(i)
+                      write(10,200)
+                      write(10,500) n,m,i,jcfun(i),jcvar(i),jcval(i)
+                  end if
+
+                  jcfun(i) = 1
+                  jcvar(i) = 1
+                  jcval(i) = 0.0d0
+              end if
+
+              if ( .not. IsANumber(jcval(i)) ) then
+                  if ( iprintctl(3) ) then
+C                      write(* ,300)
+C                      write(* ,500) n,m,i,jcfun(i),jcvar(i),jcval(i)
+                      write(10,300)
+                      write(10,500) n,m,i,jcfun(i),jcvar(i),jcval(i)
+                  end if
+
+                  if ( safemode ) then
+                      inform = - 87
+                      call reperr(inform)
+                      return
+                  end if
+              end if
+          end do
+
+      else
+          call ivevalgjac(n,x,g,m,jcfun,jcvar,jcval,jcnnz,inform)
+          if ( inform .lt. 0 ) return
+      end if
+
+C     NON-EXECUTABLE STATEMENTS
+
+ 100  format(/,1X,'VEVALGJAC WARNING: A non-null flag was returned.',/)
+
+ 200  format(/,1X,'VEVALGJAC WARNING: There is an element out of ',
+     +            'range in the gradient of the objective function or ',
+     +            'in the Jacobian of the constraints computed by the ',
+     +            'user-supplied subroutine EVALGJAC. It will be ',
+     +            'ignored.')
+
+ 300  format(/,1X,'VEVALGJAC WARNING: There is an element whose value ',
+     +            'is +Inf, -Inf or NaN in the',/,1X,'gradient of the ',
+     +            'objective function or in the Jacobian of the ',
+     +            'constraints',/,1X,'computed by the user-supplied ',
+     +            'subroutine EVALGJAC.')
+
+ 400  format(/,1X,'Dimension of the space: ',I16,
+     +       /,1X,'Position              : ',I16,
+     +       /,1X,'Value                 : ',1P,D24.16)
+
+ 500  format(/,1X,'Dimension of the space: ',I16,
+     +       /,1X,'Number of constraints : ',I16,
+     +       /,1X,'Position              : ',I16,
+     +       /,1X,'Constraint            : ',I16,
+     +       /,1X,'Variable              : ',I16,
+     +       /,1X,'Value                 : ',1P,D24.16)
+
+      end
+
+C     ******************************************************************
+C     ******************************************************************
+
+      subroutine ivevalgjac(n,x,g,m,jcfun,jcvar,jcval,jcnnz,inform)
+
+      implicit none
+
+C     SCALAR ARGUMENTS
+      integer inform,jcnnz,m,n
+
+C     ARRAY ARGUMENTS
+      integer jcfun(*),jcvar(*)
+      double precision g(n),jcval(*),x(n)
+
+      include "dim.par"
+      include "machconst.inc"
+
+C     LOCAL SCALARS
+      integer i,j
+      double precision fminus,fplus,step,tmp
+
+C     LOCAL ARRAYS
+      double precision cminus(mmax),cplus(mmax)
+
+C     INTRINSIC FUNCTIONS
+      intrinsic abs,max
+
+C     EXTERNAL SUBROUTINES
+      external vsetp,vevalfc
+
+      jcnnz = 0
+
+      do i = 1,n
+          tmp  = x(i)
+
+          step = macheps13 * max( 1.0d0, abs( tmp ) )
+
+          x(i) = tmp + step
+          call vsetp(n,x)
+          call vevalfc(n,x,fplus,m,cplus,inform)
+          if ( inform .lt. 0 ) return
+
+          x(i) = tmp - step
+          call vsetp(n,x)
+          call vevalfc(n,x,fminus,m,cminus,inform)
+          if ( inform .lt. 0 ) return
+
+          do j = 1,m
+              jcfun(jcnnz + 1) = j
+              jcvar(jcnnz + 1) = i
+              jcval(jcnnz + 1) = ( cplus(j) - cminus(j) ) /
+     +                           ( 2.0d0 * step )
+
+              if ( abs( jcval(jcnnz + 1) ) .gt. 0.0d0 ) then
+                  jcnnz = jcnnz + 1
+              end if
+          end do
+
+          g(i) = ( fplus - fminus ) / ( 2.0d0 * step )
+
+          x(i) = tmp
+      end do
+
+      end
+
+C     ******************************************************************
+C     ******************************************************************
+
+      subroutine vevalgjacp(n,x,g,m,p,q,work,gotj,inform)
+
+      implicit none
+
+C     SCALAR ARGUMENTS
+      logical gotj
+      integer inform,m,n
+      character work
+
+C     ARRAY ARGUMENTS
+      double precision g(n),p(m),q(n),x(n)
+
+C     The meaning of argument work follows: work = 'j' or 'J' means that 
+C     q is an input array argument and that p = Jacobian x q must be 
+C     computed, while work = 't' or 'T' means that p is an input array 
+C     argument and that q = Jacobian^t x p must be computed. Moreover, a 
+C     capital letter (i.e. 'J' or 'T') means that the gradient of the 
+C     objective function g must also be computed. A lower letter (i.e. 
+C     'j' or 't') means that only the product with the Jacobian is 
+C     required. In the later case, input array argument g MUST NOT be 
+C     modified nor referenced.
+
+      include "dim.par"
+      include "algparam.inc"
+      include "counters.inc"
+      include "outtyp.inc"
+
+C     LOCAL SCALARS
+      integer flag,i,j
+
+C     EXTERNAL FUCNTIONS
+      logical IsANumber
+      external IsANumber
+
+C     EXTERNAL SUBROUTINES
+      external evalgjacp,reperr
+
+      call evalgjacp(n,x,g,m,p,q,work,gotj,flag)
+
+      egjcpcnt = egjcpcnt + 1
+
+      if ( flag .ne. 0 ) then
+          if ( iprintctl(3) ) then
+C              write(* ,100)
+              write(10,100)
+          end if
+
+          if ( safemode ) then
+              inform = - 88
+              call reperr(inform)
+              return
+          end if
+      end if
+
+      if ( work .eq. 'J' .or. work .eq. 'T' ) then
+          do i = 1,n
+              if ( .not. IsANumber(g(i)) ) then
+                  if ( iprintctl(3) ) then
+C                      write(* ,200)
+C                      write(* ,400) n,i,g(i)
+                      write(10,200)
+                      write(10,400) n,i,g(i)
+                  end if
+
+                  if ( safemode ) then
+                      inform = - 88
+                      call reperr(inform)
+                      return
+                  end if
+              end if
+          end do
+      end if
+
+      if ( work .eq. 'j' .or. work .eq. 'J' ) then
+          do j = 1,m
+              if ( .not. IsANumber(p(j)) ) then
+                  if ( iprintctl(3) ) then
+C                      write(* ,300)
+C                      write(* ,400) m,j,p(j)
+                      write(10,300)
+                      write(10,400) m,j,p(j)
+                  end if
+
+                  if ( safemode ) then
+                      inform = - 88
+                      call reperr(inform)
+                      return
+                  end if
+              end if
+          end do
+
+      else ! if ( work .eq. 't' .or. work .eq. 'T' ) then
+          do i = 1,n
+              if ( .not. IsANumber(q(i)) ) then
+                  if ( iprintctl(3) ) then
+C                      write(* ,300)
+C                      write(* ,400) n,i,q(i)
+                      write(10,300)
+                      write(10,400) n,i,q(i)
+                  end if
+
+                  if ( safemode ) then
+                      inform = - 88
+                      call reperr(inform)
+                      return
+                  end if
+              end if
+          end do
+      end if
+
+C     NON-EXECUTABLE STATEMENTS
+
+ 100  format(/,1X,'VEVALGJACP WARNING: A non-null flag was returned.',/)
+
+ 200  format(/,1X,'VEVALGJACP WARNING: There is an element whose ',
+     +            'value is +Inf, -Inf or NaN in the gradient of the ',
+     +            'objective function computed by the user-supplied ',
+     +            'subroutine EVALGJACP.')
+
+ 300  format(/,1X,'VEVALGJACP WARNING: There is an element whose ',
+     +            'value is +Inf, -Inf or NaN in the product of the ',
+     +            'Jacobian (or transpose Jacobian) times a given ',
+     +            'vector, computed by the user-supplied subroutine ',
+     +            'EVALGJACP.')
+
+ 400  format(/,1X,'Dimension of computed array: ',I16,
+     +       /,1X,'Position                   : ',I16,
+     +       /,1X,'Value                      : ',1P,D24.16)
 
       end
 
@@ -784,7 +1213,7 @@ C                  write(* ,100)
               end if
 
               if ( safemode ) then
-                  inform = - 96
+                  inform = - 89
                   call reperr(inform)
                   return
               end if
@@ -816,7 +1245,7 @@ C                      write(* ,400) n,i,hlin(i),hcol(i),hval(i)
                   end if
 
                   if ( safemode ) then
-                      inform = - 96
+                      inform = - 89
                       call reperr(inform)
                       return
                   end if
@@ -1076,7 +1505,7 @@ C                  write(* ,100)
               end if
 
               if ( safemode ) then
-                  inform = - 97
+                  inform = - 90
                   call reperr(inform)
                   return
               end if
@@ -1092,14 +1521,14 @@ C                      write(* ,300) n,i,hp(i)
                   end if
 
                   if ( safemode ) then
-                      inform = - 97
+                      inform = - 90
                       call reperr(inform)
                       return
                   end if
               end if
           end do
 
-      else if ( truehl ) then
+      else if ( seconde ) then
           call ivevalhlp(n,x,m,lambda,sf,sc,p,hp,gothl,inform)
           if ( inform .lt. 0 ) return
       end if
@@ -1172,301 +1601,6 @@ C     EXTERNAL SUBROUTINES
 C     ******************************************************************
 C     ******************************************************************
 
-      subroutine vevalfc(n,x,f,m,c,inform)
-
-      implicit none
-
-C     SCALAR ARGUMENTS
-      integer inform,m,n
-      double precision f
-
-C     ARRAY ARGUMENTS
-      double precision c(m),x(n)
-
-      include "dim.par"
-      include "algparam.inc"
-      include "counters.inc"
-      include "outtyp.inc"
-
-C     LOCAL SCALARS
-      integer flag,i
-
-C     EXTERNAL FUCNTIONS
-      logical IsANumber
-      external IsANumber
-
-C     EXTERNAL SUBROUTINES
-      external evalfc,reperr
-
-      call evalfc(n,x,f,m,c,flag)
-
-      efccnt = efccnt + 1
-      fcnt   = fcnt   + 1
-
-      if ( flag .ne. 0 ) then
-          if ( iprintctl(3) ) then
-C              write(* ,100)
-              write(10,100)
-          end if
-
-          if ( safemode ) then
-              inform = - 98
-              call reperr(inform)
-              return
-          end if
-      end if
-
-      if ( .not. IsANumber(f) ) then
-          if ( iprintctl(3) ) then
-C              write(* ,200)
-C              write(* ,400) f
-              write(10,200)
-              write(10,400) f
-          end if
-
-          if ( safemode ) then
-              inform = - 98
-              call reperr(inform)
-              return
-          end if
-      end if
-
-      do i = 1,m
-          if ( .not. IsANumber(c(i)) ) then
-              if ( iprintctl(3) ) then
-C                  write(* ,300)
-C                  write(* ,500) n,m,i,c(i)
-                  write(10,300)
-                  write(10,500) n,m,i,c(i)
-              end if
-
-              if ( safemode ) then
-                  inform = - 98
-                  call reperr(inform)
-                  return
-              end if
-          end if
-      end do
-
-C     NON-EXECUTABLE STATEMENTS
-
- 100  format(/,1X,'VEVALFC WARNING: A non-null flag was returned.',/)
-
- 200  format(/,1X,'VEVALFC WARNING: The objective function value ',
-     +            'computed by the user-supplied',/,1X,'subroutine ',
-     +            'EVALFC is +Inf, -Inf or NaN.')
-
- 300  format(/,1X,'VEVALFC WARNING: The value of a constraint ',
-     +            'computed by the user-supplied',/,1X,'subroutine ',
-     +            'EVALFC is +Inf, -Inf or NaN.')
-
- 400  format(/,1X,'Value: ',1P,D24.16)
-
- 500  format(/,1X,'Dimension of the space: ',I16,
-     +       /,1X,'Number of constraints : ',I16,
-     +       /,1X,'Constraint            : ',I16,
-     +       /,1X,'Value                 : ',1P,D24.16)
-
-      end
-
-C     ******************************************************************
-C     ******************************************************************
-
-      subroutine vevalgjac(n,x,g,m,jcfun,jcvar,jcval,jcnnz,inform)
-
-      implicit none
-
-C     SCALAR ARGUMENTS
-      integer inform,jcnnz,m,n
-
-C     ARRAY ARGUMENTS
-      integer jcfun(n*m),jcvar(n*m)
-      double precision g(n),jcval(n*m),x(n)
-
-      include "dim.par"
-      include "algparam.inc"
-      include "counters.inc"
-      include "outtyp.inc"
-
-C     LOCAL SCALARS
-      integer flag,i
-
-C     EXTERNAL FUCNTIONS
-      logical IsANumber
-      external IsANumber
-
-C     EXTERNAL SUBROUTINES
-      external evalgjac,ivevalgjac,reperr
-
-      if ( gjaccoded ) then
-          call evalgjac(n,x,g,m,jcfun,jcvar,jcval,jcnnz,flag)
-
-          egjccnt = egjccnt + 1
-
-          if ( flag .ne. 0 ) then
-              if ( iprintctl(3) ) then
-C                  write(* ,100)
-                  write(10,100)
-              end if
-
-              if ( safemode ) then
-                  inform = - 99
-                  call reperr(inform)
-                  return
-              end if
-          end if
-
-          do i = 1,n
-              if ( .not. IsANumber(g(i)) ) then
-                  if ( iprintctl(3) ) then
-C                      write(* ,300)
-C                      write(* ,400) n,i,g(i)
-                      write(10,300)
-                      write(10,400) n,i,g(i)
-                  end if
-
-                  if ( safemode ) then
-                      inform = - 99
-                      call reperr(inform)
-                      return
-                  end if
-              end if
-          end do
-
-          do i = 1,jcnnz
-              if ( jcfun(i) .lt. 1 .or. jcfun(i) .gt. m .or.
-     +             jcvar(i) .lt. 1 .or. jcvar(i) .gt. n ) then
-
-                  if ( iprintctl(3) ) then
-C                      write(* ,200)
-C                      write(* ,500) n,m,i,jcfun(i),jcvar(i),jcval(i)
-                      write(10,200)
-                      write(10,500) n,m,i,jcfun(i),jcvar(i),jcval(i)
-                  end if
-
-                  jcfun(i) = 1
-                  jcvar(i) = 1
-                  jcval(i) = 0.0d0
-              end if
-
-              if ( .not. IsANumber(jcval(i)) ) then
-                  if ( iprintctl(3) ) then
-C                      write(* ,300)
-C                      write(* ,500) n,m,i,jcfun(i),jcvar(i),jcval(i)
-                      write(10,300)
-                      write(10,500) n,m,i,jcfun(i),jcvar(i),jcval(i)
-                  end if
-
-                  if ( safemode ) then
-                      inform = - 99
-                      call reperr(inform)
-                      return
-                  end if
-              end if
-          end do
-
-      else
-          call ivevalgjac(n,x,g,m,jcfun,jcvar,jcval,jcnnz,inform)
-          if ( inform .lt. 0 ) return
-      end if
-
-C     NON-EXECUTABLE STATEMENTS
-
- 100  format(/,1X,'VEVALGJAC WARNING: A non-null flag was returned.',/)
-
- 200  format(/,1X,'VEVALGJAC WARNING: There is an element out of ',
-     +            'range in the gradient of the objective function or ',
-     +            'in the Jacobian of the constraints computed by the ',
-     +            'user-supplied subroutine EVALGJAC. It will be ',
-     +            'ignored.')
-
- 300  format(/,1X,'VEVALGJAC WARNING: There is an element whose value ',
-     +            'is +Inf, -Inf or NaN in the',/,1X,'gradient of the ',
-     +            'objective function or in the Jacobian of the ',
-     +            'constraints',/,1X,'computed by the user-supplied ',
-     +            'subroutine EVALGJAC.')
-
- 400  format(/,1X,'Dimension of the space: ',I16,
-     +       /,1X,'Position              : ',I16,
-     +       /,1X,'Value                 : ',1P,D24.16)
-
- 500  format(/,1X,'Dimension of the space: ',I16,
-     +       /,1X,'Number of constraints : ',I16,
-     +       /,1X,'Position              : ',I16,
-     +       /,1X,'Constraint            : ',I16,
-     +       /,1X,'Variable              : ',I16,
-     +       /,1X,'Value                 : ',1P,D24.16)
-
-      end
-
-C     ******************************************************************
-C     ******************************************************************
-
-      subroutine ivevalgjac(n,x,g,m,jcfun,jcvar,jcval,jcnnz,inform)
-
-      implicit none
-
-C     SCALAR ARGUMENTS
-      integer inform,jcnnz,m,n
-
-C     ARRAY ARGUMENTS
-      integer jcfun(*),jcvar(*)
-      double precision g(n),jcval(*),x(n)
-
-      include "dim.par"
-      include "machconst.inc"
-
-C     LOCAL SCALARS
-      integer i,j
-      double precision fminus,fplus,step,tmp
-
-C     LOCAL ARRAYS
-      double precision cminus(mmax),cplus(mmax)
-
-C     INTRINSIC FUNCTIONS
-      intrinsic abs,max
-
-C     EXTERNAL SUBROUTINES
-      external setp,vevalfc
-
-      jcnnz = 0
-
-      do i = 1,n
-          tmp  = x(i)
-
-          step = macheps13 * max( 1.0d0, abs( tmp ) )
-
-          x(i) = tmp + step
-          call setp(n,x)
-          call vevalfc(n,x,fplus,m,cplus,inform)
-          if ( inform .lt. 0 ) return
-
-          x(i) = tmp - step
-          call setp(n,x)
-          call vevalfc(n,x,fminus,m,cminus,inform)
-          if ( inform .lt. 0 ) return
-
-          do j = 1,m
-              jcfun(jcnnz + 1) = j
-              jcvar(jcnnz + 1) = i
-              jcval(jcnnz + 1) = ( cplus(j) - cminus(j) ) /
-     +                           ( 2.0d0 * step )
-
-              if ( abs( jcval(jcnnz + 1) ) .gt. 0.0d0 ) then
-                  jcnnz = jcnnz + 1
-              end if
-          end do
-
-          g(i) = ( fplus - fminus ) / ( 2.0d0 * step )
-
-          x(i) = tmp
-      end do
-
-      end
-
-C     ******************************************************************
-C     ******************************************************************
-
       subroutine reperr(inform)
 
 C     SCALAR ARGUMENTS
@@ -1526,6 +1660,7 @@ C     EXTERNAL SUBROUTINES
       external setp
 
       gotc = .false.
+      gotj = .false.
 
       call setp(n,x)
 
@@ -1545,6 +1680,7 @@ C     EXTERNAL SUBROUTINES
       external unsetp
 
       gotc = .false.
+      gotj = .false.
 
       call unsetp()
 

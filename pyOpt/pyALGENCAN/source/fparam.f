@@ -1,12 +1,12 @@
 C     ******************************************************************
 C     ******************************************************************
-      subroutine fparam(epsfeas,epsopt,iprint,ncomp)
+      subroutine fparam(epsfeas,epsopt,efacc,eoacc,iprint,ncomp)
 
       implicit none
 
 C     SCALAR ARGUMENTS
       integer ncomp,iprint
-      double precision epsfeas,epsopt
+      double precision efacc,eoacc,epsfeas,epsopt
 
       include "dim.par"
       include "algparam.inc"
@@ -17,7 +17,7 @@ C     SCALAR ARGUMENTS
 
 C     PARAMETERS
       integer nwords
-      parameter ( nwords = 16 )
+      parameter ( nwords = 18 )
 
 C     LOCAL SCALARS
       logical lss,scl
@@ -53,8 +53,10 @@ C     DATA BLOCKS
       data dictionary(12) /'IGNORE-OBJ'/
       data dictionary(13) /'FEASIBILIT'/
       data dictionary(14) /'OPTIMALITY'/
-      data dictionary(15) /'OUTPUT-DET'/
-      data dictionary(16) /'NCOMP-ARRA'/
+      data dictionary(15) /'ACC-FEASIB'/
+      data dictionary(16) /'ACC-OPTIMA'/
+      data dictionary(17) /'OUTPUT-DET'/
+      data dictionary(18) /'NCOMP-ARRA'/
 
       data description( 1) /'INCREMENTAL-QUOTIENTS-IN-CG              '/
       data description( 2) /'HESSIAN-APPROXIMATION-IN-CG              '/
@@ -70,8 +72,10 @@ C     DATA BLOCKS
       data description(12) /'IGNORE-OBJECTIVE-FUNCTION                '/
       data description(13) /'FEASIBILITY-TOLERANCE                    '/
       data description(14) /'OPTIMALITY-TOLERANCE                     '/
-      data description(15) /'OUTPUT-DETAIL                            '/
-      data description(16) /'NCOMP-ARRAY                              '/
+      data description(15) /'ACC-FEASIBILITY-THRESHOLD                '/
+      data description(16) /'ACC-OPTIMALITY-THRESHOLD                 '/
+      data description(17) /'OUTPUT-DETAIL                            '/
+      data description(18) /'NCOMP-ARRAY                              '/
 
       data addinfo( 1) /' '/
       data addinfo( 2) /' '/
@@ -87,8 +91,10 @@ C     DATA BLOCKS
       data addinfo(12) /' '/
       data addinfo(13) /'D'/
       data addinfo(14) /'D'/
-      data addinfo(15) /'I'/
-      data addinfo(16) /'I'/
+      data addinfo(15) /'D'/
+      data addinfo(16) /'D'/
+      data addinfo(17) /'I'/
+      data addinfo(18) /'I'/
 
 C     EXTERNAL FUNCTIONS
       external lss,scl
@@ -242,7 +248,7 @@ C     Set the corresponding algencan argument
           hptype = 'HAPPRO'
 
       else if ( ikey .eq.  3 ) then
-          if ( hlpcoded .or. truehl ) then
+          if ( seconde .or. truehpr ) then
               hptype = 'TRUEHP'
           else
               if ( iprintctl(2) ) then
@@ -255,7 +261,7 @@ C                  write(* ,9100) description(ikey)
           skipacc = .true.
 
       else if ( ikey .eq.  5 ) then
-          if ( .not. truehl ) then
+          if ( .not. seconde ) then
               if ( iprintctl(2) ) then
 C                  write(* ,9110) description(ikey)
                   write(10,9110) description(ikey)
@@ -270,7 +276,7 @@ C                  write(* ,9120) description(ikey)
           end if
 
       else if ( ikey .eq.  6 ) then
-          if ( .not. truehl ) then
+          if ( .not. seconde ) then
               if ( iprintctl(2) ) then
 C                  write(* ,9110) description(ikey)
                   write(10,9110) description(ikey)
@@ -318,9 +324,15 @@ C                  write(* ,9130) description(ikey)
           epsopt = dnum
 
       else if ( ikey .eq. 15 ) then
-          iprint = inum
+          efacc  = dnum
 
       else if ( ikey .eq. 16 ) then
+          eoacc  = dnum
+
+      else if ( ikey .eq. 17 ) then
+          iprint = inum
+
+      else if ( ikey .eq. 18 ) then
           ncomp = inum
       end if
 
@@ -355,12 +367,12 @@ C          write(*, 9010)
 C     PRINTING PARAMETERS VALUES
  500  continue
       if ( iprintctl(2) ) then
-C          write(* ,4000) firstde,hptype,innslvr,sclsys,skipacc,lssdes,
-C     +                   scldes,rmfixv,slacks,scale,epsfeas,epsopt,
-C     +                   iprint,ncomp
-          write(10,4000) firstde,hptype,innslvr,sclsys,skipacc,lssdes,
-     +                   scldes,rmfixv,slacks,scale,epsfeas,epsopt,
-     +                   iprint,ncomp
+C          write(* ,4000) firstde,seconde,truehpr,hptype,innslvr,sclsys,
+C     +                   skipacc,lssdes,scldes,rmfixv,slacks,scale,
+C     +                   epsfeas,epsopt,efacc,eoacc,iprint,ncomp
+          write(10,4000) firstde,seconde,truehpr,hptype,innslvr,sclsys,
+     +                   skipacc,lssdes,scldes,rmfixv,slacks,scale,
+     +                   epsfeas,epsopt,efacc,eoacc,iprint,ncomp
       end if
 
 C     NON-EXECUTABLE STATEMENTS
@@ -370,6 +382,8 @@ C     NON-EXECUTABLE STATEMENTS
  3000 format(BN,F24.0)
  4000 format(/,1X,'ALGENCAN PARAMETERS:',
      +       /,1X,'firstde  = ',     19X,L1,
+     +       /,1X,'seconde  = ',     19X,L1,
+     +       /,1X,'truehpr  = ',     19X,L1,
      +       /,1X,'hptype   = ',     14X,A6,
      +       /,1X,'innslvr  = ',     18X,A2,
      +       /,1X,'sclsys   = ',     19X,L1,
@@ -381,10 +395,12 @@ C     NON-EXECUTABLE STATEMENTS
      +       /,1X,'scale    = ',     19X,L1,
      +       /,1X,'epsfeas  = ',8X,1P,D12.4,
      +       /,1X,'epsopt   = ',8X,1P,D12.4,
+     +       /,1X,'efacc    = ',8X,1P,D12.4,
+     +       /,1X,'eoacc    = ',8X,1P,D12.4,
      +       /,1X,'iprint   = ',        I20,
      +       /,1X,'ncomp    = ',        I20)
  8000 format(/,1X,78('='),
-     +       /,1X,'This is ALGENCAN 2.3.7.',
+     +       /,1X,'This is ALGENCAN 2.4.0.',
      +       /,1X,'ALGENCAN, an augmented Lagrangian method for ',
      +            'nonlinear programming, is part of',/,1X,'the TANGO ',
      +            'Project: Trustable Algorithms for Nonlinear ',
@@ -404,15 +420,18 @@ C     NON-EXECUTABLE STATEMENTS
  9042 format(1X,A41,1X,1P,D24.8)
 
  9100 format(/,1X,'Warning: Ignoring keyword ',A41,'.',
-     +       /,1X,'This option requires subroutines EVALH and EVALHC, ',
-     +            'or, alternatively,',/,1X,'subroutine EVALHLP, to ',
-     +            'be coded by the user. If you already coded them,',
-     +       /,1X,'set array CODED in subrutine INIP appropiately.',/)
+     +       /,1X,'This option requires subroutines EVALJAC, EVALH ',
+     +            'and EVALHC, or, alternatively, subroutines ',
+     +            'EVALGJAC and EVALHL, or, alternatively, EVALGJACP ',
+     +            'and EVALHLP, to be coded by the user. If you ',
+     +            'already coded them, set array CODED in subrutine ',
+     +            'INIP appropiately.',/)
  9110 format(/,1X,'Warning: Ignoring keyword ',A41,'.',
-     +       /,1X,'This option requires subroutines EVALH and EVALHC, ',
-     +            'or, alternatively,',/,1X,'subroutine EVALHL, to ',
-     +            'be coded by the user. If you already coded them,',
-     +       /,1X,'set array CODED in subrutine INIP appropiately.',/)
+     +       /,1X,'This option requires subroutines EVALJAC, EVALH ',
+     +            'and EVALHC, or, alternatively,',/,1X,'subroutines ',
+     +            'EVALGJAC and EVALHL, to be coded by the user. If ',
+     +            'you already coded them, set array CODED in ',
+     +            'subrutine INIP appropiately.',/)
  9120 format(/,1X,'Warning: Ignoring keyword ',A41,'.',
      +       /,1X,'This option requires subroutine MA27 or MA57 from ',
      +            'HSL to be provided by the',/,1X,'user. If you ',

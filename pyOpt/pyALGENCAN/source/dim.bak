@@ -5,7 +5,7 @@ C     PARAMETERS
       parameter ( mmax      =   500000 )
       parameter ( nmax      =   500000 )
       parameter ( nsmax     =     1000 )
-      parameter ( nsysmax   =   500000 )
+      parameter ( nsysmax   =  5000000 )
       parameter ( nnzmax    = 10000000 )
       parameter ( jcnnzmax  = 10000000 )
       parameter ( hnnzmax   = 10000000 )

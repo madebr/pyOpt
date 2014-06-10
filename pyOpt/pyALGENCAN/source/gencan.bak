@@ -247,7 +247,7 @@ C     Compute the gradient at the auxiliary point
 
       call ssetp(n,s)
 
-      call ievalnal(n,s,m,lambda,rho,equatn,linear,y,dum,inform)
+      call ievalnal(n,s,m,lambda,rho,equatn,linear,.false.,y,inform)
       if ( inform .lt. 0 ) return
 
       call ssetp(n,x)
@@ -559,15 +559,20 @@ C             with a direct solver.
 
               nwcnt = nwcnt + 1
 
-C             Compute maximum step
+              if ( .not. memfail ) then
 
-              call compamax(nind,x,l,u,d,amax,rbdnnz,rbdind,rbdtype)
+C                 Compute maximum step
 
-C             Perform line search
+                  call compamax(nind,x,l,u,d,amax,rbdnnz,rbdind,rbdtype)
 
-              call tnls(nind,x,l,u,m,lambda,rho,equatn,linear,f,g,amax,
-     +        d,rbdnnz,rbdind,rbdtype,xplus,fplus,gplus,lsinfo,inform)
-              if ( inform .lt. 0 ) return
+C                 Perform line search
+
+                  call tnls(nind,x,l,u,m,lambda,rho,equatn,linear,f,g,
+     +            amax,d,rbdnnz,rbdind,rbdtype,xplus,fplus,gplus,lsinfo,
+     +            inform)
+                  if ( inform .lt. 0 ) return
+
+              end if
 
 C             Set iteration type
 

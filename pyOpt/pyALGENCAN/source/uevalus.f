@@ -13,7 +13,7 @@ C     SCALAR ARGUMENTS
       integer inform,m,n
 
 C     ARRAY ARGUMENTS
-      logical coded(10),equatn(m),linear(m)
+      logical coded(11),equatn(m),linear(m)
       double precision l(n),lambda(m),u(n),x(n)
 
       include "dim.par"
@@ -147,14 +147,6 @@ C     EXTERNAL SUBROUTINES
           if ( inform .lt. 0 ) return
 
       else
-          if ( .not. yset ) then
-C              write(*,*) 'uevalf: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              write(10,*) 'uevalf: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              do i = 1,n
-                  y(yind(i)) = x(i)
-              end do
-          end if
-
           call vevalf(yind(0),y,f,inform)
           if ( inform .lt. 0 ) return
       end if
@@ -188,14 +180,6 @@ C     EXTERNAL SUBROUTINES
           if ( inform .lt. 0 ) return
 
       else
-          if ( .not. yset ) then
-C              write(*,*) 'uevalg: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              write(10,*) 'uevalg: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              do i = 1,n
-                  y(yind(i)) = x(i)
-              end do
-          end if
-
           call vevalg(yind(0),y,g,inform)
           if ( inform .lt. 0 ) return
 
@@ -234,14 +218,6 @@ C     EXTERNAL SUBROUTINES
           if ( inform .lt. 0 ) return
 
       else
-          if ( .not. yset ) then
-C              write(*,*) 'uevalh: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              write(10,*) 'uevalh: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              do i = 1,n
-                  y(yind(i)) = x(i)
-              end do
-          end if
-
           call vevalh(yind(0),y,hlin,hcol,hval,hnnz,inform)
           if ( inform .lt. 0 ) return
 
@@ -290,14 +266,6 @@ C     EXTERNAL SUBROUTINES
           if ( inform .lt. 0 ) return
 
       else
-          if ( .not. yset ) then
-C              write(*,*) 'uevalc: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              write(10,*) 'uevalc: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              do i = 1,n
-                  y(yind(i)) = x(i)
-              end do
-          end if
-
           call vevalc(yind(0),y,ind,c,inform)
           if ( inform .lt. 0 ) return
       end if
@@ -332,14 +300,6 @@ C     EXTERNAL SUBROUTINES
           if ( inform .lt. 0 ) return
 
       else
-          if ( .not. yset ) then
-C              write(*,*) 'uevaljac: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              write(10,*) 'uevaljac: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              do i = 1,n
-                  y(yind(i)) = x(i)
-              end do
-          end if
-
           call vevaljac(yind(0),y,ind,jcvar,jcval,jcnnz,inform)
           if ( inform .lt. 0 ) return
 
@@ -386,14 +346,6 @@ C     EXTERNAL SUBROUTINES
           if ( inform .lt. 0 ) return
 
       else
-          if ( .not. yset ) then
-C              write(*,*) 'uevalhc: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              write(10,*) 'uevalhc: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              do i = 1,n
-                  y(yind(i)) = x(i)
-              end do
-          end if
-
           call vevalhc(yind(0),y,ind,hlin,hcol,hval,hnnz,inform)
           if ( inform .lt. 0 ) return
 
@@ -443,14 +395,6 @@ C     EXTERNAL SUBROUTINES
           if ( inform .lt. 0 ) return
 
       else
-          if ( .not. yset ) then
-C              write(*,*) 'uevalhl: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              write(10,*) 'uevalhl: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              do i = 1,n
-                  y(yind(i)) = x(i)
-              end do
-          end if
-
           call vevalhl(yind(0),y,m,lambda,sf,sc,hlin,hcol,hval,hnnz,
      +    inform)
           if ( inform .lt. 0 ) return
@@ -504,14 +448,6 @@ C     EXTERNAL SUBROUTINES
           if ( inform .lt. 0 ) return
 
       else
-          if ( .not. yset ) then
-C              write(*,*) 'uevalhlp: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              write(10,*) 'uevalhlp: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              do i = 1,n
-                  y(yind(i)) = x(i)
-              end do
-          end if
-
           do i = 1,yind(0)
               w(i) = 0.0d0
           end do
@@ -558,14 +494,6 @@ C     EXTERNAL SUBROUTINES
           if ( inform .lt. 0 ) return
 
       else
-          if ( .not. yset ) then
-C              write(*,*) 'uevalfc: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              write(10,*) 'uevalfc: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              do i = 1,n
-                  y(yind(i)) = x(i)
-              end do
-          end if
-
           call vevalfc(yind(0),y,f,m,c,inform)
           if ( inform .lt. 0 ) return
       end if
@@ -600,14 +528,6 @@ C     EXTERNAL SUBROUTINES
           if ( inform .lt. 0 ) return
 
       else
-          if ( .not. yset ) then
-C              write(*,*) 'uevalgjac: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              write(10,*) 'uevalgjac: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
-              do i = 1,n
-                  y(yind(i)) = x(i)
-              end do
-          end if
-
           call vevalgjac(yind(0),y,g,m,jcfun,jcvar,jcval,jcnnz,inform)
           if ( inform .lt. 0 ) return
 
@@ -627,6 +547,69 @@ C              write(*,*) 'uevalgjac: Opa!!!!!!!!!!!!!!!!!!!!!!!!!'
           end do
 
           jcnnz = j
+      end if
+
+      end
+
+C     ******************************************************************
+C     ******************************************************************
+
+      subroutine uevalgjacp(n,x,g,m,p,q,work,gotj,inform)
+
+      implicit none
+
+C     SCALAR ARGUMENTS
+      logical gotj
+      integer inform,m,n
+      character work
+
+C     ARRAY ARGUMENTS
+      double precision g(n),p(m),q(n),x(n)
+
+      include "dim.par"
+      include "fixvar.inc"
+
+C     LOCAL SCALARS
+      integer i
+
+C     LOCAL ARRAYS
+      double precision w(nmax)
+
+C     EXTERNAL SUBROUTINES
+      external vevalgjacp
+
+      if ( .not. rmfixv ) then
+          call vevalgjacp(n,x,g,m,p,q,work,gotj,inform)
+          if ( inform .lt. 0 ) return
+
+      else
+          if ( work .eq. 'j' .or. work .eq. 'J' ) then
+              do i = 1,yind(0)
+                  w(i) = 0.0d0
+              end do
+
+              do i = 1,n
+                  w(yind(i)) = q(i)
+              end do
+
+              call vevalgjacp(yind(0),y,g,m,p,w,work,gotj,inform)
+              if ( inform .lt. 0 ) return
+
+          else ! if ( work .eq. 't' .or. work .eq. 'T' ) then
+              call vevalgjacp(yind(0),y,g,m,p,q,work,gotj,inform)
+              if ( inform .lt. 0 ) return
+
+              do i = 1,n
+                  q(i) = q(yind(i))
+              end do
+          end if
+
+          if ( work .eq. 'J' .or. work .eq. 'T' ) then
+              do i = 1,n
+                  g(i) = g(yind(i))
+              end do
+          end if
+
       end if
 
       end
@@ -658,8 +641,6 @@ C     EXTERNAL SUBROUTINES
           return
       end if
 
-      yset = .true.
-
       do i = 1,n
           y(yind(i)) = x(i)
       end do
@@ -675,13 +656,8 @@ C     ******************************************************************
 
       implicit none
 
-      include "dim.par"
-      include "fixvar.inc"
-
 C     EXTERNAL SUBROUTINES
       external vunsetp
-
-      yset = .false.
 
       call vunsetp()
 

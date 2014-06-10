@@ -2,9 +2,9 @@ C     ******************************************************************
 C     ******************************************************************
 
       subroutine auglag(n,x,l,u,m,lambda,equatn,linear,epsfeas,epsopt,
-     +f,c,csupn,snorm,nl,nlpsupn,fu,cu,csupnu,fub,csupnub,fb,csupnb,
-     +nlpsupnb,ncsupn,rsupn,outiter,totiter,nwcalls,nwtotit,msqcalls,
-     +msqtotit,innfail,alinfo,inform)
+     +efacc,eoacc,f,c,csupn,snorm,nl,nlpsupn,fu,cu,csupnu,fub,csupnub,
+     +fb,csupnb,nlpsupnb,ncsupn,rsupn,outiter,totiter,nwcalls,nwtotit,
+     +msqcalls,msqtotit,innfail,alinfo,inform)
 
       implicit none
 
@@ -12,8 +12,8 @@ C     SCALAR ARGUMENTS
       logical innfail
       integer alinfo,inform,m,msqcalls,msqtotit,n,nwcalls,nwtotit,
      +        outiter,totiter
-      double precision csupn,csupnb,csupnu,csupnub,epsfeas,epsopt,f,fb,
-     +        fu,fub,ncsupn,nlpsupn,nlpsupnb,rsupn,snorm
+      double precision csupn,csupnb,csupnu,csupnub,efacc,eoacc,epsfeas,
+     +        epsopt,f,fb,fu,fub,ncsupn,nlpsupn,nlpsupnb,rsupn,snorm
 
 C     ARRAY ARGUMENTS
       logical equatn(m),linear(m)
@@ -395,7 +395,10 @@ C     ==================================================================
 C     Near the solution, try to solve the KKT system by Newton's method
 C     ==================================================================
 
-      if ( .not. skipacc .and. truehl .and. ( nwcalls .gt. 0 .or.
+      if ( seconde .and. .not. skipacc .and. 
+     +     .not. ( efacc .lt. 0.0d0 .and. eoacc .lt. 0.0d0 ) .and. 
+     +     ( nwcalls .gt. 0 .or.
+     +     ( snorm .le. efacc     .and. nlpsupn .le. eoacc    ) .or.
      +     ( snorm .le. epsfeas12 .and. nlpsupn .le. epsopt12 ) .or.
      +     ( snorm .le. epsfeas14 .and. nlpsupn .le. epsopt14 .and.
      +       outiter .gt. 0 .and. geninfo .ne. 0 ) ) ) then
@@ -979,43 +982,65 @@ C     ARRAY ARGUMENTS
 
 C     LOCAL SCALARS
       integer i,j,nrnnz
-      double precision nci
+      double precision dum,nci
 
 C     LOCAL ARRAYS
       integer nrvar(nmax)
-      double precision nrval(nmax)
+      double precision nrval(nmax),p(mmax)
 
-      do i = 1,n
-          nc(i) = 0.0d0
-      end do
+      if ( gjacpcoded ) then
 
-      do j = 1,m
-          if ( equatn(j) .or. r(j) .gt. 0.0d0 ) then
+          do j = 1,m
+              if ( equatn(j) .or. r(j) .gt. 0.0d0 ) then
+                  p(j) = r(j)
+              else
+                  p(j) = 0.0d0
+              end if
+          end do
 
-              if ( gjaccoded ) then
+          call sevalgjacp(n,x,dum,m,p,nc,'t',gotj,inform)
+          if ( inform .lt. 0 ) return
+
+      else if ( gjaccoded ) then
+
+          do i = 1,n
+              nc(i) = 0.0d0
+          end do
+
+          do j = 1,m
+              if ( equatn(j) .or. r(j) .gt. 0.0d0 ) then
                   do i = jcsta(j),jcsta(j) + jclen(j) - 1
                       nc(jcvar(i)) = nc(jcvar(i)) + r(j) * jcval(i)
                   end do
+              end if
+          end do
 
-              else ! if ( gcoded .and. jaccoded ) then
+      else ! if ( gcoded .and. jaccoded ) then
+c     This else is the choice when gcoded and jaccoded and also when
+c     first derivatives were not provided by the user. In such case,
+c     sevaljac below will ultimately call subrotuines to compute 
+c     derivatives by finite differences.
+          do i = 1,n
+              nc(i) = 0.0d0
+          end do
 
+          do j = 1,m
+              if ( equatn(j) .or. r(j) .gt. 0.0d0 ) then
                   if ( equatn(j) .or. lambda(j) .gt. 0.0d0 ) then
                       do i = jcsta(j),jcsta(j) + jclen(j) - 1
                           nc(jcvar(i)) = nc(jcvar(i)) + r(j) * jcval(i)
                       end do
-
                   else
                       call sevaljac(n,x,j,nrvar,nrval,nrnnz,inform)
+                      if ( inform .lt. 0 ) return
                       do i = 1,nrnnz
                           nc(nrvar(i)) = nc(nrvar(i)) + r(j) * nrval(i)
                       end do
-
                   end if
-
               end if
+          end do
 
-          end if
-      end do
+      end if
 
       ncsupn = 0.0d0
       do i = 1,n

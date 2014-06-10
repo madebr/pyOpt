@@ -2,9 +2,9 @@
 '''
 pyALGENCAN - A Python pyOpt interface to ALGENCAN. 
 
-Copyright (c) 2008-2013 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
-Revision: 1.0   $Date: 30/12/2011 21:00$
+Revision: 1.0   $Date: 10/06/2014 21:00$
 
 
 Tested on:
@@ -19,6 +19,7 @@ Developers:
 History
 -------
 	v. 1.0	- Initial Class Creation (RP, 2011)
+	V. 1.1  - Updated to Work with ALGENCAN 2.4 (RP, 2014)
 '''
 
 __version__ = '$Revision: $'
@@ -105,6 +106,8 @@ class ALGENCAN(Optimizer):
 		# ALGENCAN Options
 		'epsfeas':[float,1.0e-8],		# Feasibility Convergence Accurancy
 		'epsopt':[float,1.0e-8],		# Optimality Convergence Accurancy
+		'efacc':[float,1.0e-4],			# Feasibility Level for Newton-KKT Acceleration
+		'eoacc':[float,1.0e-4],			# Optimality Level for Newton-KKT Acceleration
 		'checkder':[bool,False],		# Check Derivatives Flag
 		'iprint':[int,10],				# Print Flag (0 - None, )
 		'ifile':[str,'ALGENCAN.out'],	# Output File Name
@@ -196,6 +199,10 @@ class ALGENCAN(Optimizer):
 		def evaljac(n,x,ind,jcvar,jcval,jcnnz,flag):
 			flag = -1
 			return jcvar,jcval,jcnnz,flag
+		
+		def evalgjacp(n,x,g,m,p,q,work,gotj,flag):
+			flag = -1
+			return g,p,q,gotj,flag
 		
 		def evalhc(n,x,ind,hclin,hccol,hcval,hcnnz,flag):
 			flag = -1
@@ -407,6 +414,8 @@ class ALGENCAN(Optimizer):
 		coded = numpy.array([False,False,False,False,False,False,True,True,False,False], numpy.bool)
 		epsfeas = numpy.array([self.options['epsfeas'][1]], numpy.float)
 		epsopt = numpy.array([self.options['epsopt'][1]], numpy.float)
+		efacc = numpy.array([self.options['efacc'][1]], numpy.float)
+		eoacc = numpy.array([self.options['eoacc'][1]], numpy.float)	
 		checkder = numpy.array([self.options['checkder'][1]], numpy.bool)
 		iprint = numpy.array([self.options['iprint'][1]], numpy.int)
 		if (myrank != 0):
@@ -429,7 +438,7 @@ class ALGENCAN(Optimizer):
 		
 		# Run ALGENCAN
 		t0 = time.time()
-		algencan.algencan(epsfeas,epsopt,iprint,ncomp,nn,xx,xl,xu,mm,lm,equatn,linear,coded,checkder,ff,cnormu,snorm,nlpsupn,inform,ifile,evalf,evalg,evalh,evalc,evaljac,evalhc,evalfc,evalgjac,evalhl,evalhlp)
+		algencan.algencan(epsfeas,epsopt,efacc,eoacc,iprint,ncomp,nn,xx,xl,xu,mm,lm,equatn,linear,coded,checkder,ff,cnormu,snorm,nlpsupn,inform,ifile,evalf,evalg,evalh,evalc,evaljac,evalhc,evalfc,evalgjac,evalgjacp,evalhl,evalhlp)
 		sol_time = time.time() - t0
 		
 		if (myrank == 0):

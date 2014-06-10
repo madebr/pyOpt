@@ -1,20 +1,22 @@
 C     ******************************************************************
 C     ******************************************************************
 
-      subroutine algencan(epsfeas,epsopt,iprint,ncomp,n,x,l,u,m,lambda,
-     +equatn,linear,coded,checkder,fu,cnormu,snorm,nlpsupn,inform,ifile)
+      subroutine algencan(epsfeas,epsopt,efacc,eoacc,iprint,ncomp,n,x,l,
+     +u,m,lambda,equatn,linear,coded,checkder,fu,cnormu,snorm,nlpsupn,
+     +inform,ifile)
 
       implicit none
 
 C     SCALAR ARGUMENTS
       logical checkder
       integer inform,iprint,m,n,ncomp
-      double precision cnormu,epsfeas,epsopt,fu,nlpsupn,snorm
+      double precision cnormu,efacc,eoacc,epsfeas,epsopt,fu,nlpsupn,
+     +        snorm
       
       character*(*) ifile
       
 C     ARRAY ARGUMENTS
-      logical coded(10),equatn(m),linear(m)
+      logical coded(11),equatn(m),linear(m)
       double precision l(n),lambda(m),u(n),x(n)
 
       include "dim.par"
@@ -53,7 +55,7 @@ C     DATA STATEMENTS
 C     EXTERNAL FUNCTIONS AND SUBROUTINES
       external fparam,checkd,auglag,gencan,lss,scl
       external evalf,evalg,evalh,evalc,evaljac,evalhc,evalfc,evalgjac,
-     +        evalhl,evalhlp
+     +        evalgjacp,evalhl,evalhlp
 
 C     ==================================================================
 C     Start timing
@@ -81,14 +83,15 @@ C     Set machine-dependent constants
 
 C     Set global counters
 
-      fcnt    = 0
-      efcnt   = 0
-      efccnt  = 0
-      egcnt   = 0
-      egjccnt = 0
-      ehcnt   = 0
-      ehlcnt  = 0
-      ehlpcnt = 0
+      fcnt     = 0
+      efcnt    = 0
+      efccnt   = 0
+      egcnt    = 0
+      egjccnt  = 0
+      egjcpcnt = 0
+      ehcnt    = 0
+      ehlcnt   = 0
+      ehlpcnt  = 0
 
       do j = 1,m
           eccnt(j)  = 0
@@ -102,18 +105,19 @@ C     ==================================================================
 
 C     Set user-provided subroutines indicators
 
-      fcoded    = coded(1)
-      gcoded    = coded(2)
-      hcoded    = coded(3)
-      ccoded    = coded(4)
-      jaccoded  = coded(5)
-      hccoded   = coded(6)
-      fccoded   = coded(7)
-      gjaccoded = coded(8)
-      hlcoded   = coded(9)
-      hlpcoded  = coded(10)
+      fcoded     = coded(1)
+      gcoded     = coded(2)
+      hcoded     = coded(3)
+      ccoded     = coded(4)
+      jaccoded   = coded(5)
+      hccoded    = coded(6)
+      fccoded    = coded(7)
+      gjaccoded  = coded(8)
+      gjacpcoded = coded(9)
+      hlcoded    = coded(10)
+      hlpcoded   = coded(11)
 
-C     Check whether mandatory subroutines are being properly provided
+C     Check whether mandatory subroutines are being properly provided.
 
 C     For unconstrained and bound-constrained problems, EVALF must be 
 C     coded by the user. For constrained problems, EVALF and EVALC, or, 
@@ -124,35 +128,72 @@ C     problem solved with the IGNORE-OBJECTIVE-FUNCTION keyword. Coded
 C     subroutines must be indicated by setting the entrances of array 
 C     named CODED within subroutine INIP.
 
+C     Moreover, to avoid odd combinations, only the following choices
+C     will be considered valid:
+C
+C     If the objective function and the constraints are given by evalf 
+C     and evalc, respectively, first derivatives must be given by evalg 
+C     and evaljac, while second derivatives must be given by evalh and 
+C     evalhc.
+C
+C     If the objective function and the constraints are given by evalfc
+C     then first derivatives may be given by evalgjac or evalgjacp. If
+C     first derivatives are given by evalgjac, second derivatives must 
+C     be given by evalhl. On the other hand, if first derivatives are
+C     given by evalgjacp, second derivatives must be given by evalhlp.
+C
+C     Any other odd combination will be ignored.
+C
+C     Variables being set below have the following meaning:
+C
+C     firstde: whether, following the rules dictated above, the user-
+C     provided subroutines will allow the method to compute first 
+C     derivatives. 
+C
+C     seconde: whether, following the rules dictated above, the user-
+C     provided subroutines will allow the method to compute the Hessian 
+C     matrix of the augmented Lagrangian (to minimize the augmented 
+C     Lagrangian subproblems using a second-order method) and/or the
+C     Hessian of the Lagrangian plus the Jacobian of the constraints
+C     (in order to solve the KKT system by Newton's method). 
+C
+C     truehpr: whether, following the rules dictated above, the user-
+C     provided subroutines will allow the method to compute the 
+C     product of the true Hessian of the augmented Lagrangian times
+C     a given vector. It would allow the method to solve the augmented
+C     Lagrangian subproblems using a truncated-Newton method using
+C     Conjugate Gradients to solve the Newtonian linear systems.
+
       fcsubt = 0      
       if ( fcoded .and. ( ccoded .or. m .eq. 0 ) ) then
           fcsubt = 1
+          firstde = .false.
+          seconde = .false.
+          truehpr = .false.
+          if ( gcoded .and. ( jaccoded .or. m .eq. 0 ) ) then
+              firstde = .true.
+              if ( hcoded .and. ( hccoded .or. m .eq. 0 ) ) then
+                  seconde = .true.
+                  truehpr = .true.
+              end if
+          end if
       else if ( fccoded ) then
           fcsubt = 2
-      end if
-
-C     Check whether first-order subroutines are being properly provided
-
-C     If EVALF was coded to compute the objective function, its gradient 
-C     must be provided within EVALG subroutine. If EVALC was coded to 
-C     compute the constraints individualy, gradients of the constraints 
-C     must be coded within subroutine EVALJAC. If EVALFC was coded to 
-C     compute the objective function and all the constraints at once, 
-C     the gradient of the objective function and the Jacobian of the 
-C     constraints must be provided within subroutine EVALGJAC. If other 
-C     combination is coded, first derivatives are ignored.
-
-      firstde = .false.
-      if ( ( fcsubt .eq. 1 .and. gcoded .and. ( jaccoded .or. 
-     +     m .eq. 0 ) ) .or. ( fcsubt .eq. 2 .and. gjaccoded ) ) then
-          firstde = .true.
-      end if
-
-C     Check whether the true Hessian of the Lagrangian can be computed
-
-      truehl = .false.
-      if ( hlcoded .or. ( hcoded .and. ( hccoded .or. m.eq.0 ) ) ) then
-          truehl = .true.
+          firstde = .false.
+          seconde = .false.
+          truehpr = .false.
+          if ( gjaccoded ) then
+              firstde = .true.
+              if ( hlcoded ) then
+                  seconde = .true.
+                  truehpr = .true.
+              end if
+          else if ( gjacpcoded ) then
+              firstde = .true.
+              if ( hlpcoded ) then
+                  truehpr = .true.
+              end if
+          end if 
       end if
 
 C     ==================================================================
@@ -166,7 +207,7 @@ C     the unconstrained and bound-constrained cases and switches between
 C     INCQUO and the product by an approximation of the Hessian in the
 C     constrained case.
 
-      if ( truehl .or. hlpcoded ) then
+      if ( truehpr ) then
           hptype = 'TRUEHP'
       else
           hptype = 'HAPPRO'
@@ -179,9 +220,9 @@ C     (Truncated Newton and product with Hessian approximation). If the
 C     proper subroutines were not provided by the user then TN + HAPPRO
 C     is used.
 
-      if ( truehl .and. lss(lsssub) .and. n .le. n0 ) then
+      if ( seconde .and. lss(lsssub) .and. n .le. n0 ) then
           innslvr = 'TR'
-      else if ( truehl .and. lss(lsssub) .and. n .le. n1 ) then
+      else if ( seconde .and. lss(lsssub) .and. n .le. n1 ) then
           innslvr = 'NW'
       else
           innslvr = 'TN'
@@ -203,7 +244,7 @@ C     minimizing 1/2 of the squared infeasibility)
       ignoref = .false.
 
 C     Acceleration step
-      if ( truehl .and. lss(lsssub) ) then
+      if ( seconde .and. lss(lsssub) ) then
           skipacc = .false.
       else
           skipacc = .true.
@@ -230,14 +271,14 @@ C     ==================================================================
 C     Main output control (silent-mode?)
 C     ==================================================================
 
-      iprintctl(1) = .true. ! Banner
-      iprintctl(2) = .true. ! Parameters and problem processing
-      iprintctl(3) = .true. ! Warnings and errors messages
-      iprintctl(4) = .true. ! Screen-mirror file algencan.out
-      iprintctl(5) = .true. ! Solution file solution.txt
-      iprintctl(6) = .false.! Statistic files with table lines
-      iprintctl(7) = .true. ! User-provided subs calls counters and timing
-
+      iprintctl(1) = .true.  ! Banner
+      iprintctl(2) = .true.  ! Parameters and problem processing
+      iprintctl(3) = .true.  ! Warnings and errors messages
+      iprintctl(4) = .true.  ! Screen-mirror file algencan.out
+      iprintctl(5) = .true.  ! Solution file solution.txt
+      iprintctl(6) = .false. ! Statistics file with table line
+      iprintctl(7) = .true.  ! User-provided subs calls counters and timing
+ 
       oprint = iprint
 
       if (oprint .eq. 0 ) then
@@ -245,7 +286,7 @@ C     ==================================================================
               iprintctl(i) = .false.
           end do
       end if
-      
+
       if ( iprintctl(4) ) then
           open(unit=10,file=ifile,status='replace')
       else
@@ -256,7 +297,7 @@ C     ==================================================================
 C     Set solver arguments using the specification file
 C     ==================================================================
 
-      call fparam(epsfeas,epsopt,oprint,ncomp)
+      call fparam(epsfeas,epsopt,efacc,eoacc,oprint,ncomp)
 
 C     Outer and inner iterations output detail
 
@@ -299,10 +340,10 @@ C     ==================================================================
 C     ALGENCAN for PNL problems
 
       if ( .not. ignoref .and. m .gt. 0 ) then
-          call auglag(n,x,l,u,m,lambda,equatn,linear,epsfeas,epsopt,f,c,
-     +    cnorm,snorm,nl,nlpsupn,fu,cu,cnormu,fub,cnormub,fb,cnormb,
-     +    nlpsupnb,ncsupn,rsupn,outiter,totiter,nwcalls,nwtotit,
-     +    msqcalls,msqtotit,innfail,alinfo,inform)
+          call auglag(n,x,l,u,m,lambda,equatn,linear,epsfeas,epsopt,
+     +    efacc,eoacc,f,c,cnorm,snorm,nl,nlpsupn,fu,cu,cnormu,fub,
+     +    cnormub,fb,cnormb,nlpsupnb,ncsupn,rsupn,outiter,totiter,
+     +    nwcalls,nwtotit,msqcalls,msqtotit,innfail,alinfo,inform)
 
           solinfo = alinfo
 
@@ -364,10 +405,11 @@ C     ==================================================================
       time = dum(1)
 
 C     ==================================================================
-C     Write user-provided subs calls counters and timing
+C     Write statistics
 C     ==================================================================
 
       if ( iprintctl(7) ) then
+C          write(* ,9000) time
           write(10,9000) time
 
           toteccnt  = 0
@@ -390,11 +432,16 @@ C     ==================================================================
               aveehccnt = 0
           end if
 
+C          write(* ,9010) fcoded,efcnt,gcoded,egcnt,hcoded,ehcnt,ccoded,
+C     +                   toteccnt,aveeccnt,jaccoded,totejccnt,aveejccnt,
+C     +                   hccoded,totehccnt,aveehccnt,fccoded,efccnt,
+C     +                   gjaccoded,egjccnt,gjacpcoded,egjcpcnt,hlcoded,
+C     +                   ehlcnt,hlpcoded,ehlpcnt
           write(10,9010) fcoded,efcnt,gcoded,egcnt,hcoded,ehcnt,ccoded,
-     +                  toteccnt,aveeccnt,jaccoded,totejccnt,aveejccnt,
-     +                  hccoded,totehccnt,aveehccnt,fccoded,efccnt,
-     +                  gjaccoded,egjccnt,hlcoded,ehlcnt,hlpcoded,
-     +                  ehlpcnt
+     +                   toteccnt,aveeccnt,jaccoded,totejccnt,aveejccnt,
+     +                   hccoded,totehccnt,aveehccnt,fccoded,efccnt,
+     +                   gjaccoded,egjccnt,gjacpcoded,egjcpcnt,hlcoded,
+     +                   ehlcnt,hlpcoded,ehlpcnt
       end if
 
 C     ==================================================================
@@ -404,7 +451,7 @@ C     ==================================================================
       close(10)
 
 C     ==================================================================
-C     Write statistics with table lines
+C     Write statistics file with table line
 C     ==================================================================
 
       if ( iprintctl(6) ) then
@@ -436,19 +483,20 @@ C     ==================================================================
      +            'within subroutine INIP.')
  9000 format(/,1X,'Total CPU time in seconds: ',F8.2)
  9010 format(/,1X,'User-provided subroutines calls counters: ',/,
-     +       /,1X,'Subroutine evalf    (coded=',L1,'): ',I6,
-     +       /,1X,'Subroutine evalg    (coded=',L1,'): ',I6,
-     +       /,1X,'Subroutine evalh    (coded=',L1,'): ',I6,
-     +       /,1X,'Subroutine evalc    (coded=',L1,'): ',I6,
+     +       /,1X,'Subroutine evalf     (coded=',L1,'): ',I6,
+     +       /,1X,'Subroutine evalg     (coded=',L1,'): ',I6,
+     +       /,1X,'Subroutine evalh     (coded=',L1,'): ',I6,
+     +       /,1X,'Subroutine evalc     (coded=',L1,'): ',I6,
      +         1X,'(',I6,' calls per constraint in average)',
-     +       /,1X,'Subroutine evaljac  (coded=',L1,'): ',I6,
+     +       /,1X,'Subroutine evaljac   (coded=',L1,'): ',I6,
      +         1X,'(',I6,' calls per constraint in average)',
-     +       /,1X,'Subroutine evalhc   (coded=',L1,'): ',I6,
+     +       /,1X,'Subroutine evalhc    (coded=',L1,'): ',I6,
      +         1X,'(',I6,' calls per constraint in average)',
-     +       /,1X,'Subroutine evalfc   (coded=',L1,'): ',I6,
-     +       /,1X,'Subroutine evalgjac (coded=',L1,'): ',I6,
-     +       /,1X,'Subroutine evalhl   (coded=',L1,'): ',I6,
-     +       /,1X,'Subroutine evalhlp  (coded=',L1,'): ',I6,/)
+     +       /,1X,'Subroutine evalfc    (coded=',L1,'): ',I6,
+     +       /,1X,'Subroutine evalgjac  (coded=',L1,'): ',I6,
+     +       /,1X,'Subroutine evalgjacp (coded=',L1,'): ',I6,
+     +       /,1X,'Subroutine evalhl    (coded=',L1,'): ',I6,
+     +       /,1X,'Subroutine evalhlp   (coded=',L1,'): ',I6,/)
  9040 format(1X,1P,D24.16,1X,1P,D7.1,1X,1P,D24.16,1X,1P,D7.1,1X,1P,D7.1,
      +       1X,1P,D24.16,1X,1P,D7.1,1X,1P,D24.16,1X,1P,D7.1,1X,1P,D7.1,
      +       1X,1P,D7.1,1X,1P,D7.1,1X,I3,1X,I1,1X,L1,1X,I6,1X,I6,1X,I3,

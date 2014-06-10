@@ -85,6 +85,19 @@ python module algencan__user__routines
             integer intent(in,out) :: jcnnz
             integer intent(in,out) :: flag
         end subroutine evalgjac
+        subroutine evalgjacp(n,x,g,m,p,q,work,gotj,flag)
+            intent(callback) evalgjacp
+            external evalgjacp
+            integer intent(in) :: n
+            double precision dimension(n),intent(in),depend(n) :: x
+            double precision dimension(n),intent(in,out),depend(n) :: g
+            integer intent(in) :: m
+            double precision dimension(m),intent(in,out),depend(m) :: p
+            double precision dimension(n),intent(in,out),depend(n) :: q
+            character intent(in) :: work
+            logical intent(in,out) :: gotj
+            integer intent(in,out) :: flag
+        end subroutine evalgjacp
         subroutine evalhl(n,x,m,lambda,scalef,scalec,hllin,hlcol,hlval,hlnnz,flag)
             intent(callback) evalhl
             external evalhl
@@ -118,10 +131,12 @@ python module algencan__user__routines
 end python module algencan__user__routines
 python module algencan ! in 
     interface  ! in :algencan
-        subroutine algencan(epsfeas,epsopt,iprint,ncomp,n,x,l,u,m,lambda,equatn,linear,coded,checkder,fu,cnormu,snorm,nlpsupn,inform,ifile) ! in :algencan:source/algencan.f
+        subroutine algencan(epsfeas,epsopt,efacc,eoacc,iprint,ncomp,n,x,l,u,m,lambda,equatn,linear,coded,checkder,fu,cnormu,snorm,nlpsupn,inform,ifile) ! in :algencan:source/algencan.f
             use algencan__user__routines
             double precision intent(in) :: epsfeas
             double precision intent(in) :: epsopt
+            double precision intent(in) :: efacc
+            double precision intent(in) :: eoacc
             integer intent(in) :: iprint
             integer intent(in) :: ncomp
             integer intent(in) :: n
@@ -210,6 +225,8 @@ python module algencan ! in
             external evalfc
             intent(callback) evalgjac
             external evalgjac
+            intent(callback) evalgjacp
+            external evalgjacp
             intent(callback) evalhl
             external evalhl
             intent(callback) evalhlp

@@ -221,7 +221,8 @@ C     direction d is calculated.
               write(10,2000)
           end if
 
-          call dogleg(nind,g,hnnz,hlin,hcol,hval,pd,trdelta,d,dinfo)
+          call dogleg(nind,g,hnnz,hlin,hcol,hval,mslamb,pd,trdelta,d,
+     +    dinfo)
 
       end if
       
@@ -675,7 +676,9 @@ C             Update actual reduction of objective function
 
       else
 
-          trdelta = 2.5d-1 * deucn
+c         trdelta = 2.5d-1 * deucn
+c         due to numerical issues, we may have deucn > trdelta
+          trdelta = 2.5d-1 * min( trdelta, deucn )
           triter  = triter + 1
           frstit  = .false.
 

@@ -13,7 +13,7 @@ C     SCALAR ARGUMENTS
       integer inform,m,n
 
 C     ARRAY ARGUMENTS
-      logical coded(10),equatn(m),linear(m)
+      logical coded(11),equatn(m),linear(m)
       double precision l(n),lambda(m),u(n),x(n)
 
       include "dim.par"
@@ -455,6 +455,65 @@ C     LOCAL SCALARS
 C     ******************************************************************
 C     ******************************************************************
 
+      subroutine tevalgjacp(n,x,g,m,p,q,work,gotj,inform)
+
+      implicit none
+
+C     SCALAR ARGUMENTS
+      logical gotj
+      integer inform,m,n
+      character work
+
+C     ARRAY ARGUMENTS
+      double precision g(n),p(m),q(n),x(n)
+
+      include "dim.par"
+      include "slacks.inc"
+
+C     LOCAL SCALARS
+      integer i,j,sind
+
+      if ( .not. slacks ) then
+          call uevalgjacp(n,x,g,m,p,q,work,gotj,inform)
+          if ( inform .lt. 0 ) return
+
+      else
+          call uevalgjacp(nws,x,g,m,p,q,work,gotj,inform)
+          if ( inform .lt. 0 ) return
+
+          if ( work .eq. 'J' .or. work .eq. 'T' ) then
+              do i = nws + 1,n
+                  g(i) = 0.0d0
+              end do
+          end if
+
+          if ( work .eq. 'j' .or. work .eq. 'J' ) then
+              do j = 1,m
+                  sind = slaind(j)
+                  if ( sind .ne. - 1 ) then
+                      p(j) = p(j) - q(sind)
+                  end if
+              end do
+
+          else ! if ( work .eq. 't' .or. work .eq. 'T' ) then
+              do i = nws + 1,n
+                  q(i) = 0.0d0
+              end do
+
+              do j = 1,m
+                  sind = slaind(j)
+                  if ( sind .ne. - 1 ) then
+                      q(sind) = q(sind) - p(j)
+                  end if
+              end do
+          end if
+      end if
+
+      end
+
+C     ******************************************************************
+C     ******************************************************************
+
       subroutine tsetp(n,x)
 
       implicit none
@@ -467,6 +526,9 @@ C     ARRAY ARGUMENTS
 
       include "dim.par"
       include "slacks.inc"
+
+C     EXTERNAL SUBROUTINES
+      external usetp
 
       if ( .not. slacks ) then
           call usetp(n,x)
@@ -483,6 +545,9 @@ C     ******************************************************************
       subroutine tunsetp()
 
       implicit none
+
+C     EXTERNAL SUBROUTINES
+      external uunsetp
 
       call uunsetp()
 
