@@ -2,9 +2,9 @@
 '''
 pyMIDACO - A Python pyOpt interface to MIDACO. 
 
-Copyright (c) 2008-2012 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
-Revision: 1.1   $Date: 15/08/2012 21:00$
+Revision: 1.1   $Date: 10/06/2014 21:00$
 
 
 Tested on:
@@ -21,7 +21,8 @@ Developers:
 History
 -------
 	v. 1.0	- Initial Class Creation (RP, 2009)
-	v. 1.1  - Updated Functionality for MIDACO v.3.0 (RP, 2012) 
+	v. 1.1  - Updated Functionality for MIDACO v.3.0 (RP, 2012)
+	v. 1.2  - Updated Functionality for MIDACO v.4.0 (RP, 2014)
 '''
 
 __version__ = '$Revision: $'
@@ -109,30 +110,31 @@ class MIDACO(Optimizer):
 		category = 'Global Optimizer'
 		def_opts = {
 		# MIDACO Options
-		'ACC':[float,0.0001],       		# Accuracy for constraint violation
+		'ACC':[float,0],       			    # Accuracy for constraint violation (0 - default)
 		'ISEED':[int,0],            		# Seed for random number generator  (e.g. ISEED = 0,1,2,3,...)
-		'QSTART':[int,0],					# Quality of starting point (0 - if x0 is a random point)
-		'AUTOSTOP':[int,0],					# Internal stopping criteria (0 - Use internal default)
-		'ORACLE':[float,0],					# Oracle parameter (0 - Use internal default)
+		'FSTOP':[int,0],					# Objective Function Stopping Value (0 - disabled)
+		'AUTOSTOP':[int,0],					# Automatic stopping criteria (0 - disable, 1 to 500 - from local to global)
+		'ORACLE':[float,0],					# Oracle parameter for constrained problems (0 - Use internal default)
+		'FOCUS':[int,0],					# Focus of MIDACO search process around best solution (0 - Use internal default)
 		'ANTS':[int,0],						# Number of iterates (ants) per generation (0 - Use internal default)
 		'KERNEL':[int,0],					# Size of the solution archive (0 - Use internal default)
 		'CHARACTER':[int,0],				# Internal custom parameters (0 - Use internal default, 1 - IP problems, 2 - NLP problems, 3 - MINLP problems)
-		'MAXEVAL':[int,500000],				# Maximum function evaluations
-		'MAXTIME':[float,86400],			# Maximum time limit, in seconds
+		'MAXEVAL':[int,10000],				# Maximum function evaluations
+		'MAXTIME':[int,86400],				# Maximum time limit, in seconds
 		'IPRINT':[int,1],					# Output Level (<0 - None, 0 - Screen, 1 - File(s))
-		'PRINTEVAL':[int,10000],			# Print history after every PRINTEVAL evaluation
-		'PRINTBEST':[int,1000],				# Print best solution after every PRINTBEST evaluation
+		'PRINTEVAL':[int,1000],				# Print-Frequency for current best solution
 		'IOUT1':[int,36],					# History output unit number
 		'IOUT2':[int,37],					# Best solution output unit number
 		'IFILE1':[str,'MIDACO_HIST.out'],	# History output file name
 		'IFILE2':[str,'MIDACO_BEST.out'],	# Best output file name
-		'LKEY':[str,'FREE_TEST_VERSION________________[LIMITED_UP_TO_4_VARIABLES]'],	# License Key
+		'LKEY':[str,'MIDACO_LIMITED_VERSION___[CREATIVE_COMMONS_BY-NC-ND_LICENSE]'],
 		}
 		informs = {
 		1 : 'Feasible solution,   MIDACO was stopped by the user submitting ISTOP=1',
 		2 : 'Infeasible solution, MIDACO was stopped by the user submitting ISTOP=1',
 		3 : 'Feasible solution,   MIDACO stopped automatically using AUTOSTOP option',
 		4 : 'Infeasible solution,   MIDACO stopped automatically using AUTOSTOP option',
+		5 : 'Feasible solution,   MIDACO stopped automatically by FSTOP',
 		51 : 'WARNING: Some X(i)  is greater/lower than +/- 1.0D+12 (try to avoid huge values!)',
 		52 : 'WARNING: Some XL(i) is greater/lower than +/- 1.0D+12 (try to avoid huge values!)',
 		53 : 'WARNING: Some XU(i) is greater/lower than +/- 1.0D+12 (try to avoid huge values!)',
@@ -142,11 +144,13 @@ class MIDACO(Optimizer):
 		71 : 'WARNING: Some XL(i) = XU(I) (fixed variable)',
 		81 : 'WARNING: F(X) has value NaN for starting point X (sure your problem is correct?)',
 		82 : 'WARNING: Some G(X) has value NaN for starting point X (sure your problem is correct?)',
-		101 : 'ERROR: L    <= 0',
-		102 : 'ERROR: N    <= 0',
+		91 : 'WARNING: FSTOP is greater/lower than +/- 1.0D+8',
+		92 : 'WARNING: ORACLE is greater/lower than +/- 1.0D+8',
+		101 : 'ERROR: L    <= 0 or L > 1.0D+6',
+		102 : 'ERROR: N    <= 0 or N > 1.0D+6',
 		103 : 'ERROR: NINT <  0',
 		104 : 'ERROR: NINT >  N',
-		105 : 'ERROR: M    <  0',
+		105 : 'ERROR: M    <  0 or M > 1.0D+6',
 		106 : 'ERROR: ME   <  0',
 		107 : 'ERROR: ME   >  M',
 		201 : 'ERROR: some X(i)  has type NaN',
@@ -155,19 +159,21 @@ class MIDACO(Optimizer):
 		204 : 'ERROR: some X(i) < XL(i)',
 		205 : 'ERROR: some X(i) > XU(i)',
 		206 : 'ERROR: some XL(i) > XU(i)',
-		301 : 'ERROR: ACC < 0 or ACC has type NaN',
-		302 : 'ERROR: ISEED < 0',
-		303 : 'ERROR: QSTART < 0 or ( 0 < QSTART < 1 )',
-		304 : 'ERROR: AUTOSTOP < 0',
-		305 : 'ERROR: ANTS < 0',
-		306 : 'ERROR: KERNEL < 0 or ( 0 < KERNEL < 2 )',
-		307 : 'ERROR: KERNEL >= ANTS',
-		308 : 'ERROR: ANTS > 0 and KERNEL = 0',
-		309 : 'ERROR: KERNEL > 2*N+10',
-		310 : 'ERROR: CHARACTER < 0 or CHARACTER > 3',
-		311 : 'ERROR: some MIDACO parameters has type NaN',
+		301 : 'ERROR: ACC < 0   or   ACC > 1.0D+6',
+		302 : 'ERROR: ISEED < 0   or   ISEED > 1.0D+12',
+		303 : 'ERROR: FSTOP greater/lower than +/- 1.0D+12',
+		304 : 'ERROR: AUTOSTOP < 0   or   AUTOSTOP > 1.0D+6',
+		305 : 'ERROR: ORACLE greater/lower than +/- 1.0D+12',
+		306 : 'ERROR: |FOCUS| < 1   or   FOCUS > 1.0D+12',
+		307 : 'ERROR: ANTS < 0   or   ANTS > 1.0D+8',
+		308 : 'ERROR: KERNEL < 0   or   KERNEL > 100',
+		309 : 'ERROR: ANTS < KERNEL',
+		310 : 'ERROR: ANTS > 0 but KERNEL = 0',
+		311 : 'ERROR: KERNEL > 0 but ANTS = 0',
+		312 : 'ERROR: CHARACTER < 0   or   CHARACTER > 1000',
+		313 : 'ERROR: some MIDACO parameters has type NaN',
 		401 : 'ERROR: ISTOP < 0 or ISTOP > 1',
-		501 : 'ERROR: Double precision work space size LRW is too small (see below LRW), RW must be at least of size LRW = 2*N^2+23*N+2*M+70',
+		501 : 'ERROR: Double precision work space size LRW is too small (see below LRW), RW must be at least of size LRW = 200*N+2*M+1000',
 		601 : 'ERROR: Integer work space size LIW is too small (see below LIW), IW must be at least of size LIW = 2*N+L+100',
 		701 : 'ERROR: Input check failed! MIDACO must be called initially with IFAIL = 0',
 		801 : 'ERROR: L > LMAX (user must specifiy LMAX below in the MIDACO source code)',
@@ -263,9 +269,6 @@ class MIDACO(Optimizer):
 			else:
 				xn = x[mxi,:]
 			#end
-			
-			# Flush Output Files
-			self.flushFiles()
 			
 			# Evaluate User Function
 			fail = 0
@@ -424,34 +427,30 @@ class MIDACO(Optimizer):
 		ni = numpy.array([nint], numpy.int)
 		mm = numpy.array([ncon], numpy.int)
 		me = numpy.array([neqc], numpy.int)
-		acc = numpy.array([self.options['ACC'][1]], numpy.float)
-		opts = [0]*7
-		opts[0] = self.options['ISEED'][1]
-		opts[1] = self.options['QSTART'][1]
-		opts[2] = self.options['AUTOSTOP'][1]
-		opts[3] = self.options['ORACLE'][1]
-		opts[4] = self.options['ANTS'][1]
-		opts[5] = self.options['KERNEL'][1]
-		opts[6] = self.options['CHARACTER'][1]
+		opts = [0]*9
+		opts[0] = self.options['ACC'][1]
+		opts[1] = self.options['ISEED'][1]
+		opts[2] = self.options['FSTOP'][1]
+		opts[3] = self.options['AUTOSTOP'][1]
+		opts[4] = self.options['ORACLE'][1]
+		opts[5] = self.options['FOCUS'][1]
+		opts[6] = self.options['ANTS'][1]
+		opts[7] = self.options['KERNEL'][1]
+		opts[8] = self.options['CHARACTER'][1]
 		param = numpy.array([opts], numpy.float)
 		maxeval = numpy.array([self.options['MAXEVAL'][1]], numpy.int)
-		maxtime = numpy.array([self.options['MAXTIME'][1]], numpy.float)
+		maxtime = numpy.array([self.options['MAXTIME'][1]], numpy.int)
 		if (myrank == 0):
 			iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
 		else:
 			iprint = numpy.array([-1], numpy.int)
 		#end
 		ifail = numpy.array([0], numpy.int)
-		eval = numpy.array([0], numpy.int)
+		neval = numpy.array([0], numpy.int)
 		if (self.options['PRINTEVAL'][1] > 0):
 			printeval = numpy.array([self.options['PRINTEVAL'][1]], numpy.int)
 		else:
 			raise IOError('Incorrect PRINTEVAL Setting')
-		#end
-		if (self.options['PRINTBEST'][1] >= 0):
-			printbest = numpy.array([self.options['PRINTBEST'][1]], numpy.int)
-		else:
-			raise IOError('Incorrect PRINTBEST Setting')
 		#end
 		iout1 = numpy.array([self.options['IOUT1'][1]], numpy.int)
 		iout2 = numpy.array([self.options['IOUT2'][1]], numpy.int)
@@ -461,24 +460,22 @@ class MIDACO(Optimizer):
 			if os.path.isfile(ifile1):
 				os.remove(ifile1)
 			#end
-			if (printbest > 0):
-				if os.path.isfile(ifile2):
-					os.remove(ifile2)
-				#end
+			if os.path.isfile(ifile2):
+				os.remove(ifile2)
 			#end
 		#end
 		lkey = self.options['LKEY'][1]
-		liw0 = 2*nn + ll + 100
+		liw0 = 2*nn + ll + 1000
 		liw = numpy.array([liw0], numpy.int)
 		iw = numpy.zeros([liw], numpy.int)
-		lrw0 = 2*nn**2 + 23*nn + 2*mm + 70
+		lrw0 = 200*nn + 2*mm + 1000
 		lrw = numpy.array([lrw0], numpy.int)
 		rw = numpy.zeros([lrw], numpy.float)
 		
 		
 		# Run MIDACO
 		t0 = time.time()
-		midaco.midaco_wrap(ll,nn,ni,mm,me,xx,xl,xu,ff,gg,acc,param,maxeval,maxtime,ifail,eval,iprint,printeval,printbest,iout1,iout2,ifile1,ifile2,lkey,liw,iw,lrw,rw,objfun)
+		midaco.midaco_wrap(ll,nn,ni,mm,me,xx,xl,xu,ff,gg,param,maxeval,maxtime,ifail,neval,iprint,printeval,iout1,iout2,ifile1,ifile2,lkey,liw,iw,lrw,rw,objfun)
 		sol_time = time.time() - t0
 		
 		if (myrank == 0):
@@ -497,9 +494,7 @@ class MIDACO(Optimizer):
 		
 		if (iprint > 0):
 			midaco.closeunit(self.options['IOUT1'][1])
-			if (printbest > 0):
-				midaco.closeunit(self.options['IOUT2'][1])
-			#end
+			midaco.closeunit(self.options['IOUT2'][1])
 		#end
 		
 		
@@ -517,7 +512,7 @@ class MIDACO(Optimizer):
 			sol_inform['value'] = ifail[0]
 			sol_inform['text'] = self.getInform(ifail[0])
 			
-			sol_evals = eval
+			sol_evals = neval
 			
 			sol_vars = copy.deepcopy(opt_problem._variables)
 			i = 0
@@ -608,12 +603,9 @@ class MIDACO(Optimizer):
 		
 		# 
 		iprint = self.options['IPRINT'][1]
-		printbest = self.options['PRINTBEST'][1]
 		if (iprint > 0):
 			midaco.pyflush(self.options['IOUT1'][1])
-			if (printbest > 0):
-				midaco.pyflush(self.options['IOUT2'][1])
-			#end
+			midaco.pyflush(self.options['IOUT2'][1])
 		#end
 	
 

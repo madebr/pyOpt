@@ -15,7 +15,7 @@ python module midaco__user__routines
 end python module midaco__user__routines
 python module midaco ! in 
     interface  ! in :midaco
-        subroutine midaco_wrap(l,n,nint,m,me,x,xl,xu,f,g,acc,param,maxeval,maxtime,ifail,eval,iprint,printeval,printbest,iout1,iout2,ifile1,ifile2,license_key,liw,iw,lrw,rw,objfun)
+        subroutine midaco_wrap(l,n,nint,m,me,x,xl,xu,f,g,param,maxeval,maxtime,ifail,neval,iprint,printeval,iout1,iout2,ifile1,ifile2,license_key,liw,iw,lrw,rw,objfun)
             use midaco__user__routines
             integer intent(in) :: l
             integer intent(in) :: n
@@ -27,15 +27,13 @@ python module midaco ! in
             double precision dimension(n),intent(in),depend(n) :: xu
             double precision dimension(l),intent(inout),depend(l) :: f
             double precision dimension(l*m),intent(inout),depend(l,m) :: g
-            double precision intent(in) :: acc
-            double precision dimension(7),intent(in) :: param
+            double precision dimension(9),intent(in) :: param
             integer intent(in) :: maxeval
-            double precision intent(in) :: maxtime
+            integer intent(in) :: maxtime
             integer intent(inout) :: ifail
-            integer intent(inout) :: eval
+            integer intent(inout) :: neval
             integer intent(in) :: iprint
             integer intent(in) :: printeval
-            integer intent(in) :: printbest
             integer intent(in) :: iout1
             integer intent(in) :: iout2
             character*(*) intent(in) :: ifile1
