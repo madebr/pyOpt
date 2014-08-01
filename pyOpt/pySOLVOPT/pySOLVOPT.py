@@ -2,9 +2,9 @@
 '''
 pySOLVOPT - A Python pyOpt interface to SOLVOPT. 
 
-Copyright (c) 2008-2013 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
-Revision: 1.4   $Date: 21/06/2010 21:00$
+Revision: 1.5   $Date: 31/07/2014 21:00$
 
 
 Tested on:
@@ -21,11 +21,12 @@ Developers:
 
 History
 -------
-	v. 1.0 	- Initial Class Creation (RP, 2009)
+	v. 1.0  - Initial Class Creation (RP, 2009)
 	v. 1.1	- Integrate to pyOpt Framework (RP, 2009)
 	v. 1.2  - Wrapper Callback Storage Support (AL,RP, 2009)
-	v. 1.3	- History support (PJ,RP, 2010)
+	v. 1.3  - History support (PJ,RP, 2010)
 	v. 1.4  - Gradient Class Support (PJ,RP, 2010)
+	v. 1.5  - Unconstrained Support (RP, 2014) 
 '''
 
 __version__ = '$Revision: $'
@@ -295,6 +296,7 @@ class SOLVOPT(Optimizer):
 			
 			# Constraints Assigment
 			i = 0
+			j = 0
 			for j in xrange(len(opt_problem._constraints.keys())):
 				if isinstance(g[j],complex):
 					gg[i] = g[j].astype(float)
@@ -494,7 +496,7 @@ class SOLVOPT(Optimizer):
 				nadd += 1
 			#end
 		#end
-		gg = numpy.array(gg)
+		gg = numpy.array(gg,numpy.float)
 		
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
@@ -503,7 +505,7 @@ class SOLVOPT(Optimizer):
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
 		#end
-		ff = numpy.array(ff)
+		ff = numpy.array(ff,numpy.float)
 		
 		
 		# Setup argument list values

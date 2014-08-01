@@ -27,6 +27,7 @@ __version__ = '$Revision: $'
 '''
 To Do:
 	- add evals return on source
+	- add unconstrained problems support
 '''
 
 # =============================================================================
@@ -393,6 +394,8 @@ class ALGENCAN(Optimizer):
 				#end
 				linear.append(False)
 			#end
+		else:
+			raise IOError('ALGENCAN support for unconstrained problems not implemented yet')
 		#end
 		equatn = numpy.array(equatn)
 		linear = numpy.array(linear)

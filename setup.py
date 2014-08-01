@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 
 import os,sys
 from numpy.distutils.command.build_ext import build_ext
@@ -91,7 +91,7 @@ if __name__ == '__main__':
     from numpy.distutils.core import setup
     setup(
         name             = 'pyOpt',
-        version          = '1.1.0',
+        version          = '1.2.0',
         author           = 'Ruben E. Perez, Peter W. Jansen',
         author_email     = 'Ruben.Perez@rmc.ca; Peter.Jansen@rmc.ca',
         maintainer       = 'pyOpt Developers',

@@ -2,9 +2,9 @@
 '''
 pySNOPT - A Python pyOpt interface to SNOPT.
 
-Copyright (c) 2008-2013 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
-Revision: 1.3   $Date: 21/06/2010 21:00$
+Revision: 1.4   $Date: 31/07/2014 21:00$
 
 
 Tested on:
@@ -40,6 +40,7 @@ History
 	v. 1.1  - User provided sensitivities support (PJ,RP, 2008)
 	v. 1.2	- History support (PJ,RP, 2010)
 	v. 1.3	- Gradient Class Support (PJ,RP, 2010)
+	v. 1.4  - Unconstrained Problems Support (RP, 2014)
 '''
 
 __version__ = '$Revision: $'
@@ -469,6 +470,9 @@ class SNOPT(Optimizer):
 					f_con[i] = f_con[i].astype(float)
 				#end
 			#end
+			if not f_con:
+				f_con = [0]
+			#end
 			
 			return mode,f_obj,g_obj,f_con,g_con
 		
@@ -520,10 +524,10 @@ class SNOPT(Optimizer):
 				#end
 			#end
 		else:
-			if ((store_sol) and (myrank == 0)):
-				print "Optimization Problem Does Not Have Constraints\n"
-				print "Unconstrained Optimization Initiated\n"
-			#end
+			#if ((store_sol) and (myrank == 0)):
+			#	print "Optimization Problem Does Not Have Constraints\n"
+			#	print "Unconstrained Optimization Initiated\n"
+			##end
 			ncon = 1
 			blc.append(-inf)
 			buc.append( inf)
@@ -538,7 +542,7 @@ class SNOPT(Optimizer):
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
 		#end
-		ff = numpy.array(ff)
+		ff = numpy.array(ff, numpy.float)
 		
 		
 		# Initialize SNOPT

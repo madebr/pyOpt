@@ -4,7 +4,7 @@ pyOpt_optimizer
 
 Holds the Python Design Optimization Classes (base and inherited).
 
-Copyright (c) 2008-2013 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
 Revision: 1.1   $Date: 08/05/2008 21:00$
 

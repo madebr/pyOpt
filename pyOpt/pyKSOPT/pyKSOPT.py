@@ -2,9 +2,9 @@
 '''
 pyKSOPT - A Python pyOpt interface to KSOPT. 
 
-Copyright (c) 2008-2013 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
-Revision: 1.2   $Date: 21/06/2010 21:00$
+Revision: 1.3   $Date: 31/07/2014 21:00$
 
 
 Tested on:
@@ -22,6 +22,7 @@ History
 	v. 1.0	- Initial Class Creation (RP, 2010)
 	v. 1.1	- History Support (PJ,RP, 2010)
 	v. 1.2  - Gradient Class Support (PJ,RP, 2010)
+	v. 1.3	- Unconstrained Problems Support (RP, 2014)
 '''
 
 __version__ = '$Revision: $'
@@ -351,8 +352,11 @@ class KSOPT(Optimizer):
 				#end
 				gg.append(opt_problem._constraints[key].value)
 			#end
+			gg = numpy.array(gg, numpy.float)
+		else:
+			ncon = 1 
+			gg = numpy.array([0], numpy.float)
 		#end
-		gg = numpy.array(gg)
 		
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
@@ -361,7 +365,7 @@ class KSOPT(Optimizer):
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
 		#end
-		ff = numpy.array(ff)
+		ff = numpy.array(ff, numpy.float)
 		
 		
 		# Setup argument list values

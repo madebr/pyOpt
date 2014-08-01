@@ -4,7 +4,7 @@ pyOpt_optimization
 
 Holds the Python Design Optimization Classes (base and inherited).
 
-Copyright (c) 2008-2013 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
 Revision: 1.4   $Date: 22/06/2009 21:00$
 
@@ -125,6 +125,7 @@ class Optimization(object):
         #else:
         #    self._parameters = par_set
         ##end
+        #self._pargroups = {}
         
         # Initialize Solution Set
         self._solutions = {}
@@ -733,93 +734,153 @@ class Optimization(object):
         return self._solutions
         
         
-    def getPar(self, i):
-        
-        '''
-        Get Parameter *i* from Parameters Set
-        
-        **Arguments:**
-        
-        - i -> INT: Solution index
-        
-        Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
-        '''
-        
-        # Check Index
-        if not (isinstance(i,int) and i >= 0):
-            raise ValueError("Parameter index must be an integer >= 0.")
-        #end
-        
-        # 
-        return self._parameters[i]
-        
-        
-    def addPar(self, *args, **kwargs):
-        
-        '''
-        Add Parameter into Parameters Set
-        
-        Documentation last updated:  May. 23, 2008 - Ruben E. Perez
-        '''
-        
-        # 
-        self.setPar(self.firstavailableindex(self._parameters),*args,**kwargs)
-        
-        
-    def setPar(self, i, *args, **kwargs):
-        
-        '''
-        Set Parameter *i* into Parameters Set
-        
-        **Arguments:**
-        
-        - i -> INT: Parameter index
-        
-        Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
-        '''
-        
-        # 
-        if (len(args) > 0) and isinstance(args[0], Parameter):
-            self._parameters[i] = args[0]
-        else:
-            try:
-                self._parameters[i] = Parameter(*args,**kwargs)
-            except:
-                raise ValueError("Input is not a Valid for a Parameter Object instance\n")
-            #end
-        #end
-        
-        
-    def delPar(self, i):
-        
-        '''
-        Delete Parameter *i* from Parameters Set
-        
-        **Arguments:**
-        
-        - i -> INT: Parameter index
-        
-        Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
-        '''
-        
-        # Check Index
-        if not (isinstance(i,int) and i >= 0):
-            raise ValueError("Parameter index must be an integer >= 0.")
-        #end
-        
-        # 
-        del self._parameters[i]
-        
-        
-    def getParSet(self):
-        
-        '''
-        Get Parameter Set
-        
-        Documentation last updated:  May. 23, 2008 - Ruben E. Perez
-        '''
-        
-        return self._parameters
+#    def getPar(self, i):
+#        
+#        '''
+#        Get Parameter *i* from Parameters Set
+#        
+#        **Arguments:**
+#        
+#        - i -> INT: Solution index
+#        
+#        Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
+#        '''
+#        
+#        # Check Index
+#        if not (isinstance(i,int) and i >= 0):
+#            raise ValueError("Parameter index must be an integer >= 0.")
+#        #end
+#        
+#        # 
+#        return self._parameters[i]
+#        
+#        
+#    def addPar(self, *args, **kwargs):
+#        
+#        '''
+#        Add Parameter into Parameters Set
+#        
+#        Documentation last updated:  May. 23, 2008 - Ruben E. Perez
+#        '''
+#        
+#        # 
+#        id = self.firstavailableindex(self._parameters)
+#        self.setPar(id,*args,**kwargs)
+#        
+#        # 
+#        tmp_group = {}
+#        tmp_group[self._parameters[id].name] = id
+#        self._pargroups[self.firstavailableindex(self._pargroups)] = {'name':self._parameters[id].name,'ids':tmp_group}
+#        
+#        
+#    def setPar(self, i, *args, **kwargs):
+#        
+#        '''
+#        Set Parameter *i* into Parameters Set
+#        
+#        **Arguments:**
+#        
+#        - i -> INT: Parameter index
+#        
+#        Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
+#        '''
+#        
+#        # 
+#        if (len(args) > 0) and isinstance(args[0], Parameter):
+#            self._parameters[i] = args[0]
+#        else:
+#            try:
+#                self._parameters[i] = Parameter(*args,**kwargs)
+#            except IOError, (error):
+#                raise IOError("%s" %(error))
+#            except:
+#                raise ValueError("Input is not a Valid for a Parameter Object instance\n")
+#            #end
+#        #end
+#        
+#        
+#    def delPar(self, i):
+#        
+#        '''
+#        Delete Parameter *i* from Parameters Set
+#        
+#        **Arguments:**
+#        
+#        - i -> INT: Parameter index
+#        
+#        Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
+#        '''
+#        
+#        # Check Index
+#        if not (isinstance(i,int) and i >= 0):
+#            raise ValueError("Parameter index must be an integer >= 0.")
+#        #end
+#        
+#        # 
+#        del self._parameters[i]
+#        
+#        # 
+#        for j in self._pargroups.keys():
+#            keys = self._pargroups[j]['ids']
+#            nkeys = len(keys)
+#            for key in keys:
+#                if (self._pargroups[j]['ids'][key] == i):
+#                    del self._pargroups[j]['ids'][key]
+#                    if (nkeys == 1):
+#                        del self._pargroups[j]
+#                    #end
+#                    return
+#                #end
+#            #end
+#        #end
+#        
+#        
+#    def delParGroup(self, name):
+#        
+#        '''
+#        Delete Parameter Group *name* from Parameters Set
+#        
+#        **Arguments:**
+#        
+#        - name -> STR: Parameter group name
+#        
+#        Documentation last updated:  Sep. 07, 2013 - Ruben E. Perez
+#        '''
+#        
+#        # 
+#        ngroups = len(self._pargroups)
+#        for j in xrange(ngroups):
+#            if (self._pargroups[j]['name'] == name):
+#                keys = self._pargroups[j]['ids']
+#                for key in keys:
+#                    id = self._pargroups[j]['ids'][key]
+#                    del self._parameters[id]
+#                #end
+#                del self._pargroups[j]
+#            #end
+#        #end
+#        
+#        
+#    def getParSet(self):
+#        
+#        '''
+#        Get Parameter Set
+#        
+#        Documentation last updated:  May. 23, 2008 - Ruben E. Perez
+#        '''
+#        
+#        return self._parameters
+#        
+#        
+#    def getParGroups(self):
+#        
+#        '''
+#        Get Parameters Groups Set
+#        
+#        Documentation last updated:  June. 25, 2009 - Ruben E. Perez
+#        '''
+#        
+#        return self._pargroups
         
         
     def firstavailableindex(self, set):
@@ -969,7 +1030,7 @@ class Solution(Optimization):
     Optimization Solution Class
     '''
     
-    def __init__(self, optimizer, name, obj_fun, opt_time, opt_evals, opt_inform, var_set={}, obj_set={}, con_set={}, options_set={}, myrank=0,*args, **kwargs):
+    def __init__(self, optimizer, name, obj_fun, opt_time, opt_evals, opt_inform, var_set=None, obj_set=None, con_set=None, options_set=None, myrank=0,*args, **kwargs):
         
         '''
         Solution Class Initialization

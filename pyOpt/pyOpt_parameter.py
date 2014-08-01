@@ -4,7 +4,7 @@ pyOpt_parameter
 
 Holds the Python Design Optimization Classes (base and inherited).
 
-Copyright (c) 2008-2013 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
 Revision: 1.0   $Date: 23/05/2008 21:00$
 

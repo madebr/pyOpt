@@ -2,7 +2,7 @@
 '''
 pyMMFD - A Python pyOpt interface to MMFD (part of NASA's ADS). 
 
-Copyright (c) 2008-2013 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
 Revision: 1.2   $Date: 21/06/2010 21:00$
 
@@ -30,6 +30,7 @@ __version__ = '$Revision: $'
 To Do:
 	- Include IOUT
 	- Implement Informs
+	- add unconstrained problems support
 '''
 
 # =============================================================================
@@ -353,6 +354,8 @@ class MMFD(Optimizer):
 				#end
 				gg.append(opt_problem._constraints[key].value)
 			#end
+		else:
+			raise IOError('MMFD support for unconstrained problems not implemented yet')
 		#end
 		gg = numpy.array(gg)
 		idg = numpy.array(idg, numpy.int)

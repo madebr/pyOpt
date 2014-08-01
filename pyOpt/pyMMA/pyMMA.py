@@ -2,7 +2,7 @@
 '''
 pyMMA - A Python pyOpt interface to MMA. 
 
-Copyright (c) 2008-2013 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
 Revision: 1.4   $Date: 21/06/2010 21:00$
 
@@ -34,7 +34,7 @@ __version__ = '$Revision: $'
 
 '''
 To Do:
-	- 
+	- add unconstrained problems support
 '''
 
 # =============================================================================
@@ -361,6 +361,8 @@ class MMA(Optimizer):
 				#fval.append(opt_problem._constraints[key].value)
 				fmax.append(opt_problem._constraints[key].upper)
 			#end
+		else:
+			raise IOError('MMA support for unconstrained problems not implemented yet')
 		#end
 		#fval = numpy.array(fval)
 		fmax = numpy.array(fmax)

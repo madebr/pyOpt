@@ -2,9 +2,9 @@
 '''
 pyPSQP - A Python pyOpt interface to PSQP. 
 
-Copyright (c) 2008-2013 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
-Revision: 1.0   $Date: 30/12/2010 21:00$
+Revision: 1.1   $Date: 31/07/2014 21:00$
 
 
 Tested on:
@@ -21,6 +21,7 @@ Developers:
 History
 -------
 	v. 1.0	- Initial Class Creation (RP, 2010)
+	v. 1.1	- Unconstrained Support (RP, 2014)
 '''
 
 __version__ = '$Revision: $'
@@ -400,11 +401,9 @@ class PSQP(Optimizer):
 		
 		# Constraints Handling
 		ncon = len(opt_problem._constraints.keys())
-		gl = numpy.zeros([ncon], numpy.float)
-		gu = numpy.zeros([ncon], numpy.float)
-		gi = []
-		gg = []
 		if ncon > 0:
+			gi = []
+			gg = []
 			for key in opt_problem._constraints.keys():
 				if opt_problem._constraints[key].type == 'e':
 					gi.append(5)
@@ -414,9 +413,16 @@ class PSQP(Optimizer):
 				gg.append(opt_problem._constraints[key].value)
 			#end
 			gg.append(0.0)
+			gl = numpy.zeros([ncon], numpy.float)
+			gu = numpy.zeros([ncon], numpy.float)
+			gi = numpy.array(gi, numpy.float)
+			gg = numpy.array(gg, numpy.float)
+		else:
+			gl = numpy.array([0], numpy.float)
+			gu = numpy.array([0], numpy.float)
+			gi = numpy.array([0], numpy.float)
+			gg = numpy.array([0], numpy.float)
 		#end
-		gi = numpy.array(gi)
-		gg = numpy.array(gg)
 		
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
@@ -425,7 +431,7 @@ class PSQP(Optimizer):
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
 		#end
-		ff = numpy.array(ff)
+		ff = numpy.array(ff, numpy.float)
 		
 		
 		# Setup argument list values

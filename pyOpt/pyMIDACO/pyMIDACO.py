@@ -4,7 +4,7 @@ pyMIDACO - A Python pyOpt interface to MIDACO.
 
 Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
-Revision: 1.1   $Date: 10/06/2014 21:00$
+Revision: 1.3   $Date: 31/07/2014 21:00$
 
 
 Tested on:
@@ -23,6 +23,7 @@ History
 	v. 1.0	- Initial Class Creation (RP, 2009)
 	v. 1.1  - Updated Functionality for MIDACO v.3.0 (RP, 2012)
 	v. 1.2  - Updated Functionality for MIDACO v.4.0 (RP, 2014)
+	v. 1.3	- Unconstrained Problems Support (RP, 2014)
 '''
 
 __version__ = '$Revision: $'
@@ -407,6 +408,9 @@ class MIDACO(Optimizer):
 				#end
 				gg.append(opt_problem._constraints[key].value)
 			#end
+		else:
+			ncon = 1
+			gg.append(0.0)
 		#end
 		gg = numpy.array(gg*nproc)
 		

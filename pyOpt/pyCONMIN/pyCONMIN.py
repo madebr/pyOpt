@@ -2,9 +2,9 @@
 '''
 pyCONMIN - A Python pyOpt interface to CONMIN. 
 
-Copyright (c) 2008-2013 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
-Revision: 1.2   $Date: 21/06/2010 21:00$
+Revision: 1.3   $Date: 31/07/2014 21:00$
 
 
 Tested on:
@@ -24,13 +24,13 @@ History
 	v. 1.0	- Initial Class Creation (RP, 2008)
 	v. 1.1	- Migrate to pyOpt Framework (RP, 2008)
 	v. 1.2	- Gradient Class Support (PJ,RP, 2010)
+	v. 1.3  - Unconstrained Support (RP, 2014)
 '''
 
 __version__ = '$Revision: $'
 
 '''
 To Do:
-	- Check if code can handle unconstrained problems
 	- Check issue tp037 with FD
 '''
 
@@ -373,7 +373,7 @@ class CONMIN(Optimizer):
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
 		#end
-		ff = numpy.array(ff)
+		ff = numpy.array(ff,numpy.float)
 		
 		
 		# Setup argument list values
@@ -386,7 +386,11 @@ class CONMIN(Optimizer):
 		#nn4 = numpy.array([numpy.max(nn3[0],ndv[0])], numpy.int)
 		nn4 = numpy.array([numpy.max([nn2[0],ndv[0]])], numpy.int)
 		nn5 = numpy.array([2*nn4[0]], numpy.int)
-		gg = numpy.zeros([ncn], numpy.float)
+		if ncon > 0:
+			gg = numpy.zeros([ncn], numpy.float)
+		else:
+			gg = numpy.array([0], numpy.float)
+		#end
 		if (myrank == 0):
 			if (self.options['IPRINT'][1]>=0 and self.options['IPRINT'][1]<=4):
 				iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)

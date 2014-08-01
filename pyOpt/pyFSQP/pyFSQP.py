@@ -2,9 +2,9 @@
 '''
 pyFSQP - A Python pyOpt interface to FSQP. 
 
-Copyright (c) 2008-2013 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
-Revision: 1.4   $Date: 21/06/2010 21:00$
+Revision: 1.5   $Date: 31/07/2014 21:00$
 
 
 Tested on:
@@ -26,6 +26,7 @@ History
 	v. 1.2  - Wrapper Callback Storage Support (AL,RP, 2009)
 	v. 1.3	- History support (PJ,RP, 2010)
 	v. 1.4  - Gradient Class Support (PJ,RP, 2010)
+	v. 1.5  - Unconstrained Problems Support (RP, 2014)
 '''
 
 __version__ = '$Revision: $'
@@ -449,8 +450,10 @@ class FSQP(Optimizer):
 				#end
 				gg.append(opt_problem._constraints[key].value)
 			#end
+			gg = numpy.array(gg, numpy.float)
+		else:
+			gg = numpy.array([0] ,numpy.float)
 		#end
-		gg = numpy.array(gg)
 		
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
@@ -459,7 +462,7 @@ class FSQP(Optimizer):
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
 		#end
-		ff = numpy.array(ff)
+		ff = numpy.array(ff, numpy.float)
 		
 		
 		# Setup argument list values

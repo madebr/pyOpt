@@ -2,7 +2,7 @@
 '''
 pySLSQP - A Python pyOpt interface to SLSQP.
 
-Copyright (c) 2008-2013 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
 Revision: 1.2   $Date: 21/06/2010 21:00$
 
@@ -357,7 +357,7 @@ class SLSQP(Optimizer):
 				#gg.append(opt_problem._constraints[key].value)
 			#end
 		#end
-		#gg = numpy.array(gg)
+		#gg = numpy.array(gg,numpy.float)
 		
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
@@ -366,7 +366,7 @@ class SLSQP(Optimizer):
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
 		#end
-		ff = numpy.array(ff)
+		ff = numpy.array(ff,numpy.float)
 		
 		
 		# Setup argument list values

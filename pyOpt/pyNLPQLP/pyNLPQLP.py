@@ -2,7 +2,7 @@
 '''
 pyNLPQLP - A Python pyOpt interface to NLPQLP. 
 
-Copyright (c) 2008-2013 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
 Revision: 1.0   $Date: 18/12/2012 21:00$
 
@@ -439,7 +439,7 @@ class NLPQLP(Optimizer):
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
 		#end
-		ff = numpy.array(ff*nproc)
+		ff = numpy.array(ff*nproc,numpy.float)
 		
 		
 		# Setup argument list values

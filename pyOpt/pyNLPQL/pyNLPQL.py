@@ -2,7 +2,7 @@
 '''
 pyNLPQL - A Python pyOpt interface to NLPQL. 
 
-Copyright (c) 2008-2013 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
 Revision: 1.5   $Date: 21/06/2010 21:00$
 
@@ -380,7 +380,7 @@ class NLPQL(Optimizer):
 				#gg.append(opt_problem._constraints[key].value)
 			#end
 		#end
-		#gg = numpy.array(gg)
+		#gg = numpy.array(gg, numpy.float)
 		
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
@@ -389,7 +389,7 @@ class NLPQL(Optimizer):
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
 		#end
-		ff = numpy.array(ff)
+		ff = numpy.array(ff, numpy.float)
 		
 		
 		# Setup argument list values
@@ -499,7 +499,7 @@ class NLPQL(Optimizer):
 				del sol_options['defaults']
 			#end
 			
-			sol_evals = kwa[0]
+			sol_evals = kwa[0] + kwa[1]*nvar
 			
 			sol_vars = copy.deepcopy(opt_problem._variables)
 			i = 0

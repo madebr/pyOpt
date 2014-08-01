@@ -2,9 +2,9 @@
 '''
 pySDPEN - A Python pyOpt interface to SDPEN.
 
-Copyright (c) 2008-2013 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
-Revision: 1.0   $Date: 09/08/2012 21:00$
+Revision: 1.1   $Date: 31/07/2014 21:00$
 
 
 Tested on:
@@ -19,6 +19,7 @@ Developers:
 History
 -------
 	v. 1.0	- Initial Class Creation (RP, 2012)
+	v. 1.1	- Unconstrained Problems Support (RP, 2014)
 '''
 
 __version__ = '$Revision: $'
@@ -284,6 +285,9 @@ class SDPEN(Optimizer):
 				#gg.append(opt_problem._constraints[key].value)
 				gg.append(opt_problem._constraints[key].upper)
 			#end
+		else:
+			ncon = 1
+			gg.append(inf)
 		#end
 		gg = numpy.array(gg)
 		

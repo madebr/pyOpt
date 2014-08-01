@@ -2,9 +2,9 @@
 '''
 pyFILTERSD - A Python pyOpt interface to filterSD. 
 
-Copyright (c) 2008-2013 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
-Revision: 1.0   $Date: 16/12/2012 21:00$
+Revision: 1.1   $Date: 31/07/2014 21:00$
 
 
 Tested on:
@@ -19,6 +19,7 @@ Developers:
 History
 -------
 	v. 1.0	- Initial Class Creation (RP, 2012)
+	v. 1.1	- Unconstrained Problems Support (RP, 2014)
 '''
 
 __version__ = '$Revision: $'
@@ -366,8 +367,11 @@ class FILTERSD(Optimizer):
 				#end
 				gg.append(opt_problem._constraints[key].value)
 			#end
+			gg = numpy.array(gg, numpy.float)
+		else:
+			ncon = 1
+			gg = numpy.array([0], numpy.float)
 		#end
-		gg = numpy.array(gg)
 		
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
@@ -376,7 +380,7 @@ class FILTERSD(Optimizer):
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
 		#end
-		ff = numpy.array(ff)
+		ff = numpy.array(ff, numpy.float)
 		
 		
 		# Setup argument list values

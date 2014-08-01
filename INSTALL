@@ -1,6 +1,6 @@
 pyOpt - Building and Installing
 ===============================
-Copyright (c) 2008-2013, pyOpt Developers
+Copyright (c) 2008-2014, pyOpt Developers
 
 
 Requirements
@@ -19,9 +19,10 @@ of parallel computing capabilities are:
 
 Notes:
 
-    * In Windows MinGW is recommended if c/FORTRAN compilers are not available
-    * In Linux, the python header files (python-dev) are also required.
-    * Compatibility on Windows 64bit has not been tested 
+    * In Windows with python x86 and numpy-win32 MinGW is recommended if c/FORTRAN compilers are not available.
+    * In Windows with python x86-64 and numpy-amd64 MinGW-W64 is recommended if c/FORTRAN compilers are not available.
+    * In Linux, the python header files (python-dev) and numpy header files (numpy-dev) are also required.
+    * In OpenSUSE systems, install as superuser and modify package execution permission for non-superusers.
 
 
 Installation

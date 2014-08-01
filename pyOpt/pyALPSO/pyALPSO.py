@@ -2,7 +2,7 @@
 '''
 pyALPSO - A Python pyOpt interface to ALPSO.
 
-Copyright (c) 2008-2013 by pyOpt Developers
+Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
 Revision: 1.1   $Date: 16/05/2008 21:00$
 
