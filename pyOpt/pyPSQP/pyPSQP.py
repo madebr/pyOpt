@@ -21,7 +21,7 @@ Developers:
 History
 -------
 	v. 1.0	- Initial Class Creation (RP, 2010)
-	v. 1.1	- Unconstrained Support (RP, 2014)
+	v. 1.1	- Unconstrained Problems Support (RP, 2014)
 '''
 
 __version__ = '$Revision: $'

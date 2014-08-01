@@ -24,7 +24,7 @@ History
 	v. 1.0	- Initial Class Creation (RP, 2008)
 	v. 1.1	- Migrate to pyOpt Framework (RP, 2008)
 	v. 1.2	- Gradient Class Support (PJ,RP, 2010)
-	v. 1.3  - Unconstrained Support (RP, 2014)
+	v. 1.3  - Unconstrained Problems Support (RP, 2014)
 '''
 
 __version__ = '$Revision: $'

@@ -26,7 +26,7 @@ History
 	v. 1.2  - Wrapper Callback Storage Support (AL,RP, 2009)
 	v. 1.3  - History support (PJ,RP, 2010)
 	v. 1.4  - Gradient Class Support (PJ,RP, 2010)
-	v. 1.5  - Unconstrained Support (RP, 2014) 
+	v. 1.5  - Unconstrained Problems Support (RP, 2014) 
 '''
 
 __version__ = '$Revision: $'
