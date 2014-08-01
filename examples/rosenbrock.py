@@ -27,8 +27,6 @@ from pyOpt import COBYLA
 from pyOpt import SOLVOPT
 from pyOpt import KSOPT
 from pyOpt import NSGA2
-from pyOpt import ALGENCAN
-from pyOpt import FILTERSD
 from pyOpt import SDPEN
 
 
@@ -95,20 +93,8 @@ nsga2.setOption('PrintOut',0)
 nsga2(opt_prob)
 print opt_prob.solution(6)
 
-# Instantiate Optimizer (ALGENCAN) & Solve Problem
-algencan = ALGENCAN()
-algencan.setOption('iprint',0)
-algencan(opt_prob)
-print opt_prob._solutions(7)
-
-# Instantiate Optimizer (FILTERSD) & Solve Problem
-filtersd = FILTERSD()
-filtersd.setOption('iprint',0)
-filtersd(opt_prob)
-print opt_prob._solutions(8)
-
 # Instantiate Optimizer (SDPEN) & Solve Problem
 sdpen = SDPEN()
 sdpen.setOption('iprint',-1)
 sdpen(opt_prob)
-print opt_prob._solutions(9)
+print opt_prob.solution(7)

@@ -30,7 +30,6 @@ from pyOpt import KSOPT
 from pyOpt import NSGA2
 from pyOpt import ALGENCAN
 from pyOpt import FILTERSD
-from pyOpt import SDPEN
 
 
 # =============================================================================
@@ -107,16 +106,11 @@ print opt_prob.solution(6)
 algencan = ALGENCAN()
 algencan.setOption('iprint',0)
 algencan(opt_prob)
-print opt_prob._solutions(7)
+print opt_prob.solution(7)
 
 # Instantiate Optimizer (FILTERSD) & Solve Problem
 filtersd = FILTERSD()
 filtersd.setOption('iprint',0)
 filtersd(opt_prob)
-print opt_prob._solutions(8)
+print opt_prob.solution(8)
 
-# Instantiate Optimizer (SDPEN) & Solve Problem
-sdpen = SDPEN()
-sdpen.setOption('iprint',-1)
-sdpen(opt_prob)
-print opt_prob._solutions(9)
