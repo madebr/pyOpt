@@ -34,7 +34,7 @@ To Do:
 # ALGENCAN Library
 # =============================================================================
 try:
-	import algencan
+	from . import algencan
 except ImportError:
 	raise ImportError('ALGENCAN shared library failed to import')
 #end

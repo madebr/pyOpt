@@ -40,7 +40,7 @@ To Do:
 # MMA Library
 # =============================================================================
 try:
-	import gcmma
+	from . import gcmma
 except:
 	raise ImportError('GCMMA shared library failed to import')
 #end

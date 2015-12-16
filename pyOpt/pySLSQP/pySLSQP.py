@@ -38,7 +38,7 @@ To Do:
 # SLSQP Library
 # =============================================================================
 try:
-	import slsqp
+	from . import slsqp
 except ImportError:
 	raise ImportError('SLSQP shared library failed to import')
 #end

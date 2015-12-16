@@ -44,7 +44,7 @@ To Do:
 # NLPQL Library
 # =============================================================================
 try:
-	import nlpql
+	from . import nlpql
 except:
 	raise ImportError('NLPQL shared library failed to import')
 #end

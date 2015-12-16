@@ -32,7 +32,7 @@ To Do:
 # NLPQLP Library
 # =============================================================================
 try:
-	import nlpqlp
+	from . import nlpqlp
 except:
 	raise ImportError('NLPQLP shared library failed to import')
 #end

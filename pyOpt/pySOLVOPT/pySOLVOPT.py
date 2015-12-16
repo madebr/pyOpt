@@ -40,7 +40,7 @@ To Do:
 # SOLVOPT Library
 # =============================================================================
 try:
-	import solvopt
+	from . import solvopt
 except:
 	raise ImportError('SOLVOPT shared library failed to import')
 #end

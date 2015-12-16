@@ -37,7 +37,7 @@ To Do:
 # MIDACO Library
 # =============================================================================
 try:
-	import midaco
+	from . import midaco
 except:
 	raise ImportError('MIDACO shared library failed to import')
 #end

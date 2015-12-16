@@ -33,7 +33,7 @@ To Do:
 # SDPEN Library
 # =============================================================================
 try:
-	import sdpen
+	from . import sdpen
 except ImportError:
 	raise ImportError('SDPEN shared library failed to import')
 #end

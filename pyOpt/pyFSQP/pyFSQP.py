@@ -40,7 +40,7 @@ To Do:
 # FSQP Library
 # =============================================================================
 try:
-	import ffsqp
+	from . import ffsqp
 except:
 	raise ImportError('FSQP shared library failed to import')
 #end

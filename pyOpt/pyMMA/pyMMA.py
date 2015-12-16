@@ -41,7 +41,7 @@ To Do:
 # MMA Library
 # =============================================================================
 try:
-	import mma
+	from . import mma
 except:
 	raise ImportError('MMA shared library failed to import')
 #end

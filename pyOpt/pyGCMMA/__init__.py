@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 try:
-    from pyGCMMA import GCMMA
+    from .pyGCMMA import GCMMA
     __all__ = ['GCMMA']
 except:
     __all__ = []

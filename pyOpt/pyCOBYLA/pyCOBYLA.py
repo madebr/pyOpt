@@ -37,7 +37,7 @@ To Do:
 # COBYLA Library
 # =============================================================================
 try:
-	import cobyla
+	from . import cobyla
 except:
 	raise ImportError('COBYLA shared library failed to import')
 #end

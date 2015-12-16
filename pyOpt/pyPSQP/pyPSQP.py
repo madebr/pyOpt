@@ -35,7 +35,7 @@ To Do:
 # PSQP Library
 # =============================================================================
 try:
-	import psqp
+	from . import psqp
 except:
 	raise ImportError('PSQP shared library failed to import')
 #end

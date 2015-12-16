@@ -38,7 +38,7 @@ To Do:
 # CONMIN Library
 # =============================================================================
 try:
-	import conmin
+	from . import conmin
 except:
 	raise ImportError('CONMIN shared library failed to import')
 #end

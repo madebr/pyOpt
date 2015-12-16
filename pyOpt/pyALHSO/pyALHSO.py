@@ -28,7 +28,7 @@ To Do:
 # ALHSO Library
 # =============================================================================
 try:
-	import alhso
+	from . import alhso
 except:
 	raise ImportError('ALHSO shared library failed to import')
 #end

@@ -58,7 +58,7 @@ To Do:
 # SNOPT Library
 # =============================================================================
 try:
-	import snopt
+	from . import snopt
 except:
 	raise ImportError('SNOPT shared library failed to import')
 #end

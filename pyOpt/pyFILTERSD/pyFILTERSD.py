@@ -33,7 +33,7 @@ To Do:
 # FILTERSD Library
 # =============================================================================
 try:
-	import filtersd
+	from . import filtersd
 except:
 	raise ImportError('FILTERSD shared library failed to import')
 #end

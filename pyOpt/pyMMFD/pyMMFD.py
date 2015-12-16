@@ -37,7 +37,7 @@ To Do:
 # MMFD Library
 # =============================================================================
 try:
-	import mmfd
+	from . import mmfd
 except:
 	raise ImportError('MMFD shared library failed to import')
 #end

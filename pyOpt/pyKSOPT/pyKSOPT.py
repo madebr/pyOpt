@@ -37,7 +37,7 @@ To Do:
 # KSOPT Library
 # =============================================================================
 try:
-	import ksopt
+	from . import ksopt
 except:
 	raise ImportError('KSOPT shared library failed to import')
 #end

@@ -36,7 +36,7 @@ To Do:
 # NSGA2 Library
 # =============================================================================
 try:
-	import nsga2
+	from . import nsga2
 except:
 	raise ImportError('NSGA-II shared library failed to import')
 #end
