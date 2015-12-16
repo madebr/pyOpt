@@ -221,7 +221,7 @@ class Optimization(object):
                     lower = [kwargs['lower']]*nvars
                 elif isinstance(kwargs['lower'],(list,numpy.ndarray)):
                     if len(kwargs['lower']) != nvars:
-                        for i in xrange(len(kwargs['lower'])):
+                        for i in range(len(kwargs['lower'])):
                             lower[i] = kwargs['lower'][i]
                         #end
                     else:
@@ -237,7 +237,7 @@ class Optimization(object):
                     upper = [kwargs['upper']]*nvars
                 elif isinstance(kwargs['upper'],(list,numpy.ndarray)):
                     if len(kwargs['upper']) != nvars:
-                        for i in xrange(len(kwargs['upper'])):
+                        for i in range(len(kwargs['upper'])):
                             upper[i] = kwargs['upper'][i]
                         #end
                     else:
@@ -253,7 +253,7 @@ class Optimization(object):
         #end
         
         tmp_group = {}
-        for var in xrange(nvars):
+        for var in range(nvars):
             tmp_name = name +'_%s' %(var)
             id = self.firstavailableindex(self._variables)
             self.setVar(id, tmp_name, type[var], value[var], lower=lower[var], upper=upper[var], choices=choices[var])
@@ -339,7 +339,7 @@ class Optimization(object):
         
         # 
         ngroups = len(self._vargroups)
-        for j in xrange(ngroups):
+        for j in range(ngroups):
             if (self._vargroups[j]['name'] == name):
                 keys = self._vargroups[j]['ids']
                 for key in keys:
@@ -526,7 +526,7 @@ class Optimization(object):
                         lower = [kwargs['lower']]*ncons
                     elif isinstance(kwargs['lower'],(list,numpy.ndarray)):
                         if len(kwargs['lower']) != ncons:
-                            for i in xrange(len(kwargs['lower'])):
+                            for i in range(len(kwargs['lower'])):
                                 lower[i] = kwargs['lower'][i]
                             #end
                         else:
@@ -542,7 +542,7 @@ class Optimization(object):
                         upper = [kwargs['upper']]*ncons
                     elif isinstance(kwargs['upper'],(list,numpy.ndarray)):
                         if len(kwargs['upper']) != ncons:
-                            for i in xrange(len(kwargs['upper'])):
+                            for i in range(len(kwargs['upper'])):
                                 upper[i] = kwargs['upper'][i]
                             #end
                         else:
@@ -553,7 +553,7 @@ class Optimization(object):
                     #end
                 #end
             #end
-            for con in xrange(ncons):
+            for con in range(ncons):
                 tmp_name = name +'_%s' %(con)
                 self.setCon(self.firstavailableindex(self._constraints),tmp_name, type_list[con], lower=lower[con], upper=upper[con])
             #end
@@ -567,7 +567,7 @@ class Optimization(object):
                         equal = [kwargs['equal']]*ncons
                     elif isinstance(kwargs['equal'],(list,numpy.ndarray)):
                         if len(kwargs['equal']) != ncons:
-                            for i in xrange(len(kwargs['equal'])):
+                            for i in range(len(kwargs['equal'])):
                                 lower[i] = kwargs['equal'][i]
                             #end
                         else:
@@ -578,7 +578,7 @@ class Optimization(object):
                     #end
                 #end
             #end
-            for con in xrange(ncons):
+            for con in range(ncons):
                 tmp_name = name +'_%s' %(con)
                 self.setCon(self.firstavailableindex(self._constraints),tmp_name, type_list[con], equal=equal[con])
             #end
@@ -1083,7 +1083,7 @@ class Solution(Optimization):
         text1 = ''
         lines = text0.split('\n')
         lines[1] = lines[1][len('Optimization Problem -- '):]
-        for i in xrange(5):
+        for i in range(5):
             text1 += lines[i] + '\n'
         #end
         if self.display_opt:
@@ -1108,7 +1108,7 @@ class Solution(Optimization):
                 text1 += '    '+ key +': ' + str(self.parameters[key]).rjust(9) + '\n'
             #end
         #end
-        for i in xrange(5,len(lines)):
+        for i in range(5,len(lines)):
             text1 += lines[i] + '\n'
         #end
         text1 += ('-'*80) + '\n'

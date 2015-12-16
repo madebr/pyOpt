@@ -277,7 +277,7 @@ class MIDACO(Optimizer):
 			gg = []
 			if (myrank == 0):
 				if self.h_start:
-					for proc in xrange(l):
+					for proc in range(l):
 						[vals,hist_end] = hos_file.read(ident=['obj', 'con', 'fail'])
 						if hist_end:
 							self.h_start = False
@@ -304,7 +304,7 @@ class MIDACO(Optimizer):
 					# Objective Assigment
 					f[mxi] = inf
 					# Constraints Assigment (negative gg as midaco uses g(x) >= 0)
-					for i in xrange(len(opt_problem._constraints.keys())):
+					for i in range(len(opt_problem._constraints.keys())):
 						g[mxi,i] = -inf
 					#end
 				else:
@@ -315,7 +315,7 @@ class MIDACO(Optimizer):
 						f[mxi] = ff
 					#end
 					# Constraints Assigment (negative gg as midaco uses g(x) >= 0)
-					for i in xrange(len(opt_problem._constraints.keys())):
+					for i in range(len(opt_problem._constraints.keys())):
 						if isinstance(gg[i],complex):
 							g[mxi,i] = -gg[i].astype(float)
 						else:
@@ -331,13 +331,13 @@ class MIDACO(Optimizer):
 						Send(send_buf,dest=0)
 					else:
 						p_results = []
-						for proc in xrange(1,nproc):
+						for proc in range(1,nproc):
 							p_results.append(Recv(source=proc))
 						#end
 					#end
 					
 					if myrank == 0:
-						for proc in xrange(nproc-1):
+						for proc in range(nproc-1):
 							for i in p_results[proc].keys():
 								f[i] = p_results[proc][i]['fi']
 								g[i,:] = p_results[proc][i]['gi']
@@ -352,7 +352,7 @@ class MIDACO(Optimizer):
 			# Store History
 			if (myrank == 0):
 				if self.sto_hst:
-					for proc in xrange(l):
+					for proc in range(l):
 						log_file.write(x[proc],'x')
 						log_file.write(f[proc],'obj')
 						log_file.write(g[proc],'con')

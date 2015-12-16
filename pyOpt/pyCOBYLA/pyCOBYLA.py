@@ -235,7 +235,7 @@ class COBYLA(Optimizer):
 			
 			# Constraints Assigment (negative gg as cobyla uses g(x) >= 0)
 			i = 0
-			for j in xrange(len(opt_problem._constraints.keys())):
+			for j in range(len(opt_problem._constraints.keys())):
 				if isinstance(gg[j],complex):
 					g[i] = -gg[j].astype(float)
 				else:

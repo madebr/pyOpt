@@ -222,7 +222,7 @@ class History(object):
 				hist_end = True
 				return (bdata,hist_end)
 			#end
-			for i in xrange(index[0],index[1]):
+			for i in range(index[0],index[1]):
 				
 				#
 				if (i >= len(self.cues[id])):

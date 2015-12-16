@@ -32,7 +32,7 @@ def objfunc(x):
     c = [1,2,5,2,3]
     
     f = 0.0
-    for i in xrange(5):
+    for i in range(5):
         f += -(c[i]*exp(-(1/pi)*((x[0]-a[i])**2 + (x[1]-b[i])**2))*cos(pi*((x[0]-a[i])**2 + (x[1]-b[i])**2)))
     #end
     

@@ -247,7 +247,7 @@ class MMFD(Optimizer):
 			#end
 			
 			# Constraints Assigment
-			for i in xrange(len(opt_problem._constraints.keys())):
+			for i in range(len(opt_problem._constraints.keys())):
 				if isinstance(gg[i],complex):
 					g[i] = gg[i].astype(float)
 				else:
@@ -298,9 +298,9 @@ class MMFD(Optimizer):
 			#end
 			
 			# Gradient Assignment
-			for i in xrange(len(opt_problem._variables.keys())):
+			for i in range(len(opt_problem._variables.keys())):
 				df[i] = dff[0,i]
-				for j in xrange(len(opt_problem._constraints.keys())):
+				for j in range(len(opt_problem._constraints.keys())):
 					dg[i,j] = dgg[j,i]
 				#end
 			#end

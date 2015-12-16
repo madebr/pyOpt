@@ -229,7 +229,7 @@ class SDPEN(Optimizer):
 			#end
 			
 			# Constraints Assigment
-			for i in xrange(len(opt_problem._constraints.keys())):
+			for i in range(len(opt_problem._constraints.keys())):
 				if isinstance(g[i],complex):
 					g[i] = gg[i].astype(float)
 				else:

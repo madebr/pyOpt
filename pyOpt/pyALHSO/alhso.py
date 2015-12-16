@@ -105,7 +105,7 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 		dbw = (xmax - xmin)/bw
 		space_centre = numpy.zeros(dimensions,float)
 		space_halflen = numpy.zeros(dimensions,float)
-		for j in xrange(dimensions):
+		for j in range(dimensions):
 			space_centre[j] = (xmin[j] + xmax[j])/2.0
 			space_halflen[j] = ((xmax[j] - xmin[j])/2.0)
 		#end
@@ -122,8 +122,8 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 	# Initialize Harmony Memory
 	HM = numpy.zeros((memsize,dimensions+1), float)
 	discrete_i = []
-	for i in xrange(memsize):
-		for j in xrange(dimensions):
+	for i in range(memsize):
+		for j in range(dimensions):
 			HM[i,j] = xmin[j] + rand.random()*(xmax[j]-xmin[j])
 			if (xtype[j] == 1):
 				discrete_i.append(j)
@@ -144,7 +144,7 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 	tau_val = numpy.zeros(constraints, float)
 	nfevals = 0
 	#best_L_val = 0
-	for i in xrange(memsize):
+	for i in range(memsize):
 		
 		# Evaluate Ojective Function
 		if (scale == 1):
@@ -163,12 +163,12 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 		if (constraints > 0):
 			
 			# Equality Constraints
-			for l in xrange(neqcons):
+			for l in range(neqcons):
 				tau_val[l] = g_val[l]
 			#end
 			
 			# Inequality Constraints
-			for l in xrange(neqcons,constraints):
+			for l in range(neqcons,constraints):
 				if (rp_val[l] != 0):
 					if (g_val[l] > -lambda_val[l]/(2*rp_val[l])):
 						tau_val[l] = g_val[l]
@@ -181,7 +181,7 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 			#end
 			
 			#
-			for l in xrange(constraints):
+			for l in range(constraints):
 				L_val += lambda_val[l]*tau_val[l] + rp_val[l]*tau_val[l]**2
 			#end
 			
@@ -218,7 +218,7 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 			k_inn += 1
 			
 			# New Harmony Improvisation
-			for j in xrange(dimensions):
+			for j in range(dimensions):
 				
 				if ((rand.random() < hmcr) or (x0 != [] and k_out == 1)):
 					
@@ -267,12 +267,12 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 			if (constraints > 0):
 				
 				# Equality Constraints
-				for l in xrange(neqcons):
+				for l in range(neqcons):
 					tau_val[l] = g_val[l]
 				#end
 				
 				# Inequality Constraints
-				for l in xrange(neqcons,constraints):
+				for l in range(neqcons,constraints):
 					if (rp_val[l] != 0):
 						if (g_val[l] > -lambda_val[l]/(2*rp_val[l])):
 							tau_val[l] = g_val[l]
@@ -285,7 +285,7 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 				#end
 				
 				# 
-				for l in xrange(constraints):
+				for l in range(constraints):
 					L_val += lambda_val[l]*tau_val[l] + rp_val[l]*tau_val[l]**2
 				#end
 				
@@ -294,7 +294,7 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 			# 
 			feasible = True
 			if (constraints > 0):
-				for l in xrange(constraints):
+				for l in range(constraints):
 					if (l < neqcons):
 						if (abs(g_val[l]) > etol):
 							feasible = False
@@ -315,7 +315,7 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 				# Harmony Memory Update
 				hmax_num = 0
 				hmax = HM[0,dimensions]
-				for i in xrange(memsize):
+				for i in range(memsize):
 					if (HM[i,dimensions] > hmax):
 						hmax_num = i
 						hmax = HM[i,dimensions]
@@ -323,7 +323,7 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 				#end
 				
 				if (L_val < hmax):
-					for j in xrange(dimensions):
+					for j in range(dimensions):
 						HM[hmax_num,j] = x_val[j]
 					#end
 					HM[hmax_num,dimensions] = L_val
@@ -331,7 +331,7 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 				
 				hmin_num = 0
 				hmin = HM[0,dimensions]
-				for i in xrange(memsize):
+				for i in range(memsize):
 					if (HM[i,dimensions] < hmin):
 						hmin_num = i
 						hmin = HM[i,dimensions]
@@ -382,14 +382,14 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 			
 			# Re-Initialize Harmony Memory
 			HM = numpy.zeros((memsize,dimensions+1), float)
-			for i in xrange(memsize):
-				for j in xrange(dimensions):
+			for i in range(memsize):
+				for j in range(dimensions):
 					HM[i,j] = xmin[j] + rand.random()*(xmax[j]-xmin[j])
 				#end
 			#end
 			
 			# Re-Initialize Harmony Memory Augmented Lagrange
-			for i in xrange(memsize):
+			for i in range(memsize):
 				
 				# Evaluate Ojective Function
 				if (scale == 1):
@@ -408,12 +408,12 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 				if (constraints > 0):
 					
 					# Equality Constraints
-					for l in xrange(neqcons):
+					for l in range(neqcons):
 						tau_val[l] = g_val[l]
 					#end
 					
 					# Inequality Constraints
-					for l in xrange(neqcons,constraints):
+					for l in range(neqcons,constraints):
 						if (rp_val[l] != 0):
 							if (g_val[l] > -lambda_val[l]/(2*rp_val[l])):
 								tau_val[l] = g_val[l]
@@ -426,7 +426,7 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 					#end
 					
 					#
-					for l in xrange(constraints):
+					for l in range(constraints):
 						L_val += lambda_val[l]*tau_val[l] + rp_val[l]*tau_val[l]**2
 					#end
 					
@@ -456,17 +456,17 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 			if (constraints > 0):
 				# Equality Constraints
 				print("EQUALITY CONSTRAINTS VALUES:")
-				for l in xrange(neqcons):
+				for l in range(neqcons):
 					print(("\tG(%d) = %g" %(l,best_g_val[l])))
 				#end
 				# Inequality Constraints
 				print("\nINEQUALITY CONSTRAINTS VALUES:")
-				for l in xrange(neqcons,constraints):
+				for l in range(neqcons,constraints):
 					print(("\tH(%d) = %g" %(l,best_g_val[l])))
 				#end
 			#end
 			print("\nLAGRANGIAN MULTIPLIERS VALUES:")
-			for l in xrange(constraints):
+			for l in range(constraints):
 				print(("\tL(%d) = %g" %(l,lambda_val[l])))
 			#end
 			
@@ -480,7 +480,7 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 				x_tmp[m] = floor(x_tmp[m]+0.5)
 			#end
 			text = ''
-			for j in xrange(dimensions):
+			for j in range(dimensions):
 				text += ("\tP(%d) = %9.3e\t" %(j,x_tmp[j]))
 				if (numpy.mod(j+1,3) == 0):
 					text +=("\n")
@@ -499,17 +499,17 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 			if (constraints > 0):
 				# Equality Constraints
 				ofile.write("\nEQUALITY CONSTRAINTS VALUES:\n")
-				for l in xrange(neqcons):
+				for l in range(neqcons):
 					ofile.write("\tG(%d) = %g\n" %(l,best_g_val[l]))
 				#end
 				# Inequality Constraints
 				ofile.write("\nINEQUALITY CONSTRAINTS VALUES:\n")
-				for l in xrange(neqcons,constraints):
+				for l in range(neqcons,constraints):
 					ofile.write("\tH(%d) = %g\n" %(l,best_g_val[l]))
 				#end
 			#end
 			ofile.write("\nLAGRANGIAN MULTIPLIERS VALUES:\n")
-			for l in xrange(constraints):
+			for l in range(constraints):
 				ofile.write("\tL(%d) = %g\n" %(l,lambda_val[l]))
 			#end
 			
@@ -523,7 +523,7 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 				x_tmp[m] = floor(x_tmp[m]+0.5)
 			#end
 			text = ''
-			for j in xrange(dimensions):
+			for j in range(dimensions):
 				text += ("\tP(%d) = %9.3e\t" %(j,x_tmp[j]))
 				if (numpy.mod(j+1,3) == 0):
 					text +=("\n")
@@ -540,12 +540,12 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 		if (constraints == 0):
 			stop_constraints_flag = 1
 		else:
-			for l in xrange(neqcons):
+			for l in range(neqcons):
 				if (abs(best_g_val[l]) <= etol):
 					stop_constraints_flag += 1 
 				#end
 			#end
-			for l in xrange(neqcons,constraints):
+			for l in range(neqcons,constraints):
 				if (best_g_val[l] <= itol):
 					stop_constraints_flag += 1
 				#end
@@ -607,10 +607,10 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 			if (constraints > 0):
 				
 				# Tau for Best 
-				for l in xrange(neqcons):
+				for l in range(neqcons):
 					tau_val[l] = best_g_val[l]
 				#end
-				for l in xrange(neqcons,constraints):
+				for l in range(neqcons,constraints):
 					if (best_g_val[l] > -lambda_val[l]/(2*rp_val[l])):
 						tau_val[l] = best_g_val[l]
 					else:
@@ -619,20 +619,20 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 				#end
 				
 				# Update Lagrange Multiplier
-				for l in xrange(constraints):
+				for l in range(constraints):
 					lambda_old[l] = lambda_val[l]
 					lambda_val[l] += 2*rp_val[l]*tau_val[l]
 				#end
 				
 				# Update Penalty Factor
-				for l in xrange(neqcons):
+				for l in range(neqcons):
 					if (abs(best_g_val[l]) > abs(best_g_old[l]) and abs(best_g_val[l]) > etol):
 						rp_val[l] = 2.0*rp_val[l]
 					elif (abs(best_g_val[l]) <= etol):
 						rp_val[l] = 0.5*rp_val[l]
 					#end
 				#end
-				for l in xrange(neqcons,constraints):
+				for l in range(neqcons,constraints):
 					if (best_g_val[l] > best_g_old[l] and best_g_val[l] > itol):
 						rp_val[l] = 2.0*rp_val[l]
 					elif (best_g_val[l] <= itol):
@@ -641,17 +641,17 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 				#end
 				
 				# Apply Lower Bounds on rp
-				for l in xrange(neqcons):
+				for l in range(neqcons):
 					if (rp_val[l] < 0.5*(abs(lambda_val[l])/etol)**0.5):
 						rp_val[l] = 0.5*(abs(lambda_val[l])/etol)**0.5
 					#end
 				#end	
-				for l in xrange(neqcons,constraints):
+				for l in range(neqcons,constraints):
 					if (rp_val[l] < 0.5*(abs(lambda_val[l])/itol)**0.5):
 						rp_val[l] = 0.5*(abs(lambda_val[l])/itol)**0.5
 					#end
 				#end
-				for l in xrange(constraints):
+				for l in range(constraints):
 					if (rp_val[l] < 1):
 						rp_val[l] = 1
 					#end
@@ -680,17 +680,17 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 		if (constraints > 0):
 			# Equality Constraints
 			print("EQUALITY CONSTRAINTS VALUES:")
-			for l in xrange(neqcons):
+			for l in range(neqcons):
 				print(("\tG(%d) = %g" %(l,best_g_val[l])))
 			#end
 			# Inequality Constraints
 			print("\nINEQUALITY CONSTRAINTS VALUES:")
-			for l in xrange(neqcons,constraints):
+			for l in range(neqcons,constraints):
 				print(("\tH(%d) = %g" %(l,best_g_val[l])))
 			#end
 		#end
 		print("\nLAGRANGIAN MULTIPLIERS VALUES:")
-		for l in xrange(constraints):
+		for l in range(constraints):
 			print(("\tL(%d) = %g" %(l,float(lambda_val[l]))))
 		#end
 		
@@ -704,7 +704,7 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 			x_tmp[m] = floor(x_tmp[m]+0.5)
 		#end
 		text = ''
-		for j in xrange(dimensions):
+		for j in range(dimensions):
 			text += ("\tP(%d) = %9.3e\t" %(j,x_tmp[j]))
 			if (numpy.mod(j+1,3) == 0):
 				text +=("\n")
@@ -724,17 +724,17 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 		if (constraints > 0):
 			# Equality Constraints
 			ofile.write("\nEQUALITY CONSTRAINTS VALUES:\n")
-			for l in xrange(neqcons):
+			for l in range(neqcons):
 				ofile.write("\tG(%d) = %g\n" %(l,best_g_val[l]))
 			#end
 			# Inequality Constraints
 			ofile.write("\nINEQUALITY CONSTRAINTS VALUES:\n")
-			for l in xrange(neqcons,constraints):
+			for l in range(neqcons,constraints):
 				ofile.write("\tH(%d) = %g\n" %(l,best_g_val[l]))
 			#end
 		#end
 		ofile.write("\nLAGRANGIAN MULTIPLIERS VALUES:\n")
-		for l in xrange(constraints):
+		for l in range(constraints):
 			ofile.write("\tL(%d) = %g\n" %(l,float(lambda_val[l])))
 		#end
 		
@@ -748,7 +748,7 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 			x_tmp[m] = floor(x_tmp[m]+0.5)
 		#end
 		text = ''
-		for j in xrange(dimensions):
+		for j in range(dimensions):
 			text += ("\tP(%d) = %9.3e\t" %(j,x_tmp[j]))
 			if (numpy.mod(j+1,3) == 0):
 				text +=("\n")
@@ -798,8 +798,8 @@ def chso(ND,nc,nec,xtype,x0,lb,ub,bw,HMS,HMCR,PAR,maxIter,printout,rseed,objfunc
 	
 	# Initialize
 	HM = numpy.zeros((HMS,ND+1), float)
-	for i in xrange(HMS):
-		for j in xrange(ND):
+	for i in range(HMS):
+		for j in range(ND):
 			HM[i,j] = lb[j] + rand.random()*(ub[j] - lb[j])
 		#end
 		[f0,gs0] = objfunc(HM[i,:-1])
@@ -821,7 +821,7 @@ def chso(ND,nc,nec,xtype,x0,lb,ub,bw,HMS,HMCR,PAR,maxIter,printout,rseed,objfunc
 	while status != 1:
 		
 		# New Harmony Improvisation
-		for j in xrange(ND):
+		for j in range(ND):
 			
 			# 
 			if (rand.random() >= HMCR):
@@ -856,7 +856,7 @@ def chso(ND,nc,nec,xtype,x0,lb,ub,bw,HMS,HMCR,PAR,maxIter,printout,rseed,objfunc
 			# Harmony Memory Update
 			hmax_num = 0
 			hmax = HM[0,ND]
-			for i in xrange(HMS):
+			for i in range(HMS):
 				if (HM[i,ND] > hmax):
 					hmax_num = i
 					hmax = HM[i,ND]
@@ -864,7 +864,7 @@ def chso(ND,nc,nec,xtype,x0,lb,ub,bw,HMS,HMCR,PAR,maxIter,printout,rseed,objfunc
 			#end
 			
 			if (fval < hmax):
-				for j in xrange(ND):
+				for j in range(ND):
 					HM[hmax_num,j] = x[j]
 				#end
 				HM[hmax_num,ND] = fval
@@ -872,7 +872,7 @@ def chso(ND,nc,nec,xtype,x0,lb,ub,bw,HMS,HMCR,PAR,maxIter,printout,rseed,objfunc
 			
 			hmin_num = 0
 			hmin = HM[0,ND]
-			for i in xrange(HMS):
+			for i in range(HMS):
 				if (HM[i,ND] < hmin):
 					hmin_num = i
 					hmin = HM[i,ND]

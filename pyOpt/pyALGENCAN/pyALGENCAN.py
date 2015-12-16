@@ -282,7 +282,7 @@ class ALGENCAN(Optimizer):
 			#end
 			
 			# Constraints Assigment
-			for i in xrange(len(opt_problem._constraints.keys())):
+			for i in range(len(opt_problem._constraints.keys())):
 				if isinstance(gg[i],complex):
 					g[i] = gg[i].astype(float)
 				else:
@@ -331,14 +331,14 @@ class ALGENCAN(Optimizer):
 			#end
 			
 			# Objective Gradient Assigment
-			for i in xrange(len(opt_problem._variables.keys())):
+			for i in range(len(opt_problem._variables.keys())):
 				jfval[i] = dff[0,i]
 			#end
 			
 			# Constraint Gradient Assigment
 			jcnnz = 0
-			for jj in xrange(len(opt_problem._constraints.keys())):
-				for ii in xrange(len(opt_problem._variables.keys())):
+			for jj in range(len(opt_problem._constraints.keys())):
+				for ii in range(len(opt_problem._variables.keys())):
 					jcfun[jcnnz] = jj + 1
 					jcvar[jcnnz] = ii + 1
 					jcval[jcnnz] = dgg[jj,ii]

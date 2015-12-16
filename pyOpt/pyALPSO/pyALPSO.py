@@ -257,7 +257,7 @@ class ALPSO(Optimizer):
 				# Objective Assigment
 				f = inf
 				# Constraints Assigment
-				for i in xrange(len(opt_problem._constraints.keys())):
+				for i in range(len(opt_problem._constraints.keys())):
 					g[i] = inf
 				#end
 			else:
@@ -268,7 +268,7 @@ class ALPSO(Optimizer):
 					f = ff
 				#end
 				# Constraints Assigment
-				for i in xrange(len(opt_problem._constraints.keys())):
+				for i in range(len(opt_problem._constraints.keys())):
 					if isinstance(gg[i],complex):
 						g[i] = gg[i].astype(float)
 					else:
@@ -471,7 +471,7 @@ class ALPSO(Optimizer):
 			
 			if m > 0:
 				sol_lambda = numpy.zeros(m ,float)
-				for i in xrange(m):
+				for i in range(m):
 					sol_lambda[i] = opt_lambda[i]
 				#end
 			else:

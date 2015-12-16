@@ -238,7 +238,7 @@ class KSOPT(Optimizer):
 			if isinstance(ff,float):
 				ff = [ff]
 			#end
-			for i in xrange(len(opt_problem._objectives.keys())):
+			for i in range(len(opt_problem._objectives.keys())):
 				if isinstance(ff[i],complex):
 					f[i] = ff[i].astype(float)
 				else:
@@ -247,7 +247,7 @@ class KSOPT(Optimizer):
 			#end
 			
 			# Constraints Assigment
-			for i in xrange(len(opt_problem._constraints.keys())):
+			for i in range(len(opt_problem._constraints.keys())):
 				if isinstance(gg[i],complex):
 					g[i] = gg[i].astype(float)
 				else:
@@ -298,11 +298,11 @@ class KSOPT(Optimizer):
 			#end
 			
 			# Gradient Assignment
-			for i in xrange(len(opt_problem._variables.keys())):
-				for j in xrange(len(opt_problem._objectives.keys())):
+			for i in range(len(opt_problem._variables.keys())):
+				for j in range(len(opt_problem._objectives.keys())):
 					df[j,i] = dff[j,i]
 				#end
-				for j in xrange(len(opt_problem._constraints.keys())):
+				for j in range(len(opt_problem._constraints.keys())):
 					dg[j,i] = dgg[j,i]
 				#end
 			#end

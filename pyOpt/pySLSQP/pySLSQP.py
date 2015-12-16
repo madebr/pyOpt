@@ -253,7 +253,7 @@ class SLSQP(Optimizer):
 			#end
 			
 			# Constraints Assignment (negative gg as slsqp uses g(x) >= 0)
-			for i in xrange(len(opt_problem._constraints.keys())):
+			for i in range(len(opt_problem._constraints.keys())):
 				if isinstance(gg[i],complex):
 					g[i] = -gg[i].astype(float)
 				else:
@@ -303,9 +303,9 @@ class SLSQP(Optimizer):
 			#end
 			
 			# Gradient Assigment
-			for i in xrange(len(opt_problem._variables.keys())):
+			for i in range(len(opt_problem._variables.keys())):
 				df[i] = dff[0,i]
-				for jj in xrange(len(opt_problem._constraints.keys())):
+				for jj in range(len(opt_problem._constraints.keys())):
 					dg[jj,i] = -dgg[jj,i]
 				#end
 			#end

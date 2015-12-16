@@ -444,9 +444,9 @@ class SNOPT(Optimizer):
 				dff,dgg = gradient.getGrad(x, group_ids, [f_obj], f_con, *args, **kwargs)
 				
 				# 
-				for i in xrange(len(opt_problem._variables.keys())):
+				for i in range(len(opt_problem._variables.keys())):
 					g_obj[i] = dff[0,i]
-					for j in xrange(len(opt_problem._constraints.keys())):
+					for j in range(len(opt_problem._constraints.keys())):
 						g_con[j,i] = dgg[j,i]
 					#end
 				#end
@@ -465,7 +465,7 @@ class SNOPT(Optimizer):
 			#end
 			
 			# Constraints Assigment
-			for i in xrange(len(opt_problem._constraints.keys())):
+			for i in range(len(opt_problem._constraints.keys())):
 				if isinstance(f_con[i],complex):
 					f_con[i] = f_con[i].astype(float)
 				#end
@@ -622,7 +622,7 @@ class SNOPT(Optimizer):
 		
 		# Set Options
 		inform = numpy.array([-1], numpy.int)
-		for i in xrange(len(self.set_options)):
+		for i in range(len(self.set_options)):
 			name = self.set_options[i][0]
 			value = self.set_options[i][1]
 			if isinstance(value, str):
@@ -776,7 +776,7 @@ class SNOPT(Optimizer):
 			
 			if ncon > 0:
 				sol_lambda = numpy.zeros(ncon ,float)
-				for i in xrange(ncon):
+				for i in range(ncon):
 					sol_lambda[i] = pi[i]
 				#end
 			else:

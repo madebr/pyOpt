@@ -250,7 +250,7 @@ class GCMMA(Optimizer):
 			#end
 			
 			# Constraints Assigment
-			for i in xrange(len(opt_problem._constraints.keys())):
+			for i in range(len(opt_problem._constraints.keys())):
 				if isinstance(g[i],complex):
 					fnew[i] = g[i].astype(float)
 				else:
@@ -362,7 +362,7 @@ class GCMMA(Optimizer):
 			#end
 			
 			# Constraints Assigment
-			for i in xrange(len(opt_problem._constraints.keys())):
+			for i in range(len(opt_problem._constraints.keys())):
 				if isinstance(g[i],complex):
 					fval[i] = g[i].astype(float)
 				else:
@@ -372,13 +372,13 @@ class GCMMA(Optimizer):
 			
 			# Gradients Assigment
 			k = 0
-			for i in xrange(len(opt_problem._variables.keys())):
+			for i in range(len(opt_problem._variables.keys())):
 				if isinstance(df[0,i],complex):
 					df0dx[i] = df[0,i].astype(float)
 				else:
 					df0dx[i] = df[0,i]
 				#end
-				for jj in xrange(len(opt_problem._constraints.keys())):
+				for jj in range(len(opt_problem._constraints.keys())):
 					if isinstance(dg[jj,i],complex):
 						dfdx[k] = dg[jj,i].astype(float)
 					else:

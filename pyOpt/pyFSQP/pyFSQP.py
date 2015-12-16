@@ -264,7 +264,7 @@ class FSQP(Optimizer):
 			if isinstance(f,float):
 				f = [f]
 			#end
-			for i in xrange(len(opt_problem._objectives.keys())):
+			for i in range(len(opt_problem._objectives.keys())):
 				if isinstance(f[i],complex):
 					ff[i] = f[i].astype(float)
 				else:
@@ -274,7 +274,7 @@ class FSQP(Optimizer):
 			
 			# Constraints Assigment
 			i = 0
-			for j in xrange(len(opt_problem._constraints.keys())):
+			for j in range(len(opt_problem._constraints.keys())):
 				if isinstance(g[j],complex):
 					gg[i] = g[j].astype(float)
 				else:
@@ -384,7 +384,7 @@ class FSQP(Optimizer):
 			#end			
 			
 			df = self.stored_data['df']
-			for i in xrange(len(opt_problem._variables.keys())):
+			for i in range(len(opt_problem._variables.keys())):
 				gradfj[i] = df[j-1,i]
 			#end
 			
@@ -581,7 +581,7 @@ class FSQP(Optimizer):
 			
 			if ncon > 0:
 				sol_lambda = numpy.zeros(ncon,float)
-				for i in xrange(ncon):
+				for i in range(ncon):
 					sol_lambda[i] = w[nvar+i]
 				#end
 			else:

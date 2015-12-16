@@ -121,10 +121,10 @@ class Gradient(object):
                 self.Recv = comm.recv
                 self.Bcast = comm.bcast
             #end
-            self.mydvs = xrange(self.myrank,len(opt_problem._variables.keys()),self.nproc)
+            self.mydvs = range(self.myrank,len(opt_problem._variables.keys()),self.nproc)
         else:
             self.myrank = 0
-            self.mydvs = xrange(len(opt_problem._variables.keys()))
+            self.mydvs = range(len(opt_problem._variables.keys()))
         #end
         
         
@@ -184,10 +184,10 @@ class Gradient(object):
                     fph = [fph]
                 #end
                 
-                for j in xrange(len(opt_problem._objectives.keys())):
+                for j in range(len(opt_problem._objectives.keys())):
                     dfi[j,k] = (fph[j] - f[j])/dh
                 #end
-                for j in xrange(len(opt_problem._constraints.keys())):
+                for j in range(len(opt_problem._constraints.keys())):
                     dgi[j,k] = (gph[j] - g[j])/dh
                 #end
                 k += 1
@@ -221,10 +221,10 @@ class Gradient(object):
                     cfph = [cfph]
                 #end
                 
-                for j in xrange(len(opt_problem._objectives.keys())):
+                for j in range(len(opt_problem._objectives.keys())):
                     dfi[j,k] = cfph[j].imag/cdh
                 #end
-                for j in xrange(len(opt_problem._constraints.keys())):
+                for j in range(len(opt_problem._constraints.keys())):
                     dgi[j,k] = cgph[j].imag/cdh
                 #end
                 k += 1
@@ -264,11 +264,11 @@ class Gradient(object):
             #end
             
             # 
-            for i in xrange(len(opt_problem._variables.keys())):
-                for j in xrange(len(opt_problem._objectives.keys())):
+            for i in range(len(opt_problem._variables.keys())):
+                for j in range(len(opt_problem._objectives.keys())):
                     dfi[j,i] = df_user[j,i]
                 #end
-                for j in xrange(len(opt_problem._constraints.keys())):
+                for j in range(len(opt_problem._constraints.keys())):
                     dgi[j,i] = dg_user[j,i]
                 #end
             #end
@@ -284,14 +284,14 @@ class Gradient(object):
                     self.Send([myrank, dfi, dgi],dest=0)
                 else:
                     p_results = [[myrank, dfi, dgi]]
-                    for proc in xrange(1,self.nproc):
+                    for proc in range(1,self.nproc):
                         p_results.append(self.Recv(source=proc))
                     #end
                 #end
                 if myrank == 0:
-                    for proc in xrange(self.nproc):
+                    for proc in range(self.nproc):
                         k = 0
-                        for i in xrange(p_results[proc][0],len(opt_problem._variables.keys()),self.nproc):
+                        for i in range(p_results[proc][0],len(opt_problem._variables.keys()),self.nproc):
                             df[:,i] = p_results[proc][1][:,k]
                             dg[:,i] = p_results[proc][2][:,k]
                             k += 1

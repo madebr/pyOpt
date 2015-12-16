@@ -297,7 +297,7 @@ class SOLVOPT(Optimizer):
 			# Constraints Assigment
 			i = 0
 			j = 0
-			for j in xrange(len(opt_problem._constraints.keys())):
+			for j in range(len(opt_problem._constraints.keys())):
 				if isinstance(g[j],complex):
 					gg[i] = g[j].astype(float)
 				else:
@@ -384,7 +384,7 @@ class SOLVOPT(Optimizer):
 					i += 1
 				#end
 			#end
-			for j in xrange(len(opt_problem._constraints),len(self.stored_data['g'])):
+			for j in range(len(opt_problem._constraints),len(self.stored_data['g'])):
 				maxg[i] = max(0,self.stored_data['g'][i])
 				i += 1
 			#end
@@ -429,7 +429,7 @@ class SOLVOPT(Optimizer):
 					i += 1
 				#end
 			#end
-			for j in xrange(len(opt_problem._constraints),len(self.stored_data['g'])):
+			for j in range(len(opt_problem._constraints),len(self.stored_data['g'])):
 				maxg[i] = max(0,self.stored_data['g'][i])
 				i += 1
 			#end

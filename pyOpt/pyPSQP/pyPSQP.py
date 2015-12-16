@@ -250,7 +250,7 @@ class PSQP(Optimizer):
 			if isinstance(f,float):
 				f = [f]
 			#end
-			for i in xrange(len(opt_problem._objectives.keys())):
+			for i in range(len(opt_problem._objectives.keys())):
 				if isinstance(f[i],complex):
 					ff[i] = f[i].astype(float)
 				else:
@@ -260,7 +260,7 @@ class PSQP(Optimizer):
 			
 			# Constraints Assigment
 			i = 0
-			for j in xrange(len(opt_problem._constraints.keys())):
+			for j in range(len(opt_problem._constraints.keys())):
 				if isinstance(g[j],complex):
 					gg[i] = g[j].astype(float)
 				else:

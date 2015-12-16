@@ -262,7 +262,7 @@ class FILTERSD(Optimizer):
 			#end
 			
 			# Constraints Assigment
-			for i in xrange(len(opt_problem._constraints.keys())):
+			for i in range(len(opt_problem._constraints.keys())):
 				if isinstance(gg[i],complex):
 					g[i] = gg[i].astype(float)
 				else:
@@ -320,11 +320,11 @@ class FILTERSD(Optimizer):
 			#end
 			
 			# Gradient Assignment
-			for i in xrange(len(opt_problem._variables.keys())):
+			for i in range(len(opt_problem._variables.keys())):
 				a[i,0] = dff[0,i]
 			#end
-			for i in xrange(len(opt_problem._variables.keys())):
-				for j in xrange(len(opt_problem._constraints.keys())):
+			for i in range(len(opt_problem._variables.keys())):
+				for j in range(len(opt_problem._constraints.keys())):
 					a[i,j+1] = dgg[j,i]
 				#end
 			#end
@@ -490,7 +490,7 @@ class FILTERSD(Optimizer):
 			
 			if ncon > 0:
 				sol_lambda = numpy.zeros(ncon,float)
-				for i in xrange(ncon):
+				for i in range(ncon):
 					sol_lambda[i] = al[i]
 				#end
 			else:

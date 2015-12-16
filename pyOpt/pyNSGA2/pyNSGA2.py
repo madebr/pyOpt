@@ -225,11 +225,11 @@ class NSGA2(Optimizer):
 			# 
 			if (fail == 1):
 				# Objective Assigment
-				for i in xrange(len(opt_problem._objectives.keys())):
+				for i in range(len(opt_problem._objectives.keys())):
 					f[i] = inf
 				#end
 				# Constraints Assigment
-				for i in xrange(len(opt_problem._constraints.keys())):
+				for i in range(len(opt_problem._constraints.keys())):
 					g[i] = -inf
 				#end
 			else:
@@ -237,7 +237,7 @@ class NSGA2(Optimizer):
 				if (len(opt_problem._objectives.keys()) == 1):
 					f[0] = ff
 				else:
-					for i in xrange(len(opt_problem._objectives.keys())):
+					for i in range(len(opt_problem._objectives.keys())):
 						if isinstance(ff[i],complex):
 							f[i] = ff[i].astype(float)
 						else:
@@ -246,7 +246,7 @@ class NSGA2(Optimizer):
 					#end
 				#end
 				# Constraints Assigment
-				for i in xrange(len(opt_problem._constraints.keys())):
+				for i in range(len(opt_problem._constraints.keys())):
 					if isinstance(gg[i],complex):
 						g[i] = -gg[i].astype(float)
 					else:
@@ -420,13 +420,13 @@ class NSGA2(Optimizer):
 		#end
 		
 		fstar = [0.]*l
-		for i in xrange(l):
+		for i in range(l):
 			fstar[i] = nsga2.doubleArray_getitem(f,i)
 			i += 1
 		#end
 		
 		xstar = [0.]*n
-		for i in xrange(n):
+		for i in range(n):
 			xstar[i] = nsga2.doubleArray_getitem(x,i)
 		#end
 		
