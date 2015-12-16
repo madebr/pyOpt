@@ -140,7 +140,7 @@ class ALHSO(Optimizer):
 		'''
 		
 		#
-		if kwargs.has_key('display_opts'):
+		if 'display_opts' in kwargs:
 			sol_dispOpt = kwargs['display_opts']
 			del kwargs['display_opts']
 		else:
@@ -401,7 +401,7 @@ class ALHSO(Optimizer):
 			sol_name = 'ALHSO Solution to ' + opt_problem.name
 			
 			sol_options = copy.copy(self.options)
-			if sol_options.has_key('defaults'):
+			if 'defaults' in sol_options:
 				del sol_options['defaults']
 			#end
 			
@@ -548,7 +548,7 @@ class HSO(Optimizer):
 		'''
 		
 		#
-		if kwargs.has_key('display_opts'):
+		if 'display_opts' in kwargs:
 			sol_dispOpt = kwargs['display_opts']
 			del kwargs['display_opts']
 		else:
@@ -693,7 +693,7 @@ class HSO(Optimizer):
 			sol_name = 'HSO Solution to ' + opt_problem.name
 			
 			sol_options = copy.copy(self.options)
-			if sol_options.has_key('defaults'):
+			if 'defaults' in sol_options:
 				del sol_options['defaults']
 			#end
 			

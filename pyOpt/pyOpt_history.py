@@ -153,7 +153,7 @@ class History(object):
 				else:
 					#read in positions
 					tline = line.split()
-					if self.cues.has_key(tline[2]):
+					if tline[2] in self.cues:
 						self.cues[tline[2]].append([int(tline[0]),int(tline[1])])
 					else:
 						self.cues[tline[2]] = [[int(tline[0]),int(tline[1])]]

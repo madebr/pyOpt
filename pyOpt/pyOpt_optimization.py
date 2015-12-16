@@ -984,8 +984,8 @@ class Optimization(object):
         #end
         ftext = self.__str__()
         outfile.write(ftext)
-        if disp_sols or kwargs.has_key('solutions'):
-            if kwargs.has_key('solutions'):
+        if disp_sols or 'solutions' in kwargs:
+            if 'solutions' in kwargs:
                 sol_indices = kwargs['solutions']
             else:
                 sol_indices = self._solutions.keys()
@@ -1062,7 +1062,7 @@ class Solution(Optimization):
         self.options_set = options_set
         self.myrank = myrank
         
-        if kwargs.has_key('display_opts'):
+        if 'display_opts' in kwargs:
             self.display_opt = kwargs['display_opts']
             del kwargs['display_opts']
         else:

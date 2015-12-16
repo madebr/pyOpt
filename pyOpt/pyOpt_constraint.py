@@ -97,7 +97,7 @@ class Constraint(object):
                 #end
             #end
         elif (type[0].lower() == 'e'):
-            if (kwargs.has_key('equal')):
+            if 'equal' in kwargs:
                 self.equal = float(kwargs['equal'])
             else:
                 self.equal = 0.0

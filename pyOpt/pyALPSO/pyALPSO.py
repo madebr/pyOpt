@@ -214,7 +214,7 @@ class ALPSO(Optimizer):
 		'''
 		
 		#
-		if kwargs.has_key('display_opts'):
+		if 'display_opts' in kwargs:
 			sol_dispOpt = kwargs['display_opts']
 			del kwargs['display_opts']
 		else:
@@ -435,7 +435,7 @@ class ALPSO(Optimizer):
 			sol_name = 'ALPSO Solution to ' + opt_problem.name
 			
 			sol_options = copy.copy(self.options)
-			if sol_options.has_key('defaults'):
+			if 'defaults' in sol_options:
 				del sol_options['defaults']
 			#end
 			

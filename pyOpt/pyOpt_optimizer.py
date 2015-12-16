@@ -194,7 +194,7 @@ class Optimizer(object):
         
         # 
         def_options = self.options['defaults']
-        if def_options.has_key(name):
+        if name in def_options:
             if (type(value) == def_options[name][0]):
                 self.options[name] = [type(value),value]
             else:
@@ -237,7 +237,7 @@ class Optimizer(object):
         
         # 
         def_options = self.options['defaults']
-        if def_options.has_key(name):
+        if name in def_options:
             return self.options[name][1]
         else:	
             raise IOError(repr(name) + ' is not a valid option name')

@@ -476,7 +476,7 @@ class ALGENCAN(Optimizer):
 			sol_name = 'ALGENCAN Solution to ' + opt_problem.name
 			
 			sol_options = copy.copy(self.options)
-			if sol_options.has_key('defaults'):
+			if 'defaults' in sol_options:
 				del sol_options['defaults']
 			#end
 			
