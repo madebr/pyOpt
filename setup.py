@@ -18,7 +18,7 @@ try:
         print(('pyOpt requires NumPy version 1.0 or later (%s detected).' %numpy.__version__))
         sys.exit(-1)
     #end
-except ImportError, e:
+except ImportError:
     print('NumPy version 1.0 or later must be installed to build pyOpt')
     sys.exit(-1)
 #end

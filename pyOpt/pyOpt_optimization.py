@@ -280,8 +280,8 @@ class Optimization(object):
         else:
             try:
                 self._variables[i] = Variable(*args,**kwargs)
-            except IOError, (error):
-                raise IOError("%s" %(error))
+            except IOError:
+                raise
             except:
                 raise ValueError("Input is not a Valid for a Variable Object instance\n")
             #end
@@ -603,8 +603,8 @@ class Optimization(object):
         else:
             try:
                 self._constraints[i] = Constraint(*args,**kwargs)
-            except IOError, (error):
-                raise IOError("%s" %(error))
+            except IOError:
+                raise
             except:
                 raise ValueError("Input is not a Valid for a Constraint Object instance\n")
             #end
