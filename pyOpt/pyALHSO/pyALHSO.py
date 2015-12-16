@@ -153,7 +153,7 @@ class ALHSO(Optimizer):
 				import mpi4py
 				from mpi4py import MPI
 			except ImportError:
-				print 'pyALHSO: Parallel objective Function Analysis requires mpi4py'
+				print('pyALHSO: Parallel objective Function Analysis requires mpi4py')
 			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
@@ -804,7 +804,7 @@ class HSO(Optimizer):
 if __name__ == '__main__':
 	
 	# Test ALHSO
-	print 'Testing ...'
+	print('Testing ...')
 	ALHSO = ALHSO()
-	print ALHSO
+	print(ALHSO)
 	

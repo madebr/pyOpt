@@ -90,8 +90,8 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 		if isinstance(x0,list):
 			x0 = numpy.array(x0)
 		elif not isinstance(x0,numpy.ndarray):
-			print """Warning: Initial x must be either list or numpy.array,
-				all initial positions randomly generated"""
+			print("""Warning: Initial x must be either list or numpy.array,
+				all initial positions randomly generated""")
 		#end
 	#end
 	
@@ -223,7 +223,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 			#end
 		else:
 			if (x0.shape[0] > swarmsize):
-				print 'Warning: %d initial positions specified for %d particles, last %d positions ignored' %(x0.shape[0],swarmsize,x0.shape[0]-swarmsize)
+				print('Warning: %d initial positions specified for %d particles, last %d positions ignored' %(x0.shape[0],swarmsize,x0.shape[0]-swarmsize))
 				x0 = x0[0:swarmsize,:]
 			#end
 			for i in xrange(x0.shape[0]):
@@ -823,7 +823,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 			# Print Inner
 			if (prtInnIter != 0 and numpy.mod(k_inn,prtInnIter) == 0):
 				# output to screen
-				print 'Outer Iteration: %d 	[%d. Inner Iteration]' %(k_out,k_inn)
+				print('Outer Iteration: %d 	[%d. Inner Iteration]' %(k_out,k_inn))
 			#end
 			if (fileout == 1) or (fileout == 3):
 				# output to filename
@@ -850,26 +850,26 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 		# Print Outer
 		if (prtOutIter != 0 and numpy.mod(k_out,prtOutIter) == 0):
 			# Output to screen
-			print("="*80 + "\n")
-			print("NUMBER OF ITERATIONS: %d\n" %(k_out))
-			print("NUMBER OF OBJECTIVE FUNCTION EVALUATIONS: %d\n" %(nfevals))
+			print(("="*80 + "\n"))
+			print(("NUMBER OF ITERATIONS: %d\n" %(k_out)))
+			print(("NUMBER OF OBJECTIVE FUNCTION EVALUATIONS: %d\n" %(nfevals)))
 			print("OBJECTIVE FUNCTION VALUE:")
-			print("\tF = %.16g\n" %(float(swarm_f)))
+			print(("\tF = %.16g\n" %(float(swarm_f))))
 			if (constraints > 0):
 				# Equality Constraints
 				print("EQUALITY CONSTRAINTS VALUES:")
 				for l in xrange(neqcons):
-					print("\tH(%d) = %g" %(l,swarm_g[l]))
+					print(("\tH(%d) = %g" %(l,swarm_g[l])))
 				#end
 				# Inequality Constraints
 				print("\nINEQUALITY CONSTRAINTS VALUES:")
 				for l in xrange(neqcons,constraints):
-					print("\tG(%d) = %g" %(l,swarm_g[l]))
+					print(("\tG(%d) = %g" %(l,swarm_g[l])))
 				#end
 			#end
 			print("\nLAGRANGIAN MULTIPLIERS VALUES:")
 			for l in xrange(constraints):
-				print("\tL(%d) = %g" %(l,lambda_val[l]))
+				print(("\tL(%d) = %g" %(l,lambda_val[l])))
 			#end
 			
 			print("\nBEST POSITION:")
@@ -888,8 +888,8 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 					text +=("\n")
 				#end
 			#end
-			print text
-			print("="*80 + "\n")
+			print(text)
+			print(("="*80 + "\n"))
 		#end
 		if (fileout == 1) or (fileout == 3):
 			# Output to Print File
@@ -1188,27 +1188,27 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 	# Print Results
 	if (prtOutIter != 0):
 		# Output to screen
-		print("="*80 + "\n")
-		print("RANDOM SEED VALUE: %.8f\n" %(rseed))
-		print("NUMBER OF ITERATIONS: %d\n" %(k_out))
-		print("NUMBER OF OBJECTIVE FUNCTION EVALUATIONS: %d\n" %(nfevals))
+		print(("="*80 + "\n"))
+		print(("RANDOM SEED VALUE: %.8f\n" %(rseed)))
+		print(("NUMBER OF ITERATIONS: %d\n" %(k_out)))
+		print(("NUMBER OF OBJECTIVE FUNCTION EVALUATIONS: %d\n" %(nfevals)))
 		print("OBJECTIVE FUNCTION VALUE:")
-		print("\tF = %.16g\n" %(float(swarm_f)))
+		print(("\tF = %.16g\n" %(float(swarm_f))))
 		if (constraints > 0):
 			# Equality Constraints
 			print("EQUALITY CONSTRAINTS VALUES:")
 			for l in xrange(neqcons):
-				print("\tH(%d) = %g" %(l,swarm_g[l]))
+				print(("\tH(%d) = %g" %(l,swarm_g[l])))
 			#end
 			# Inequality Constraints
 			print("\nINEQUALITY CONSTRAINTS VALUES:")
 			for l in xrange(neqcons,constraints):
-				print("\tG(%d) = %g" %(l,swarm_g[l]))
+				print(("\tG(%d) = %g" %(l,swarm_g[l])))
 			#end
 		#end
 		print("\nLAGRANGIAN MULTIPLIERS VALUES:")
 		for l in xrange(constraints):
-			print("\tL(%d) = %g" %(l,float(lambda_val[l])))
+			print(("\tL(%d) = %g" %(l,float(lambda_val[l]))))
 		#end
 		
 		print("\nBEST POSITION:")
@@ -1227,8 +1227,8 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 				text +=("\n")
 			#end
 		#end
-		print text
-		print("="*80 + "\n")
+		print(text)
+		print(("="*80 + "\n"))
 	#end
 	if (fileout == 1) or (fileout == 3):
 		ofile.close()
@@ -1307,9 +1307,9 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 #==============================================================================
 if __name__ == '__main__':
 	
-	print 'Testing ...'
+	print('Testing ...')
 	
 	# Test alpso
 	alpso = alpso()
-	print alpso
+	print(alpso)
 	

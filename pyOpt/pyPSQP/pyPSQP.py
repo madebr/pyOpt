@@ -162,7 +162,7 @@ class PSQP(Optimizer):
 				import mpi4py
 				from mpi4py import MPI
 			except ImportError:
-				print 'pyPSQP: Parallel objective Function Analysis requires mpi4py'
+				print('pyPSQP: Parallel objective Function Analysis requires mpi4py')
 			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
@@ -614,7 +614,7 @@ class PSQP(Optimizer):
 if __name__ == '__main__':
 	
 	# Test PSQP
-	print 'Testing ...'
+	print('Testing ...')
 	psqp = PSQP()
-	print psqp
+	print(psqp)
 	

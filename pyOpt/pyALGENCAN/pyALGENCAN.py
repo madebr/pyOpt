@@ -154,7 +154,7 @@ class ALGENCAN(Optimizer):
 				import mpi4py
 				from mpi4py import MPI
 			except ImportError:
-				print 'pyALGENCAN: Parallel objective Function Analysis requires mpi4py'
+				print('pyALGENCAN: Parallel objective Function Analysis requires mpi4py')
 			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
@@ -580,7 +580,7 @@ class ALGENCAN(Optimizer):
 if __name__ == '__main__':
 	
 	# Test ALGENCAN
-	print 'Testing ...'
+	print('Testing ...')
 	algencan = ALGENCAN()
-	print algencan
+	print(algencan)
 	

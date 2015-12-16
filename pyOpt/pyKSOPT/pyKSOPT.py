@@ -150,7 +150,7 @@ class KSOPT(Optimizer):
 				import mpi4py
 				from mpi4py import MPI
 			except ImportError:
-				print 'pyKSOPT: Parallel objective Function Analysis requires mpi4py'
+				print('pyKSOPT: Parallel objective Function Analysis requires mpi4py')
 			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
@@ -544,7 +544,7 @@ class KSOPT(Optimizer):
 if __name__ == '__main__':
 	
 	# Test KSOPT
-	print 'Testing ...'
+	print('Testing ...')
 	KSOPT = KSOPT()
-	print KSOPT
+	print(KSOPT)
 	

@@ -299,6 +299,6 @@ class History(object):
 if __name__ == '__main__':
 	
 	# Test Optimizer History
-	print 'Testing Optimizer History...'
+	print('Testing Optimizer History...')
 	hst = History()
 	

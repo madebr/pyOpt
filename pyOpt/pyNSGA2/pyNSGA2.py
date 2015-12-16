@@ -144,7 +144,7 @@ class NSGA2(Optimizer):
 				import mpi4py
 				from mpi4py import MPI
 			except ImportError:
-				print 'pyNSGA-II: Parallel objective Function Analysis requires mpi4py'
+				print('pyNSGA-II: Parallel objective Function Analysis requires mpi4py')
 			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
@@ -491,7 +491,7 @@ class NSGA2(Optimizer):
 if __name__ == '__main__':
 	
 	# Test NSGA2
-	print 'Testing ...'
+	print('Testing ...')
 	nsga2 = NSGA2()
-	print nsga2
+	print(nsga2)
 	

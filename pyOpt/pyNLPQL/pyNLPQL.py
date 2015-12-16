@@ -183,7 +183,7 @@ class NLPQL(Optimizer):
 				import mpi4py
 				from mpi4py import MPI
 			except ImportError:
-				print 'pyNLPQL: Parallel objective Function Analysis requires mpi4py'
+				print('pyNLPQL: Parallel objective Function Analysis requires mpi4py')
 			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
@@ -611,7 +611,7 @@ class NLPQL(Optimizer):
 if __name__ == '__main__':
 	
 	# Test NLPQL
-	print 'Testing ...'
+	print('Testing ...')
 	nlpql = NLPQL()
-	print nlpql
+	print(nlpql)
 	

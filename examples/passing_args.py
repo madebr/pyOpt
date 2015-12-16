@@ -54,7 +54,7 @@ opt_prob.addVar('x1','c',lower=0.0,upper=1.0,value=0.5)
 opt_prob.addVar('x2','c',lower=0.0,upper=1.0,value=0.5)
 opt_prob.addObj('f')
 opt_prob.addCon('g1','i')
-print opt_prob
+print(opt_prob)
 
 # Arguments to pass into objfunc
 a1 = 100.0
@@ -65,4 +65,4 @@ a3 = 1.0
 slsqp = SLSQP()
 slsqp.setOption('IPRINT',-1)
 slsqp(opt_prob,sens_type='FD',a12=[a1,a2],a3=a3)
-print opt_prob.solution(0)
+print(opt_prob.solution(0))

@@ -107,7 +107,7 @@ class Gradient(object):
                 import mpi4py
                 from mpi4py import MPI
             except ImportError:
-                print 'Error: mpi4py library failed to import'
+                print('Error: mpi4py library failed to import')
             #end
             comm = MPI.COMM_WORLD
             self.nproc = comm.Get_size()
@@ -331,6 +331,6 @@ class Gradient(object):
 if __name__ == '__main__':
     
     # Test Optimizer Gradient Calculation
-    print 'Testing Optimizer Gradient Calculation...'
+    print('Testing Optimizer Gradient Calculation...')
     grd = Gradient()
     

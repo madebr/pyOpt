@@ -152,7 +152,7 @@ class Optimizer(object):
                 #end
             #end
             if (last_eq > first_ieq) and (first_ieq != -1):	
-                print 'WARNING - Equality Constraints should be defined BEFORE Inequality Constraints'
+                print('WARNING - Equality Constraints should be defined BEFORE Inequality Constraints')
             #end
         #end
         
@@ -416,16 +416,16 @@ def ListAttributes(self):
         Documentation last updated:  March. 24, 2008 - Ruben E. Perez
         '''
         
-        print '\n'
-        print 'Attributes List of: ' + repr(self.__dict__['name']) + ' - ' + self.__class__.__name__ + ' Instance\n'
+        print('\n')
+        print('Attributes List of: ' + repr(self.__dict__['name']) + ' - ' + self.__class__.__name__ + ' Instance\n')
         self_keys = self.__dict__.keys()
         self_keys.sort()
         for key in self_keys:
             if key != 'name':
-                print str(key) + ' : ' + repr(self.__dict__[key])
+                print(str(key) + ' : ' + repr(self.__dict__[key]))
             #end
         #end
-        print '\n'
+        print('\n')
     
 
 
@@ -435,7 +435,7 @@ def ListAttributes(self):
 if __name__ == '__main__':
     
     # Test Optimizer
-    print 'Testing Optimizer...'
+    print('Testing Optimizer...')
     opt = Optimizer()
     opt.ListAttributes()
     

@@ -70,9 +70,9 @@ slsqp.setOption('IPRINT',-1)
 # Solve Problem (Without Parallel Gradient)
 slsqp(opt_prob,sens_type='CS')
 if myrank == 0:
-    print opt_prob.solution(0)
+    print(opt_prob.solution(0))
 #end
 
 # Solve Problem (With Parallel Gradient)
 slsqp(opt_prob,sens_type='CS',sens_mode='pgc')
-print opt_prob.solution(1)
+print(opt_prob.solution(1))

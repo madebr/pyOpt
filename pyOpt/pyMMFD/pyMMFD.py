@@ -155,7 +155,7 @@ class MMFD(Optimizer):
 				import mpi4py
 				from mpi4py import MPI
 			except ImportError:
-				print 'pyMMFD: Parallel objective Function Analysis requires mpi4py'
+				print('pyMMFD: Parallel objective Function Analysis requires mpi4py')
 			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
@@ -566,7 +566,7 @@ class MMFD(Optimizer):
 if __name__ == '__main__':
 	
 	# Test MMFD
-	print 'Testing ...'
+	print('Testing ...')
 	MMFD = MMFD()
-	print MMFD
+	print(MMFD)
 	

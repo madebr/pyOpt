@@ -75,7 +75,7 @@ midaco_none.setOption('IPRINT',-1)
 midaco_none.setOption('MAXEVAL',50000)
 midaco_none(opt_prob)
 if myrank == 0:
-    print opt_prob.solution(0)
+    print(opt_prob.solution(0))
 #end
 
 # Solve Problem (SPM-Parallelization)
@@ -83,4 +83,4 @@ midaco_spm = MIDACO(pll_type='SPM')
 midaco_spm.setOption('IPRINT',-1)
 midaco_none.setOption('MAXEVAL',50000)
 midaco_spm(opt_prob)
-print opt_prob.solution(1)
+print(opt_prob.solution(1))

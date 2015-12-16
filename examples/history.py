@@ -48,15 +48,15 @@ opt_prob.addVar('x2','c',value=1.0,lower=0.0,upper=10.0)
 opt_prob.addObj('f')
 opt_prob.addCon('g1','i')
 opt_prob.addCon('g2','i')
-print opt_prob
+print(opt_prob)
 
 # Instanciate Optimizer (SLSQP) & Solve Problem Storing History
 slsqp = SLSQP()
 slsqp.setOption('IFILE','slsqp1.out')
 slsqp(opt_prob,store_hst=True)
-print opt_prob.solution(0)
+print(opt_prob.solution(0))
 
 # Solve Problem Using Stored History (Warm Start)
 slsqp.setOption('IFILE','slsqp2.out')
 slsqp(opt_prob, store_hst=True, hot_start='slsqp1')
-print opt_prob.solution(1)
+print(opt_prob.solution(1))

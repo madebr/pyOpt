@@ -167,7 +167,7 @@ class SOLVOPT(Optimizer):
 				import mpi4py
 				from mpi4py import MPI
 			except ImportError:
-				print 'pySOLVOPT: Parallel objective Function Analysis requires mpi4py'
+				print('pySOLVOPT: Parallel objective Function Analysis requires mpi4py')
 			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
@@ -704,7 +704,7 @@ class SOLVOPT(Optimizer):
 if __name__ == '__main__':
 	
 	# Test SOLVOPT
-	print 'Testing ...'
+	print('Testing ...')
 	solvopt = SOLVOPT()
-	print solvopt
+	print(solvopt)
 	

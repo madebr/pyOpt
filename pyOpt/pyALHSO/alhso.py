@@ -347,8 +347,8 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 					# Print Inner
 					if (prtinniter != 0):
 						# output to screen
-						print '%d Inner Iteration of %d Outer Iteration' %(k_inn,k_out)
-						print L_val
+						print('%d Inner Iteration of %d Outer Iteration' %(k_inn,k_out))
+						print(L_val)
 						
 						if (scale == 1):
 							x_tmp = (x_val * space_halflen) + space_centre
@@ -358,11 +358,11 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 						for m in discrete_i:
 							x_tmp[m] = floor(x_tmp[m] + 0.5)
 						#end
-						print x_tmp
+						print(x_tmp)
 						
-						print f_val
-						print g_val
-						print nfevals
+						print(f_val)
+						print(g_val)
+						print(nfevals)
 					#end
 					if (fileout == 1):
 						# output to filename
@@ -448,26 +448,26 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 		if (prtoutiter != 0 and numpy.mod(k_out,prtoutiter) == 0):
 			
 			# Output to screen
-			print("="*80 + "\n")
-			print("NUMBER OF ITERATIONS: %d\n" %(k_out))
-			print("NUMBER OF OBJECTIVE FUNCTION EVALUATIONS: %d\n" %(nfevals))
+			print(("="*80 + "\n"))
+			print(("NUMBER OF ITERATIONS: %d\n" %(k_out)))
+			print(("NUMBER OF OBJECTIVE FUNCTION EVALUATIONS: %d\n" %(nfevals)))
 			print("OBJECTIVE FUNCTION VALUE:")
-			print("\tF = %g\n" %(best_f_val))
+			print(("\tF = %g\n" %(best_f_val)))
 			if (constraints > 0):
 				# Equality Constraints
 				print("EQUALITY CONSTRAINTS VALUES:")
 				for l in xrange(neqcons):
-					print("\tG(%d) = %g" %(l,best_g_val[l]))
+					print(("\tG(%d) = %g" %(l,best_g_val[l])))
 				#end
 				# Inequality Constraints
 				print("\nINEQUALITY CONSTRAINTS VALUES:")
 				for l in xrange(neqcons,constraints):
-					print("\tH(%d) = %g" %(l,best_g_val[l]))
+					print(("\tH(%d) = %g" %(l,best_g_val[l])))
 				#end
 			#end
 			print("\nLAGRANGIAN MULTIPLIERS VALUES:")
 			for l in xrange(constraints):
-				print("\tL(%d) = %g" %(l,lambda_val[l]))
+				print(("\tL(%d) = %g" %(l,lambda_val[l])))
 			#end
 			
 			print("\nDESIGN VARIABLES VALUES:")
@@ -486,8 +486,8 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 					text +=("\n")
 				#end
 			#end
-			print text
-			print("="*80 + "\n")
+			print(text)
+			print(("="*80 + "\n"))
 		#end
 		if (fileout == 1):
 			# Output to filename
@@ -671,27 +671,27 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 	if (prtoutiter != 0):
 		
 		# Output to screen
-		print("="*80 + "\n")
-		print("RANDOM SEED VALUE: %.8f\n" %(rseed))
-		print("NUMBER OF ITERATIONS: %d\n" %(k_out))
-		print("NUMBER OF OBJECTIVE FUNCTION EVALUATIONS: %d\n" %(nfevals))
+		print(("="*80 + "\n"))
+		print(("RANDOM SEED VALUE: %.8f\n" %(rseed)))
+		print(("NUMBER OF ITERATIONS: %d\n" %(k_out)))
+		print(("NUMBER OF OBJECTIVE FUNCTION EVALUATIONS: %d\n" %(nfevals)))
 		print("OBJECTIVE FUNCTION VALUE:")
-		print("\tF = %g\n" %(best_f_val))
+		print(("\tF = %g\n" %(best_f_val)))
 		if (constraints > 0):
 			# Equality Constraints
 			print("EQUALITY CONSTRAINTS VALUES:")
 			for l in xrange(neqcons):
-				print("\tG(%d) = %g" %(l,best_g_val[l]))
+				print(("\tG(%d) = %g" %(l,best_g_val[l])))
 			#end
 			# Inequality Constraints
 			print("\nINEQUALITY CONSTRAINTS VALUES:")
 			for l in xrange(neqcons,constraints):
-				print("\tH(%d) = %g" %(l,best_g_val[l]))
+				print(("\tH(%d) = %g" %(l,best_g_val[l])))
 			#end
 		#end
 		print("\nLAGRANGIAN MULTIPLIERS VALUES:")
 		for l in xrange(constraints):
-			print("\tL(%d) = %g" %(l,float(lambda_val[l])))
+			print(("\tL(%d) = %g" %(l,float(lambda_val[l]))))
 		#end
 		
 		print("\nDESIGN VARIABLES VALUES:")
@@ -710,8 +710,8 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 				text +=("\n")
 			#end
 		#end
-		print text
-		print("="*80 + "\n")
+		print(text)
+		print(("="*80 + "\n"))
 	#end
 	if (fileout == 1):
 		# Output to filename
@@ -886,7 +886,7 @@ def chso(ND,nc,nec,xtype,x0,lb,ub,bw,HMS,HMCR,PAR,maxIter,printout,rseed,objfunc
 				opt_g = gvals
 				if (printout == 1):
 					#print('%f,%f,%f,%f' %(k,x,fval,numpy.var(numpy.corrcoef(HM).T)))
-					print('%i,%f' %(k,fval))
+					print(('%i,%f' %(k,fval)))
 				#end
 			#end
 			
@@ -895,8 +895,8 @@ def chso(ND,nc,nec,xtype,x0,lb,ub,bw,HMS,HMCR,PAR,maxIter,printout,rseed,objfunc
 		# Test Convergence
 		if k == maxIter-1:
 			if (printout == 1):
-				print '\nMaximum number of iterations exceeded\n'
-				print 'increase OPTIONS.MaxIter\n'
+				print('\nMaximum number of iterations exceeded\n')
+				print('increase OPTIONS.MaxIter\n')
 			#end
 			status = 1
 		else:
@@ -907,7 +907,7 @@ def chso(ND,nc,nec,xtype,x0,lb,ub,bw,HMS,HMCR,PAR,maxIter,printout,rseed,objfunc
 	
 	# Print
 	if (printout == 1):
-		print '\nNumber of function evaluations = %f\n' %(numFunEvals)
+		print('\nNumber of function evaluations = %f\n' %(numFunEvals))
 	#end
 	
 	return opt_x,opt_f,opt_g,numFunEvals,'%.8f' %(rseed)
@@ -918,9 +918,9 @@ def chso(ND,nc,nec,xtype,x0,lb,ub,bw,HMS,HMCR,PAR,maxIter,printout,rseed,objfunc
 #==============================================================================
 if __name__ == '__main__':
 	
-	print 'Testing ...'
+	print('Testing ...')
 	
 	# Test alpso
 	alhso = alhso()
-	print alhso
+	print(alhso)
 	

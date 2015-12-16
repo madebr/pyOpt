@@ -164,7 +164,7 @@ class FILTERSD(Optimizer):
 				import mpi4py
 				from mpi4py import MPI
 			except ImportError:
-				print 'pyFILTERSD: Parallel objective Function Analysis requires mpi4py'
+				print('pyFILTERSD: Parallel objective Function Analysis requires mpi4py')
 			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
@@ -569,7 +569,7 @@ class FILTERSD(Optimizer):
 if __name__ == '__main__':
 	
 	# Test FILTERSD
-	print 'Testing ...'
+	print('Testing ...')
 	filtersd = FILTERSD()
-	print filtersd
+	print(filtersd)
 	

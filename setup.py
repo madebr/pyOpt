@@ -8,14 +8,14 @@ if os.path.exists('MANIFEST'):
 #end
 
 if sys.version_info[:2] < (2, 4):
-    print('pyOpt requires Python version 2.4 or later (%d.%d detected).' %sys.version_info[:2])
+    print(('pyOpt requires Python version 2.4 or later (%d.%d detected).' %sys.version_info[:2]))
     sys.exit(-1)
 #end
 
 try:                  
     import numpy
     if int(numpy.__version__.split('.')[0]) < 1:
-        print('pyOpt requires NumPy version 1.0 or later (%s detected).' %numpy.__version__)
+        print(('pyOpt requires NumPy version 1.0 or later (%s detected).' %numpy.__version__))
         sys.exit(-1)
     #end
 except ImportError, e:

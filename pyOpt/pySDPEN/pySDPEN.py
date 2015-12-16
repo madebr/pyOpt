@@ -139,7 +139,7 @@ class SDPEN(Optimizer):
 				import mpi4py
 				from mpi4py import MPI
 			except ImportError:
-				print 'pySDPEN: Parallel objective Function Analysis requires mpi4py'
+				print('pySDPEN: Parallel objective Function Analysis requires mpi4py')
 			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
@@ -465,7 +465,7 @@ class SDPEN(Optimizer):
 if __name__ == '__main__':
 	
 	# Test SDPEN
-	print 'Testing ...'
+	print('Testing ...')
 	SDPEN = SDPEN()
-	print SDPEN
+	print(SDPEN)
 	

@@ -208,7 +208,7 @@ class MIDACO(Optimizer):
 				import mpi4py
 				from mpi4py import MPI
 			except ImportError:
-				print 'pyMIDACO: Parallel objective Function Analysis requires mpi4py'
+				print('pyMIDACO: Parallel objective Function Analysis requires mpi4py')
 			#end
 			comm = MPI.COMM_WORLD
 			if (mpi4py.__version__[0] == '0'):
@@ -620,7 +620,7 @@ class MIDACO(Optimizer):
 if __name__ == '__main__':
 	
 	# Test MIDACO
-	print 'Testing ...'
+	print('Testing ...')
 	midaco = MIDACO()
-	print midaco
+	print(midaco)
 	

@@ -144,7 +144,7 @@ class COBYLA(Optimizer):
 				import mpi4py
 				from mpi4py import MPI
 			except ImportError:
-				print 'pyCOBYLA: Parallel objective Function Analysis requires mpi4py'
+				print('pyCOBYLA: Parallel objective Function Analysis requires mpi4py')
 			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
@@ -498,7 +498,7 @@ class COBYLA(Optimizer):
 if __name__ == '__main__':
 	
 	# Test COBYLA
-	print 'Testing ...'
+	print('Testing ...')
 	COBYLA = COBYLA()
-	print COBYLA
+	print(COBYLA)
 	

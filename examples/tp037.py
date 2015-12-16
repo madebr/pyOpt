@@ -58,59 +58,59 @@ opt_prob.addVar('x3','c',lower=0.0,upper=42.0,value=10.0)
 opt_prob.addObj('f')
 opt_prob.addCon('g1','i')
 opt_prob.addCon('g2','i')
-print opt_prob
+print(opt_prob)
 
 # Instantiate Optimizer (PSQP) & Solve Problem
 psqp = PSQP()
 psqp.setOption('IPRINT',0)
 psqp(opt_prob,sens_type='FD')
-print opt_prob.solution(0)
+print(opt_prob.solution(0))
 
 # Instantiate Optimizer (SLSQP) & Solve Problem
 slsqp = SLSQP()
 slsqp.setOption('IPRINT',-1)
 slsqp(opt_prob,sens_type='FD')
-print opt_prob.solution(1)
+print(opt_prob.solution(1))
 
 # Instantiate Optimizer (CONMIN) & Solve Problem
 conmin = CONMIN()
 conmin.setOption('IPRINT',0)
 conmin(opt_prob,sens_type='CS')
-print opt_prob.solution(2)
+print(opt_prob.solution(2))
 
 # Instantiate Optimizer (COBYLA) & Solve Problem
 cobyla = COBYLA()
 cobyla.setOption('IPRINT',0)
 cobyla(opt_prob)
-print opt_prob.solution(3)
+print(opt_prob.solution(3))
 
 # Instantiate Optimizer (SOLVOPT) & Solve Problem
 solvopt = SOLVOPT()
 solvopt.setOption('iprint',-1)
 solvopt(opt_prob,sens_type='FD')
-print opt_prob.solution(4)
+print(opt_prob.solution(4))
 
 # Instantiate Optimizer (KSOPT) & Solve Problem
 ksopt = KSOPT()
 ksopt.setOption('IPRINT',0)
 ksopt(opt_prob,sens_type='FD')
-print opt_prob.solution(5)
+print(opt_prob.solution(5))
 
 # Instantiate Optimizer (NSGA2) & Solve Problem
 nsga2 = NSGA2()
 nsga2.setOption('PrintOut',0)
 nsga2(opt_prob)
-print opt_prob.solution(6)
+print(opt_prob.solution(6))
 
 # Instantiate Optimizer (ALGENCAN) & Solve Problem
 algencan = ALGENCAN()
 algencan.setOption('iprint',0)
 algencan(opt_prob)
-print opt_prob.solution(7)
+print(opt_prob.solution(7))
 
 # Instantiate Optimizer (FILTERSD) & Solve Problem
 filtersd = FILTERSD()
 filtersd.setOption('iprint',0)
 filtersd(opt_prob)
-print opt_prob.solution(8)
+print(opt_prob.solution(8))
 

@@ -77,19 +77,19 @@ opt_prob.addObj('f')
 opt_prob.addCon('g1','i')
 opt_prob.addCon('g2','i')
 opt_prob.addCon('g3','i')
-print opt_prob
+print(opt_prob)
 
 # Instantiate Optimizer (CONMIN)
 conmin = CONMIN()
 
 # Solve Problem with Optimizer Using Finite Differences
 conmin(opt_prob,sens_type='FD')
-print opt_prob.solution(0)
+print(opt_prob.solution(0))
 
 # Solve Problem with Optimizer Using Complex Step
 conmin(opt_prob,sens_type='CS')
-print opt_prob.solution(1)
+print(opt_prob.solution(1))
 
 # Solve Problem with Optimizer Using User-Provided Sensitivities
 conmin(opt_prob,sens_type=gradfunc)
-print opt_prob.solution(2)
+print(opt_prob.solution(2))

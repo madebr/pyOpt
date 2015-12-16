@@ -52,14 +52,14 @@ opt_prob.addVar('x1','c',lower=-2.0,upper=10.0,value=8.0)
 opt_prob.addVar('x2','c',lower=-2.0,upper=10.0,value=8.0)
 opt_prob.addObj('f')
 opt_prob.addCon('g','i')
-print opt_prob
+print(opt_prob)
 
 # Global Optimization
 nsga2 = NSGA2()
 nsga2(opt_prob)
-print opt_prob.solution(0)
+print(opt_prob.solution(0))
 
 # Local Optimization Refinement
 slsqp = SLSQP()
 slsqp(opt_prob.solution(0))
-print opt_prob.solution(0).solution(0)
+print(opt_prob.solution(0).solution(0))

@@ -158,7 +158,7 @@ class GCMMA(Optimizer):
 				import mpi4py
 				from mpi4py import MPI
 			except ImportError:
-				print 'pyGCMMA: Parallel objective Function Analysis requires mpi4py'
+				print('pyGCMMA: Parallel objective Function Analysis requires mpi4py')
 			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
@@ -677,7 +677,7 @@ class GCMMA(Optimizer):
 if __name__ == '__main__':
 	
 	# Test GCMMA
-	print 'Testing ...'
+	print('Testing ...')
 	gcmma = GCMMA()
-	print gcmma
+	print(gcmma)
 	

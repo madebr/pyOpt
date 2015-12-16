@@ -152,7 +152,7 @@ class CONMIN(Optimizer):
 				import mpi4py
 				from mpi4py import MPI
 			except ImportError:
-				print 'pyCONMIN: Parallel objective Function Analysis requires mpi4py'
+				print('pyCONMIN: Parallel objective Function Analysis requires mpi4py')
 			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
@@ -561,7 +561,7 @@ class CONMIN(Optimizer):
 if __name__ == '__main__':
 	
 	# Test CONMIN
-	print 'Testing ...'
+	print('Testing ...')
 	conmin = CONMIN()
-	print conmin
+	print(conmin)
 	

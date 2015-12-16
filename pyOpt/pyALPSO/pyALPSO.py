@@ -544,7 +544,7 @@ class ALPSO(Optimizer):
 if __name__ == '__main__':
 	
 	# Test ALPSO
-	print 'Testing ...'
+	print('Testing ...')
 	alpso = ALPSO()
-	print alpso
+	print(alpso)
 	

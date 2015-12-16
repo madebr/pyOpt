@@ -173,7 +173,7 @@ class NLPQLP(Optimizer):
 				import mpi4py
 				from mpi4py import MPI
 			except ImportError:
-				print 'pyNLPQLP: Parallel objective Function Analysis or gradient calculation requires mpi4py'
+				print('pyNLPQLP: Parallel objective Function Analysis or gradient calculation requires mpi4py')
 			#end
 			comm = MPI.COMM_WORLD
 			if (mpi4py.__version__[0] == '0'):
@@ -649,7 +649,7 @@ class NLPQLP(Optimizer):
 if __name__ == '__main__':
 	
 	# Test NLPQLP
-	print 'Testing ...'
+	print('Testing ...')
 	nlpqlp = NLPQLP()
-	print nlpqlp
+	print(nlpqlp)
 	

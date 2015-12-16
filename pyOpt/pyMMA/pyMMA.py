@@ -159,7 +159,7 @@ class MMA(Optimizer):
 				import mpi4py
 				from mpi4py import MPI
 			except ImportError:
-				print 'pyMMA: Parallel objective Function Analysis requires mpi4py'
+				print('pyMMA: Parallel objective Function Analysis requires mpi4py')
 			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
@@ -584,7 +584,7 @@ class MMA(Optimizer):
 if __name__ == '__main__':
 	
 	# Test MMA
-	print 'Testing ...'
+	print('Testing ...')
 	mma = MMA()
-	print mma
+	print(mma)
 	

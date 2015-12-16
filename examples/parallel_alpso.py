@@ -69,17 +69,17 @@ alpso_none = ALPSO()
 alpso_none.setOption('fileout',0)
 alpso_none(opt_prob)
 if myrank == 0:
-    print opt_prob.solution(0)
+    print(opt_prob.solution(0))
 #end
 
 # Solve Problem (SPM-Parallelization)
 alpso_spm = ALPSO(pll_type='SPM')
 alpso_spm.setOption('fileout',0)
 alpso_spm(opt_prob)
-print opt_prob.solution(1)
+print(opt_prob.solution(1))
 
 # Solve Problem (DPM-Parallelization)
 alpso_dpm = ALPSO(pll_type='DPM')
 alpso_dpm.setOption('fileout',0)
 alpso_dpm(opt_prob)
-print opt_prob.solution(2)
+print(opt_prob.solution(2))
