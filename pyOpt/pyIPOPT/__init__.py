@@ -1,7 +1,7 @@
-#!/usr/local/bin/python                                                         
+#!/usr/local/bin/python
 
 try:
-    from pyIPOPT import IPOPT
+    from .pyIPOPT import IPOPT
     __all__ = ['IPOPT']
 except:
     __all__ = []
