@@ -6,7 +6,7 @@ Solves Runarsson's G08 Problem Using ALPSO Parallelization Options
     s.t.:	x1**2 - x2 + 1 <= 0
             1 - x1 + (x2-4)**2 <= 0
             0 <= xi <= 10,  i = 1,2
-        
+
     x* = [1.2279713, 4.2453733]
     f* = -0.095825
 '''
@@ -36,27 +36,27 @@ from pyOpt import ALPSO
 
 
 # =============================================================================
-# 
+#
 # =============================================================================
 def objfunc(x):
-    
+
     f = -(((math.sin(2*math.pi*x[0])**3)*math.sin(2*math.pi*x[1]))/((x[0]**3)*(x[0]+x[1])))
-    
+
     g = [0.0]*2
     g[0] = x[0]**2 - x[1] + 1
     g[1] = 1 - x[0] + (x[1]-4)**2
-    
-    time.sleep(0.01)
-    
+
+    time.sleep(0.001)
+
     fail = 0
     return f,g, fail
-    
+
 
 # =============================================================================
-# 
+#
 # =============================================================================
 
-# Instantiate Optimization Problem 
+# Instantiate Optimization Problem
 opt_prob = Optimization('G08 Global Constrained Problem',objfunc)
 opt_prob.addVar('x1','c',lower=5.0,upper=1e-6,value=10.0)
 opt_prob.addVar('x2','c',lower=5.0,upper=1e-6,value=10.0)
