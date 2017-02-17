@@ -25,7 +25,6 @@ try:
     myrank = comm.Get_rank()
 except:
     raise ImportError('mpi4py is required for parallelization')
-#end
 
 # =============================================================================
 # Extension modules
@@ -46,7 +45,7 @@ def objfunc(x):
     g[0] = x[0]**2 - x[1] + 1
     g[1] = 1 - x[0] + (x[1]-4)**2
 
-    time.sleep(0.001)
+    time.sleep(0.002)
 
     fail = 0
     return f,g, fail
@@ -70,7 +69,6 @@ alpso_none.setOption('fileout',0)
 alpso_none(opt_prob)
 if myrank == 0:
     print(opt_prob.solution(0))
-#end
 
 # Solve Problem (SPM-Parallelization)
 alpso_spm = ALPSO(pll_type='SPM')

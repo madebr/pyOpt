@@ -26,7 +26,6 @@ try:
     myrank = comm.Get_rank()
 except:
     raise ImportError('mpi4py is required for parallelization')
-#end
 
 # =============================================================================
 # Extension modules
@@ -48,7 +47,7 @@ def objfunc(x):
     g[1] = 1.333333333 - x[1]
     g[2] = 2.666666666 - x[2]
 
-    time.sleep(0.001)
+    time.sleep(0.0002)
 
     fail = 0
     return f,g, fail
@@ -76,7 +75,6 @@ midaco_none.setOption('MAXEVAL',50000)
 midaco_none(opt_prob)
 if myrank == 0:
     print(opt_prob.solution(0))
-#end
 
 # Solve Problem (SPM-Parallelization)
 midaco_spm = MIDACO(pll_type='SPM')

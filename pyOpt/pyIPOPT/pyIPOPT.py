@@ -10,11 +10,13 @@ Revision: 0.1   $Date: 23/03/2011 12:00$
 Developers:
 -----------
 - Mr. Sylvain Arreckx (SA)
+- Mr. Stefan Bethge (SB)
 
 
 History
 -------
-	v. 0.1	- Initial Class Creation (SA, 2011)
+        v. 0.2   - Python 3 compatibility (SB, 2017)
+        v. 0.1  - Initial Class Creation (SA, 2011)
 """
 
 __version__ = '$Revision: $'
@@ -226,6 +228,9 @@ class IPOPT(Optimizer):
             # The type of corrector steps that should be taken (unsupported!)
             # ('none', 'affine', 'primal-dual')
             'corrector_type': [str, 'none'],
+            'dependency_detector': [str, 'none'],
+            # Which linear solver should be used to detect linearly dependent equality constraints (experimental)
+            # ('ma28, 'mumps', 'none')
 
             # Warm start options
             # Warm-start for initial point
@@ -554,7 +559,7 @@ class IPOPT(Optimizer):
 
             # Constraints Assigment
             g = numpy.zeros(len(opt_problem._constraints.keys()))
-            for i in xrange(len(opt_problem._constraints.keys())):
+            for i in range(len(opt_problem._constraints.keys())):
                 if isinstance(gg[i], complex):
                     g[i] = gg[i].astype(float)
                 else:
@@ -626,7 +631,7 @@ class IPOPT(Optimizer):
 
             # Constraints Assigment
             g = numpy.zeros(len(opt_problem._constraints.keys()))
-            for i in xrange(len(opt_problem._constraints.keys())):
+            for i in range(len(opt_problem._constraints.keys())):
                 if isinstance(gg[i], complex):
                     g[i] = gg[i].astype(float)
                 else:
@@ -671,7 +676,7 @@ class IPOPT(Optimizer):
             # Gradient Assignment
             df = numpy.zeros(len(opt_problem._variables.keys()))
 
-            for i in xrange(len(opt_problem._variables.keys())):
+            for i in range(len(opt_problem._variables.keys())):
                 df[i] = dff[0, i]
             # end
 
@@ -706,8 +711,8 @@ class IPOPT(Optimizer):
                 b = numpy.zeros(len(opt_problem._variables.keys()) *
                                 len(opt_problem._constraints.keys()), int)
 
-                for i in xrange(len(opt_problem._constraints.keys())):
-                    for j in xrange(len(opt_problem._variables.keys())):
+                for i in range(len(opt_problem._constraints.keys())):
+                    for j in range(len(opt_problem._variables.keys())):
                         a[i * len(opt_problem._variables.keys()) + j] = i
                         b[i * len(opt_problem._variables.keys()) + j] = j
                 return (a, b)
@@ -726,8 +731,8 @@ class IPOPT(Optimizer):
                 # Gradient Assignment
                 a = numpy.zeros([len(opt_problem._variables.keys()) *
                                  len(opt_problem._constraints.keys())])
-                for i in xrange(len(opt_problem._constraints.keys())):
-                    for j in xrange(len(opt_problem._variables.keys())):
+                for i in range(len(opt_problem._constraints.keys())):
+                    for j in range(len(opt_problem._variables.keys())):
                         a[i * len(opt_problem._variables.keys()) +
                           j] = dgg[i, j]
                     # end
