@@ -31,7 +31,7 @@ except:
 # =============================================================================
 #from pyOpt import *
 from pyOpt import Optimization
-from pyOpt import SLSQP
+from pyOpt import IPOPT
 
 
 # =============================================================================
@@ -44,7 +44,7 @@ def objfunc(x):
     g[0] = x[0] + 2.*x[1] + 2.*x[2] - 72.0
     g[1] = -x[0] - 2.*x[1] - 2.*x[2]
 
-    time.sleep(0.3)
+    time.sleep(0.1)
 
     fail = 0
     return f,g, fail
@@ -63,16 +63,16 @@ opt_prob.addObj('f')
 opt_prob.addCon('g1','i')
 opt_prob.addCon('g2','i')
 
-# Instantiate Optimizer (SLSQP)
-slsqp = SLSQP()
-slsqp.setOption('IPRINT',-1)
+# Instantiate Optimizer
+ipopt = IPOPT()
+ipopt.setOption('print_level', 0)  #0 none ... 5 max
 
 # Solve Problem (Without Parallel Gradient)
-slsqp(opt_prob,sens_type='CS')
+ipopt(opt_prob,sens_type='CS')
 if myrank == 0:
     print(opt_prob.solution(0))
 #end
 
 # Solve Problem (With Parallel Gradient)
-slsqp(opt_prob,sens_type='CS',sens_mode='pgc')
+ipopt(opt_prob,sens_type='CS',sens_mode='pgc')
 print(opt_prob.solution(1))

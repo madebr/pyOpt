@@ -664,8 +664,10 @@ class IPOPT(Optimizer):
 
             # if not self.h_start:
 
+            opt_problem.is_gradient = True
             [f, g, fail] = opt_problem.obj_fun(x, *args, **kwargs)
             dff, dgg = gradient.getGrad(x, group_ids, [f], g, *args, **kwargs)
+            opt_problem.is_gradient = False
 
             # Store History
             if self.sto_hst and (myrank == 0):
@@ -718,9 +720,11 @@ class IPOPT(Optimizer):
                 return (a, b)
 
             else:
+                opt_problem.is_gradient = True
                 [f, g, fail] = opt_problem.obj_fun(x, *args, **kwargs)
                 dff, dgg = gradient.getGrad(
                     x, group_ids, [f], g, *args, **kwargs)
+                opt_problem.is_gradient = False
 
                 # Store History
                 if self.sto_hst and (myrank == 0):

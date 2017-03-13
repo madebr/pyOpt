@@ -216,7 +216,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 	#end
 	if (x0 != []):
 		if len(x0.shape) == 1:
-			if (scale == 1) and numpy.all(space_halflen):
+			if (scale == 1) and numpy.all(numpy.isfinite(space_halflen)):
 				x_k[0,:] = (x0[:] - space_centre)/space_halflen
 			else:
 				x_k[0,:] = x0[:]
@@ -227,7 +227,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 				x0 = x0[0:swarmsize,:]
 			#end
 			for i in range(x0.shape[0]):
-				if (scale == 1) and numpy.all(space_halflen):
+				if (scale == 1) and numpy.all(numpy.isfinite(space_halflen)):
 					x_k[i,:] = (x0[i,:] - space_centre)/space_halflen
 				else:
 					x_k[i,:] = x0[i,:]
@@ -258,7 +258,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 		for i in range(swarmsize):
 
 			# Evaluate Ojective Function
-			if (scale == 1):
+			if (scale == 1) and numpy.all(numpy.isfinite(space_halflen)):
 				xtmp = (x_k[i,:] * space_halflen) + space_centre
 			else:
 				xtmp = x_k[i,:]

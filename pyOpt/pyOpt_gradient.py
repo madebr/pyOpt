@@ -151,8 +151,8 @@ class Gradient(object):
         mydvs = self.mydvs
         myrank = self.myrank
 
+        opt_problem.is_gradient = True
 
-        #
         dfi = numpy.zeros([len(opt_problem._objectives.keys()),len(mydvs)],'d')
         dgi = numpy.zeros([len(opt_problem._constraints.keys()),len(mydvs)],'d')
 
@@ -305,6 +305,7 @@ class Gradient(object):
             dg = dgi
         #end
 
+        opt_problem.is_gradient = False
 
         return df,dg
 

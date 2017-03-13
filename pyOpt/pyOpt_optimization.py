@@ -67,36 +67,36 @@ inf = 10.E+20  # define a value for infinity
 # Optimization Class
 # =============================================================================
 class Optimization(object):
-    
+
     '''
     Optimization Problem Class
     '''
-    
+
     def __init__(self, name, obj_fun, var_set=None, obj_set=None, con_set=None, use_groups=False, *args, **kwargs):
-        
+
         '''
         Optimization Problem Class Initialization
-        
+
         **Arguments:**
-        
+
         - name -> STR: Solution name
         - opt_func -> FUNC: Objective function
-        
+
         **Keyword arguments:**
-        
+
         - var_set -> INST: Variable set, *Default* = None
         - obj_set -> INST: Objective set, *Default* = None
         - con_set -> INST: Constraints set, *Default* = None
         - use_groups -> BOOL: Use of group identifiers flag, *Default* = False
-        
+
         Documentation last updated:  May. 23, 2011 - Ruben E. Perez
         '''
-        
-        # 
+
+        #
         self.name = name
         self.obj_fun = obj_fun
         self.use_groups = use_groups
-        
+
         # Initialize Variable Set
         if var_set is None:
             self._variables = {}
@@ -104,21 +104,21 @@ class Optimization(object):
             self._variables = var_set
         #end
         self._vargroups = {}
-        
+
         # Initialize Objective Set
         if obj_set is None:
             self._objectives = {}
         else:
             self._objectives = obj_set
         #end
-        
+
         # Initialize Constraint Set
         if con_set is None:
             self._constraints = {}
         else:
             self._constraints = con_set
         #end
-        
+
         ## Initialize Parameter Set
         #if par_set is None:
         #    self._parameters = {}
@@ -126,79 +126,82 @@ class Optimization(object):
         #    self._parameters = par_set
         ##end
         #self._pargroups = {}
-        
+
         # Initialize Solution Set
         self._solutions = {}
-        
-        
+
+        # Flags for objective function calls about internal state of optimization
+        self.is_gradient = False
+
+
     def getVar(self, i):
-        
+
         '''
         Get Variable *i* from Variables Set
-        
+
         **Arguments:**
-        
+
         - i -> INT: Variable index
-        
+
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
         '''
-        
+
         # Check Index
         if not (isinstance(i,int) and i >= 0):
             raise ValueError("Variable index must be an integer >= 0.")
         #end
-        
-        # 
+
+        #
         return self._variables[i]
-        
-        
+
+
     def addVar(self, *args, **kwargs):
-        
+
         '''
         Add Variable into Variables Set
-        
+
         Documentation last updated:  March. 27, 2008 - Ruben E. Perez
         '''
-        
-        # 
+
+        #
         id = self.firstavailableindex(self._variables)
         self.setVar(id,*args,**kwargs)
-        
-        # 
+
+        #
         tmp_group = {}
         tmp_group[self._variables[id].name] = id
         self._vargroups[self.firstavailableindex(self._vargroups)] = {'name':self._variables[id].name,'ids':tmp_group}
-        
-        
+
+
     def addVarGroup(self, name, nvars, type='c', value=0.0, **kwargs):
-        
+
         '''
         Add a Group of Variables into Variables Set
-        
+
         **Arguments:**
-        
+
         - name -> STR: Variable Group Name
         - nvars -> INT: Number of variables in group
-        
+
         **Keyword arguments:**
-        
+
         - type -> STR: Variable type ('c'-continuous, 'i'-integer, 'd'-discrete), *Default* = 'c'
         - value ->INT/FLOAT: Variable starting value, *Default* = 0.0
-        
+
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
         '''
-        
-        # 
+
+        #
         #ngroups = len(self._vargroups)
         #for j in xrange(ngroups):
         #    if (self._vargroups[j]['name'] == name):
         #        raise IOError('Variables group names should be distinct\n')
         #    #end
         ##end
-        
+
         #
         type = [type]*nvars
-        
+
         if isinstance(value,list) or isinstance(value,numpy.ndarray):
             value = value
         elif isinstance(value,int):
@@ -208,11 +211,11 @@ class Optimization(object):
         else:
             raise IOError('Variable type for value not understood - use float, int or list\n')
         #end
-        
+
         lower = [-inf]*nvars
         upper = [inf]*nvars
         choices = ['']*nvars
-        
+
         for key in kwargs.keys():
             if (key == 'lower'):
                 if isinstance(kwargs['lower'],float):
@@ -251,7 +254,7 @@ class Optimization(object):
                 choices = [kwargs['choices']]*nvars
             #end
         #end
-        
+
         tmp_group = {}
         for var in range(nvars):
             tmp_name = name +'_%s' %(var)
@@ -260,21 +263,21 @@ class Optimization(object):
             tmp_group[tmp_name] = id
         #end
         self._vargroups[self.firstavailableindex(self._vargroups)] = {'name':name,'ids':tmp_group}
-        
-        
+
+
     def setVar(self, i, *args, **kwargs):
-        
+
         '''
         Set Variable *i* into Variables Set
-        
+
         **Arguments:**
-        
+
         - i -> INT: Variable index
-        
+
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
         '''
-        
-        # 
+
+        #
         if (len(args) > 0) and isinstance(args[0], Variable):
             self._variables[i] = args[0]
         else:
@@ -286,29 +289,29 @@ class Optimization(object):
                 raise ValueError("Input is not a Valid for a Variable Object instance\n")
             #end
         #end
-        
-        
+
+
     def delVar(self, i):
-        
+
         '''
         Delete Variable *i* from Variables Set
-        
+
         **Arguments:**
-        
+
         - i -> INT: Variable index
-        
+
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
         '''
-        
+
         # Check Index
         if not (isinstance(i,int) and i >= 0):
             raise ValueError("Variable index must be an integer >= 0.")
         #end
-        
-        # 
+
+        #
         del self._variables[i]
-        
-        # 
+
+        #
         #ngroups = len(self._vargroups)
         for j in self._vargroups.keys():
             keys = self._vargroups[j]['ids']
@@ -323,21 +326,21 @@ class Optimization(object):
                 #end
             #end
         #end
-        
-        
+
+
     def delVarGroup(self, name):
-        
+
         '''
         Delete Variable Group *name* from Variables Set
-        
+
         **Arguments:**
-        
+
         - name -> STR: Variable group name
-        
+
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
         '''
-        
-        # 
+
+        #
         ngroups = len(self._vargroups)
         for j in range(ngroups):
             if (self._vargroups[j]['name'] == name):
@@ -349,76 +352,76 @@ class Optimization(object):
                 del self._vargroups[j]
             #end
         #end
-        
-        
+
+
     def getVarSet(self):
-        
+
         '''
         Get Variables Set
-        
+
         Documentation last updated:  March. 27, 2008 - Ruben E. Perez
         '''
-        
+
         return self._variables
-        
-        
+
+
     def getVarGroups(self):
-        
+
         '''
         Get Variables Groups Set
-        
+
         Documentation last updated:  June. 25, 2009 - Ruben E. Perez
         '''
-        
+
         return self._vargroups
-        
-        
+
+
     def getObj(self, i):
-        
+
         '''
         Get Objective *i* from Objectives Set
-        
+
         **Arguments:**
-        
+
         - i -> INT: Objective index
-        
+
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
         '''
-        
+
         # Check Index
         if not (isinstance(i,int) and i >= 0):
             raise ValueError("Objective index must be an integer >= 0.")
         #end
-        
-        # 
+
+        #
         return self._objectives[i]
-        
-        
+
+
     def addObj(self, *args, **kwargs):
-        
+
         '''
         Add Objective into Objectives Set
-        
+
         Documentation last updated:  March. 27, 2008 - Ruben E. Perez
         '''
-        
-        # 
+
+        #
         self.setObj(self.firstavailableindex(self._objectives),*args,**kwargs)
-        
-        
+
+
     def setObj(self, i, *args, **kwargs):
-        
+
         '''
         Set Objective *i* into Objectives Set
-        
+
         **Arguments:**
-        
+
         - i -> INT: Objective index
-        
+
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
         '''
-        
-        # 
+
+        #
         if (len(args) > 0) and isinstance(args[0], Objective):
             self._objectives[i] = args[0]
         else:
@@ -428,96 +431,96 @@ class Optimization(object):
                 raise ValueError("Input is not a Valid for a Objective Object instance\n")
             #end
         #end
-        
-        
+
+
     def delObj(self, i):
-        
+
         '''
         Delete Objective *i* from Objectives Set
-        
+
         **Arguments:**
-        
+
         - i -> INT: Objective index
-        
+
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
         '''
-        
+
         # Check Index
         if not (isinstance(i,int) and i >= 0):
             raise ValueError("Objective index must be an integer >= 0.")
         #end
-        
-        # 
+
+        #
         del self._objectives[i]
-        
-        
+
+
     def getObjSet(self):
-        
+
         '''
         Get Objectives Set
-        
+
         Documentation last updated:  March. 27, 2008 - Ruben E. Perez
         '''
-        
+
         return self._objectives
-        
-        
+
+
     def getCon(self, i):
-        
+
         '''
         Get Constraint *i* from Constraint Set
-        
+
         **Arguments:**
-        
+
         - i -> INT: Constraint index
-        
+
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
         '''
-        
+
         # Check Index
         if not (isinstance(i,int) and i >= 0):
             raise ValueError("Constraint index must be an integer >= 0.")
         #end
-        
-        # 
+
+        #
         return self._constraints[i]
-        
-        
+
+
     def addCon(self, *args, **kwargs):
-        
+
         '''
         Add Constraint into Constraints Set
-        
+
         Documentation last updated:  March. 27, 2008 - Ruben E. Perez
         '''
-        
-        # 
+
+        #
         self.setCon(self.firstavailableindex(self._constraints),*args,**kwargs)
-        
-        
+
+
     def addConGroup(self, name, ncons, type='i', **kwargs):
-        
+
         '''
         Add a Group of Constraints into Constraints Set
-        
+
         **Arguments:**
-        
+
         - name -> STR: Constraint group name
         - ncons -> INT: Number of constraints in group
-        
+
         **Keyword arguments:**
-        
+
         - type -> STR: Constraint type ('i'-inequality, 'e'-equality), *Default* = 'i'
-        
+
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
         '''
-        
+
         #
         type_list = [type[0].lower()]*ncons
-        
+
         if (type[0].lower() == 'i'):
             lower = [-inf]*ncons
-            upper = [0.0]*ncons			
+            upper = [0.0]*ncons
             for key in kwargs.keys():
                 if (key == 'lower'):
                     if isinstance(kwargs['lower'],float):
@@ -583,21 +586,21 @@ class Optimization(object):
                 self.setCon(self.firstavailableindex(self._constraints),tmp_name, type_list[con], equal=equal[con])
             #end
         #end
-        
-        
+
+
     def setCon(self, i, *args, **kwargs):
-        
+
         '''
         Set Constraint *i* into Constraints Set
-        
+
         **Arguments:**
-        
+
         - i -> INT: Constraint index
-        
+
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
         '''
-        
-        # 
+
+        #
         if (len(args) > 0) and isinstance(args[0], Constraint):
             self._constraints[i] = args[0]
         else:
@@ -609,86 +612,86 @@ class Optimization(object):
                 raise ValueError("Input is not a Valid for a Constraint Object instance\n")
             #end
         #end
-        
-        
+
+
     def delCon(self, i):
-        
+
         '''
         Delete Constraint *i* from Constraints Set
-        
+
         **Arguments:**
-        
+
         - i -> INT: Constraint index
-        
+
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
         '''
-        
+
         # Check Index
         if not (isinstance(i,int) and i >= 0):
             raise ValueError("Constraint index must be an integer >= 0.")
         #end
-        
-        # 
+
+        #
         del self._constraints[i]
-        
-        
+
+
     def getConSet(self):
-        
+
         '''
         Get Constraints Set
-        
+
         Documentation last updated:  March. 27, 2008 - Ruben E. Perez
         '''
-        
+
         return self._constraints
-        
-        
+
+
     def getSol(self, i):
-        
+
         '''
         Get Solution *i* from Solution Set
-        
+
         **Arguments:**
-        
+
         - i -> INT: Solution index
-        
+
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
         '''
-        
+
         # Check Index
         if not (isinstance(i,int) and i >= 0):
             raise ValueError("Solution index must be an integer >= 0.")
         #end
-        
-        # 
+
+        #
         return self._solutions[i]
-        
-        
+
+
     def addSol(self, *args, **kwargs):
-        
+
         '''
         Add Solution into Solution Set
-        
+
         Documentation last updated:  May. 07, 2008 - Ruben E. Perez
         '''
-        
-        # 
+
+        #
         self.setSol(self.firstavailableindex(self._solutions),*args,**kwargs)
-        
-        
+
+
     def setSol(self,i, *args, **kwargs):
-        
+
         '''
         Set Solution *i* into Solution Set
-        
+
         **Arguments:**
-        
+
         - i -> INT: Solution index
-        
+
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
         '''
-        
-        # 
+
+        #
         if (len(args) > 0) and isinstance(args[0], Solution):
             self._solutions[i] = args[0]
         else:
@@ -700,92 +703,92 @@ class Optimization(object):
             #	raise ValueError("Input is not a Valid for a Solution Object instance\n")
             #end
         #end
-        
-        
+
+
     def delSol(self, i):
-        
+
         '''
         Delete *i* Solution from Solutions Set
-        
+
         **Arguments:**
-        
+
         - i -> INT: Solution index
-        
+
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
         '''
-        
+
         # Check Index
         if not (isinstance(i,int) and i >= 0):
             raise ValueError("Solution index must be an integer >= 0.")
         #end
-        
-        # 
+
+        #
         del self._solutions[i]
-        
-        
+
+
     def getSolSet(self):
-        
+
         '''
         Get Solutions Set
-        
+
         Documentation last updated:  May. 07, 2008 - Ruben E. Perez
         '''
-        
+
         return self._solutions
-        
-        
+
+
 #    def getPar(self, i):
-#        
+#
 #        '''
 #        Get Parameter *i* from Parameters Set
-#        
+#
 #        **Arguments:**
-#        
+#
 #        - i -> INT: Solution index
-#        
+#
 #        Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
 #        '''
-#        
+#
 #        # Check Index
 #        if not (isinstance(i,int) and i >= 0):
 #            raise ValueError("Parameter index must be an integer >= 0.")
 #        #end
-#        
-#        # 
+#
+#        #
 #        return self._parameters[i]
-#        
-#        
+#
+#
 #    def addPar(self, *args, **kwargs):
-#        
+#
 #        '''
 #        Add Parameter into Parameters Set
-#        
+#
 #        Documentation last updated:  May. 23, 2008 - Ruben E. Perez
 #        '''
-#        
-#        # 
+#
+#        #
 #        id = self.firstavailableindex(self._parameters)
 #        self.setPar(id,*args,**kwargs)
-#        
-#        # 
+#
+#        #
 #        tmp_group = {}
 #        tmp_group[self._parameters[id].name] = id
 #        self._pargroups[self.firstavailableindex(self._pargroups)] = {'name':self._parameters[id].name,'ids':tmp_group}
-#        
-#        
+#
+#
 #    def setPar(self, i, *args, **kwargs):
-#        
+#
 #        '''
 #        Set Parameter *i* into Parameters Set
-#        
+#
 #        **Arguments:**
-#        
+#
 #        - i -> INT: Parameter index
-#        
+#
 #        Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
 #        '''
-#        
-#        # 
+#
+#        #
 #        if (len(args) > 0) and isinstance(args[0], Parameter):
 #            self._parameters[i] = args[0]
 #        else:
@@ -797,29 +800,29 @@ class Optimization(object):
 #                raise ValueError("Input is not a Valid for a Parameter Object instance\n")
 #            #end
 #        #end
-#        
-#        
+#
+#
 #    def delPar(self, i):
-#        
+#
 #        '''
 #        Delete Parameter *i* from Parameters Set
-#        
+#
 #        **Arguments:**
-#        
+#
 #        - i -> INT: Parameter index
-#        
+#
 #        Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
 #        '''
-#        
+#
 #        # Check Index
 #        if not (isinstance(i,int) and i >= 0):
 #            raise ValueError("Parameter index must be an integer >= 0.")
 #        #end
-#        
-#        # 
+#
+#        #
 #        del self._parameters[i]
-#        
-#        # 
+#
+#        #
 #        for j in self._pargroups.keys():
 #            keys = self._pargroups[j]['ids']
 #            nkeys = len(keys)
@@ -833,21 +836,21 @@ class Optimization(object):
 #                #end
 #            #end
 #        #end
-#        
-#        
+#
+#
 #    def delParGroup(self, name):
-#        
+#
 #        '''
 #        Delete Parameter Group *name* from Parameters Set
-#        
+#
 #        **Arguments:**
-#        
+#
 #        - name -> STR: Parameter group name
-#        
+#
 #        Documentation last updated:  Sep. 07, 2013 - Ruben E. Perez
 #        '''
-#        
-#        # 
+#
+#        #
 #        ngroups = len(self._pargroups)
 #        for j in xrange(ngroups):
 #            if (self._pargroups[j]['name'] == name):
@@ -859,70 +862,70 @@ class Optimization(object):
 #                del self._pargroups[j]
 #            #end
 #        #end
-#        
-#        
+#
+#
 #    def getParSet(self):
-#        
+#
 #        '''
 #        Get Parameter Set
-#        
+#
 #        Documentation last updated:  May. 23, 2008 - Ruben E. Perez
 #        '''
-#        
+#
 #        return self._parameters
-#        
-#        
+#
+#
 #    def getParGroups(self):
-#        
+#
 #        '''
 #        Get Parameters Groups Set
-#        
+#
 #        Documentation last updated:  June. 25, 2009 - Ruben E. Perez
 #        '''
-#        
+#
 #        return self._pargroups
-        
-        
+
+
     def firstavailableindex(self, set):
-        
+
         '''
         List First Unused Index from Variable Objects List
-        
+
         **Arguments:**
-        
+
         - set -> LIST: Set to find frist available index of
-        
+
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
         '''
-        
-        # 
+
+        #
         i = 0
-        while i in set: 
+        while i in set:
             i += 1
         #end
-        
+
         return i
-        
-        
+
+
     def ListAttributes(self):
-        
+
         '''
         Print Structured Attributes List
-        
+
         Documentation last updated:  March. 24, 2008 - Ruben E. Perez
         '''
-        
+
         ListAttributes(self)
-        
-        
+
+
     def __str__(self):
-        
+
         '''
         Print Structured Optimization Problem
-        
+
         Documentation last updated:  April. 30, 2008 - Peter W. Jansen
         '''
-        
+
         text = '''\nOptimization Problem -- %s\n%s\n
         Objective Function: %s\n\n    Objectives:
         Name        Value        Optimum\n''' %(self.name,'='*80,self.obj_fun.__name__)
@@ -944,25 +947,25 @@ class Optimization(object):
                 text+= lines[1] + '\n'
             #end
         #end
-        
+
         return (text)
-        
-        
+
+
     def write2file(self, outfile='', disp_sols=False, **kwargs):
-        
+
         '''
         Write Structured Optimization Problem to file
-        
+
         **Keyword arguments:**
-        
+
         - outfile   ->  STR/INST: File name or file instance, *Default* = ''
         - disp_sols ->  BOOL: Display solutions flag, *Default* = False.
         - solutions ->  LIST: List of solution indexes.
-        
+
         Documentation last updated:  May. 9, 2008 - Peter W. Jansen
         '''
-        
-        # 
+
+        #
         if isinstance(outfile,str):
             if (outfile == ''):
                 findir = os.listdir(os.curdir)
@@ -991,69 +994,69 @@ class Optimization(object):
                 sol_indices = self._solutions.keys()
             #end
             for key in sol_indices:
-                soltext = '\n' + self._solutions[key].__str__() 
+                soltext = '\n' + self._solutions[key].__str__()
                 outfile.write(soltext)
             #end
         #end
         print('Data written to file ', outfile.name)
         outfile.close()
-        
-        
+
+
     def solution(self, i):
-        
+
         '''
         Get Solution from Solution Set
-        
+
         **Arguments:**
-        
+
         - i -> INT: Solution index
-        
+
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
         '''
-        
+
         # Check Index
         if not (isinstance(i,int) and i >= 0):
             raise ValueError("Solution index must be an integer >= 0.")
         #end
-        
-        # 
+
+        #
         return self._solutions[i]
-    
+
 
 
 # =============================================================================
 # Solution Class
 # =============================================================================
 class Solution(Optimization):
-    
+
     '''
     Optimization Solution Class
     '''
-    
+
     def __init__(self, optimizer, name, obj_fun, opt_time, opt_evals, opt_inform, var_set=None, obj_set=None, con_set=None, options_set=None, myrank=0,*args, **kwargs):
-        
+
         '''
         Solution Class Initialization
-        
+
         **Arguments:**
-        
+
         - optimizer -> STR: Optimizer name
         - name -> STR: Optimization problem name
         - opt_time -> FLOAT: Solution total time
         - opt_evals -> INT: Number of function evaluations
-        
+
         **Keyword arguments:**
-        
+
         - var_set -> INST: Variable set, *Default* = {}
         - obj_set -> INST: Objective set, *Default* = {}
         - con_set -> INST: Constraints set, *Default* = {}
         - options_set -> Options used for solution, *Default* = {}
         - myrank -> INT: Process identification for MPI evaluations, *Default* = 0
-        
+
         Documentation last updated:  Feb. 03, 2011 - Peter W. Jansen
         '''
-        
-        # 
+
+        #
         Optimization.__init__(self, name, obj_fun, var_set, obj_set, con_set, *args, **kwargs)
         self.optimizer = optimizer
         self.opt_time = opt_time
@@ -1061,7 +1064,7 @@ class Solution(Optimization):
         self.opt_inform = opt_inform
         self.options_set = options_set
         self.myrank = myrank
-        
+
         if 'display_opts' in kwargs:
             self.display_opt = kwargs['display_opts']
             del kwargs['display_opts']
@@ -1069,16 +1072,16 @@ class Solution(Optimization):
             self.display_opt = False
         #end
         self.parameters = kwargs
-        
-        
+
+
     def __str__(self):
-        
+
         '''
         Print Structured Solution
-        
+
         Documentation last updated:  April. 30, 2008 - Peter W. Jansen
         '''
-        
+
         text0 = Optimization.__str__(self)
         text1 = ''
         lines = text0.split('\n')
@@ -1112,41 +1115,41 @@ class Solution(Optimization):
             text1 += lines[i] + '\n'
         #end
         text1 += ('-'*80) + '\n'
-        
+
         if (self.myrank == 0):
             return text1
         else:
             return ''
         #end
-        
-        
+
+
     def write2file(self, outfile):
-        
+
         '''
         Write Structured Solution to file
-        
+
         **Arguments:**
-        
+
         - outfile -> STR: Output file name
-        
+
         Documentation last updated:  May. 9, 2008 - Peter W. Jansen
         '''
-        
+
         Optimization.write2file(self,outfile,False)
-    
+
 
 
 #==============================================================================
-# 
+#
 #==============================================================================
 def ListAttributes(self):
-    
+
     '''
     Print Structured Attributes List
-    
+
     Documentation last updated:  March. 24, 2008 - Ruben E. Perez
     '''
-    
+
     print('\n')
     print('Attributes List of: ' + repr(self.__dict__['name']) + ' - ' + self.__class__.__name__ + ' Instance\n')
     self_keys = self.__dict__.keys()
@@ -1157,15 +1160,15 @@ def ListAttributes(self):
         #end
     #end
     print('\n')
-    
+
 
 
 #==============================================================================
 # Optimization Test
 #==============================================================================
 if __name__ == '__main__':
-    
+
     print('Testing Optimization...')
     optprob = Optimization('Optimization Problem',{})
     optprob.ListAttributes()
-    
+
