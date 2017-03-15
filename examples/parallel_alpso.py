@@ -45,7 +45,7 @@ def objfunc(x):
     g[0] = x[0]**2 - x[1] + 1
     g[1] = 1 - x[0] + (x[1]-4)**2
 
-    time.sleep(0.002)
+    time.sleep(0.01)
 
     fail = 0
     return f,g, fail
@@ -77,7 +77,8 @@ alpso_spm(opt_prob)
 print(opt_prob.solution(1))
 
 # Solve Problem (DPM-Parallelization)
-alpso_dpm = ALPSO(pll_type='DPM')
-alpso_dpm.setOption('fileout',0)
-alpso_dpm(opt_prob)
+alpso_poa = ALPSO(pll_type='POA')
+alpso_poa.setOption('fileout',0)
+alpso_poa(opt_prob)
 print(opt_prob.solution(2))
+
