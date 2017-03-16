@@ -151,7 +151,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 	if rseed == {}:
 		rseed = time.time()
 	#end
-	rseed = Bcast(rseed,root=0)
+	#rseed = Bcast(rseed,root=0)
 	rand.seed(rseed)
 
 	if (filename == ''):
@@ -330,11 +330,11 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 		#end
 
 		if myrank != 0:
-			Send(send_buf,dest=0)
+			Send(send_buf,dest=0, tag=41)
 		else:
 			p_results = []
 			for proc in range(1,nproc):
-				p_results.append(Recv(source=proc))
+				p_results.append(Recv(source=proc, tag=41))
 			#end
 		#end
 		if myrank == 0:
@@ -483,11 +483,11 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 				#end
 			#end
 			if (myrank != 0):
-				Send(sbuf,dest=0)
+				Send(sbuf,dest=0, tag=40)
 			else:
 				recb = []
 				for proc in range(1,nproc):
-					recb.append(Recv(source=proc))
+					recb.append(Recv(source=proc, tag=40))
 				#end
 			#end
 			if (myrank == 0):
@@ -785,11 +785,11 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 				#end
 
 				if myrank != 0:
-					Send(send_buf,dest=0)
+					Send(send_buf,dest=0, tag=41)
 				else:
 					p_results = []
 					for proc in range(1,nproc):
-						p_results.append(Recv(source=proc))
+						p_results.append(Recv(source=proc, tag=41))
 					#end
 				#end
 				if myrank == 0:
@@ -897,11 +897,11 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 					#end
 				#end
 				if (myrank != 0):
-					Send(sbuf,dest=0)
+					Send(sbuf,dest=0, tag=42)
 				else:
 					recb = []
 					for proc in range(1,nproc):
-						recb.append(Recv(source=proc))
+						recb.append(Recv(source=proc, tag=42))
 					#end
 				#end
 				if (myrank == 0):
