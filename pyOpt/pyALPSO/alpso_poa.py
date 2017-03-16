@@ -3,7 +3,7 @@
 alpso_poa - Python Version of the Augmented Lagrangian Particle Swarm Optimizer
 
 This version uses mpi4py for a parallel objective function analysis.
-alpso if a global optimizer which solves problems of the form:
+alpso is a global optimizer which solves problems of the form:
 
 			min F(x)
 
@@ -136,7 +136,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 	if rseed == {}:
 		rseed = time.time()
 	#end
-	rseed = Bcast(rseed,root=0)
+	#rseed = Bcast(rseed, root=0)
 	rand.seed(rseed)
 
 	#
@@ -288,11 +288,11 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 				#end
 			#end
 		#end
-		h_start = Bcast(h_start,root=0)
+		h_start = Bcast(h_start, root=0)
 	#end
 	if not h_start:
 		## MPI Objective Function Evaluation
-		x_k = Bcast(x_k,root=0)
+		x_k = Bcast(x_k, root=0)
 		for i in range(swarmsize):
 
 			# Evaluate Ojective Function
@@ -691,13 +691,12 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 						hstfile.close()
 					#end
 				#end
-				h_start = Bcast(h_start,root=0)
+				h_start = Bcast(h_start, root=0)
 			#end
 			if not h_start:
 				## MPI Objective Function Evaluation
-				x_k = Bcast(x_k,root=0)
+				x_k = Bcast(x_k, root=0)
 				for i in range(swarmsize):
-
 					# Evaluate Ojective Function
 					if (scale == 1):
 						xtmp = (x_k[i,:] * space_halflen) + space_centre
@@ -873,7 +872,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 						stop_inner = 1
 					#end
 				#end
-				stop_inner = Bcast(stop_inner,root=0)
+				stop_inner = Bcast(stop_inner, root=0)
 			#end
 
 			#Store History
@@ -1205,7 +1204,7 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 			#end
 		#end
 		Barrier()
-		recv_buf = Bcast(stop_main_flag,root=0)
+		recv_buf = Bcast(stop_main_flag, root=0)
 		stop_main_flag = recv_buf
 	#end
 
@@ -1322,10 +1321,10 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 	opt_g = swarm_g
 	opt_lambda = lambda_val[:]
 
-	opt_x = Bcast(opt_x,root=0)
-	opt_f = Bcast(opt_f,root=0)
-	opt_g = Bcast(opt_g,root=0)
-	opt_lambda = Bcast(opt_lambda,root=0)
+	opt_x = Bcast(opt_x, root=0)
+	opt_f = Bcast(opt_f, root=0)
+	opt_g = Bcast(opt_g, root=0)
+	opt_lambda = Bcast(opt_lambda, root=0)
 
 	return opt_x,opt_f,opt_g,opt_lambda,nfevals,'%.8f' %(rseed)
 
