@@ -438,7 +438,7 @@ class IPOPT(Optimizer):
                     # end
                 # end
                 self.sto_hst = True
-                self.h_start = True
+                self.hot_start = True
             elif hot_start:
                 if (myrank == 0):
                     hos_file = History(store_hst, 'r', self)
@@ -447,13 +447,13 @@ class IPOPT(Optimizer):
                     tmp_file = True
                 # end
                 self.sto_hst = True
-                self.h_start = True
+                self.hot_start = True
             else:
                 if (myrank == 0):
                     log_file = History(store_hst, 'w', self, opt_problem.name)
                 # end
                 self.sto_hst = True
-                self.h_start = False
+                self.hot_start = False
             # end
         elif store_hst:
             if isinstance(hot_start, str):
@@ -472,7 +472,7 @@ class IPOPT(Optimizer):
                     # end
                 # end
                 self.sto_hst = True
-                self.h_start = True
+                self.hot_start = True
             elif hot_start:
                 if (myrank == 0):
                     hos_file = History(def_fname, 'r', self)
@@ -481,17 +481,17 @@ class IPOPT(Optimizer):
                     tmp_file = True
                 # end
                 self.sto_hst = True
-                self.h_start = True
+                self.hot_start = True
             else:
                 if (myrank == 0):
                     log_file = History(def_fname, 'w', self, opt_problem.name)
                 # end
                 self.sto_hst = True
-                self.h_start = False
+                self.hot_start = False
             # end
         else:
             self.sto_hst = False
-            self.h_start = False
+            self.hot_start = False
         # end
 
         gradient = Gradient(opt_problem, sens_type, sens_mode, sens_step,
@@ -520,10 +520,10 @@ class IPOPT(Optimizer):
             # Evaluate User Function
             fail = 0
             # if (myrank == 0):
-            #    if self.h_start:
+            #    if self.hot_start:
             #        [vals,hist_end] = hos_file.read(ident=['obj', 'con', 'fail'])
             #        if hist_end:
-            #            self.h_start = False
+            #            self.hot_start = False
             #            hos_file.close()
             #        else:
             #            [ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
@@ -532,9 +532,9 @@ class IPOPT(Optimizer):
             # end
 
             # if self.pll:
-            #    self.h_start = Bcast(self.h_start,root=0)
+            #    self.hot_start = Bcast(self.hot_start,root=0)
             # end
-            # if self.h_start and self.pll:
+            # if self.hot_start and self.pll:
             #    [ff,gg,fail] = Bcast([ff,gg,fail],root=0)
             # else:
             [ff, gg, fail] = opt_problem.obj_fun(xn, *args, **kwargs)
@@ -592,10 +592,10 @@ class IPOPT(Optimizer):
             # Evaluate User Function
             fail = 0
 #            if (myrank == 0):
-#                if self.h_start:
+#                if self.hot_start:
 #                    [vals,hist_end] = hos_file.read(ident=['obj', 'con', 'fail'])
 #                    if hist_end:
-#                        self.h_start = False
+#                        self.hot_start = False
 #                        hos_file.close()
 #                    else:
 #                        [ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
@@ -604,9 +604,9 @@ class IPOPT(Optimizer):
             # end
 
             # if self.pll:
-            #   self.h_start = Bcast(self.h_start,root=0)
+            #   self.hot_start = Bcast(self.hot_start,root=0)
             # end
-            # if self.h_start and self.pll:
+            # if self.hot_start and self.pll:
             #    [ff,gg,fail] = Bcast([ff,gg,fail],root=0)
             # else:
             [ff, gg, fail] = opt_problem.obj_fun(xn, *args, **kwargs)
@@ -643,11 +643,11 @@ class IPOPT(Optimizer):
 
         def eval_grad_f(x, user_data=None):
             """IPOPT - Objective/Constraint Gradients Function."""
-            # if self.h_start:
+            # if self.hot_start:
             #    if (myrank == 0):
             #        [vals,hist_end] = hos_file.read(ident=['grad_obj','grad_con'])
             #        if hist_end:
-            #            self.h_start = False
+            #            self.hot_start = False
             #            hos_file.close()
             #        else:
             #            dff = vals['grad_obj'][0].reshape((len(opt_problem._objectives.keys()),len(opt_problem._variables.keys())))
@@ -655,14 +655,14 @@ class IPOPT(Optimizer):
             #        #end
             #    #end
             #    if self.pll:
-            #        self.h_start = Bcast(self.h_start,root=0)
+            #        self.hot_start = Bcast(self.hot_start,root=0)
             #    #end
-            #    if self.h_start and self.pll:
+            #    if self.hot_start and self.pll:
             #        [dff,dgg] = Bcast([dff,dgg],root=0)
             #    #end
             # end
 
-            # if not self.h_start:
+            # if not self.hot_start:
 
             opt_problem.is_gradient = True
             [f, g, fail] = opt_problem.obj_fun(x, *args, **kwargs)
@@ -686,11 +686,11 @@ class IPOPT(Optimizer):
 
         def eval_grad_g(x, flag, user_data=None):
 
-            # if self.h_start:
+            # if self.hot_start:
             #    if (myrank == 0):
             #        [vals,hist_end] = hos_file.read(ident=['grad_obj','grad_con'])
             #        if hist_end:
-            #            self.h_start = False
+            #            self.hot_start = False
             #            hos_file.close()
             #        else:
             #            dff = vals['grad_obj'][0].reshape((len(opt_problem._objectives.keys()),len(opt_problem._variables.keys())))
@@ -698,14 +698,14 @@ class IPOPT(Optimizer):
             #        #end
             #    #end
             #    if self.pll:
-            #        self.h_start = Bcast(self.h_start,root=0)
+            #        self.hot_start = Bcast(self.hot_start,root=0)
             #    #end
-            #    if self.h_start and self.pll:
+            #    if self.hot_start and self.pll:
             #        [dff,dgg] = Bcast([dff,dgg],root=0)
             #    #end
             # end
 
-            # if not self.h_start:
+            # if not self.hot_start:
 
             if flag:
                 a = numpy.zeros(len(opt_problem._variables.keys()) *

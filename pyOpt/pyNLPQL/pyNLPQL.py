@@ -237,10 +237,10 @@ class NLPQL(Optimizer):
 			ff = []
 			gg = []
 			if (myrank == 0):
-				if self.h_start:
+				if self.hot_start:
 					[vals,hist_end] = hos_file.read(ident=['obj', 'con', 'fail'])
 					if hist_end:
-						self.h_start = False
+						self.hot_start = False
 						hos_file.close()
 					else:
 						[ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
@@ -249,11 +249,11 @@ class NLPQL(Optimizer):
 			#end
 			
 			if self.pll:
-				self.h_start = Bcast(self.h_start,root=0)
+				self.hot_start = Bcast(self.hot_start,root=0)
 			#end
-			if self.h_start and self.pll:
+			if self.hot_start and self.pll:
 				[ff,gg,fail] = Bcast([ff,gg,fail],root=0)
-			elif not self.h_start:	
+			elif not self.hot_start:	
 				[ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
 			#end
 			
@@ -291,13 +291,13 @@ class NLPQL(Optimizer):
 		#======================================================================
 		def nlgrad(m,me,mmax,n,f,g,df,dg,x,active,wa):
 			
-			if self.h_start:
+			if self.hot_start:
 				dff = []
 				dgg = []
 				if (myrank == 0):
 					[vals,hist_end] = hos_file.read(ident=['grad_obj','grad_con'])
 					if hist_end:
-						self.h_start = False
+						self.hot_start = False
 						hos_file.close()
 					else:
 						dff = vals['grad_obj'][0].reshape((len(opt_problem._objectives.keys()),len(opt_problem._variables.keys())))
@@ -305,14 +305,14 @@ class NLPQL(Optimizer):
 					#end
 				#end
 				if self.pll:
-					self.h_start = Bcast(self.h_start,root=0)
+					self.hot_start = Bcast(self.hot_start,root=0)
 				#end
-				if self.h_start and self.pll:
+				if self.hot_start and self.pll:
 					[dff,dgg] = Bcast([dff,dgg],root=0)
 				#end
 			#end
 			
-			if not self.h_start:	
+			if not self.hot_start:	
 				
 				#
 				dff,dgg = gradient.getGrad(x, group_ids, [f], -g[0:len(opt_problem._constraints.keys())], *args, **kwargs)

@@ -276,11 +276,11 @@ class MIDACO(Optimizer):
                         ff = []
                         gg = []
                         if (myrank == 0):
-                                if self.h_start:
+                                if self.hot_start:
                                         for proc in range(l):
                                                 [vals,hist_end] = hos_file.read(ident=['obj', 'con', 'fail'])
                                                 if hist_end:
-                                                        self.h_start = False
+                                                        self.hot_start = False
                                                         hos_file.close()
                                                 else:
                                                         [ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
@@ -292,11 +292,11 @@ class MIDACO(Optimizer):
                         #end
 
                         if self.pll:
-                                self.h_start = Bcast(self.h_start,root=0)
+                                self.hot_start = Bcast(self.hot_start,root=0)
                         #end
-                        if self.h_start and self.pll:
+                        if self.hot_start and self.pll:
                                 [f,g] = Bcast([f,g],root=0)
-                        elif not self.h_start:
+                        elif not self.hot_start:
                                 [ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
 
                                 #

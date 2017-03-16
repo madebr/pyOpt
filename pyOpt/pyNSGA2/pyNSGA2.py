@@ -39,7 +39,7 @@ try:
         from . import nsga2
 except:
         raise ImportError('NSGA-II shared library failed to import')
-#end
+
 
 # =============================================================================
 # Standard Python modules
@@ -65,7 +65,7 @@ inf = 10.E+20  # define a value for infinity
 eps = 1.0       # define a value for machine precision
 while ((eps/2.0 + 1.0) > 1.0):
         eps = eps/2.0
-#end
+
 eps = 2.0*eps
 #eps = math.ldexp(1,-52)
 
@@ -98,23 +98,26 @@ class NSGA2(Optimizer):
                         self.poa = True
                 else:
                         raise ValueError("pll_type must be either None or 'POA'")
-                #end
+
 
                 #
                 name = 'NSGA-II'
                 category = 'Global Optimizer'
                 def_opts = {
-                'PopSize':[int,100],                    #
-                'maxGen':[int,150],                             #
-                'pCross_real':[float,0.6],              #
-                'pMut_real':[float,0.2],                #
-                'eta_c':[float,10],                             #
-                'eta_m':[float,20],                             #
-                'pCross_bin':[float,0],                 #
-                'pMut_bin':[float,0],                   #
-                'PrintOut':[int,1],                             # Flag to Turn On Output to filename (0 - , 1 - , 2 - )
-                'seed':[float,0],                               # Random Number Seed (0 - Auto-Seed based on time clock)
-                'xinit':[int,0],                                # Use Initial Solution Flag (0 - random population, 1 - use given solution)
+                    'PopSize': [int, 100],
+                    'maxGen': [int, 150],
+                    'pCross_real': [float, 0.6],
+                    'pMut_real': [float, 0.2],
+                    'eta_c': [float, 10],
+                    'eta_m': [float, 20],
+                    'pCross_bin': [float, 0],
+                    'pMut_bin': [float, 0],
+                    # Flag to Turn On Output to filename (0 - , 1 - , 2 - )
+                    'PrintOut': [int, 1],
+                    # Random Number Seed (0 - Auto-Seed based on time clock)
+                    'seed': [float, 0],
+                    # Use Initial Solution Flag (0 - random population, 1 - use given solution)
+                    'xinit': [int, 0],
                 }
                 informs = {}
                 Optimizer.__init__(self, name, category, def_opts, informs, *args, **kwargs)
@@ -145,7 +148,7 @@ class NSGA2(Optimizer):
                                 from mpi4py import MPI
                         except ImportError:
                                 print('pyNSGA-II: Parallel objective Function Analysis requires mpi4py')
-                        #end
+
                         comm = MPI.COMM_WORLD
                         nproc = comm.Get_size()
                         if (mpi4py.__version__[0] == '0'):
@@ -158,13 +161,13 @@ class NSGA2(Optimizer):
                                 Send = comm.send
                                 Recv = comm.recv
                                 Bcast = comm.bcast
-                        #end
+
                         self.pll = True
                         self.myrank = comm.Get_rank()
                 else:
                         self.pll = False
                         self.myrank = 0
-                #end
+
 
                 myrank = self.myrank
 
@@ -186,37 +189,36 @@ class NSGA2(Optimizer):
                                                 xg[group] = x[group_ids[group][0]]
                                         else:
                                                 xg[group] = x[group_ids[group][0]:group_ids[group][1]]
-                                        #end
-                                #end
+
+
                                 xn = xg
                         else:
                                 xn = x
-                        #end
+
 
                         # Evaluate User Function
                         fail = 0
                         ff = []
                         gg = []
                         if (myrank == 0):
-                                if self.h_start:
+                                if self.hot_start:
                                         [vals,hist_end] = hos_file.read(ident=['obj', 'con', 'fail'])
                                         if hist_end:
-                                                self.h_start = False
+                                                self.hot_start = False
                                                 hos_file.close()
                                         else:
                                                 [ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
-                                        #end
-                                #end
-                        #end
+
+
+
 
                         if self.pll:
-                                self.h_start = Bcast(self.h_start,root=0)
-                        #end
-                        if self.h_start and self.pll:
+                                self.hot_start = Bcast(self.hot_start,root=0)
+
+                        if self.hot_start and self.pll:
                                 [ff,gg,fail] = Bcast([ff,gg,fail],root=0)
-                        elif not self.h_start:
+                        elif not self.hot_start:
                                 [ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
-                        #end
 
                         # Store History
                         if (myrank == 0):
@@ -225,19 +227,19 @@ class NSGA2(Optimizer):
                                         log_file.write(ff,'obj')
                                         log_file.write(gg,'con')
                                         log_file.write(fail,'fail')
-                                #end
-                        #end
+
+
 
                         #
                         if (fail == 1):
                                 # Objective Assigment
                                 for i in range(len(opt_problem._objectives.keys())):
                                         f[i] = inf
-                                #end
+
                                 # Constraints Assigment
                                 for i in range(len(opt_problem._constraints.keys())):
                                         g[i] = -inf
-                                #end
+
                         else:
                                 # Objective Assigment
                                 if (len(opt_problem._objectives.keys()) == 1):
@@ -248,18 +250,18 @@ class NSGA2(Optimizer):
                                                         f[i] = ff[i].astype(float)
                                                 else:
                                                         f[i] = ff[i]
-                                                #end
-                                        #end
-                                #end
+
+
+
                                 # Constraints Assigment
                                 for i in range(len(opt_problem._constraints.keys())):
                                         if isinstance(gg[i],complex):
                                                 g[i] = -gg[i].astype(float)
                                         else:
                                                 g[i] = -gg[i]
-                                        #end
-                                #end
-                        #end
+
+
+
 
                         return f,g
 
@@ -280,9 +282,7 @@ class NSGA2(Optimizer):
                                 raise IOError('Current NSGA-II cannot handle integer design variables')
                         elif (opt_problem._variables[key].type == 'd'):
                                 raise IOError('Current NSGA-II cannot handle discrete design variables')
-                        #end
                         i += 1
-                #end
 
                 # Variables Groups Handling
                 if opt_problem.use_groups:
@@ -292,8 +292,6 @@ class NSGA2(Optimizer):
                                 group_len = len(opt_problem._vargroups[key]['ids'])
                                 group_ids[opt_problem._vargroups[key]['name']] = [k,k+group_len]
                                 k += group_len
-                        #end
-                #end
 
                 # Constraints Handling
                 m = len(opt_problem._constraints.keys())
@@ -304,11 +302,9 @@ class NSGA2(Optimizer):
                         for key in opt_problem._constraints.keys():
                                 if opt_problem._constraints[key].type == 'e':
                                         raise IOError('Current NSGA-II cannot handle equality constraints')
-                                #end
+
                                 #nsga2.doubleArray_setitem(g,j,opt_problem._constraints[key].value)
-                        #end
                         #j += 1
-                #end
 
                 # Objective Handling
                 objfunc = opt_problem.obj_fun
@@ -318,7 +314,7 @@ class NSGA2(Optimizer):
                 #for key in opt_problem._objectives.keys():
                 #       nsga2.doubleArray_setitem(f,k,opt_problem._objectives[key].value)
                 #       k += 1
-                ##end
+                #
 
 
                 # Setup argument list values
@@ -335,22 +331,19 @@ class NSGA2(Optimizer):
                         printout = self.options['PrintOut'][1]
                 else:
                         raise IOError('Incorrect Stopping Criteria Setting')
-                #end
+
                 seed = self.options['seed'][1]
-                if (myrank == 0):
-                        if (seed == 0) and not self.h_start:
-                                seed = time.time()
-                        #end
-                        if self.h_start:
-                                seed = hos_file.read(-1,ident=['seed'])[0]['seed'][0][0]
-                        #end
-                #end
-                if self.pll:
-                        seed = Bcast(seed, root=0)
-                #end
+                if (seed == 0) and not self.hot_start:
+                        seed = time.time() / 2147483647   # must be number between 0 and 1
+                if self.hot_start:
+                        seed = hos_file.read(-1,ident=['seed'])[0]['seed'][0][0]
+
+                #if self.pll:
+                #        seed = Bcast(seed, root=0)
+
                 if self.sto_hst and (myrank == 0):
                         log_file.write(seed,'seed')
-                #end
+
                 xinit = self.options['xinit'][1]
 
                 # Run NSGA-II
@@ -370,19 +363,15 @@ class NSGA2(Optimizer):
                                         os.remove(name+'.bin')
                                         os.rename(name+'_tmp.cue',name+'.cue')
                                         os.rename(name+'_tmp.bin',name+'.bin')
-                                #end
-                        #end
-                #end
+
 
                 # Store Results
                 if store_sol:
-
                         sol_name = 'NSGA-II Solution to ' + opt_problem.name
 
                         sol_options = copy.copy(self.options)
                         if 'defaults' in sol_options:
                                 del sol_options['defaults']
-                        #end
 
                         sol_inform = {}
                         #sol_inform['value'] = inform
@@ -395,14 +384,13 @@ class NSGA2(Optimizer):
                         for key in sol_vars.keys():
                                 sol_vars[key].value = nsga2.doubleArray_getitem(x,i)
                                 i += 1
-                        #end
 
                         sol_objs = copy.deepcopy(opt_problem._objectives)
                         i = 0
                         for key in sol_objs.keys():
                                 sol_objs[key].value = nsga2.doubleArray_getitem(f,i)
                                 i += 1
-                        #end
+
 
                         if m > 0:
                                 sol_cons = copy.deepcopy(opt_problem._constraints)
@@ -410,10 +398,10 @@ class NSGA2(Optimizer):
                                 for key in sol_cons.keys():
                                         sol_cons[key].value = -nsga2.doubleArray_getitem(g,i)
                                         i += 1
-                                #end
+
                         else:
                                 sol_cons = {}
-                        #end
+
 
                         sol_lambda = {}
 
@@ -423,18 +411,18 @@ class NSGA2(Optimizer):
                                 display_opts=disp_opts, Lambda=sol_lambda, myrank=myrank,
                                 arguments=args, **kwargs)
 
-                #end
+
 
                 fstar = [0.]*l
                 for i in range(l):
                         fstar[i] = nsga2.doubleArray_getitem(f,i)
                         i += 1
-                #end
+
 
                 xstar = [0.]*n
                 for i in range(n):
                         xstar[i] = nsga2.doubleArray_getitem(x,i)
-                #end
+
 
                 inform = {}
 

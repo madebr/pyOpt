@@ -139,16 +139,16 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 
 	#
 	if (hstfile != None):
-		h_start = True
+		hot_start = True
 	else:
-		h_start = False
+		hot_start = False
 	#end
 	if (logfile != None):
 		sto_hst = True
 	else:
 		sto_hst = False
 	#end
-	h_start = Bcast(h_start, root=0)
+	hot_start = Bcast(hot_start, root=0)
 
 	# Set random number seed
 	rand = random.Random()
@@ -293,21 +293,21 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 	tau_new = numpy.zeros(constraints,float)
 	tau_old = numpy.zeros(constraints,float)
 	nfevals = 0
-	if h_start:
+	if hot_start:
 		if (myrank == master):
 			[vals,hist_end] = hstfile.read([],ident=['obj','con'])
 			if not hist_end:
 				f = vals['obj'][0]
 				g = vals['con'][0].reshape(g.shape)
 			else:
-				h_start = False
+				hot_start = False
 				hstfile.close()
 				#end
 			#end
 		#end
-		h_start = Bcast(h_start,root=0)
+		hot_start = Bcast(hot_start,root=0)
 	#end
-	if not h_start:
+	if not hot_start:
 		## MPI Objective Function Evaluation
 		Barrier()
 		if myrank == master:
@@ -755,20 +755,20 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
 			#end
 
 
-			if h_start:
+			if hot_start:
 				if (myrank == master):
 					[vals,hist_end] = hstfile.read([],ident=['obj','con'])
 					if not hist_end:
 						f = vals['obj'][0]
 						g = vals['con'][0].reshape(g.shape)
 					else:
-						h_start = False
+						hot_start = False
 						hstfile.close()
 					#end
 				#end
-				h_start = Bcast(h_start,root=0)
+				hot_start = Bcast(hot_start,root=0)
 			#end
-			if not h_start:
+			if not hot_start:
 				## MPI Objective Function Evaluation
 				Barrier()
 				if myrank == master:

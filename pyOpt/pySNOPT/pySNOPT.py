@@ -382,10 +382,10 @@ class SNOPT(Optimizer):
 			# Evaluate User Function
 			fail = 0
 			if (myrank == 0):
-				if self.h_start:
+				if self.hot_start:
 					[vals,hist_end] = hos_file.read(ident=['obj', 'con', 'fail'])
 					if hist_end:
-						self.h_start = False
+						self.hot_start = False
 						hos_file.close()
 					else:
 						[f_obj,f_con,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
@@ -394,11 +394,11 @@ class SNOPT(Optimizer):
 			#end
 
 			if self.pll:
-				self.h_start = Bcast(self.h_start,root=0)
+				self.hot_start = Bcast(self.hot_start,root=0)
 			#end
-			if self.h_start and self.pll:
+			if self.hot_start and self.pll:
 				[f_obj,f_con,fail] = Bcast([f_obj,f_con,fail],root=0)
-			elif not self.h_start:
+			elif not self.hot_start:
 				[f_obj,f_con,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
 			#end
 
@@ -419,11 +419,11 @@ class SNOPT(Optimizer):
 			#end
 
 			# Gradients
-			if mode != 0 and self.h_start:
+			if mode != 0 and self.hot_start:
 				if (myrank == 0):
 					[vals,hist_end] = hos_file.read(ident=['grad_obj','grad_con'])
 					if hist_end:
-						self.h_start = False
+						self.hot_start = False
 						hos_file.close()
 					else:
 						g_obj = vals['grad_obj'][0]
@@ -431,14 +431,14 @@ class SNOPT(Optimizer):
 					#end
 				#end
 				if self.pll:
-					self.h_start = Bcast(self.h_start,root=0)
+					self.hot_start = Bcast(self.hot_start,root=0)
 				#end
-				if self.h_start and self.pll:
+				if self.hot_start and self.pll:
 					[g_obj,g_con] = Bcast([g_obj,g_con],root=0)
 				#end
 			#end
 
-			if mode != 0 and not self.h_start:
+			if mode != 0 and not self.hot_start:
 
 				#
 				dff,dgg = gradient.getGrad(x, group_ids, [f_obj], f_con, *args, **kwargs)

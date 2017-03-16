@@ -92,9 +92,9 @@ def alpso(dimensions, constraints, neqcons, xtype, x0, xmin, xmax, swarmsize, nh
 
     #
     if hstfile is not None:
-        h_start = True
+        hot_start = True
     else:
-        h_start = False
+        hot_start = False
 
     if logfile is not None:
         sto_hst = True
@@ -234,7 +234,7 @@ def alpso(dimensions, constraints, neqcons, xtype, x0, xmin, xmax, swarmsize, nh
     tau_old = numpy.zeros(constraints, float)
     nfevals = 0
 
-    if h_start:
+    if hot_start:
         [vals, hist_end] = hstfile.read([], ident=['obj', 'con'])
         f = vals['obj'][0]
         g = vals['con'][0].reshape(g.shape)
@@ -570,16 +570,16 @@ def alpso(dimensions, constraints, neqcons, xtype, x0, xmin, xmax, swarmsize, nh
                         x_k[i, j] = xmin[j]
 
             # Augmented Lagrange
-            if h_start:
+            if hot_start:
                 [vals, hist_end] = hstfile.read([], ident=['obj', 'con'])
                 if not hist_end:
                     f = vals['obj'][0]
                     g = vals['con'][0].reshape(g.shape)
                 else:
-                    h_start = False
+                    hot_start = False
                     hstfile.close()
 
-            if not h_start:
+            if not hot_start:
                 for i in range(swarmsize):
 
                     # Evaluate Ojective Function

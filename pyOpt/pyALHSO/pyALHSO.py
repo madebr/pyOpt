@@ -201,10 +201,10 @@ class ALHSO(Optimizer):
 			ff = []
 			gg = []
 			if (myrank == 0):
-				if self.h_start:
+				if self.hot_start:
 					[vals,hist_end] = hos_file.read(ident=['obj', 'con', 'fail'])
 					if hist_end:
-						self.h_start = False
+						self.hot_start = False
 						hos_file.close()
 					else:
 						[ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
@@ -213,9 +213,9 @@ class ALHSO(Optimizer):
 			#end
 			
 			if self.pll:
-				self.h_start = Bcast(self.h_start,root=0)
+				self.hot_start = Bcast(self.hot_start,root=0)
 			#end
-			if self.h_start and self.pll:
+			if self.hot_start and self.pll:
 				[ff,gg,fail] = Bcast([ff,gg,fail],root=0)
 			else:	
 				[ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
@@ -351,10 +351,10 @@ class ALHSO(Optimizer):
 		#end
 		seed = self.options['seed'][1]
 		if (myrank == 0):
-			if (seed == 0) and not self.h_start:
+			if (seed == 0) and not self.hot_start:
 				seed = time.time()
 			#end
-			if self.h_start:
+			if self.hot_start:
 				seed = hos_file.read(-1,ident=['seed'])[0]['seed'][0][0]
 			#end
 		#end

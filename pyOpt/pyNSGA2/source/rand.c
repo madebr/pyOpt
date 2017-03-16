@@ -7,12 +7,11 @@
 # include "nsga2.h"
 # include "rand.h"
 
-double seed;
 double oldrand[55];
 int jrand;
 
 /* Get seed number for random and start it up */
-void randomize()
+void randomize(double seed)
 {
     int j1;
     for(j1=0; j1<=54; j1++)
