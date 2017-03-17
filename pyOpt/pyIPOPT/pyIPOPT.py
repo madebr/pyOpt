@@ -28,7 +28,6 @@ try:
     import pyipopt
 except ImportError:
     print('Error: IPOPT shared library failed to import')
-# end
 
 # =============================================================================
 # Standard Python modules
@@ -36,7 +35,6 @@ except ImportError:
 import os
 import copy
 import time
-import pdb
 
 # =============================================================================
 # External Python modules
@@ -50,7 +48,6 @@ from pyOpt import Optimizer
 from pyOpt import History
 from pyOpt import Gradient
 
-
 # =============================================================================
 # Misc Definitions
 # =============================================================================
@@ -59,8 +56,9 @@ inf = 10.E+20  # define a value for infinity
 eps = 1.0  # define a value for machine precision
 while ((eps / 2.0 + 1.0) > 1.0):
     eps = eps / 2.0
-# end
+
 eps = 2.0 * eps
+
 # eps = math.ldexp(1,-52)
 
 # =============================================================================
@@ -83,7 +81,7 @@ class IPOPT(Optimizer):
             # IPOPT Printing Options
             # Print Control (0 - None, 1 - Final,2,3,4,5 - Debug)
             'IPRINT': [int, 2],
-            'IOUT': [int, 6],             # Output Unit Number
+            'IOUT': [int, 6],  # Output Unit Number
             'output_file': [str, 'IPOPT.out'],  # Output File Name
 
             # Output options
@@ -389,10 +387,17 @@ class IPOPT(Optimizer):
         Optimizer.__init__(self, name, category, def_opts, informs, *args,
                            **kwargs)
 
-    def __solve__(self, opt_problem={}, sens_type='FD', store_sol=True,
-                  disp_opts=False, store_hst=False, hot_start=False,
-                  sens_mode='', sens_step={},
-                  *args, **kwargs):
+    def __solve__(self,
+                  opt_problem={},
+                  sens_type='FD',
+                  store_sol=True,
+                  disp_opts=False,
+                  store_hst=False,
+                  hot_start=False,
+                  sens_mode='',
+                  sens_step={},
+                  *args,
+                  **kwargs):
         """
         Run Optimizer (Optimize Routine)
 
@@ -428,15 +433,14 @@ class IPOPT(Optimizer):
                 if (myrank == 0):
                     if (store_hst == hot_start):
                         hos_file = History(hot_start, 'r', self)
-                        log_file = History(store_hst + '_tmp', 'w',
-                                           self, opt_problem.name)
+                        log_file = History(store_hst + '_tmp', 'w', self,
+                                           opt_problem.name)
                         tmp_file = True
                     else:
                         hos_file = History(hot_start, 'r', self)
                         log_file = History(store_hst, 'w', self,
                                            opt_problem.name)
-                    # end
-                # end
+
                 self.sto_hst = True
                 self.hot_start = True
             elif hot_start:
@@ -445,16 +449,16 @@ class IPOPT(Optimizer):
                     log_file = History(store_hst + '_tmp', 'w', self,
                                        opt_problem.name)
                     tmp_file = True
-                # end
+
                 self.sto_hst = True
                 self.hot_start = True
             else:
                 if (myrank == 0):
                     log_file = History(store_hst, 'w', self, opt_problem.name)
-                # end
+
                 self.sto_hst = True
                 self.hot_start = False
-            # end
+
         elif store_hst:
             if isinstance(hot_start, str):
                 if (hot_start == def_fname):
@@ -463,14 +467,13 @@ class IPOPT(Optimizer):
                         log_file = History(def_fname + '_tmp', 'w', self,
                                            opt_problem.name)
                         tmp_file = True
-                    # end
+
                 else:
                     if (myrank == 0):
                         hos_file = History(hot_start, 'r', self)
                         log_file = History(def_fname, 'w', self,
                                            opt_problem.name)
-                    # end
-                # end
+
                 self.sto_hst = True
                 self.hot_start = True
             elif hot_start:
@@ -479,20 +482,19 @@ class IPOPT(Optimizer):
                     log_file = History(def_fname + '_tmp', 'w', self,
                                        opt_problem.name)
                     tmp_file = True
-                # end
+
                 self.sto_hst = True
                 self.hot_start = True
             else:
                 if (myrank == 0):
                     log_file = History(def_fname, 'w', self, opt_problem.name)
-                # end
+
                 self.sto_hst = True
                 self.hot_start = False
-            # end
+
         else:
             self.sto_hst = False
             self.hot_start = False
-        # end
 
         gradient = Gradient(opt_problem, sens_type, sens_mode, sens_step,
                             *args, **kwargs)
@@ -507,12 +509,10 @@ class IPOPT(Optimizer):
                         xg[group] = x[group_ids[group][0]]
                     else:
                         xg[group] = x[group_ids[group][0]:group_ids[group][1]]
-                    # end
-                # end
+
                 xn = xg
             else:
                 xn = x
-            # end
 
             # Flush Output Files
             self.flushFiles()
@@ -527,18 +527,16 @@ class IPOPT(Optimizer):
             #            hos_file.close()
             #        else:
             #            [ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
-            #        #end
-            #    #end
-            # end
+            #
+            #
 
             # if self.pll:
             #    self.hot_start = Bcast(self.hot_start,root=0)
-            # end
+
             # if self.hot_start and self.pll:
             #    [ff,gg,fail] = Bcast([ff,gg,fail],root=0)
             # else:
             [ff, gg, fail] = opt_problem.obj_fun(xn, *args, **kwargs)
-            # end
 
             # Store History
             if (myrank == 0):
@@ -547,15 +545,12 @@ class IPOPT(Optimizer):
                     log_file.write(ff, 'obj')
                     log_file.write(gg, 'con')
                     log_file.write(fail, 'fail')
-                # end
-            # end
 
-            # Objective Assigment
+                # Objective Assigment
             if isinstance(ff, complex):
                 f = ff.astype(float)
             else:
                 f = ff
-            # end
 
             # Constraints Assigment
             g = numpy.zeros(len(opt_problem._constraints.keys()))
@@ -564,8 +559,6 @@ class IPOPT(Optimizer):
                     g[i] = gg[i].astype(float)
                 else:
                     g[i] = gg[i]
-                # end
-            # end
 
             return f
 
@@ -579,38 +572,32 @@ class IPOPT(Optimizer):
                         xg[group] = x[group_ids[group][0]]
                     else:
                         xg[group] = x[group_ids[group][0]:group_ids[group][1]]
-                    # end
-                # end
+
                 xn = xg
             else:
                 xn = x
-            # end
 
             # Flush Output Files
             self.flushFiles()
 
             # Evaluate User Function
             fail = 0
-#            if (myrank == 0):
-#                if self.hot_start:
-#                    [vals,hist_end] = hos_file.read(ident=['obj', 'con', 'fail'])
-#                    if hist_end:
-#                        self.hot_start = False
-#                        hos_file.close()
-#                    else:
-#                        [ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
-            # end
-            # end
-            # end
+            #            if (myrank == 0):
+            #                if self.hot_start:
+            #                    [vals,hist_end] = hos_file.read(ident=['obj', 'con', 'fail'])
+            #                    if hist_end:
+            #                        self.hot_start = False
+            #                        hos_file.close()
+            #                    else:
+            #                        [ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
 
             # if self.pll:
             #   self.hot_start = Bcast(self.hot_start,root=0)
-            # end
+
             # if self.hot_start and self.pll:
             #    [ff,gg,fail] = Bcast([ff,gg,fail],root=0)
             # else:
             [ff, gg, fail] = opt_problem.obj_fun(xn, *args, **kwargs)
-            # end
 
             # Store History
             if (myrank == 0):
@@ -619,15 +606,12 @@ class IPOPT(Optimizer):
                     log_file.write(ff, 'obj')
                     log_file.write(gg, 'con')
                     log_file.write(fail, 'fail')
-                # end
-            # end
 
-            # Objective Assigment
+                # Objective Assigment
             if isinstance(ff, complex):
                 f = ff.astype(float)
             else:
                 f = ff
-            # end
 
             # Constraints Assigment
             g = numpy.zeros(len(opt_problem._constraints.keys()))
@@ -636,8 +620,6 @@ class IPOPT(Optimizer):
                     g[i] = gg[i].astype(float)
                 else:
                     g[i] = gg[i]
-                # end
-            # end
 
             return g
 
@@ -652,35 +634,30 @@ class IPOPT(Optimizer):
             #        else:
             #            dff = vals['grad_obj'][0].reshape((len(opt_problem._objectives.keys()),len(opt_problem._variables.keys())))
             #            dgg = vals['grad_con'][0].reshape((len(opt_problem._constraints.keys()),len(opt_problem._variables.keys())))
-            #        #end
-            #    #end
+            #
+            #
             #    if self.pll:
             #        self.hot_start = Bcast(self.hot_start,root=0)
-            #    #end
+            #
             #    if self.hot_start and self.pll:
             #        [dff,dgg] = Bcast([dff,dgg],root=0)
-            #    #end
-            # end
+            #
 
             # if not self.hot_start:
 
-            opt_problem.is_gradient = True
             [f, g, fail] = opt_problem.obj_fun(x, *args, **kwargs)
             dff, dgg = gradient.getGrad(x, group_ids, [f], g, *args, **kwargs)
-            opt_problem.is_gradient = False
 
             # Store History
             if self.sto_hst and (myrank == 0):
                 log_file.write(dff, 'grad_obj')
                 log_file.write(dgg, 'grad_con')
-            # end
 
             # Gradient Assignment
             df = numpy.zeros(len(opt_problem._variables.keys()))
 
             for i in range(len(opt_problem._variables.keys())):
                 df[i] = dff[0, i]
-            # end
 
             return df
 
@@ -695,23 +672,24 @@ class IPOPT(Optimizer):
             #        else:
             #            dff = vals['grad_obj'][0].reshape((len(opt_problem._objectives.keys()),len(opt_problem._variables.keys())))
             #            dgg = vals['grad_con'][0].reshape((len(opt_problem._constraints.keys()),len(opt_problem._variables.keys())))
-            #        #end
-            #    #end
+            #
+            #
             #    if self.pll:
             #        self.hot_start = Bcast(self.hot_start,root=0)
-            #    #end
+            #
             #    if self.hot_start and self.pll:
             #        [dff,dgg] = Bcast([dff,dgg],root=0)
-            #    #end
-            # end
+            #
 
             # if not self.hot_start:
 
             if flag:
-                a = numpy.zeros(len(opt_problem._variables.keys()) *
-                                len(opt_problem._constraints.keys()), int)
-                b = numpy.zeros(len(opt_problem._variables.keys()) *
-                                len(opt_problem._constraints.keys()), int)
+                a = numpy.zeros(
+                    len(opt_problem._variables.keys()) *
+                    len(opt_problem._constraints.keys()), int)
+                b = numpy.zeros(
+                    len(opt_problem._variables.keys()) *
+                    len(opt_problem._constraints.keys()), int)
 
                 for i in range(len(opt_problem._constraints.keys())):
                     for j in range(len(opt_problem._variables.keys())):
@@ -720,27 +698,24 @@ class IPOPT(Optimizer):
                 return (a, b)
 
             else:
-                opt_problem.is_gradient = True
                 [f, g, fail] = opt_problem.obj_fun(x, *args, **kwargs)
-                dff, dgg = gradient.getGrad(
-                    x, group_ids, [f], g, *args, **kwargs)
-                opt_problem.is_gradient = False
+                dff, dgg = gradient.getGrad(x, group_ids, [f], g, *args,
+                                            **kwargs)
 
                 # Store History
                 if self.sto_hst and (myrank == 0):
                     log_file.write(dff, 'grad_obj')
                     log_file.write(dgg, 'grad_con')
-                # end
 
                 # Gradient Assignment
-                a = numpy.zeros([len(opt_problem._variables.keys()) *
-                                 len(opt_problem._constraints.keys())])
+                a = numpy.zeros([
+                    len(opt_problem._variables.keys()) *
+                    len(opt_problem._constraints.keys())
+                ])
                 for i in range(len(opt_problem._constraints.keys())):
                     for j in range(len(opt_problem._variables.keys())):
                         a[i * len(opt_problem._variables.keys()) +
                           j] = dgg[i, j]
-                    # end
-                # end
 
                 return a
 
@@ -758,8 +733,7 @@ class IPOPT(Optimizer):
                 raise IOError('IPOPT cannot handle integer design variables')
             elif (opt_problem._variables[key].type == 'd'):
                 raise IOError('IPOPT cannot handle discrete design variables')
-            # end
-        # end
+
         xl = numpy.array(xl)
         xu = numpy.array(xu)
         xx = numpy.array(xx)
@@ -770,13 +744,11 @@ class IPOPT(Optimizer):
             k = 0
             for key in opt_problem._vargroups.keys():
                 group_len = len(opt_problem._vargroups[key]['ids'])
-                group_ids[opt_problem._vargroups[key]
-                          ['name']] = [k, k + group_len]
+                group_ids[opt_problem._vargroups[key][
+                    'name']] = [k, k + group_len]
                 k += group_len
-            # end
-        # end
 
-        # Constraints Handling
+            # Constraints Handling
         ncon = len(opt_problem._constraints.keys())
         blc = []
         buc = []
@@ -788,17 +760,16 @@ class IPOPT(Optimizer):
                 elif (opt_problem._constraints[key].type == 'i'):
                     blc.append(opt_problem._constraints[key].lower)
                     buc.append(opt_problem._constraints[key].upper)
-                # end
-            # end
+
         else:
             if ((store_sol) and (myrank == 0)):
                 print("Optimization Problem Does Not Have Constraints\n")
                 print("Unconstrained Optimization Initiated\n")
-            # end
+
             ncon = 1
             blc.append(-inf)
             buc.append(inf)
-        # end
+
         blc = numpy.array(blc)
         buc = numpy.array(buc)
 
@@ -808,7 +779,7 @@ class IPOPT(Optimizer):
         ff = []
         for key in opt_problem._objectives.keys():
             ff.append(opt_problem._objectives[key].value)
-        # end
+
         ff = numpy.array(ff)
 
         # Create an IPOPT instance problem
@@ -848,9 +819,6 @@ class IPOPT(Optimizer):
                     os.remove(name + '.bin')
                     os.rename(name + '_tmp.cue', name + '.cue')
                     os.rename(name + '_tmp.bin', name + '.bin')
-                # end
-            # end
-        # end
 
         ipopt.close()
 
@@ -858,8 +826,7 @@ class IPOPT(Optimizer):
         sol_inform = {}
         print(r)
         sol_inform['value'] = r[-1]  # ifail[0]
-        sol_inform['text'] = self.getInform(
-            r[-1])  # self.getInform(ifail[0])
+        sol_inform['text'] = self.getInform(r[-1])  # self.getInform(ifail[0])
 
         if store_sol:
             sol_name = 'IPOPT Solution to ' + opt_problem.name
@@ -867,7 +834,6 @@ class IPOPT(Optimizer):
             sol_options = copy.copy(self.options)
             if 'default' in sol_options:
                 del sol_options['defaults']
-            # end
 
             sol_evals = 0
 
@@ -877,7 +843,6 @@ class IPOPT(Optimizer):
             for key in sol_vars.keys():
                 sol_vars[key].value = x[i]
                 i += 1
-            # end
 
             sol_objs = copy.deepcopy(opt_problem._objectives)
             sol_objs[0].value = r[4]
@@ -888,16 +853,24 @@ class IPOPT(Optimizer):
                 sol_lambda = r[3]
             else:
                 sol_lambda = {}
-            # end
 
-            opt_problem.addSol(self.__class__.__name__, sol_name, objfunc,
-                               sol_time, sol_evals, sol_inform, sol_vars,
-                               sol_objs, sol_cons, sol_options,
-                               display_opts=disp_opts, Lambda=sol_lambda,
-                               Sensitivities=sens_type, myrank=myrank,
-                               arguments=args, **kwargs)
-
-        # end
+            opt_problem.addSol(
+                self.__class__.__name__,
+                sol_name,
+                objfunc,
+                sol_time,
+                sol_evals,
+                sol_inform,
+                sol_vars,
+                sol_objs,
+                sol_cons,
+                sol_options,
+                display_opts=disp_opts,
+                Lambda=sol_lambda,
+                Sensitivities=sens_type,
+                myrank=myrank,
+                arguments=args,
+                **kwargs)
 
         return ff, xx, sol_inform  # ifail[0]
 
@@ -931,7 +904,6 @@ class IPOPT(Optimizer):
             inform_text = self.informs[infocode]
         except:
             inform_text = 'Unknown Exit Status'
-        # end
 
         return inform_text
 
