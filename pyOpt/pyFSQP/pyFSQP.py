@@ -43,7 +43,6 @@ try:
 	from . import ffsqp
 except:
 	raise ImportError('FSQP shared library failed to import')
-#end
 
 # =============================================================================
 # Standard Python modules
@@ -70,7 +69,6 @@ inf = 10.E+20  # define a value for infinity
 eps = 1.0	# define a value for machine precision
 while ((eps/2.0 + 1.0) > 1.0):
 	eps = eps/2.0
-#end
 eps = 2.0*eps
 #eps = math.ldexp(1,-52)
 
@@ -103,7 +101,6 @@ class FSQP(Optimizer):
 			self.poa = True
 		else:
 			raise ValueError("pll_type must be either None or 'POA'")
-		#end
 		
 		#
 		name = 'FSQP'
@@ -162,13 +159,10 @@ class FSQP(Optimizer):
 				nec += 1
 			if opt_problem._constraints[key].type == 'i':
 				nic += 1
-			#end
-		#end
 		
 		# 
 		if ((self.poa) and (sens_mode.lower() == 'pgc')):
 			raise NotImplementedError("pyFSQP - Current implementation only allows single level parallelization, either 'POA' or 'pgc'")
-		#end
 		
 		if self.poa or (sens_mode.lower() == 'pgc'):
 			try:
@@ -176,20 +170,17 @@ class FSQP(Optimizer):
 				from mpi4py import MPI
 			except ImportError:
 				print('pyFSQP: Parallel objective Function Analysis requires mpi4py')
-			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
 			if (mpi4py.__version__[0] == '0'):
 				Bcast = comm.Bcast
 			elif (mpi4py.__version__[0] == '1'):
 				Bcast = comm.bcast
-			#end
 			self.pll = True
 			self.myrank = comm.Get_rank()
 		else:
 			self.pll = False
 			self.myrank = 0
-		#end
 		
 		myrank = self.myrank
 		
@@ -215,12 +206,9 @@ class FSQP(Optimizer):
 						xg[group] = x[group_ids[group][0]]
 					else:
 						xg[group] = x[group_ids[group][0]:group_ids[group][1]]
-					#end
-				#end
 				xn = xg
 			else:
 				xn = x
-			#end
 			
 			# Flush Output Files
 			self.flushFiles()
@@ -237,18 +225,13 @@ class FSQP(Optimizer):
 						hos_file.close()
 					else:
 						[f,g,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
-					#end
-				#end
-			#end
 			
 			if self.pll:
 				self.hot_start = Bcast(self.hot_start,root=0)
-			#end
 			if self.hot_start and self.pll:
 				[f,g,fail] = Bcast([f,g,fail],root=0)
 			elif not self.hot_start:	
 				[f,g,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
-			#end
 			
 			# Store History
 			if (myrank == 0):
@@ -257,20 +240,15 @@ class FSQP(Optimizer):
 					log_file.write(f,'obj')
 					log_file.write(g,'con')
 					log_file.write(fail,'fail')
-				#end
-			#end
 			
 			# Objective Assigment
 			if isinstance(f,float):
 				f = [f]
-			#end
 			for i in range(len(opt_problem._objectives.keys())):
 				if isinstance(f[i],complex):
 					ff[i] = f[i].astype(float)
 				else:
 					ff[i] = f[i]
-				#end
-			#end
 			
 			# Constraints Assigment
 			i = 0
@@ -279,9 +257,7 @@ class FSQP(Optimizer):
 					gg[i] = g[j].astype(float)
 				else:
 					gg[i] = g[j]
-				#end
 				i += 1
-			#end
 			
 			# Gradients
 			if self.hot_start:
@@ -295,28 +271,21 @@ class FSQP(Optimizer):
 					else:
 						dff = vals['grad_obj'][0].reshape((len(opt_problem._objectives.keys()),len(opt_problem._variables.keys())))
 						dgg = vals['grad_con'][0].reshape((len(opt_problem._constraints.keys()),len(opt_problem._variables.keys())))	
-					#end
-				#end
 				if self.pll:
 					self.hot_start = Bcast(self.hot_start,root=0)
-				#end
 				if self.hot_start and self.pll:
 					[dff,dgg] = Bcast([dff,dgg],root=0)
-				#end
-			#end
 			
 			if not self.hot_start:
 				
 				# 
 				dff,dgg = gradient.getGrad(x, group_ids, f, g, *args, **kwargs)
 				
-			#end
 			
 			# Store History
 			if self.sto_hst and (myrank == 0):
 				log_file.write(dff,'grad_obj')
 				log_file.write(dgg,'grad_con')
-			#end
 			
 			# Store
 			self.stored_data['x'] = copy.copy(x)
@@ -335,7 +304,6 @@ class FSQP(Optimizer):
 			
 			if ((self.stored_data['x'] != x).any()):
 				eval(x)
-			#end
 			
 			ff = self.stored_data['f']
 			if (nobj == 1):
@@ -343,9 +311,7 @@ class FSQP(Optimizer):
 			else:
 				if isinstance(ff,list):
 					ff = numpy.array(ff)
-				#end
 				fj = ff[j-1]
-			#end
 			
 			return fj
 		
@@ -359,14 +325,12 @@ class FSQP(Optimizer):
 			
 			if ((self.stored_data['x'] != x).any()):
 				eval(x)
-			#end			
 			
 			gg = self.stored_data['g']
 			if (j <= nic):
 				jg = nec + (j-1)
 			else:
 				jg = (j-1) - nic
-			#end
 			gj = gg[jg]	
 			
 			return gj
@@ -381,12 +345,10 @@ class FSQP(Optimizer):
 			
 			if ((self.stored_data['x'] != x).any()):
 				eval(x)
-			#end			
 			
 			df = self.stored_data['df']
 			for i in range(len(opt_problem._variables.keys())):
 				gradfj[i] = df[j-1,i]
-			#end
 			
 			return gradfj
 		
@@ -400,14 +362,12 @@ class FSQP(Optimizer):
 			
 			if ((self.stored_data['x'] != x).any()):
 				eval(x)
-			#end
 			
 			dg = self.stored_data['dg']
 			if (j <= nic):
 				jg = nec + (j-1)
 			else:
 				jg = (j-1) - nic
-			#end
 			gradgj = dg[jg]
 			
 			return gradgj
@@ -423,7 +383,6 @@ class FSQP(Optimizer):
 			xl.append(opt_problem._variables[key].lower)
 			xu.append(opt_problem._variables[key].upper)
 			xx.append(opt_problem._variables[key].value)
-		#end
 		xl = numpy.array(xl)
 		xu = numpy.array(xu)
 		xx = numpy.array(xx)
@@ -436,8 +395,6 @@ class FSQP(Optimizer):
 				group_len = len(opt_problem._vargroups[key]['ids'])
 				group_ids[opt_problem._vargroups[key]['name']] = [k,k+group_len]
 				k += group_len
-			#end
-		#end		
 		
 		# Constraints Handling
 		ncon = len(opt_problem._constraints.keys())
@@ -447,13 +404,10 @@ class FSQP(Optimizer):
 			for key in opt_problem._constraints.keys():
 				if opt_problem._constraints[key].type == 'e':
 					neqc += 1
-				#end
 				gg.append(opt_problem._constraints[key].value)
-			#end
 			gg = numpy.array(gg, numpy.float)
 		else:
 			gg = numpy.array([0] ,numpy.float)
-		#end
 		
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
@@ -461,7 +415,6 @@ class FSQP(Optimizer):
 		ff = []
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
-		#end
 		ff = numpy.array(ff, numpy.float)
 		
 		
@@ -478,17 +431,13 @@ class FSQP(Optimizer):
 				iprint = numpy.array([self.options['iprint'][1]], numpy.int)
 			else:
 				raise IOError('Incorrect Output Level Setting')
-			#end
 		else:
 			iprint = numpy.array([0], numpy.int)
-		#end
 		iout = numpy.array([self.options['iout'][1]], numpy.int)
 		ifile = self.options['ifile'][1]
 		if (iprint > 0):
 			if os.path.isfile(ifile):
 				os.remove(ifile)
-			#end
-		#end
 		miter = numpy.array([self.options['miter'][1]], numpy.int)
 		inform = numpy.array([0], numpy.int)
 		bigbnd = numpy.array([self.options['bigbnd'][1]], numpy.float)
@@ -529,13 +478,9 @@ class FSQP(Optimizer):
 					os.remove(name+'.bin')
 					os.rename(name+'_tmp.cue',name+'.cue')
 					os.rename(name+'_tmp.bin',name+'.bin')
-				#end
-			#end
-		#end
 		
 		if (iprint > 0):
 			ffsqp.closeunit(self.options['iout'][1])
-		#end
 		
 		
 		# Store Results
@@ -550,7 +495,6 @@ class FSQP(Optimizer):
 			sol_options = copy.copy(self.options)
 			if 'defaults' in sol_options:
 				del sol_options['defaults']
-			#end
 			
 			sol_evals = 0
 			
@@ -559,14 +503,12 @@ class FSQP(Optimizer):
 			for key in sol_vars.keys():
 				sol_vars[key].value = xx[i]
 				i += 1
-			#end
 			
 			sol_objs = copy.deepcopy(opt_problem._objectives)
 			i = 0
 			for key in sol_objs.keys():
 				sol_objs[key].value = ff[i]
 				i += 1
-			#end
 			
 			if ncon > 0:
 				sol_cons = copy.deepcopy(opt_problem._constraints)
@@ -574,19 +516,15 @@ class FSQP(Optimizer):
 				for key in sol_cons.keys():
 					sol_cons[key].value = gg[i]
 					i += 1
-				#end
 			else:
 				sol_cons = {}
-			#end
 			
 			if ncon > 0:
 				sol_lambda = numpy.zeros(ncon,float)
 				for i in range(ncon):
 					sol_lambda[i] = w[nvar+i]
-				#end
 			else:
 				sol_lambda = {}
-			#end
 			
 			
 			opt_problem.addSol(self.__class__.__name__, sol_name, objfunc, sol_time, 
@@ -594,7 +532,6 @@ class FSQP(Optimizer):
 				display_opts=disp_opts, Lambda=sol_lambda, Sensitivities=sens_type, 
 				myrank=myrank, arguments=args, **kwargs)
 			
-		#end
 		
 		return ff, xx, sol_inform
 		
@@ -649,7 +586,6 @@ class FSQP(Optimizer):
 		iprint = self.options['iprint'][1]
 		if (iprint > 1):
 			ffsqp.pyflush(self.options['iout'][1])	
-		#end
 	
 
 

@@ -5,32 +5,26 @@ from numpy.distutils.command.build_ext import build_ext
 
 if os.path.exists('MANIFEST'): 
     os.remove('MANIFEST')
-#end
 
 if sys.version_info[:2] < (2, 4):
     print(('pyOpt requires Python version 2.4 or later (%d.%d detected).' %sys.version_info[:2]))
     sys.exit(-1)
-#end
 
 try:                  
     import numpy
     if int(numpy.__version__.split('.')[0]) < 1:
         print(('pyOpt requires NumPy version 1.0 or later (%s detected).' %numpy.__version__))
         sys.exit(-1)
-    #end
 except ImportError:
     print('NumPy version 1.0 or later must be installed to build pyOpt')
     sys.exit(-1)
-#end
 
 if sys.argv[-1].endswith('setup.py'):
     print('\nTo install, run "python setup.py install"\n\nTo build, run "python setup.py inplace"\n')
     sys.exit(-1)
-#end
 
 if sys.argv[1] == 'inplace':
     sys.argv[1:2] = ['build_src','--inplace','build_ext','--inplace','build']
-#end
 
 if sys.argv[1] == 'install':
     arg = []
@@ -41,13 +35,9 @@ if sys.argv[1] == 'install':
             del sys.argv[i]
         else:
             i += 1
-        #end
-    #end
     if arg != []:
         arg.insert(0,'build')
         sys.argv[1:1] = arg
-    #end
-#end
 
 if sys.argv[1] == 'compilers':
     del sys.argv[1]
@@ -57,7 +47,6 @@ if sys.argv[1] == 'compilers':
     from numpy.distutils.ccompiler import show_compilers
     show_compilers()
     sys.exit()
-#end
 
 
 class build_opt(build_ext):
@@ -67,9 +56,6 @@ class build_opt(build_ext):
         except:
             self.announce('*** WARNING: Building of optimizer "%s" '
             'failed: %s' %(ext.name, sys.exc_info()[1]))
-        #end
-    #end
-#end
 
 
 def configuration(parent_package='',top_path=None):

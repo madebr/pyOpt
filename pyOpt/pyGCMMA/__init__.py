@@ -5,4 +5,3 @@ try:
     __all__ = ['GCMMA']
 except:
     __all__ = []
-#end

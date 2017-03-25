@@ -89,26 +89,20 @@ class Constraint(object):
                     self.lower = float(kwargs['lower'])
                 #else:
                     #self.lower = -float(inf)
-                #end
                 if (key == 'upper'):
                     self.upper = float(kwargs['upper'])
                 #else:
                     #self.upper = float(inf) 
-                #end
-            #end
         elif (type[0].lower() == 'e'):
             if 'equal' in kwargs:
                 self.equal = float(kwargs['equal'])
             else:
                 self.equal = 0.0
-            #end
         else:
             raise IOError('Constraint type not understood -- use either i(nequality) or e(quality)')
-        #end
         
         #if (kwargs['nvars']):
         #	self.sensitivity = numpy.zeros(kwargs['nvars'],float)
-        ##end
         
         
     def ListAttributes(self):
@@ -155,8 +149,6 @@ def ListAttributes(self):
         for key in self_keys:
             if key != 'name':
                 print(str(key) + ' : ' + repr(self.__dict__[key]))
-            #end
-        #end
         print('\n')
     
 

@@ -43,7 +43,6 @@ try:
 	from . import solvopt
 except:
 	raise ImportError('SOLVOPT shared library failed to import')
-#end
 
 # =============================================================================
 # Standard Python modules
@@ -70,7 +69,6 @@ inf = 10.E+20  # define a value for infinity
 eps = 1.0	# define a value for machine precision
 while ((eps/2.0 + 1.0) > 1.0):
 	eps = eps/2.0
-#end
 eps = 2.0*eps
 #eps = math.ldexp(1,-52)
 
@@ -103,7 +101,6 @@ class SOLVOPT(Optimizer):
 			self.poa = True
 		else:
 			raise ValueError("pll_type must be either None or 'POA'")
-		#end
 		
 		# 
 		name = 'SOLVOPT'
@@ -160,7 +157,6 @@ class SOLVOPT(Optimizer):
 		# 
 		if ((self.poa) and (sens_mode.lower() == 'pgc')):
 			raise NotImplementedError("pySOLVOPT - Current implementation only allows single level parallelization, either 'POA' or 'pgc'")
-		#end
 		
 		if self.poa or (sens_mode.lower() == 'pgc'):
 			try:
@@ -168,20 +164,17 @@ class SOLVOPT(Optimizer):
 				from mpi4py import MPI
 			except ImportError:
 				print('pySOLVOPT: Parallel objective Function Analysis requires mpi4py')
-			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
 			if (mpi4py.__version__[0] == '0'):
 				Bcast = comm.Bcast
 			elif (mpi4py.__version__[0] == '1'):
 				Bcast = comm.bcast
-			#end
 			self.pll = True
 			self.myrank = comm.Get_rank()
 		else:
 			self.pll = False
 			self.myrank = 0
-		#end
 		
 		myrank = self.myrank
 		
@@ -206,12 +199,9 @@ class SOLVOPT(Optimizer):
 						xg[group] = x[group_ids[group][0]]
 					else:
 						xg[group] = x[group_ids[group][0]:group_ids[group][1]]
-					#end
-				#end
 				xn = xg
 			else:
 				xn = x
-			#end
 			
 			# Flush Output Files
 			self.flushFiles()
@@ -228,18 +218,13 @@ class SOLVOPT(Optimizer):
 						hos_file.close()
 					else:
 						[f,g,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
-					#end
-				#end
-			#end
 			
 			if self.pll:
 				self.hot_start = Bcast(self.hot_start,root=0)
-			#end
 			if self.hot_start and self.pll:
 				[f,g,fail] = Bcast([f,g,fail],root=0)
 			elif not self.hot_start:	
 				[f,g,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
-			#end
 			
 			# Store History
 			if (myrank == 0):
@@ -248,8 +233,6 @@ class SOLVOPT(Optimizer):
 					log_file.write(f,'obj')
 					log_file.write(g,'con')
 					log_file.write(fail,'fail')
-				#end
-			#end
 			
 			# Gradients
 			if self.hot_start:
@@ -263,36 +246,27 @@ class SOLVOPT(Optimizer):
 					else:
 						df = vals['grad_obj'][0].reshape((len(opt_problem._objectives.keys()),len(opt_problem._variables.keys())))
 						dg = vals['grad_con'][0].reshape((len(opt_problem._constraints.keys()),len(opt_problem._variables.keys())))	
-					#end
-				#end
 				if self.pll:
 					self.hot_start = Bcast(self.hot_start,root=0)
-				#end
 				if self.hot_start and self.pll:
 					[df,dg] = Bcast([df,dg],root=0)
-				#end
-			#end
 			
 			if not self.hot_start:
 				# 
 				df,dg = gradient.getGrad(x, group_ids, [f], g, *args, **kwargs)
 				
-			#end
 			
 			# Store History
 			if (myrank == 0):
 				if self.sto_hst:
 					log_file.write(df,'grad_obj')
 					log_file.write(dg,'grad_con')
-				#end
-			#end
 			
 			# Objective Assigment
 			if isinstance(f,complex):
 				ff = f.astype(float)
 			else:
 				ff = f
-			#end
 			
 			# Constraints Assigment
 			i = 0
@@ -302,19 +276,14 @@ class SOLVOPT(Optimizer):
 					gg[i] = g[j].astype(float)
 				else:
 					gg[i] = g[j]
-				#end
 				i += 1
-			#end
 			for key in opt_problem._variables.keys():
 				if (opt_problem._variables[key].lower != -inf):
 					gg[i] = xl[j] - x[j]
 					i += 1
-				#end
 				if (opt_problem._variables[key].upper != inf):
 					gg[i] = x[j] - xu[j]
 					i += 1
-				#end
-			#end
 			
 			# Gradient Assignment
 			df = df[0]
@@ -325,17 +294,12 @@ class SOLVOPT(Optimizer):
 				if (opt_problem._variables[key].lower != -inf): 
 					if (gg[i] > 0):
 						dgg[j,j] = -1
-					#end	
 					i += 1
-				#end
 				if (opt_problem._variables[key].upper != inf): 
 					if (gg[i] > 0):
 						dgg[j,j] = 1
-					#end
 					i += 1
-				#end
 				j += 1
-			#end
 			dg = numpy.concatenate((dg,dgg),axis=0)
 			
 			
@@ -356,7 +320,6 @@ class SOLVOPT(Optimizer):
 			
 			if ((self.stored_data['x'] != x).any()):
 				soeval(x)
-			#end
 			
 			f = self.stored_data['f']
 			
@@ -370,7 +333,6 @@ class SOLVOPT(Optimizer):
 			
 			if ((self.stored_data['x'] != x).any()):
 				soeval(x)
-			#end
 			
 			# Constraints Maximal Residual
 			maxg = numpy.zeros([len(self.stored_data['g'])],float)
@@ -382,12 +344,9 @@ class SOLVOPT(Optimizer):
 				elif opt_problem._constraints[key].type == 'i':
 					maxg[i] = max(0,self.stored_data['g'][i])
 					i += 1
-				#end
-			#end
 			for j in range(len(opt_problem._constraints),len(self.stored_data['g'])):
 				maxg[i] = max(0,self.stored_data['g'][i])
 				i += 1
-			#end
 			
 			g = max(maxg)
 			
@@ -401,7 +360,6 @@ class SOLVOPT(Optimizer):
 			
 			if ((self.stored_data['x'] != x).any()):
 				soeval(x)
-			#end
 			
 			df = self.stored_data['df']
 			
@@ -415,7 +373,6 @@ class SOLVOPT(Optimizer):
 			
 			if ((self.stored_data['x'] != x).any()):
 				soeval(x)
-			#end
 			
 			# Constraints Maximal Residual
 			maxg = numpy.zeros([len(self.stored_data['g'])],float)
@@ -427,12 +384,9 @@ class SOLVOPT(Optimizer):
 				elif opt_problem._constraints[key].type == 'i':
 					maxg[i] = max(0,self.stored_data['g'][i])
 					i += 1
-				#end
-			#end
 			for j in range(len(opt_problem._constraints),len(self.stored_data['g'])):
 				maxg[i] = max(0,self.stored_data['g'][i])
 				i += 1
-			#end
 			id = min(numpy.nonzero(maxg==max(maxg))[0])
 			
 			dg = self.stored_data['dg'][id]
@@ -455,8 +409,6 @@ class SOLVOPT(Optimizer):
 				raise IOError('SOLVOPT cannot handle integer design variables')
 			elif (opt_problem._variables[key].type == 'd'):
 				raise IOError('SOLVOPT cannot handle discrete design variables')
-			#end
-		#end
 		xl = numpy.array(xl)
 		xu = numpy.array(xu)
 		xx = numpy.array(xx)
@@ -469,8 +421,6 @@ class SOLVOPT(Optimizer):
 				group_len = len(opt_problem._vargroups[key]['ids'])
 				group_ids[opt_problem._vargroups[key]['name']] = [k,k+group_len]
 				k += group_len
-			#end
-		#end		
 		
 		# Constraints Handling
 		ncon = len(opt_problem._constraints.keys())
@@ -480,22 +430,16 @@ class SOLVOPT(Optimizer):
 			for key in opt_problem._constraints.keys():
 				if opt_problem._constraints[key].type == 'e':
 					neqc += 1
-				#end
 				#gg.append(opt_problem._constraints[key].value)
 				gg.append(opt_problem._constraints[key].upper)
-			#end
-		#end
 		nadd = 0
 		for key in opt_problem._variables.keys():
 			if (opt_problem._variables[key].lower != -inf): 
 				gg.append(0)
 				nadd += 1
-			#end
 			if (opt_problem._variables[key].upper != inf): 
 				gg.append(0)
 				nadd += 1
-			#end
-		#end
 		gg = numpy.array(gg,numpy.float)
 		
 		# Objective Handling
@@ -504,7 +448,6 @@ class SOLVOPT(Optimizer):
 		ff = []
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
-		#end
 		ff = numpy.array(ff,numpy.float)
 		
 		
@@ -516,7 +459,6 @@ class SOLVOPT(Optimizer):
 			iprint = -1
 		else:
 			iprint = self.options['iprint'][1]
-		#end
 		options = numpy.zeros([13], numpy.float)
 		options[0] = -1  						# Minimize
 		options[1] = self.options['xtol'][1]	# Variables Tolerance
@@ -534,8 +476,6 @@ class SOLVOPT(Optimizer):
 		if (iprint >= 0):
 			if os.path.isfile(ifile):
 				os.remove(ifile)
-			#end
-		#end
 		wb = numpy.zeros([nvar,nvar], numpy.float)
 		wg = numpy.zeros([nvar], numpy.float)
 		wg0 = numpy.zeros([nvar], numpy.float)
@@ -576,13 +516,9 @@ class SOLVOPT(Optimizer):
 					os.remove(name+'.bin')
 					os.rename(name+'_tmp.cue',name+'.cue')
 					os.rename(name+'_tmp.bin',name+'.bin')
-				#end
-			#end		
-		#end
 		
 		if (iprint > 0):
 			solvopt.closeunit(self.options['iout'][1])
-		#end
 		
 		# Store Results
 		sol_inform = {}
@@ -596,7 +532,6 @@ class SOLVOPT(Optimizer):
 			sol_options = copy.copy(self.options)
 			if 'defaults' in sol_options:
 				del sol_options['defaults']
-			#end
 			
 			sol_evals = options[9]+options[10] # assumes cnst fevals and gevals are included in feval & geval
 			
@@ -605,14 +540,12 @@ class SOLVOPT(Optimizer):
 			for key in sol_vars.keys():
 				sol_vars[key].value = xx[i]
 				i += 1
-			#end
 			
 			sol_objs = copy.deepcopy(opt_problem._objectives)
 			i = 0
 			for key in sol_objs.keys():
 				sol_objs[key].value = ff[i]
 				i += 1
-			#end
 			
 			if ncon > 0:
 				sol_cons = copy.deepcopy(opt_problem._constraints)
@@ -622,11 +555,8 @@ class SOLVOPT(Optimizer):
 					i += 1
 					if (i >= ncon):
 						break
-					#end
-				#end
 			else:
 				sol_cons = {}
-			#end
 			
 			sol_lambda = {}
 			
@@ -636,7 +566,6 @@ class SOLVOPT(Optimizer):
 				display_opts=disp_opts, Lambda=sol_lambda, Sensitivities=sens_type, 
 				myrank=myrank, arguments=args, **kwargs)
 			
-		#end
 		
 		return ff, xx, sol_inform
 		
@@ -679,7 +608,6 @@ class SOLVOPT(Optimizer):
 			return self.informs[1]
 		else:
 			return self.informs[infocode]
-		#end
 		
 		
 	def _on_flushFiles(self):
@@ -694,7 +622,6 @@ class SOLVOPT(Optimizer):
 		iprint = self.options['iprint'][1]
 		if (iprint >= 0):
 			solvopt.pyflush(self.options['iout'][1])	
-		#end
 	
 
 

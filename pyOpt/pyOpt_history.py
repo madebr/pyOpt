@@ -92,27 +92,20 @@ class History(object):
 			# 
 			if os.path.isfile(bin_name):
 				os.remove(bin_name)
-			#end
 			if os.path.isfile(cue_name):
 				os.remove(cue_name)
-			#end
 			#if os.path.isfile(opt_name):
 			#	os.remove(opt_name)
-			##end   
 			
 		else:
 			
 			if not os.path.isfile(bin_name):
 				raise NameError('Error: filename %s.bin does not exist'%(filename))
-			#end
 			if not os.path.isfile(cue_name):
 				raise NameError('Error: filename %s.cue does not exist'%(filename))
-			#end
 			#if not os.path.isfile(opt_name):
 			#	raise NameError('Error: filename %s.opt does not exist'%(filename))
-			##end
 			
-		#end
 		
 		# 
 		self.bin_file = open(bin_name,mode+'b')
@@ -127,7 +120,6 @@ class History(object):
 				optname = 'None'
 			else:
 				optname = optimizer.name
-			#end
 			header = 'History for %s solving %s\n' %(optname,opt_prob)
 			self.cue_file.write(header)
 			#self.opt_file['optimizer'] = optimizer
@@ -144,7 +136,6 @@ class History(object):
 #				self.opt_file.close()
 #				self.s_count = 0
 #				return
-#			#end
 			lines = self.cue_file.readlines()			
 			for line in lines[1:]:
 				
@@ -158,11 +149,7 @@ class History(object):
 					else:
 						self.cues[tline[2]] = [[int(tline[0]),int(tline[1])]]
 						self.icount[tline[2]] = 0						
-					#end
-				#end
-			#end 
 			self.cue_file.close()
-		#end
 		
 		# 
 		self.s_count = 0
@@ -179,7 +166,6 @@ class History(object):
 		self.bin_file.close()
 		if self.mode == 'w':
 			self.cue_file.close()
-		#end
 		
 		
 	def read(self, index=[], ident=['obj']):
@@ -205,7 +191,6 @@ class History(object):
 				if isinstance(index,int):
 					if (index == -1):
 						index = len(self.cues[id])-1
-					#end
 					
 					index = [index, index+1]
 				elif isinstance(index,list):
@@ -214,27 +199,21 @@ class History(object):
 						self.icount[id] += 1
 					elif (index == [0,-1]):
 						index = [0, len(self.cues[id])]
-					#end
 				else:
 					raise ValueError('Index type not understood - must be either int or list')
-				#end
 			else:
 				hist_end = True
 				return (bdata,hist_end)
-			#end
 			for i in range(index[0],index[1]):
 				
 				#
 				if (i >= len(self.cues[id])):
 					hist_end = True
 					return (bdata,hist_end)
-				#end
 				tvals = ARRAY.array('d')
 				self.bin_file.seek(self.cues[id][i][0]*8,0)
 				tvals.fromfile(self.bin_file,self.cues[id][i][1])
 				bdata[id].append(numpy.array(tvals))
-			#end
-		#end
 		
 		return (bdata, hist_end)
 		

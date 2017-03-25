@@ -134,7 +134,6 @@ def configuration(parent_package='',top_path=None):
 	extra_link_args = []
 	if sys.platform == "darwin":
 		extra_link_args.append("-bundle")
-	#end
 	
 	config.add_library('nsga2',
 		sources=[os.path.join('source', '*.c')])

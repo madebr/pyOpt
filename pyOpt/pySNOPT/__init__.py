@@ -5,4 +5,3 @@ try:
     __all__ = ['SNOPT']
 except:
     __all__ = []
-#end

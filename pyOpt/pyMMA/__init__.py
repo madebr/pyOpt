@@ -5,4 +5,3 @@ try:
     __all__ = ['MMA']
 except:
     __all__ = []
-#end

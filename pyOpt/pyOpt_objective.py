@@ -82,7 +82,6 @@ class Objective(object):
         
         #if (kwargs['nvars']):
         #	self.sensitivity = numpy.zeros(kwargs['nvars'],float)
-        ##end
         
         
     def ListAttributes(self):
@@ -126,8 +125,6 @@ def ListAttributes(self):
         for key in self_keys:
             if key != 'name':
                 print(str(key) + ' : ' + repr(self.__dict__[key]))
-            #end
-        #end
         print('\n')
     
 

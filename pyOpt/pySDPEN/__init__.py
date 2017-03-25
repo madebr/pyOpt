@@ -5,4 +5,3 @@ try:
     __all__ = ['SDPEN']
 except:
     __all__ = []
-#end

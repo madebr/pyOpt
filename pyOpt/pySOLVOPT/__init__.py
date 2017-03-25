@@ -5,4 +5,3 @@ try:
     __all__ = ['SOLVOPT']
 except:
     __all__ = []
-#end

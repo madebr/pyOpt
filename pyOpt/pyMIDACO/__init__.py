@@ -5,4 +5,3 @@ try:
     __all__ = ['MIDACO']
 except:
     __all__ = []
-#end

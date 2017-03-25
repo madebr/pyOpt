@@ -61,7 +61,6 @@ try:
 	from . import snopt
 except:
 	raise ImportError('SNOPT shared library failed to import')
-#end
 
 # =============================================================================
 # Standard Python modules
@@ -88,7 +87,6 @@ inf = 10.E+20  # define a value for infinity
 eps = 1.0	# define a value for machine precision
 while ((eps/2.0 + 1.0) > 1.0):
 	eps = eps/2.0
-#end
 eps = 2.0*eps
 #eps = math.ldexp(1,-52)
 
@@ -121,7 +119,6 @@ class SNOPT(Optimizer):
 			self.poa = True
 		else:
 			raise ValueError("pll_type must be either None or 'POA'")
-		#end
 
 		#
 		name = 'SNOPT'
@@ -323,7 +320,6 @@ class SNOPT(Optimizer):
 		#
 		if ((self.poa) and (sens_mode.lower() == 'pgc')):
 			raise NotImplementedError("pySNOPT - Current implementation only allows single level parallelization, either 'POA' or 'pgc'")
-		#end
 
 		if self.poa or (sens_mode.lower() == 'pgc'):
 			try:
@@ -331,20 +327,17 @@ class SNOPT(Optimizer):
 				from mpi4py import MPI
 			except ImportError:
 				print('pySNOPT: Parallel objective Function Analysis requires mpi4py')
-			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
 			if (mpi4py.__version__[0] == '0'):
 				Bcast = comm.Bcast
 			elif (mpi4py.__version__[0] == '1'):
 				Bcast = comm.bcast
-			#end
 			self.pll = True
 			self.myrank = comm.Get_rank()
 		else:
 			self.pll = False
 			self.myrank = 0
-		#end
 
 		myrank = self.myrank
 
@@ -369,12 +362,9 @@ class SNOPT(Optimizer):
 						xg[group] = x[group_ids[group][0]]
 					else:
 						xg[group] = x[group_ids[group][0]:group_ids[group][1]]
-					#end
-				#end
 				xn = xg
 			else:
 				xn = x
-			#end
 
 			# Flush Output Files
 			self.flushFiles()
@@ -389,18 +379,13 @@ class SNOPT(Optimizer):
 						hos_file.close()
 					else:
 						[f_obj,f_con,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
-					#end
-				#end
-			#end
 
 			if self.pll:
 				self.hot_start = Bcast(self.hot_start,root=0)
-			#end
 			if self.hot_start and self.pll:
 				[f_obj,f_con,fail] = Bcast([f_obj,f_con,fail],root=0)
 			elif not self.hot_start:
 				[f_obj,f_con,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
-			#end
 
 			# Store History
 			if (myrank == 0):
@@ -409,14 +394,11 @@ class SNOPT(Optimizer):
 					log_file.write(f_obj,'obj')
 					log_file.write(f_con,'con')
 					log_file.write(fail,'fail')
-				#end
-			#end
 
 			#
 			if (fail == 1):
 				mode = -1
 				return mode
-			#end
 
 			# Gradients
 			if mode != 0 and self.hot_start:
@@ -428,15 +410,10 @@ class SNOPT(Optimizer):
 					else:
 						g_obj = vals['grad_obj'][0]
 						g_con = vals['grad_con'][0].reshape((len(opt_problem._constraints.keys()),len(opt_problem._variables.keys())))
-					#end
-				#end
 				if self.pll:
 					self.hot_start = Bcast(self.hot_start,root=0)
-				#end
 				if self.hot_start and self.pll:
 					[g_obj,g_con] = Bcast([g_obj,g_con],root=0)
-				#end
-			#end
 
 			if mode != 0 and not self.hot_start:
 
@@ -448,31 +425,22 @@ class SNOPT(Optimizer):
 					g_obj[i] = dff[0,i]
 					for j in range(len(opt_problem._constraints.keys())):
 						g_con[j,i] = dgg[j,i]
-					#end
-				#end
-			#end
 
 			if (myrank == 0):
 				if mode != 0 and self.sto_hst:
 					log_file.write(g_obj,'grad_obj')
 					log_file.write(g_con,'grad_con')
-				#end
-			#end
 
 			# Objective Assigment
 			if isinstance(f_obj,complex):
 				f_obj = f_obj.astype(float)
-			#end
 
 			# Constraints Assigment
 			for i in range(len(opt_problem._constraints.keys())):
 				if isinstance(f_con[i],complex):
 					f_con[i] = f_con[i].astype(float)
-				#end
-			#end
 			if not f_con:
 				f_con = [0]
-			#end
 
 			return mode,f_obj,g_obj,f_con,g_con
 
@@ -492,8 +460,6 @@ class SNOPT(Optimizer):
 				raise IOError('SNOPT cannot handle integer design variables')
 			elif (opt_problem._variables[key].type == 'd'):
 				raise IOError('SNOPT cannot handle discrete design variables')
-			#end
-		#end
 		blx = numpy.array(blx)
 		bux = numpy.array(bux)
 		xs = numpy.array(xs)
@@ -506,8 +472,6 @@ class SNOPT(Optimizer):
 				group_len = len(opt_problem._vargroups[key]['ids'])
 				group_ids[opt_problem._vargroups[key]['name']] = [k,k+group_len]
 				k += group_len
-			#end
-		#end
 
 		# Constraints Handling
 		ncon = len(opt_problem._constraints.keys())
@@ -521,17 +485,13 @@ class SNOPT(Optimizer):
 				elif (opt_problem._constraints[key].type == 'i'):
 					blc.append(opt_problem._constraints[key].lower)
 					buc.append(opt_problem._constraints[key].upper)
-				#end
-			#end
 		else:
 			#if ((store_sol) and (myrank == 0)):
 			#	print "Optimization Problem Does Not Have Constraints\n"
 			#	print "Unconstrained Optimization Initiated\n"
-			##end
 			ncon = 1
 			blc.append(-inf)
 			buc.append( inf)
-		#end
 		blc = numpy.array(blc)
 		buc = numpy.array(buc)
 
@@ -541,7 +501,6 @@ class SNOPT(Optimizer):
 		ff = []
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
-		#end
 		ff = numpy.array(ff, numpy.float)
 
 
@@ -549,32 +508,24 @@ class SNOPT(Optimizer):
 		iPrint = self.options['iPrint'][1]
 		if (myrank != 0):
 			iPrint = 0
-		#end
 		PrintFile = self.options['Print file'][1]
 		if (iPrint != 0):
 			if os.path.isfile(PrintFile):
 				os.remove(PrintFile)
-			#end
 			ierror = snopt.openunit(iPrint, numpy.array(PrintFile), numpy.array('new'), numpy.array('sequential'))
 			if (ierror != 0):
 				raise IOError('Failed to properly open %s, ierror = %3d' %(PrintFile,ierror))
-			#end
-		#end
 
 		iSumm = self.options['iSumm'][1]
 		if (myrank != 0):
 			iSumm = 0
-		#end
 		SummFile = self.options['Summary file'][1]
 		if (iSumm != 0):
 			if os.path.isfile(SummFile):
 				os.remove(SummFile)
-			#end
 			ierror = snopt.openunit(iSumm, numpy.array(SummFile), numpy.array('new'), numpy.array('sequential'))
 			if (ierror != 0):
 				raise IOError('Failed to properly open %s, ierror = %3d' %(SummFile,ierror))
-			#end
-		#end
 		lencw = 500
 		leniw = 500 + 100 * (ncon+nvar)
 		lenrw = 500 + 200 * (ncon+nvar)
@@ -585,7 +536,6 @@ class SNOPT(Optimizer):
 		string = []
 		for i in range(lencw):
 			string.append('        ')
-		#end
 		cw = numpy.array(string,'c')
 		iw = numpy.zeros(leniw, 'i')
 		rw = numpy.zeros(lenrw, numpy.float)
@@ -607,17 +557,13 @@ class SNOPT(Optimizer):
 					string = string + "        "
 				# end for
 				cw = numpy.transpose(numpy.reshape(numpy.array(string),(lencw,8)))
-			#end
 			if (miniw > leniw):
 				leniw = miniw
 				iw = numpy.zeros(leniw, 'i')
-			#end
 			if (minrw > lenrw):
 				lenrw = minrw
 				rw = numpy.zeros(lenrw, numpy.float)
-			#end
 			snopt.sninit(iPrint, iSumm, cw, iw, rw)
-		#end
 
 
 		# Set Options
@@ -631,7 +577,6 @@ class SNOPT(Optimizer):
 						snopt.snset('Cold start', iPrint, iSumm, inform, cw, iw, rw)
 					elif (value == 'Warm'):
 						snopt.snset('Warm start', iPrint, iSumm, inform, cw, iw, rw)
-					#end
 				elif (name == 'Problem Type'):
 					if (value == 'Minimize'):
 						snopt.snset('Minimize', iPrint, iSumm, inform, cw, iw, rw)
@@ -639,14 +584,12 @@ class SNOPT(Optimizer):
 						snopt.snset('Maximize', iPrint, iSumm, inform, cw, iw, rw)
 					elif (value == 'Feasible point'):
 						snopt.snset('Feasible point', iPrint, iSumm, inform, cw, iw, rw)
-					#end
 				elif (name == 'Print file'):
 					snopt.snset(name+' '+'%d'%(iPrint), iPrint, iSumm, inform, cw, iw, rw)
 				elif (name == 'Summary file'):
 					snopt.snset(name+' '+'%d'%(iSumm), iPrint, iSumm, inform, cw, iw, rw)
 				else:
 					snopt.snset(name+' '+value, iPrint, iSumm, inform, cw, iw, rw)
-				#end
 			elif isinstance(value, float):
 				snopt.snsetr(name, value, iPrint, iSumm, inform, cw, iw, rw)
 			elif isinstance(value, int):
@@ -656,11 +599,8 @@ class SNOPT(Optimizer):
 					pass
 				else:
 					snopt.snseti(name, value, iPrint, iSumm, inform, cw, iw, rw)
-				#end
 			elif isinstance(value, type(None)):
 				snopt.snset(name, iPrint, iSumm, inform, cw, iw, rw)
-			#end
-		#end
 
 
 		# Setup argument list values
@@ -679,13 +619,10 @@ class SNOPT(Optimizer):
 			for i in range(ncon):
 				ha[ine] = i + 1
 				ine = ine + 1
-			#end
-		#end
 		ka = numpy.zeros(nvar+1, 'i')
 		ka[0] = 1
 		for i in range(1,nvar+1):
 			ka[i] = ka[i-1] + ncon
-		#end
 		xs = numpy.concatenate((xs, numpy.zeros(ncon,numpy.float)))
 		bl = numpy.concatenate((blx, blc))
 		bu = numpy.concatenate((bux, buc))
@@ -726,16 +663,11 @@ class SNOPT(Optimizer):
 					os.remove(name+'.bin')
 					os.rename(name+'_tmp.cue',name+'.cue')
 					os.rename(name+'_tmp.bin',name+'.bin')
-				#end
-			#end
 
 			if (iPrint != 0):
 				snopt.closeunit(self.options['iPrint'][1])
-			#end
 			if (iSumm != 0):
 				snopt.closeunit(self.options['iSumm'][1])
-			#end
-		#end
 
 		# Store Results
 		sol_inform = {}
@@ -749,7 +681,6 @@ class SNOPT(Optimizer):
 			sol_options = copy.copy(self.options)
 			if 'defaults' in sol_options:
 				del sol_options['defaults']
-			#end
 
 			sol_evals = 0
 
@@ -758,30 +689,25 @@ class SNOPT(Optimizer):
 			for key in sol_vars.keys():
 				sol_vars[key].value = xs[i]
 				i += 1
-			#end
 
 			sol_objs = copy.deepcopy(opt_problem._objectives)
 			i = 0
 			for key in sol_objs.keys():
 				sol_objs[key].value = ff[i]
 				i += 1
-			#end
 
 			sol_cons = copy.deepcopy(opt_problem._constraints)
 			i = 0
 			for key in sol_cons.keys():
 				sol_cons[key].value = xs[nvar+i]
 				i += 1
-			#end
 
 			if ncon > 0:
 				sol_lambda = numpy.zeros(ncon ,float)
 				for i in range(ncon):
 					sol_lambda[i] = pi[i]
-				#end
 			else:
 				sol_lambda = {}
-			#end
 
 
 			opt_problem.addSol(self.__class__.__name__, sol_name, objfunc, sol_time,
@@ -789,7 +715,6 @@ class SNOPT(Optimizer):
 				display_opts=disp_opts, Lambda=sol_lambda, Sensitivities=sens_type,
 				myrank=myrank, arguments=args, **kwargs)
 
-		#end
 
 		return ff, xs[0:nvar], sol_inform
 
@@ -837,7 +762,6 @@ class SNOPT(Optimizer):
 			inform_text = self.informs[mjr_code]
 		except:
 			inform_text = 'Unknown Exit Status'
-		#end
 
 		return inform_text
 
@@ -855,10 +779,8 @@ class SNOPT(Optimizer):
 		iSumm = self.options['iSumm'][1]
 		if (iPrint != 0):
 			snopt.pyflush(iPrint)
-		#end
 		if (iSumm != 0):
 			snopt.pyflush(iSumm)
-		#end
 
 
 	def SaveSpecsFile(self, filename):
@@ -896,13 +818,11 @@ class SNOPT(Optimizer):
 		#
 		#	except:
 		#		raise IOError('Failed to properly open %s, ierror = %3d' %(filename,ierror))
-		#	#end
 		#
 		#	print 'Options had been updated based on %s file\n' %(filename)
 		#
 		#else:
 		#	raise IOError('Error: could not find file %s' %(filename))
-		##end
 
 
 

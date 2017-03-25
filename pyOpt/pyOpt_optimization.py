@@ -102,7 +102,6 @@ class Optimization(object):
             self._variables = {}
         else:
             self._variables = var_set
-        #end
         self._vargroups = {}
 
         # Initialize Objective Set
@@ -110,21 +109,18 @@ class Optimization(object):
             self._objectives = {}
         else:
             self._objectives = obj_set
-        #end
 
         # Initialize Constraint Set
         if con_set is None:
             self._constraints = {}
         else:
             self._constraints = con_set
-        #end
 
         ## Initialize Parameter Set
         #if par_set is None:
         #    self._parameters = {}
         #else:
         #    self._parameters = par_set
-        ##end
         #self._pargroups = {}
 
         # Initialize Solution Set
@@ -149,7 +145,6 @@ class Optimization(object):
         # Check Index
         if not (isinstance(i,int) and i >= 0):
             raise ValueError("Variable index must be an integer >= 0.")
-        #end
 
         #
         return self._variables[i]
@@ -196,8 +191,6 @@ class Optimization(object):
         #for j in xrange(ngroups):
         #    if (self._vargroups[j]['name'] == name):
         #        raise IOError('Variables group names should be distinct\n')
-        #    #end
-        ##end
 
         #
         type = [type]*nvars
@@ -210,7 +203,6 @@ class Optimization(object):
             value = [value]*nvars
         else:
             raise IOError('Variable type for value not understood - use float, int or list\n')
-        #end
 
         lower = [-inf]*nvars
         upper = [inf]*nvars
@@ -226,13 +218,10 @@ class Optimization(object):
                     if len(kwargs['lower']) != nvars:
                         for i in range(len(kwargs['lower'])):
                             lower[i] = kwargs['lower'][i]
-                        #end
                     else:
                         lower = kwargs['lower']
-                    #end
                 else:
                     raise IOError('Variable type for lower bound not understood - use float, int or list\n')
-                #end
             elif (key == 'upper'):
                 if isinstance(kwargs['upper'],float):
                     upper = [kwargs['upper']]*nvars
@@ -242,18 +231,12 @@ class Optimization(object):
                     if len(kwargs['upper']) != nvars:
                         for i in range(len(kwargs['upper'])):
                             upper[i] = kwargs['upper'][i]
-                        #end
                     else:
                         upper = kwargs['upper']
-                    #end
                 else:
                     raise IOError('Variable type for upper bound not understood - use float, int or list\n')
-                #end
-            #end
             if  (key == 'choices'):
                 choices = [kwargs['choices']]*nvars
-            #end
-        #end
 
         tmp_group = {}
         for var in range(nvars):
@@ -261,7 +244,6 @@ class Optimization(object):
             id = self.firstavailableindex(self._variables)
             self.setVar(id, tmp_name, type[var], value[var], lower=lower[var], upper=upper[var], choices=choices[var])
             tmp_group[tmp_name] = id
-        #end
         self._vargroups[self.firstavailableindex(self._vargroups)] = {'name':name,'ids':tmp_group}
 
 
@@ -287,8 +269,6 @@ class Optimization(object):
                 raise
             except:
                 raise ValueError("Input is not a Valid for a Variable Object instance\n")
-            #end
-        #end
 
 
     def delVar(self, i):
@@ -306,7 +286,6 @@ class Optimization(object):
         # Check Index
         if not (isinstance(i,int) and i >= 0):
             raise ValueError("Variable index must be an integer >= 0.")
-        #end
 
         #
         del self._variables[i]
@@ -321,11 +300,7 @@ class Optimization(object):
                     del self._vargroups[j]['ids'][key]
                     if (nkeys == 1):
                         del self._vargroups[j]
-                    #end
                     return
-                #end
-            #end
-        #end
 
 
     def delVarGroup(self, name):
@@ -348,10 +323,7 @@ class Optimization(object):
                 for key in keys:
                     id = self._vargroups[j]['ids'][key]
                     del self._variables[id]
-                #end
                 del self._vargroups[j]
-            #end
-        #end
 
 
     def getVarSet(self):
@@ -391,7 +363,6 @@ class Optimization(object):
         # Check Index
         if not (isinstance(i,int) and i >= 0):
             raise ValueError("Objective index must be an integer >= 0.")
-        #end
 
         #
         return self._objectives[i]
@@ -429,8 +400,6 @@ class Optimization(object):
                 self._objectives[i] = Objective(*args,**kwargs)
             except:
                 raise ValueError("Input is not a Valid for a Objective Object instance\n")
-            #end
-        #end
 
 
     def delObj(self, i):
@@ -448,7 +417,6 @@ class Optimization(object):
         # Check Index
         if not (isinstance(i,int) and i >= 0):
             raise ValueError("Objective index must be an integer >= 0.")
-        #end
 
         #
         del self._objectives[i]
@@ -480,7 +448,6 @@ class Optimization(object):
         # Check Index
         if not (isinstance(i,int) and i >= 0):
             raise ValueError("Constraint index must be an integer >= 0.")
-        #end
 
         #
         return self._constraints[i]
@@ -531,13 +498,10 @@ class Optimization(object):
                         if len(kwargs['lower']) != ncons:
                             for i in range(len(kwargs['lower'])):
                                 lower[i] = kwargs['lower'][i]
-                            #end
                         else:
                             lower = kwargs['lower']
-                        #end
                     else:
                         raise IOError('Variable type for lower bound not understood - use float, int or list\n')
-                    #end
                 elif (key == 'upper'):
                     if isinstance(kwargs['upper'],float):
                         upper = [kwargs['upper']]*ncons
@@ -547,19 +511,13 @@ class Optimization(object):
                         if len(kwargs['upper']) != ncons:
                             for i in range(len(kwargs['upper'])):
                                 upper[i] = kwargs['upper'][i]
-                            #end
                         else:
                             upper = kwargs['upper']
-                        #end
                     else:
                         raise IOError('Variable type for upper bound not understood - use float, int or list\n')
-                    #end
-                #end
-            #end
             for con in range(ncons):
                 tmp_name = name +'_%s' %(con)
                 self.setCon(self.firstavailableindex(self._constraints),tmp_name, type_list[con], lower=lower[con], upper=upper[con])
-            #end
         elif (type[0].lower() == 'e'):
             equal = [0.0]*ncons
             for key in kwargs.keys():
@@ -572,20 +530,13 @@ class Optimization(object):
                         if len(kwargs['equal']) != ncons:
                             for i in range(len(kwargs['equal'])):
                                 lower[i] = kwargs['equal'][i]
-                            #end
                         else:
                             equal = kwargs['equal']
-                        #end
                     else:
                         raise IOError('Variable type for lower bound not understood - use float, int or list\n')
-                    #end
-                #end
-            #end
             for con in range(ncons):
                 tmp_name = name +'_%s' %(con)
                 self.setCon(self.firstavailableindex(self._constraints),tmp_name, type_list[con], equal=equal[con])
-            #end
-        #end
 
 
     def setCon(self, i, *args, **kwargs):
@@ -610,8 +561,6 @@ class Optimization(object):
                 raise
             except:
                 raise ValueError("Input is not a Valid for a Constraint Object instance\n")
-            #end
-        #end
 
 
     def delCon(self, i):
@@ -629,7 +578,6 @@ class Optimization(object):
         # Check Index
         if not (isinstance(i,int) and i >= 0):
             raise ValueError("Constraint index must be an integer >= 0.")
-        #end
 
         #
         del self._constraints[i]
@@ -661,7 +609,6 @@ class Optimization(object):
         # Check Index
         if not (isinstance(i,int) and i >= 0):
             raise ValueError("Solution index must be an integer >= 0.")
-        #end
 
         #
         return self._solutions[i]
@@ -701,8 +648,6 @@ class Optimization(object):
             #	print args
             #	print kwargs
             #	raise ValueError("Input is not a Valid for a Solution Object instance\n")
-            #end
-        #end
 
 
     def delSol(self, i):
@@ -720,7 +665,6 @@ class Optimization(object):
         # Check Index
         if not (isinstance(i,int) and i >= 0):
             raise ValueError("Solution index must be an integer >= 0.")
-        #end
 
         #
         del self._solutions[i]
@@ -752,7 +696,6 @@ class Optimization(object):
 #        # Check Index
 #        if not (isinstance(i,int) and i >= 0):
 #            raise ValueError("Parameter index must be an integer >= 0.")
-#        #end
 #
 #        #
 #        return self._parameters[i]
@@ -798,8 +741,6 @@ class Optimization(object):
 #                raise IOError("%s" %(error))
 #            except:
 #                raise ValueError("Input is not a Valid for a Parameter Object instance\n")
-#            #end
-#        #end
 #
 #
 #    def delPar(self, i):
@@ -817,7 +758,6 @@ class Optimization(object):
 #        # Check Index
 #        if not (isinstance(i,int) and i >= 0):
 #            raise ValueError("Parameter index must be an integer >= 0.")
-#        #end
 #
 #        #
 #        del self._parameters[i]
@@ -831,11 +771,7 @@ class Optimization(object):
 #                    del self._pargroups[j]['ids'][key]
 #                    if (nkeys == 1):
 #                        del self._pargroups[j]
-#                    #end
 #                    return
-#                #end
-#            #end
-#        #end
 #
 #
 #    def delParGroup(self, name):
@@ -858,10 +794,7 @@ class Optimization(object):
 #                for key in keys:
 #                    id = self._pargroups[j]['ids'][key]
 #                    del self._parameters[id]
-#                #end
 #                del self._pargroups[j]
-#            #end
-#        #end
 #
 #
 #    def getParSet(self):
@@ -902,7 +835,6 @@ class Optimization(object):
         i = 0
         while i in set:
             i += 1
-        #end
 
         return i
 
@@ -932,21 +864,17 @@ class Optimization(object):
         for obj in self._objectives.keys():
             lines = str(self._objectives[obj]).split('\n')
             text += lines[1] + '\n'
-        #end
         text += '''\n	Variables (c - continuous, i - integer, d - discrete):
         Name    Type       Value       Lower Bound  Upper Bound\n'''
         for var in self._variables.keys():
             lines = str(self._variables[var]).split('\n')
             text+= lines[1] + '\n'
-        #end
         if len(self._constraints.keys()) > 0:
             text += '''\n	Constraints (i - inequality, e - equality):
         Name    Type                    Bounds\n'''
             for con in self._constraints.keys():
                 lines = str(self._constraints[con]).split('\n')
                 text+= lines[1] + '\n'
-            #end
-        #end
 
         return (text)
 
@@ -977,14 +905,12 @@ class Optimization(object):
                     tmpname = tmpname.rstrip('_%d' %(i-1))
                     tmpname = tmpname + '_' +str(i)
                     i += 1
-                #end
                 tmpname += '.txt'
                 outfile = open(tmpname,'w')
             else:
                 outfile = open(outfile,'w')
         elif (not isinstance(outfile,str)) and (not isinstance(outfile,file)):
             raise IOError(repr(outfile) + 'is not a file or filename')
-        #end
         ftext = self.__str__()
         outfile.write(ftext)
         if disp_sols or 'solutions' in kwargs:
@@ -992,12 +918,9 @@ class Optimization(object):
                 sol_indices = kwargs['solutions']
             else:
                 sol_indices = self._solutions.keys()
-            #end
             for key in sol_indices:
                 soltext = '\n' + self._solutions[key].__str__()
                 outfile.write(soltext)
-            #end
-        #end
         print('Data written to file ', outfile.name)
         outfile.close()
 
@@ -1017,7 +940,6 @@ class Optimization(object):
         # Check Index
         if not (isinstance(i,int) and i >= 0):
             raise ValueError("Solution index must be an integer >= 0.")
-        #end
 
         #
         return self._solutions[i]
@@ -1070,7 +992,6 @@ class Solution(Optimization):
             del kwargs['display_opts']
         else:
             self.display_opt = False
-        #end
         self.parameters = kwargs
 
 
@@ -1088,7 +1009,6 @@ class Solution(Optimization):
         lines[1] = lines[1][len('Optimization Problem -- '):]
         for i in range(5):
             text1 += lines[i] + '\n'
-        #end
         if self.display_opt:
             text1 += '\n	Options:\n '
             opt_keys = self.options_set.keys()
@@ -1096,8 +1016,6 @@ class Solution(Optimization):
             for key in opt_keys:
                 ns = 25-len(key)
                 text1 += '		'+ key +':' + str(self.options_set[key][1]).rjust(ns,'.') + '\n'
-            #end
-        #end
         text1 += '\n    Solution: \n'
         text1 += ('-'*80) + '\n'
         text1 += '    Total Time: %25.4f\n' %(self.opt_time)
@@ -1109,18 +1027,14 @@ class Solution(Optimization):
                 continue
             else:
                 text1 += '    '+ key +': ' + str(self.parameters[key]).rjust(9) + '\n'
-            #end
-        #end
         for i in range(5,len(lines)):
             text1 += lines[i] + '\n'
-        #end
         text1 += ('-'*80) + '\n'
 
         if (self.myrank == 0):
             return text1
         else:
             return ''
-        #end
 
 
     def write2file(self, outfile):
@@ -1157,8 +1071,6 @@ def ListAttributes(self):
     for key in self_keys:
         if key != 'name':
             print(str(key) + ' : ' + repr(self.__dict__[key]))
-        #end
-    #end
     print('\n')
 
 

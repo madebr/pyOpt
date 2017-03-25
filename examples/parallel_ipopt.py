@@ -24,7 +24,6 @@ try:
     myrank = comm.Get_rank()
 except:
     raise ImportError('mpi4py is required for parallelization')
-#end
 
 # =============================================================================
 # Extension modules
@@ -71,7 +70,6 @@ ipopt.setOption('print_level', 0)  #0 none ... 5 max
 ipopt(opt_prob,sens_type='CS')
 if myrank == 0:
     print(opt_prob.solution(0))
-#end
 
 # Solve Problem (With Parallel Gradient)
 ipopt(opt_prob,sens_type='CS',sens_mode='pgc')

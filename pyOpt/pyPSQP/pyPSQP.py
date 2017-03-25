@@ -38,7 +38,6 @@ try:
         from . import psqp
 except:
         raise ImportError('PSQP shared library failed to import')
-#end
 
 # =============================================================================
 # Standard Python modules
@@ -65,7 +64,6 @@ inf = 10.E+20  # define a value for infinity
 eps = 1.0       # define a value for machine precision
 while ((eps/2.0 + 1.0) > 1.0):
         eps = eps/2.0
-#end
 eps = 2.0*eps
 #eps = math.ldexp(1,-52)
 
@@ -98,7 +96,6 @@ class PSQP(Optimizer):
                         self.poa = True
                 else:
                         raise ValueError("pll_type must be either None or 'POA'")
-                #end
 
                 #
                 name = 'PSQP'
@@ -156,7 +153,6 @@ class PSQP(Optimizer):
                 #
                 if ((self.poa) and (sens_mode.lower() == 'pgc')):
                         raise NotImplementedError("pyPSQP - Current implementation only allows single level parallelization, either 'POA' or 'pgc'")
-                #end
 
                 if self.poa or (sens_mode.lower() == 'pgc'):
                         try:
@@ -164,20 +160,17 @@ class PSQP(Optimizer):
                                 from mpi4py import MPI
                         except ImportError:
                                 print('pyPSQP: Parallel objective Function Analysis requires mpi4py')
-                        #end
                         comm = MPI.COMM_WORLD
                         nproc = comm.Get_size()
                         if (mpi4py.__version__[0] == '0'):
                                 Bcast = comm.Bcast
                         elif (mpi4py.__version__[0] >= '1'):
                                 Bcast = comm.bcast
-                        #end
                         self.pll = True
                         self.myrank = comm.Get_rank()
                 else:
                         self.pll = False
                         self.myrank = 0
-                #end
 
                 myrank = self.myrank
 
@@ -202,12 +195,9 @@ class PSQP(Optimizer):
                                                 xg[group] = x[group_ids[group][0]]
                                         else:
                                                 xg[group] = x[group_ids[group][0]:group_ids[group][1]]
-                                        #end
-                                #end
                                 xn = xg
                         else:
                                 xn = x
-                        #end
 
                         # Flush Output Files
                         self.flushFiles()
@@ -224,18 +214,13 @@ class PSQP(Optimizer):
                                                 hos_file.close()
                                         else:
                                                 [f,g,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
-                                        #end
-                                #end
-                        #end
 
                         if self.pll:
                                 self.hot_start = Bcast(self.hot_start,root=0)
-                        #end
                         if self.hot_start and self.pll:
                                 [f,g,fail] = Bcast([f,g,fail],root=0)
                         elif not self.hot_start:
                                 [f,g,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
-                        #end
 
                         # Store History
                         if (myrank == 0):
@@ -244,20 +229,15 @@ class PSQP(Optimizer):
                                         log_file.write(f,'obj')
                                         log_file.write(g,'con')
                                         log_file.write(fail,'fail')
-                                #end
-                        #end
 
                         # Objective Assigment
                         if isinstance(f,float):
                                 f = [f]
-                        #end
                         for i in range(len(opt_problem._objectives.keys())):
                                 if isinstance(f[i],complex):
                                         ff[i] = f[i].astype(float)
                                 else:
                                         ff[i] = f[i]
-                                #end
-                        #end
 
                         # Constraints Assigment
                         i = 0
@@ -266,9 +246,7 @@ class PSQP(Optimizer):
                                         gg[i] = g[j].astype(float)
                                 else:
                                         gg[i] = g[j]
-                                #end
                                 i += 1
-                        #end
 
                         # Gradients
                         if self.hot_start:
@@ -282,25 +260,18 @@ class PSQP(Optimizer):
                                         else:
                                                 dff = vals['grad_obj'][0].reshape((len(opt_problem._objectives.keys()),len(opt_problem._variables.keys())))
                                                 dgg = vals['grad_con'][0].reshape((len(opt_problem._constraints.keys()),len(opt_problem._variables.keys())))
-                                        #end
-                                #end
                                 if self.pll:
                                         self.hot_start = Bcast(self.hot_start,root=0)
-                                #end
                                 if self.hot_start and self.pll:
                                         [dff,dgg] = Bcast([dff,dgg],root=0)
-                                #end
-                        #end
 
                         if not self.hot_start:
                                 dff,dgg = gradient.getGrad(x, group_ids, f, g, *args, **kwargs)
-                        #end
 
                         # Store History
                         if self.sto_hst and (myrank == 0):
                                 log_file.write(dff,'grad_obj')
                                 log_file.write(dgg,'grad_con')
-                        #end
 
                         # Store
                         self.stored_data['x'] = copy.copy(x)
@@ -319,7 +290,6 @@ class PSQP(Optimizer):
 
                         if ((self.stored_data['x'] != x).any()):
                                 eval(x)
-                        #end
 
                         ff = self.stored_data['f']
 
@@ -333,7 +303,6 @@ class PSQP(Optimizer):
 
                         if ((self.stored_data['x'] != x).any()):
                                 eval(x)
-                        #end
 
                         gg = self.stored_data['g']
 
@@ -347,7 +316,6 @@ class PSQP(Optimizer):
 
                         if ((self.stored_data['x'] != x).any()):
                                 eval(x)
-                        #end
 
                         df = self.stored_data['df']
 
@@ -361,7 +329,6 @@ class PSQP(Optimizer):
 
                         if ((self.stored_data['x'] != x).any()):
                                 eval(x)
-                        #end
 
                         dg = self.stored_data['dg']
 
@@ -380,7 +347,6 @@ class PSQP(Optimizer):
                         xu.append(opt_problem._variables[key].upper)
                         xi.append(3)
                         xx.append(opt_problem._variables[key].value)
-                #end
                 xl = numpy.array(xl)
                 xu = numpy.array(xu)
                 xi = numpy.array(xi)
@@ -394,8 +360,6 @@ class PSQP(Optimizer):
                                 group_len = len(opt_problem._vargroups[key]['ids'])
                                 group_ids[opt_problem._vargroups[key]['name']] = [k,k+group_len]
                                 k += group_len
-                        #end
-                #end
 
                 # Constraints Handling
                 ncon = len(opt_problem._constraints.keys())
@@ -407,9 +371,7 @@ class PSQP(Optimizer):
                                         gi.append(5)
                                 elif opt_problem._constraints[key].type == 'i':
                                         gi.append(2)
-                                #end
                                 gg.append(opt_problem._constraints[key].value)
-                        #end
                         gg.append(0.0)
                         gl = numpy.zeros([ncon], numpy.float)
                         gu = numpy.zeros([ncon], numpy.float)
@@ -420,7 +382,6 @@ class PSQP(Optimizer):
                         gu = numpy.array([0], numpy.float)
                         gi = numpy.array([0], numpy.float)
                         gg = numpy.array([0], numpy.float)
-                #end
 
                 # Objective Handling
                 objfunc = opt_problem.obj_fun
@@ -428,7 +389,6 @@ class PSQP(Optimizer):
                 ff = []
                 for key in opt_problem._objectives.keys():
                         ff.append(opt_problem._objectives[key].value)
-                #end
                 ff = numpy.array(ff, numpy.float)
 
 
@@ -451,19 +411,14 @@ class PSQP(Optimizer):
                                 iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
                         else:
                                 raise IOError('Incorrect Output Level Setting')
-                        #end
                 else:
                         iprint = numpy.array([0], numpy.int)
-                #end
                 iout = numpy.array([self.options['IOUT'][1]], numpy.int)
                 ifile = self.options['IFILE'][1]
                 if (myrank == 0):
                         if (iprint != 0):
                                 if os.path.isfile(ifile):
                                         os.remove(ifile)
-                                #end
-                        #end
-                #end
                 iterm = numpy.array([0], numpy.int)
 
 
@@ -493,9 +448,6 @@ class PSQP(Optimizer):
                                         os.remove(name+'.bin')
                                         os.rename(name+'_tmp.cue',name+'.cue')
                                         os.rename(name+'_tmp.bin',name+'.bin')
-                                #end
-                        #end
-                #end
 
 
                 # Store Results
@@ -510,7 +462,6 @@ class PSQP(Optimizer):
                         sol_options = copy.copy(self.options)
                         if 'defaults' in sol_options:
                                 del sol_options['defaults']
-                        #end
 
                         sol_evals = psqp.stat.nfv + psqp.stat.nfg*nvar
 
@@ -519,14 +470,12 @@ class PSQP(Optimizer):
                         for key in sol_vars.keys():
                                 sol_vars[key].value = xx[i]
                                 i += 1
-                        #end
 
                         sol_objs = copy.deepcopy(opt_problem._objectives)
                         i = 0
                         for key in sol_objs.keys():
                                 sol_objs[key].value = ff[i]
                                 i += 1
-                        #end
 
                         if ncon > 0:
                                 sol_cons = copy.deepcopy(opt_problem._constraints)
@@ -534,10 +483,8 @@ class PSQP(Optimizer):
                                 for key in sol_cons.keys():
                                         sol_cons[key].value = gg[i]
                                         i += 1
-                                #end
                         else:
                                 sol_cons = {}
-                        #end
 
                         sol_lambda = {}
 
@@ -547,7 +494,6 @@ class PSQP(Optimizer):
                                 display_opts=disp_opts, Lambda=sol_lambda, Sensitivities=sens_type,
                                 myrank=myrank, arguments=args, **kwargs)
 
-                #end
 
                 return ff, xx, sol_inform
 
@@ -602,7 +548,6 @@ class PSQP(Optimizer):
                 iprint = self.options['IPRINT'][1]
                 if (iprint > 0):
                         psqp.pyflush(self.options['IOUT'][1])
-                #end
 
 
 

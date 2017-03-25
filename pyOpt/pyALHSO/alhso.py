@@ -65,7 +65,6 @@ inf = 10.E+20  # define a value for infinity
 eps = 1.0	# define a value for machine precision
 while ((eps/2.0 + 1.0) > 1.0):
 	eps = eps/2.0
-#end
 eps = 2.0*eps
 #eps = math.ldexp(1,-52)
 
@@ -88,7 +87,6 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 	rand = random.Random()
 	if rseed == {}:	
 		rseed = time.time()
-	#end
 	
 	rand.seed(rseed)
 	
@@ -96,9 +94,7 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 	if (fileout == 1):
 		if (filename == ''):
 			filename = 'Print.out'
-		#end
 		ofile = open(filename,'w')
-	#end
 	
 	# 
 	if (scale == 1):
@@ -108,11 +104,9 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 		for j in range(dimensions):
 			space_centre[j] = (xmin[j] + xmax[j])/2.0
 			space_halflen[j] = ((xmax[j] - xmin[j])/2.0)
-		#end
 		xmin = -numpy.ones(dimensions,float)
 		xmax =  numpy.ones(dimensions,float)
 		bw = (xmax - xmin)/dbw
-	#end
 	
 	# Initialize Augmented Lagrange
 	rp_val = numpy.ones(constraints, float)*r0
@@ -127,16 +121,11 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 			HM[i,j] = xmin[j] + rand.random()*(xmax[j]-xmin[j])
 			if (xtype[j] == 1):
 				discrete_i.append(j)
-			#end
-		#end
-	#end
 	if (x0 != []):
 		if (scale == 1):
 			HM[:,:-1] = (x0[:] - space_centre)/space_halflen
 		else:
 			HM[:,:-1] = x0[:]
-		#end
-	#end
 	
 	# Initialize Harmony Memory Augmented Lagrange
 	x_val = numpy.zeros(dimensions, float)
@@ -151,10 +140,8 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 			x_tmp = (HM[i,:-1] * space_halflen) + space_centre
 		else:
 			x_tmp = HM[i,:-1]
-		#end
 		for m in discrete_i:
 			x_tmp[m] = floor(x_tmp[m] + 0.5)
-		#end
 		[f_val,g_val] = objfunc(x_tmp)
 		nfevals += 1
 		
@@ -165,7 +152,6 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 			# Equality Constraints
 			for l in range(neqcons):
 				tau_val[l] = g_val[l]
-			#end
 			
 			# Inequality Constraints
 			for l in range(neqcons,constraints):
@@ -174,23 +160,17 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 						tau_val[l] = g_val[l]
 					else:
 						tau_val[l] = -lambda_val[l]/(2*rp_val[l])
-					#end
 				else:
 					tau_val[l] = g_val[l]
-				#end
-			#end
 			
 			#
 			for l in range(constraints):
 				L_val += lambda_val[l]*tau_val[l] + rp_val[l]*tau_val[l]**2
-			#end
 			
-		#end
 		
 		# 
 		HM[i,dimensions] = L_val
 		
-	#end
 	
 	# Initialize Best
 	best_x_val = numpy.zeros(dimensions, float)
@@ -231,34 +211,27 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 							x_val[j] += rand.random()*bw[j]
 						else:
 							x_val[j] -= rand.random()*bw[j]
-						#end
-					#end
 					
 				else:
 					
 					# Random Searching
 					x_val[j] = xmin[j] + rand.random()*(xmax[j]-xmin[j])
 					
-				#end
 				
 				# Check for improvisations out of range
 				if (x_val[j] > xmax[j]): 
 					x_val[j] = xmax[j]
 				elif (x_val[j] < xmin[j]):
 					x_val[j] = xmin[j]
-				#end
 				
-			#end
 			
 			# Evaluate 
 			if (scale == 1):
 				x_tmp = (x_val * space_halflen) + space_centre
 			else:
 				x_tmp = x_val
-			#end
 			for m in discrete_i:
 				x_tmp[m] = floor(x_tmp[m] + 0.5)
-			#end
 			[f_val,g_val] = objfunc(x_tmp)
 			nfevals += 1
 			
@@ -269,7 +242,6 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 				# Equality Constraints
 				for l in range(neqcons):
 					tau_val[l] = g_val[l]
-				#end
 				
 				# Inequality Constraints
 				for l in range(neqcons,constraints):
@@ -278,18 +250,13 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 							tau_val[l] = g_val[l]
 						else:
 							tau_val[l] = -lambda_val[l]/(2*rp_val[l])
-						#end
 					else:
 						tau_val[l] = g_val[l]
-					#end
-				#end
 				
 				# 
 				for l in range(constraints):
 					L_val += lambda_val[l]*tau_val[l] + rp_val[l]*tau_val[l]**2
-				#end
 				
-			#end
 			
 			# 
 			feasible = True
@@ -299,15 +266,10 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 						if (abs(g_val[l]) > etol):
 							feasible = False
 							break
-						#end
 					else:
 						if (g_val[l] > itol):
 							feasible = False
 							break
-						#end
-					#end
-				#end
-			#end
 			
 			# 
 			if (feasible or (k_out == 1 and x0 != [])):
@@ -319,15 +281,11 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 					if (HM[i,dimensions] > hmax):
 						hmax_num = i
 						hmax = HM[i,dimensions]
-					#end
-				#end
 				
 				if (L_val < hmax):
 					for j in range(dimensions):
 						HM[hmax_num,j] = x_val[j]
-					#end
 					HM[hmax_num,dimensions] = L_val
-				#end
 				
 				hmin_num = 0
 				hmin = HM[0,dimensions]
@@ -335,8 +293,6 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 					if (HM[i,dimensions] < hmin):
 						hmin_num = i
 						hmin = HM[i,dimensions]
-					#end
-				#end
 				
 				if (L_val == hmin):
 					
@@ -354,28 +310,21 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 							x_tmp = (x_val * space_halflen) + space_centre
 						else:
 							x_tmp = x_val
-						#end
 						for m in discrete_i:
 							x_tmp[m] = floor(x_tmp[m] + 0.5)
-						#end
 						print(x_tmp)
 						
 						print(f_val)
 						print(g_val)
 						print(nfevals)
-					#end
 					if (fileout == 1):
 						# output to filename
 						pass
-					#end
 					
 					break
 					
-				#end
 				
-			#end
 			
-		#end
 		
 		# 
 		if (best_f_val == [] and k_out == 1 and x0 == []):
@@ -385,8 +334,6 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 			for i in range(memsize):
 				for j in range(dimensions):
 					HM[i,j] = xmin[j] + rand.random()*(xmax[j]-xmin[j])
-				#end
-			#end
 			
 			# Re-Initialize Harmony Memory Augmented Lagrange
 			for i in range(memsize):
@@ -396,10 +343,8 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 					x_tmp = (HM[i,:-1] * space_halflen) + space_centre
 				else:
 					x_tmp = HM[i,:-1]
-				#end
 				for m in discrete_i:
 					x_tmp[m] = floor(x_tmp[m] + 0.5)
-				#end
 				[f_val,g_val] = objfunc(x_tmp)
 				nfevals += 1
 				
@@ -410,7 +355,6 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 					# Equality Constraints
 					for l in range(neqcons):
 						tau_val[l] = g_val[l]
-					#end
 					
 					# Inequality Constraints
 					for l in range(neqcons,constraints):
@@ -419,29 +363,22 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 								tau_val[l] = g_val[l]
 							else:
 								tau_val[l] = -lambda_val[l]/(2*rp_val[l])
-							#end
 						else:
 							tau_val[l] = g_val[l]
-						#end
-					#end
 					
 					#
 					for l in range(constraints):
 						L_val += lambda_val[l]*tau_val[l] + rp_val[l]*tau_val[l]**2
-					#end
 					
-				#end
 				
 				# 
 				HM[i,dimensions] = L_val
 				
-			#end
 			
 			# 
 			k_out -= 1
 			continue
 			
-		#end
 		
 		
 		# Print Outer
@@ -458,37 +395,28 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 				print("EQUALITY CONSTRAINTS VALUES:")
 				for l in range(neqcons):
 					print(("\tG(%d) = %g" %(l,best_g_val[l])))
-				#end
 				# Inequality Constraints
 				print("\nINEQUALITY CONSTRAINTS VALUES:")
 				for l in range(neqcons,constraints):
 					print(("\tH(%d) = %g" %(l,best_g_val[l])))
-				#end
-			#end
 			print("\nLAGRANGIAN MULTIPLIERS VALUES:")
 			for l in range(constraints):
 				print(("\tL(%d) = %g" %(l,lambda_val[l])))
-			#end
 			
 			print("\nDESIGN VARIABLES VALUES:")
 			if (scale == 1):
 				x_tmp = (best_x_val[:] * space_halflen) + space_centre
 			else:
 				x_tmp = best_x_val[:]
-			#end
 			for m in discrete_i:
 				x_tmp[m] = floor(x_tmp[m]+0.5)
-			#end
 			text = ''
 			for j in range(dimensions):
 				text += ("\tP(%d) = %9.3e\t" %(j,x_tmp[j]))
 				if (numpy.mod(j+1,3) == 0):
 					text +=("\n")
-				#end
-			#end
 			print(text)
 			print(("="*80 + "\n"))
-		#end
 		if (fileout == 1):
 			# Output to filename
 			ofile.write("\n" + "="*80 + "\n")
@@ -501,38 +429,29 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 				ofile.write("\nEQUALITY CONSTRAINTS VALUES:\n")
 				for l in range(neqcons):
 					ofile.write("\tG(%d) = %g\n" %(l,best_g_val[l]))
-				#end
 				# Inequality Constraints
 				ofile.write("\nINEQUALITY CONSTRAINTS VALUES:\n")
 				for l in range(neqcons,constraints):
 					ofile.write("\tH(%d) = %g\n" %(l,best_g_val[l]))
-				#end
-			#end
 			ofile.write("\nLAGRANGIAN MULTIPLIERS VALUES:\n")
 			for l in range(constraints):
 				ofile.write("\tL(%d) = %g\n" %(l,lambda_val[l]))
-			#end
 			
 			ofile.write("\nDESIGN VARIABLES VALUES:\n")
 			if (scale == 1):
 				x_tmp = (best_x_val[:] * space_halflen) + space_centre
 			else:
 				x_tmp = best_x_val[:]
-			#end
 			for m in discrete_i:
 				x_tmp[m] = floor(x_tmp[m]+0.5)
-			#end
 			text = ''
 			for j in range(dimensions):
 				text += ("\tP(%d) = %9.3e\t" %(j,x_tmp[j]))
 				if (numpy.mod(j+1,3) == 0):
 					text +=("\n")
-				#end
-			#end
 			ofile.write(text)
 			ofile.write("\n" + "="*80 + "\n")
 			ofile.flush()
-		#end
 		
 		
 		# Test Constraint convergence
@@ -543,24 +462,17 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 			for l in range(neqcons):
 				if (abs(best_g_val[l]) <= etol):
 					stop_constraints_flag += 1 
-				#end
-			#end
 			for l in range(neqcons,constraints):
 				if (best_g_val[l] <= itol):
 					stop_constraints_flag += 1
-				#end
-			#end
 			if (stop_constraints_flag == constraints):
 				stop_constraints_flag = 1
 			else:
 				stop_constraints_flag = 0
-			#end
-		#end
 		
 		# Test Position and Function convergence
 		if (best_f_old == []):
 			best_f_old = best_f_val
-		#end
 		stop_criteria_flag = 0
 		if (stopcriteria == 1):
 			
@@ -570,7 +482,6 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 				kobj += 1
 			else:
 				kobj = 0
-			#end
 			
 			# Relative Change in Objective
 			if (abs(best_f_old) > 1e-10):
@@ -578,8 +489,6 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 					iobj += 1
 				else:
 					iobj = 0
-				#end
-			#end
 			
 			# 
 			best_f_old = best_f_val
@@ -589,16 +498,13 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 				stop_criteria_flag = 1
 			else:
 				stop_criteria_flag = 0
-			#end
 			
-		#end
 		
 		# Test Convergence
 		if (stop_constraints_flag == 1 and stop_criteria_flag == 1):
 			stop_main_flag = 1
 		else:
 			stop_main_flag = 0
-		#end
 		
 		
 		# Update Augmented Lagrangian Terms
@@ -609,20 +515,16 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 				# Tau for Best 
 				for l in range(neqcons):
 					tau_val[l] = best_g_val[l]
-				#end
 				for l in range(neqcons,constraints):
 					if (best_g_val[l] > -lambda_val[l]/(2*rp_val[l])):
 						tau_val[l] = best_g_val[l]
 					else:
 						tau_val[l] = -lambda_val[l]/(2*rp_val[l])
-					#end
-				#end
 				
 				# Update Lagrange Multiplier
 				for l in range(constraints):
 					lambda_old[l] = lambda_val[l]
 					lambda_val[l] += 2*rp_val[l]*tau_val[l]
-				#end
 				
 				# Update Penalty Factor
 				for l in range(neqcons):
@@ -630,41 +532,28 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 						rp_val[l] = 2.0*rp_val[l]
 					elif (abs(best_g_val[l]) <= etol):
 						rp_val[l] = 0.5*rp_val[l]
-					#end
-				#end
 				for l in range(neqcons,constraints):
 					if (best_g_val[l] > best_g_old[l] and best_g_val[l] > itol):
 						rp_val[l] = 2.0*rp_val[l]
 					elif (best_g_val[l] <= itol):
 						rp_val[l] = 0.5*rp_val[l]
-					#end
-				#end
 				
 				# Apply Lower Bounds on rp
 				for l in range(neqcons):
 					if (rp_val[l] < 0.5*(abs(lambda_val[l])/etol)**0.5):
 						rp_val[l] = 0.5*(abs(lambda_val[l])/etol)**0.5
-					#end
-				#end	
 				for l in range(neqcons,constraints):
 					if (rp_val[l] < 0.5*(abs(lambda_val[l])/itol)**0.5):
 						rp_val[l] = 0.5*(abs(lambda_val[l])/itol)**0.5
-					#end
-				#end
 				for l in range(constraints):
 					if (rp_val[l] < 1):
 						rp_val[l] = 1
-					#end
-				#end
 				
 				# 
 				best_g_old[:] = best_g_val[:]
 				
-			#end
 			
-		#end
 		
-	#end
 	
 	
 	# Print Results
@@ -682,37 +571,28 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 			print("EQUALITY CONSTRAINTS VALUES:")
 			for l in range(neqcons):
 				print(("\tG(%d) = %g" %(l,best_g_val[l])))
-			#end
 			# Inequality Constraints
 			print("\nINEQUALITY CONSTRAINTS VALUES:")
 			for l in range(neqcons,constraints):
 				print(("\tH(%d) = %g" %(l,best_g_val[l])))
-			#end
-		#end
 		print("\nLAGRANGIAN MULTIPLIERS VALUES:")
 		for l in range(constraints):
 			print(("\tL(%d) = %g" %(l,float(lambda_val[l]))))
-		#end
 		
 		print("\nDESIGN VARIABLES VALUES:")
 		if (scale == 1):
 			x_tmp = (best_x_val[:] * space_halflen) + space_centre
 		else:
 			x_tmp = best_x_val[:]
-		#end
 		for m in discrete_i:
 			x_tmp[m] = floor(x_tmp[m]+0.5)
-		#end
 		text = ''
 		for j in range(dimensions):
 			text += ("\tP(%d) = %9.3e\t" %(j,x_tmp[j]))
 			if (numpy.mod(j+1,3) == 0):
 				text +=("\n")
-			#end
-		#end
 		print(text)
 		print(("="*80 + "\n"))
-	#end
 	if (fileout == 1):
 		# Output to filename
 		ofile.write("\n" + "="*80 + "\n")
@@ -726,39 +606,30 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 			ofile.write("\nEQUALITY CONSTRAINTS VALUES:\n")
 			for l in range(neqcons):
 				ofile.write("\tG(%d) = %g\n" %(l,best_g_val[l]))
-			#end
 			# Inequality Constraints
 			ofile.write("\nINEQUALITY CONSTRAINTS VALUES:\n")
 			for l in range(neqcons,constraints):
 				ofile.write("\tH(%d) = %g\n" %(l,best_g_val[l]))
-			#end
-		#end
 		ofile.write("\nLAGRANGIAN MULTIPLIERS VALUES:\n")
 		for l in range(constraints):
 			ofile.write("\tL(%d) = %g\n" %(l,float(lambda_val[l])))
-		#end
 		
 		ofile.write("\nDESIGN VARIABLES VALUES:\n")
 		if (scale == 1):
 			x_tmp = (best_x_val[:] * space_halflen) + space_centre
 		else:
 			x_tmp = best_x_val[:]
-		#end
 		for m in discrete_i:
 			x_tmp[m] = floor(x_tmp[m]+0.5)
-		#end
 		text = ''
 		for j in range(dimensions):
 			text += ("\tP(%d) = %9.3e\t" %(j,x_tmp[j]))
 			if (numpy.mod(j+1,3) == 0):
 				text +=("\n")
-			#end
-		#end
 		ofile.write(text)
 		ofile.write("\n" + "="*80 + "\n")
 		
 		ofile.close()
-	#end
 	
 	
 	# Results
@@ -766,10 +637,8 @@ def alhso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,
 		opt_x = (best_x_val * space_halflen) + space_centre
 	else:
 		opt_x = best_x_val
-	#end
 	for m in discrete_i:
 		opt_x[m] = int(floor(opt_x[m] + 0.5))
-	#end
 	opt_f = best_f_val
 	opt_g = best_g_val
 	opt_lambda = lambda_val[:]
@@ -793,7 +662,6 @@ def chso(ND,nc,nec,xtype,x0,lb,ub,bw,HMS,HMCR,PAR,maxIter,printout,rseed,objfunc
 	rand = random.Random()
 	if rseed == {}:	
 		rseed = time.time()
-	#end
 	
 	
 	# Initialize
@@ -801,16 +669,13 @@ def chso(ND,nc,nec,xtype,x0,lb,ub,bw,HMS,HMCR,PAR,maxIter,printout,rseed,objfunc
 	for i in range(HMS):
 		for j in range(ND):
 			HM[i,j] = lb[j] + rand.random()*(ub[j] - lb[j])
-		#end
 		[f0,gs0] = objfunc(HM[i,:-1])
 		HM[i,ND] = f0
-	#end
 	
 	# Print Initial Header
 	if (printout == 1):
 		#print(' Iteration   Func-count     min f(x)')
 		print(' Iteration   min f(x)');
-	#end
 	
 	
 	# Iterations Loop
@@ -840,11 +705,7 @@ def chso(ND,nc,nec,xtype,x0,lb,ub,bw,HMS,HMCR,PAR,maxIter,printout,rseed,objfunc
 						x[j] = x[j] + rand.random()*((ub[j] - lb[j])/bw[j])
 					else:
 						x[j] = x[j] - rand.random()*((ub[j] - lb[j])/bw[j])
-					#end
-				#end
 				
-			#end
-		#end
 		
 		# 
 		[fval,gvals] = objfunc(x)
@@ -860,15 +721,11 @@ def chso(ND,nc,nec,xtype,x0,lb,ub,bw,HMS,HMCR,PAR,maxIter,printout,rseed,objfunc
 				if (HM[i,ND] > hmax):
 					hmax_num = i
 					hmax = HM[i,ND]
-				#end
-			#end
 			
 			if (fval < hmax):
 				for j in range(ND):
 					HM[hmax_num,j] = x[j]
-				#end
 				HM[hmax_num,ND] = fval
-			#end
 			
 			hmin_num = 0
 			hmin = HM[0,ND]
@@ -876,8 +733,6 @@ def chso(ND,nc,nec,xtype,x0,lb,ub,bw,HMS,HMCR,PAR,maxIter,printout,rseed,objfunc
 				if (HM[i,ND] < hmin):
 					hmin_num = i
 					hmin = HM[i,ND]
-				#end
-			#end
 			
 			# Print
 			if (fval == hmin):
@@ -887,28 +742,21 @@ def chso(ND,nc,nec,xtype,x0,lb,ub,bw,HMS,HMCR,PAR,maxIter,printout,rseed,objfunc
 				if (printout == 1):
 					#print('%f,%f,%f,%f' %(k,x,fval,numpy.var(numpy.corrcoef(HM).T)))
 					print(('%i,%f' %(k,fval)))
-				#end
-			#end
 			
-		#end
 		
 		# Test Convergence
 		if k == maxIter-1:
 			if (printout == 1):
 				print('\nMaximum number of iterations exceeded\n')
 				print('increase OPTIONS.MaxIter\n')
-			#end
 			status = 1
 		else:
 			k += 1
-		#end
 		
-	#end
 	
 	# Print
 	if (printout == 1):
 		print('\nNumber of function evaluations = %f\n' %(numFunEvals))
-	#end
 	
 	return opt_x,opt_f,opt_g,numFunEvals,'%.8f' %(rseed)
 	

@@ -5,4 +5,3 @@ try:
     __all__ = ['CONMIN']
 except:
     __all__ = []
-#end

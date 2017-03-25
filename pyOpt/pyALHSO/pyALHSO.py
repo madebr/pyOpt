@@ -31,7 +31,6 @@ try:
 	from . import alhso
 except:
 	raise ImportError('ALHSO shared library failed to import')
-#end
 
 # =============================================================================
 # Standard Python modules
@@ -57,7 +56,6 @@ inf = 10.E+20  # define a value for infinity
 eps = 1.0	# define a value for machine precision
 while ((eps/2.0 + 1.0) > 1.0):
 	eps = eps/2.0
-#end
 eps = 2.0*eps
 #eps = math.ldexp(1,-52)
 
@@ -90,7 +88,6 @@ class ALHSO(Optimizer):
 			self.poa = True
 		else:
 			raise ValueError("pll_type must be either None or 'POA'")
-		#end
 		
 		# 
 		name = 'ALHSO'
@@ -145,7 +142,6 @@ class ALHSO(Optimizer):
 			del kwargs['display_opts']
 		else:
 			sol_dispOpt = False
-		#end
 		
 		#
 		if self.poa:
@@ -154,20 +150,17 @@ class ALHSO(Optimizer):
 				from mpi4py import MPI
 			except ImportError:
 				print('pyALHSO: Parallel objective Function Analysis requires mpi4py')
-			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
 			if (mpi4py.__version__[0] == '0'):
 				Bcast = comm.Bcast
 			elif (mpi4py.__version__[0] == '1'):
 				Bcast = comm.bcast
-			#end
 			self.pll = True
 			self.myrank = comm.Get_rank()
 		else:
 			self.pll = False
 			self.myrank = 0
-		#end
 		
 		myrank = self.myrank
 		
@@ -189,12 +182,9 @@ class ALHSO(Optimizer):
 						xg[group] = x[group_ids[group][0]]
 					else:
 						xg[group] = x[group_ids[group][0]:group_ids[group][1]]
-					#end
-				#end
 				xn = xg
 			else:
 				xn = x
-			#end
 			
 			# Evaluate User Function
 			fail = 0
@@ -208,18 +198,13 @@ class ALHSO(Optimizer):
 						hos_file.close()
 					else:
 						[ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
-					#end
-				#end
-			#end
 			
 			if self.pll:
 				self.hot_start = Bcast(self.hot_start,root=0)
-			#end
 			if self.hot_start and self.pll:
 				[ff,gg,fail] = Bcast([ff,gg,fail],root=0)
 			else:	
 				[ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
-			#end
 			
 			# Store History
 			if (myrank == 0):
@@ -228,8 +213,6 @@ class ALHSO(Optimizer):
 					log_file.write(ff,'obj')
 					log_file.write(gg,'con')
 					log_file.write(fail,'fail')
-				#end
-			#end
 			
 			# Assigenment
 			g = numpy.zeros(len(opt_problem._constraints.keys()),float)
@@ -239,23 +222,18 @@ class ALHSO(Optimizer):
 				# Constraints Assigment
 				for i in range(len(opt_problem._constraints.keys())):
 					g[i] = inf
-				#end
 			else:
 				# Objective Assigment
 				if isinstance(ff,complex):
 					f = ff.astype(float)
 				else:
 					f = ff
-				#end
 				# Constraints Assigment
 				for i in range(len(opt_problem._constraints.keys())):
 					if isinstance(gg[i],complex):
 						g[i] = gg[i].astype(float)
 					else:
 						g[i] = gg[i]
-					#end
-				#end
-			#end
 			
 			return f,g
 		
@@ -274,9 +252,7 @@ class ALHSO(Optimizer):
 				type[i] = 0
 			else:
 				type[i] = 1
-			#end
 			i += 1
-		#end
 		
 		# Variables Groups Handling 
 		if opt_problem.use_groups:
@@ -286,8 +262,6 @@ class ALHSO(Optimizer):
 				group_len = len(opt_problem._vargroups[key]['ids'])
 				group_ids[opt_problem._vargroups[key]['name']] = [k,k+group_len]
 				k += group_len
-			#end
-		#end		
 		
 		# Constraints Handling
 		m = len(opt_problem._constraints.keys())
@@ -297,10 +271,7 @@ class ALHSO(Optimizer):
 			for key in opt_problem._constraints.keys():
 				if opt_problem._constraints[key].type == 'e':
 					me += 1
-				#end
-			#end
 			#i += 1
-		#end
 		
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
@@ -315,7 +286,6 @@ class ALHSO(Optimizer):
 			stop = self.options['stopcriteria'][1]
 		else:
 			raise IOError('Incorrect Stopping Criteria Setting')
-		#end
 		nstop = self.options['stopiters'][1]
 		etol = self.options['etol'][1]
 		itol = self.options['itol'][1]
@@ -327,7 +297,6 @@ class ALHSO(Optimizer):
 		else:
 			oout = 0
 			iout = 0
-		#end
 		xinit = self.options['xinit'][1]
 		rinit = self.options['rinit'][1]
 		hmcr = self.options['hmcr'][1]
@@ -339,39 +308,28 @@ class ALHSO(Optimizer):
 				fileout = self.options['fileout'][1]
 			else:
 				raise IOError('Incorrect fileout Setting')
-			#end
 		else:
 			fileout = 0
-		#end
 		filename = self.options['filename'][1]
 		if (fileout == 1):
 			if os.path.isfile(filename):
 				os.remove(filename)
-			#end
-		#end
 		seed = self.options['seed'][1]
 		if (myrank == 0):
 			if (seed == 0) and not self.hot_start:
 				seed = time.time()
-			#end
 			if self.hot_start:
 				seed = hos_file.read(-1,ident=['seed'])[0]['seed'][0][0]
-			#end
-		#end
 		if self.pll:
 			seed = Bcast(seed, root=0)
-		#end
 		if self.sto_hst and (myrank == 0):
 			log_file.write(seed,'seed')
-		#end
 		scale = self.options['scaling'][1]
 		xs = []
 		if (xinit == 1):
 			for key in opt_problem._variables.keys():
 				xs.append(opt_problem._variables[key].value)
-			#end
 			xs = numpy.array(xs)
-		#end
 		
 		
 		# Run ALHSO
@@ -391,9 +349,6 @@ class ALHSO(Optimizer):
 					os.remove(name+'.bin')
 					os.rename(name+'_tmp.cue',name+'.cue')
 					os.rename(name+'_tmp.bin',name+'.bin')
-				#end
-			#end
-		#end
 		
 		# Store Results
 		if store_sol:
@@ -403,7 +358,6 @@ class ALHSO(Optimizer):
 			sol_options = copy.copy(self.options)
 			if 'defaults' in sol_options:
 				del sol_options['defaults']
-			#end
 			
 			sol_inform = {}
 			#sol_inform['value'] = inform
@@ -416,14 +370,12 @@ class ALHSO(Optimizer):
 			for key in sol_vars.keys():
 				sol_vars[key].value = opt_x[i]
 				i += 1
-			#end
 			
 			sol_objs = copy.deepcopy(opt_problem._objectives)
 			i = 0
 			for key in sol_objs.keys():
 				sol_objs[key].value = opt_f	# Note: takes only one!
 				i += 1
-			#end
 			
 			if m > 0:
 				sol_cons = copy.deepcopy(opt_problem._constraints)
@@ -431,26 +383,21 @@ class ALHSO(Optimizer):
 				for key in sol_cons.keys():
 					sol_cons[key].value = opt_g[i]
 					i += 1
-				#end
 			else:
 				sol_cons = {}
-			#end
 			
 			if m > 0:
 				sol_lambda = numpy.zeros(m ,float)
 				for i in range(m):
 					sol_lambda[i] = opt_lambda[i]
-				#end
 			else:
 				sol_lambda = {}
-			#end
 			
 			
 			opt_problem.addSol(self.__class__.__name__, sol_name, objfunc, sol_time, 
 				sol_evals, sol_inform, sol_vars, sol_objs, sol_cons, sol_options, 
 				display_opts=disp_opts, Lambda=sol_lambda, Seed=rseed,
 				myrank=myrank, arguments=args, **kwargs)
-		#end
 		
 		
 		return opt_f, opt_x, {'opt_g':opt_g,'fevals':sol_evals,'time':sol_time}
@@ -553,7 +500,6 @@ class HSO(Optimizer):
 			del kwargs['display_opts']
 		else:
 			sol_dispOpt = False
-		#end
 		
 		
 		#======================================================================
@@ -569,12 +515,9 @@ class HSO(Optimizer):
 						xg[group] = x[group_ids[group][0]]
 					else:
 						xg[group] = x[group_ids[group][0]:group_ids[group][1]]
-					#end
-				#end
 				xn = xg
 			else:
 				xn = x
-			#end
 			
 			# Evaluate User Function
 			[ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
@@ -587,23 +530,18 @@ class HSO(Optimizer):
 				# Constraints Assigment
 				for i in range(len(opt_problem._constraints.keys())):
 					g[i] = inf
-				#end
 			else:
 				# Objective Assigment
 				if isinstance(ff,complex):
 					f = ff.astype(float)
 				else:
 					f = ff
-				#end
 				# Constraints Assigment
 				for i in range(len(opt_problem._constraints.keys())):
 					if isinstance(gg[i],complex):
 						g[i] = gg[i].astype(float)
 					else:
 						g[i] = gg[i]
-					#end
-				#end
-			#end
 			
 			return f,g
 		
@@ -622,9 +560,7 @@ class HSO(Optimizer):
 				type[i] = 0
 			else:
 				type[i] = 1
-			#end
 			i += 1
-		#end
 		
 		# Variables Groups Handling 
 		if opt_problem.use_groups:
@@ -634,8 +570,6 @@ class HSO(Optimizer):
 				group_len = len(opt_problem._vargroups[key]['ids'])
 				group_ids[opt_problem._vargroups[key]['name']] = [k,k+group_len]
 				k += group_len
-			#end
-		#end
 		
 		# Constraints Handling
 		m = len(opt_problem._constraints.keys())
@@ -645,10 +579,7 @@ class HSO(Optimizer):
 			for key in opt_problem._constraints.keys():
 				if opt_problem._constraints[key].type == 'e':
 					me += 1
-				#end
-			#end
 			#i += 1
-		#end
 		
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
@@ -666,19 +597,15 @@ class HSO(Optimizer):
 			printout = self.options['printout'][1]
 		else:
 			raise IOError('Incorrect printout Setting')
-		#end
 		seed = self.options['seed'][1]
 		if seed == 0:
 			seed = time.time()
-		#end
 		xinit = self.options['xinit'][1]
 		xs = []
 		if (xinit == 1):
 			for key in opt_problem._variables.keys():
 				xs.append(opt_problem._variables[key].value)
-			#end
 			xs = numpy.array(xs)
-		#end
 		
 		
 		# Run HSO
@@ -695,7 +622,6 @@ class HSO(Optimizer):
 			sol_options = copy.copy(self.options)
 			if 'defaults' in sol_options:
 				del sol_options['defaults']
-			#end
 			
 			sol_inform = {}
 			#sol_inform['value'] = inform
@@ -708,14 +634,12 @@ class HSO(Optimizer):
 			for key in sol_vars.keys():
 				sol_vars[key].value = opt_x[i]
 				i += 1
-			#end
 			
 			sol_objs = copy.deepcopy(opt_problem._objectives)
 			i = 0
 			for key in sol_objs.keys():
 				sol_objs[key].value = opt_f	# Note: takes only one!
 				i += 1
-			#end
 			
 			if m > 0:
 				sol_cons = copy.deepcopy(opt_problem._constraints)
@@ -723,27 +647,22 @@ class HSO(Optimizer):
 				for key in sol_cons.keys():
 					sol_cons[key].value = opt_g[i]
 					i += 1
-				#end
 			else:
 				sol_cons = {}
-			#end
 			
 			sol_lambda = {}
 			#if m > 0:
 			#	sol_lambda = numpy.zeros(m ,float)
 			#	for i in xrange(m):
 			#		sol_lambda[i] = opt_lambda[i]
-			#	#end
 			#else:
 			#	sol_lambda = {}
-			##end
 			
 			
 			opt_problem.addSol(self.__class__.__name__, sol_name, objfunc, sol_time, 
 				sol_evals, sol_inform, sol_vars, sol_objs, sol_cons, sol_options, 
 				display_opts=disp_opts, Lambda=sol_lambda, Seed=rseed,
 				arguments=args, **kwargs)
-		#end
 		
 		
 		return opt_f, opt_x, {}

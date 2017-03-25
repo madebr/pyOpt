@@ -36,7 +36,6 @@ try:
 	from . import filtersd
 except:
 	raise ImportError('FILTERSD shared library failed to import')
-#end
 
 # =============================================================================
 # Standard Python modules
@@ -63,7 +62,6 @@ inf = 10.E+20  # define a value for infinity
 eps = 1.0	# define a value for machine precision
 while ((eps/2.0 + 1.0) > 1.0):
 	eps = eps/2.0
-#end
 eps = 2.0*eps
 #eps = math.ldexp(1,-52)
 
@@ -96,7 +94,6 @@ class FILTERSD(Optimizer):
 			self.poa = True
 		else:
 			raise ValueError("pll_type must be either None or 'POA'")
-		#end
 
 		#
 		name = 'FILTERSD'
@@ -157,7 +154,6 @@ class FILTERSD(Optimizer):
 		#
 		if ((self.poa) and (sens_mode.lower() == 'pgc')):
 			raise NotImplementedError("pyFILTERSD - Current implementation only allows single level parallelization, either 'POA' or 'pgc'")
-		#end
 
 		if self.poa or (sens_mode.lower() == 'pgc'):
 			try:
@@ -165,20 +161,17 @@ class FILTERSD(Optimizer):
 				from mpi4py import MPI
 			except ImportError:
 				print('pyFILTERSD: Parallel objective Function Analysis requires mpi4py')
-			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
 			if (mpi4py.__version__[0] == '0'):
 				Bcast = comm.Bcast
 			elif (mpi4py.__version__[0] == '1'):
 				Bcast = comm.bcast
-			#end
 			self.pll = True
 			self.myrank = comm.Get_rank()
 		else:
 			self.pll = False
 			self.myrank = 0
-		#end
 
 		myrank = self.myrank
 
@@ -204,12 +197,9 @@ class FILTERSD(Optimizer):
 						xg[group] = x[group_ids[group][0]]
 					else:
 						xg[group] = x[group_ids[group][0]:group_ids[group][1]]
-					#end
-				#end
 				xn = xg
 			else:
 				xn = x
-			#end
 
 			# Flush Output Files
 			self.flushFiles()
@@ -226,18 +216,13 @@ class FILTERSD(Optimizer):
 						hos_file.close()
 					else:
 						[ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
-					#end
-				#end
-			#end
 
 			if self.pll:
 				self.hot_start = Bcast(self.hot_start,root=0)
-			#end
 			if self.hot_start and self.pll:
 				[ff,gg,fail] = Bcast([ff,gg,fail],root=0)
 			elif not self.hot_start:
 				[ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
-			#end
 
 			# Store History
 			if (myrank == 0):
@@ -246,8 +231,6 @@ class FILTERSD(Optimizer):
 					log_file.write(ff,'obj')
 					log_file.write(gg,'con')
 					log_file.write(fail,'fail')
-				#end
-			#end
 
 			# Store
 			self.stored_data['x'] = copy.copy(x)
@@ -259,7 +242,6 @@ class FILTERSD(Optimizer):
 				f = ff.astype(float)
 			else:
 				f = ff
-			#end
 
 			# Constraints Assigment
 			for i in range(len(opt_problem._constraints.keys())):
@@ -267,8 +249,6 @@ class FILTERSD(Optimizer):
 					g[i] = gg[i].astype(float)
 				else:
 					g[i] = gg[i]
-				#end
-			#end
 
 			return f,g
 
@@ -283,7 +263,6 @@ class FILTERSD(Optimizer):
 			else:
 				f = self.stored_data['f']
 				g = self.stored_data['g']
-			#end
 
 			if self.hot_start:
 				dff = []
@@ -296,38 +275,28 @@ class FILTERSD(Optimizer):
 					else:
 						dff = vals['grad_obj'][0].reshape((len(opt_problem._objectives.keys()),len(opt_problem._variables.keys())))
 						dgg = vals['grad_con'][0].reshape((len(opt_problem._constraints.keys()),len(opt_problem._variables.keys())))
-					#end
-				#end
 				if self.pll:
 					self.hot_start = Bcast(self.hot_start,root=0)
-				#end
 				if self.hot_start and self.pll:
 					[dff,dgg] = Bcast([dff,dgg],root=0)
-				#end
-			#end
 
 			if not self.hot_start:
 
 				#
 				dff,dgg = gradient.getGrad(x, group_ids, [f], g[0:len(opt_problem._constraints.keys())], *args, **kwargs)
 
-			#end
 
 			# Store History
 			if self.sto_hst and (myrank == 0):
 				log_file.write(dff,'grad_obj')
 				log_file.write(dgg,'grad_con')
-			#end
 
 			# Gradient Assignment
 			for i in range(len(opt_problem._variables.keys())):
 				a[i,0] = dff[0,i]
-			#end
 			for i in range(len(opt_problem._variables.keys())):
 				for j in range(len(opt_problem._constraints.keys())):
 					a[i,j+1] = dgg[j,i]
-				#end
-			#end
 
 			return a
 
@@ -341,7 +310,6 @@ class FILTERSD(Optimizer):
 			xl.append(opt_problem._variables[key].lower)
 			xu.append(opt_problem._variables[key].upper)
 			xx.append(opt_problem._variables[key].value)
-		#end
 		xl = numpy.array(xl)
 		xu = numpy.array(xu)
 		xx = numpy.array(xx)
@@ -354,8 +322,6 @@ class FILTERSD(Optimizer):
 				group_len = len(opt_problem._vargroups[key]['ids'])
 				group_ids[opt_problem._vargroups[key]['name']] = [k,k+group_len]
 				k += group_len
-			#end
-		#end
 
 		# Constraints Handling
 		ncon = len(opt_problem._constraints.keys())
@@ -364,14 +330,11 @@ class FILTERSD(Optimizer):
 			for key in opt_problem._constraints.keys():
 				if opt_problem._constraints[key].type == 'e':
 					raise IOError('FILTERSD cannot handle equality constraints')
-				#end
 				gg.append(opt_problem._constraints[key].value)
-			#end
 			gg = numpy.array(gg, numpy.float)
 		else:
 			ncon = 1
 			gg = numpy.array([0], numpy.float)
-		#end
 
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
@@ -379,7 +342,6 @@ class FILTERSD(Optimizer):
 		ff = []
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
-		#end
 		ff = numpy.array(ff, numpy.float)
 
 
@@ -400,17 +362,13 @@ class FILTERSD(Optimizer):
 				iprint = numpy.array([self.options['iprint'][1]], numpy.int)
 			else:
 				raise IOError('Incorrect Output Level Setting')
-			#end
 		else:
 			iprint = numpy.array([0], numpy.int)
-		#end
 		iout = numpy.array([self.options['iout'][1]], numpy.int)
 		ifile = self.options['ifile'][1]
 		if (iprint > 0):
 			if os.path.isfile(ifile):
 				os.remove(ifile)
-			#end
-		#end
 		ifail = numpy.array([0], numpy.int)
 		nfevs = numpy.array([0], numpy.int)
 		ngevs = numpy.array([0], numpy.int)
@@ -438,13 +396,9 @@ class FILTERSD(Optimizer):
 					os.remove(name+'.bin')
 					os.rename(name+'_tmp.cue',name+'.cue')
 					os.rename(name+'_tmp.bin',name+'.bin')
-				#end
-			#end
-		#end
 
 		if (iprint > 0):
 			filtersd.closeunit(self.options['iout'][1])
-		#end
 
 
 		# Store Results
@@ -459,7 +413,6 @@ class FILTERSD(Optimizer):
 			sol_options = copy.copy(self.options)
 			if 'defaults' in sol_options:
 				del sol_options['defaults']
-			#end
 
 			sol_evals = nfevs[0] + ngevs[0]*nvar
 
@@ -468,14 +421,12 @@ class FILTERSD(Optimizer):
 			for key in sol_vars.keys():
 				sol_vars[key].value = xx[i]
 				i += 1
-			#end
 
 			sol_objs = copy.deepcopy(opt_problem._objectives)
 			i = 0
 			for key in sol_objs.keys():
 				sol_objs[key].value = ff[i]
 				i += 1
-			#end
 
 			if ncon > 0:
 				sol_cons = copy.deepcopy(opt_problem._constraints)
@@ -483,19 +434,15 @@ class FILTERSD(Optimizer):
 				for key in sol_cons.keys():
 					sol_cons[key].value = gg[i]
 					i += 1
-				#end
 			else:
 				sol_cons = {}
-			#end
 
 			if ncon > 0:
 				sol_lambda = numpy.zeros(ncon,float)
 				for i in range(ncon):
 					sol_lambda[i] = al[i]
-				#end
 			else:
 				sol_lambda = {}
-			#end
 
 
 			opt_problem.addSol(self.__class__.__name__, sol_name, objfunc, sol_time,
@@ -504,7 +451,6 @@ class FILTERSD(Optimizer):
 				myrank=myrank, arguments=args, **kwargs)
 
 			time.sleep(0)
-		#end
 
 		return ff, xx, sol_inform
 
@@ -559,7 +505,6 @@ class FILTERSD(Optimizer):
 		iprint = self.options['iprint'][1]
 		if (iprint > 0):
 			filtersd.pyflush(self.options['iout'][1])
-		#end
 
 
 

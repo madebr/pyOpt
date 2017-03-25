@@ -37,7 +37,6 @@ try:
 	from . import algencan
 except ImportError:
 	raise ImportError('ALGENCAN shared library failed to import')
-#end
 
 # =============================================================================
 # Standard Python modules
@@ -65,7 +64,6 @@ inf = 10.E+20  # define a value for infinity
 eps = 1.0	# define a value for machine precision
 while ((eps/2.0 + 1.0) > 1.0):
 	eps = eps/2.0
-#end
 eps = 2.0*eps
 #eps = math.ldexp(1,-52)
 
@@ -98,7 +96,6 @@ class ALGENCAN(Optimizer):
 			self.poa = True
 		else:
 			raise ValueError("pll_type must be either None or 'POA'")
-		#end
 		
 		#
 		name = 'ALGENCAN'
@@ -147,7 +144,6 @@ class ALGENCAN(Optimizer):
 		# 
 		if ((self.poa) and (sens_mode.lower() == 'pgc')):
 			raise NotImplementedError("pyALGENCAN - Current implementation only allows single level parallelization, either 'POA' or 'pgc'")
-		#end
 		
 		if self.poa or (sens_mode.lower() == 'pgc'):
 			try:
@@ -155,20 +151,17 @@ class ALGENCAN(Optimizer):
 				from mpi4py import MPI
 			except ImportError:
 				print('pyALGENCAN: Parallel objective Function Analysis requires mpi4py')
-			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
 			if (mpi4py.__version__[0] == '0'):
 				Bcast = comm.Bcast
 			elif (mpi4py.__version__[0] == '1'):
 				Bcast = comm.bcast
-			#end
 			self.pll = True
 			self.myrank = comm.Get_rank()
 		else:
 			self.pll = False
 			self.myrank = 0
-		#end
 		
 		myrank = self.myrank
 		
@@ -231,12 +224,9 @@ class ALGENCAN(Optimizer):
 						xg[group] = x[group_ids[group][0]]
 					else:
 						xg[group] = x[group_ids[group][0]:group_ids[group][1]]
-					#end
-				#end
 				xn = xg
 			else:
 				xn = x
-			#end
 			
 			# Flush Output Files
 			self.flushFiles()
@@ -251,18 +241,13 @@ class ALGENCAN(Optimizer):
 						hos_file.close()
 					else:
 						[ff,gg,flag] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
-					#end
-				#end
-			#end
 			
 			if self.pll:
 				self.hot_start = Bcast(self.hot_start,root=0)
-			#end
 			if self.hot_start and self.pll:
 				[ff,gg,fail] = Bcast([ff,gg,fail],root=0)
 			elif not self.hot_start:	
 				[ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
-			#end
 			
 			# Store History
 			if (myrank == 0):
@@ -271,15 +256,12 @@ class ALGENCAN(Optimizer):
 					log_file.write(ff,'obj')
 					log_file.write(gg,'con')
 					log_file.write(fail,'fail')
-				#end
-			#end	
 			
 			# Objective Assigment
 			if isinstance(ff,complex):
 				f = ff.astype(float)
 			else:
 				f = ff
-			#end
 			
 			# Constraints Assigment
 			for i in range(len(opt_problem._constraints.keys())):
@@ -287,8 +269,6 @@ class ALGENCAN(Optimizer):
 					g[i] = gg[i].astype(float)
 				else:
 					g[i] = gg[i]
-				#end
-			#end
 			
 			return f,g,fail
 		
@@ -307,33 +287,25 @@ class ALGENCAN(Optimizer):
 					else:
 						dff = vals['grad_obj'][0].reshape((len(opt_problem._objectives.keys()),len(opt_problem._variables.keys())))
 						dgg = vals['grad_con'][0].reshape((len(opt_problem._constraints.keys()),len(opt_problem._variables.keys())))	
-					#end
-				#end
 				if self.pll:
 					self.hot_start = Bcast(self.hot_start,root=0)
-				#end
 				if self.hot_start and self.pll:
 					[dff,dgg] = Bcast([dff,dgg],root=0)
-				#end
-			#end
 			
 			if not self.hot_start:	
 				
 				[ff,gg,fail] = opt_problem.obj_fun(x, *args, **kwargs)
 				dff,dgg = gradient.getGrad(x, group_ids, [ff], gg, *args, **kwargs)
 				
-			#end
 			
 			# Store History
 			if self.sto_hst and (myrank == 0):
 				log_file.write(dff,'grad_obj')
 				log_file.write(dgg,'grad_con')
-			#end
 			
 			# Objective Gradient Assigment
 			for i in range(len(opt_problem._variables.keys())):
 				jfval[i] = dff[0,i]
-			#end
 			
 			# Constraint Gradient Assigment
 			jcnnz = 0
@@ -343,8 +315,6 @@ class ALGENCAN(Optimizer):
 					jcvar[jcnnz] = ii + 1
 					jcval[jcnnz] = dgg[jj,ii]
 					jcnnz += 1
-				#end
-			#end
 			
 			return jfval,jcfun,jcvar,jcval,jcnnz,fail
 		
@@ -364,8 +334,6 @@ class ALGENCAN(Optimizer):
 				raise IOError('NLPQL cannot handle integer design variables')
 			elif (opt_problem._variables[key].type == 'd'):
 				raise IOError('NLPQL cannot handle discrete design variables')
-			#end
-		#end
 		xl = numpy.array(xl)
 		xu = numpy.array(xu)
 		xx = numpy.array(xx)
@@ -378,8 +346,6 @@ class ALGENCAN(Optimizer):
 				group_len = len(opt_problem._vargroups[key]['ids'])
 				group_ids[opt_problem._vargroups[key]['name']] = [k,k+group_len]
 				k += group_len
-			#end
-		#end
 		
 		# Constraints Handling
 		m = len(opt_problem._constraints.keys())
@@ -391,12 +357,9 @@ class ALGENCAN(Optimizer):
 					equatn.append(True)
 				elif opt_problem._constraints[key].type == 'i':
 					equatn.append(False)
-				#end
 				linear.append(False)
-			#end
 		else:
 			raise IOError('ALGENCAN support for unconstrained problems not implemented yet')
-		#end
 		equatn = numpy.array(equatn)
 		linear = numpy.array(linear)
 		
@@ -406,7 +369,6 @@ class ALGENCAN(Optimizer):
 		ff = []
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
-		#end
 		ff = numpy.array(ff)
 		
 		
@@ -425,15 +387,12 @@ class ALGENCAN(Optimizer):
 			iprint = 0
 		else:
 			iprint = self.options['iprint'][1]
-		#end
 		ncomp = numpy.array([self.options['ncomp'][1]], numpy.int)
 
 		ifile = self.options['ifile'][1]
 		if (iprint >= 0):
 			if os.path.isfile(ifile):
 				os.remove(ifile)
-			#end
-		#end
 		cnormu = numpy.array([0], numpy.float)
 		snorm = numpy.array([0], numpy.float)
 		nlpsupn = numpy.array([0], numpy.float)
@@ -454,13 +413,9 @@ class ALGENCAN(Optimizer):
 					os.remove(name+'.bin')
 					os.rename(name+'_tmp.cue',name+'.cue')
 					os.rename(name+'_tmp.bin',name+'.bin')
-				#end
-			#end
-		#end
 		
 		if (iprint > 0):
 			algencan.closeunit(10)
-		#end
 		
 		
 		# 
@@ -478,7 +433,6 @@ class ALGENCAN(Optimizer):
 			sol_options = copy.copy(self.options)
 			if 'defaults' in sol_options:
 				del sol_options['defaults']
-			#end
 			
 			sol_evals = 0
 			
@@ -487,14 +441,12 @@ class ALGENCAN(Optimizer):
 			for key in sol_vars.keys():
 				sol_vars[key].value = xx[i]
 				i += 1
-			#end
 			
 			sol_objs = copy.deepcopy(opt_problem._objectives)
 			i = 0
 			for key in sol_objs.keys():
 				sol_objs[key].value = ff[i]
 				i += 1
-			#end
 			
 			if m > 0:
 				sol_cons = copy.deepcopy(opt_problem._constraints)
@@ -502,10 +454,8 @@ class ALGENCAN(Optimizer):
 				for key in sol_cons.keys():
 					sol_cons[key].value = gg[i]
 					i += 1
-				#end
 			else:
 				sol_cons = {}
-			#end
 			
 			sol_lambda = lm
 			
@@ -515,7 +465,6 @@ class ALGENCAN(Optimizer):
 				display_opts=disp_opts, Lambda=sol_lambda, Sensitivities=sens_type,
 				myrank=myrank, arguments=args, **kwargs)
 			
-		#end
 			
 		return ff, xx, sol_inform
 		
@@ -570,7 +519,6 @@ class ALGENCAN(Optimizer):
 		iPrint = self.options['iprint'][1]
 		if (iPrint >= 0):
 			algencan.pyflush(10)	
-		#end
 	
 
 

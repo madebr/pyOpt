@@ -36,7 +36,6 @@ try:
 	from . import sdpen
 except ImportError:
 	raise ImportError('SDPEN shared library failed to import')
-#end
 
 # =============================================================================
 # Standard Python modules
@@ -62,7 +61,6 @@ inf = 10.E+20  # define a value for infinity
 eps = 1.0	# define a value for machine precision
 while ((eps/2.0 + 1.0) > 1.0):
 	eps = eps/2.0
-#end
 eps = 2.0*eps
 #eps = math.ldexp(1,-52)
 
@@ -95,7 +93,6 @@ class SDPEN(Optimizer):
 			self.poa = True
 		else:
 			raise ValueError("pll_type must be either None or 'POA'")
-		#end
 		
 		#
 		name = 'SDPEN'
@@ -140,20 +137,17 @@ class SDPEN(Optimizer):
 				from mpi4py import MPI
 			except ImportError:
 				print('pySDPEN: Parallel objective Function Analysis requires mpi4py')
-			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
 			if (mpi4py.__version__[0] == '0'):
 				Bcast = comm.Bcast
 			elif (mpi4py.__version__[0] == '1'):
 				Bcast = comm.bcast
-			#end
 			self.pll = True
 			self.myrank = comm.Get_rank()
 		else:
 			self.pll = False
 			self.myrank = 0
-		#end
 		
 		myrank = self.myrank
 		
@@ -176,12 +170,9 @@ class SDPEN(Optimizer):
 						xg[group] = x[group_ids[group][0]]
 					else:
 						xg[group] = x[group_ids[group][0]:group_ids[group][1]]
-					#end
-				#end
 				xn = xg
 			else:
 				xn = x
-			#end
 			
 			# Flush Output Files
 			self.flushFiles()
@@ -198,18 +189,13 @@ class SDPEN(Optimizer):
 						hos_file.close()
 					else:
 						[ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
-					#end
-				#end
-			#end
 			
 			if self.pll:
 				self.hot_start = Bcast(self.hot_start,root=0)
-			#end
 			if self.hot_start and self.pll:
 				[ff,gg,fail] = Bcast([ff,gg,fail],root=0)
 			elif not self.hot_start:	
 				[ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
-			#end
 			
 			# Store History
 			if (myrank == 0):
@@ -218,15 +204,12 @@ class SDPEN(Optimizer):
 					log_file.write(ff,'obj')
 					log_file.write(gg,'con')
 					log_file.write(fail,'fail')
-				#end
-			#end
 			
 			# Objective Assigment
 			if isinstance(ff,complex):
 				f = ff.astype(float)
 			else:
 				f = ff
-			#end
 			
 			# Constraints Assigment
 			for i in range(len(opt_problem._constraints.keys())):
@@ -234,8 +217,6 @@ class SDPEN(Optimizer):
 					g[i] = gg[i].astype(float)
 				else:
 					g[i] = gg[i]
-				#end
-			#end
 			
 			return f,g
 		
@@ -255,8 +236,6 @@ class SDPEN(Optimizer):
 				raise IOError('SDPEN cannot handle integer design variables')
 			elif (opt_problem._variables[key].type == 'd'):
 				raise IOError('SDPEN cannot handle discrete design variables')
-			#end
-		#end
 		xl = numpy.array(xl)
 		xu = numpy.array(xu)
 		xx = numpy.array(xx)
@@ -269,8 +248,6 @@ class SDPEN(Optimizer):
 				group_len = len(opt_problem._vargroups[key]['ids'])
 				group_ids[opt_problem._vargroups[key]['name']] = [k,k+group_len]
 				k += group_len
-			#end
-		#end		
 		
 		# Constraints Handling
 		ncon = len(opt_problem._constraints.keys())
@@ -281,14 +258,11 @@ class SDPEN(Optimizer):
 				if opt_problem._constraints[key].type == 'e':
 					raise IOError('SDPEN cannot handle equality constraints')
 					#neqc += 1
-				#end
 				#gg.append(opt_problem._constraints[key].value)
 				gg.append(opt_problem._constraints[key].upper)
-			#end
 		else:
 			ncon = 1
 			gg.append(inf)
-		#end
 		gg = numpy.array(gg)
 		
 		# Objective Handling
@@ -297,7 +271,6 @@ class SDPEN(Optimizer):
 		ff = []
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
-		#end
 		ff = numpy.array(ff)		
 		
 		
@@ -311,18 +284,14 @@ class SDPEN(Optimizer):
 				iprint = numpy.array([self.options['iprint'][1]], numpy.int)
 			else:
 				raise IOError('Incorrect Output Level Setting')
-			#end
 		else:
 			iprint = numpy.array([-1], numpy.int)
-		#end
 		nfvals = numpy.array([0], numpy.int)
 		iout = numpy.array([self.options['iout'][1]], numpy.int)
 		ifile = self.options['ifile'][1]
 		if (iprint > 0):
 			if os.path.isfile(ifile):
 				os.remove(ifile)
-			#end
-		#end
 		istop = numpy.array([0], numpy.int)
 		nfvals = numpy.array([0], numpy.int)
 		
@@ -342,13 +311,9 @@ class SDPEN(Optimizer):
 					os.remove(name+'.bin')
 					os.rename(name+'_tmp.cue',name+'.cue')
 					os.rename(name+'_tmp.bin',name+'.bin')
-				#end
-			#end		
-		#end
 		
 		if (iprint > 0):
 			sdpen.closeunit(self.options['iout'][1])
-		#end
 		
 		
 		# Store Results
@@ -363,7 +328,6 @@ class SDPEN(Optimizer):
 			sol_options = copy.copy(self.options)
 			if 'defaults' in sol_options:
 				del sol_options['defaults']
-			#end
 			
 			sol_evals = nfvals[0]
 			
@@ -372,14 +336,12 @@ class SDPEN(Optimizer):
 			for key in sol_vars.keys():
 				sol_vars[key].value = xx[i]
 				i += 1
-			#end
 			
 			sol_objs = copy.deepcopy(opt_problem._objectives)
 			i = 0
 			for key in sol_objs.keys():
 				sol_objs[key].value = ff[i]
 				i += 1
-			#end
 			
 			if ncon > 0:
 				sol_cons = copy.deepcopy(opt_problem._constraints)
@@ -387,10 +349,8 @@ class SDPEN(Optimizer):
 				for key in sol_cons.keys():
 					sol_cons[key].value = gg[i]
 					i += 1
-				#end
 			else:
 				sol_cons = {}
-			#end
 			
 			sol_lambda = {}
 			
@@ -400,7 +360,6 @@ class SDPEN(Optimizer):
 				display_opts=disp_opts, Lambda=sol_lambda, myrank=myrank,
 				arguments=args, **kwargs)
 			
-		#end
 		
 		return ff, xx, sol_inform
 		
@@ -455,7 +414,6 @@ class SDPEN(Optimizer):
 		iprint = self.options['iprint'][1]
 		if (iprint >= 0):
 			sdpen.pyflush(self.options['iout'][1])	
-		#end
 	
 
 

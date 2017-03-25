@@ -40,7 +40,6 @@ try:
 	from . import cobyla
 except:
 	raise ImportError('COBYLA shared library failed to import')
-#end
 
 # =============================================================================
 # Standard Python modules
@@ -66,7 +65,6 @@ inf = 10.E+20  # define a value for infinity
 eps = 1.0	# define a value for machine precision
 while ((eps/2.0 + 1.0) > 1.0):
 	eps = eps/2.0
-#end
 eps = 2.0*eps
 #eps = math.ldexp(1,-52)
 
@@ -99,7 +97,6 @@ class COBYLA(Optimizer):
 			self.poa = True
 		else:
 			raise ValueError("pll_type must be either None or 'POA'")
-		#end
 
 		#
 		name = 'COBYLA'
@@ -145,20 +142,17 @@ class COBYLA(Optimizer):
 				from mpi4py import MPI
 			except ImportError:
 				print('pyCOBYLA: Parallel objective Function Analysis requires mpi4py')
-			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
 			if (mpi4py.__version__[0] == '0'):
 				Bcast = comm.Bcast
 			elif (mpi4py.__version__[0] == '1'):
 				Bcast = comm.bcast
-			#end
 			self.pll = True
 			self.myrank = comm.Get_rank()
 		else:
 			self.pll = False
 			self.myrank = 0
-		#end
 
 		myrank = self.myrank
 
@@ -181,12 +175,9 @@ class COBYLA(Optimizer):
 						xg[group] = x[group_ids[group][0]]
 					else:
 						xg[group] = x[group_ids[group][0]:group_ids[group][1]]
-					#end
-				#end
 				xn = xg
 			else:
 				xn = x
-			#end
 
 			# Flush Output Files
 			self.flushFiles()
@@ -203,18 +194,13 @@ class COBYLA(Optimizer):
 						hos_file.close()
 					else:
 						[ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
-					#end
-				#end
-			#end
 
 			if self.pll:
 				self.hot_start = Bcast(self.hot_start,root=0)
-			#end
 			if self.hot_start and self.pll:
 				[ff,gg,fail] = Bcast([ff,gg,fail],root=0)
 			elif not self.hot_start:
 				[ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
-			#end
 
 			# Store History
 			if (myrank == 0):
@@ -223,15 +209,12 @@ class COBYLA(Optimizer):
 					log_file.write(ff,'obj')
 					log_file.write(gg,'con')
 					log_file.write(fail,'fail')
-				#end
-			#end
 
 			# Objective Assigment
 			if isinstance(ff,complex):
 				f = ff.astype(float)
 			else:
 				f = ff
-			#end
 
 			# Constraints Assigment (negative gg as cobyla uses g(x) >= 0)
 			i = 0
@@ -240,21 +223,16 @@ class COBYLA(Optimizer):
 					g[i] = -gg[j].astype(float)
 				else:
 					g[i] = -gg[j]
-				#end
 				i += 1
-			#end
 			j = 0
 			for key in opt_problem._variables.keys():
 				if (opt_problem._variables[key].lower != -inf):
 					g[i] = x[j] - xl[j]
 					i += 1
-				#end
 				if (opt_problem._variables[key].upper != inf):
 					g[i] = xu[j] - x[j]
 					i += 1
-				#end
 				j += 1
-			#end
 
 			return f,g
 
@@ -274,8 +252,6 @@ class COBYLA(Optimizer):
 				raise IOError('COBYLA cannot handle integer design variables')
 			elif (opt_problem._variables[key].type == 'd'):
 				raise IOError('COBYLA cannot handle discrete design variables')
-			#end
-		#end
 		xl = numpy.array(xl)
 		xu = numpy.array(xu)
 		xx = numpy.array(xx)
@@ -288,8 +264,6 @@ class COBYLA(Optimizer):
 				group_len = len(opt_problem._vargroups[key]['ids'])
 				group_ids[opt_problem._vargroups[key]['name']] = [k,k+group_len]
 				k += group_len
-			#end
-		#end
 
 		# Constraints Handling
 		ncon = len(opt_problem._constraints.keys())
@@ -300,22 +274,16 @@ class COBYLA(Optimizer):
 				if opt_problem._constraints[key].type == 'e':
 					raise IOError('COBYLA cannot handle equality constraints')
 					#neqc += 1
-				#end
 				#gg.append(opt_problem._constraints[key].value)
 				gg.append(opt_problem._constraints[key].upper)
-			#end
-		#end
 		nadd = 0
 		for key in opt_problem._variables.keys():
 			if (opt_problem._variables[key].lower != -inf):
 				gg.append(0)
 				nadd += 1
-			#end
 			if (opt_problem._variables[key].upper != inf):
 				gg.append(0)
 				nadd += 1
-			#end
-		#end
 		gg = numpy.array(gg,numpy.float)
 
 		# Objective Handling
@@ -324,7 +292,6 @@ class COBYLA(Optimizer):
 		ff = []
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
-		#end
 		ff = numpy.array(ff,numpy.float)
 
 
@@ -338,10 +305,8 @@ class COBYLA(Optimizer):
 				iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
 			else:
 				raise IOError('Incorrect Output Level Setting')
-			#end
 		else:
 			iprint = numpy.array([0], numpy.int)
-		#end
 		maxfun = numpy.array([self.options['MAXFUN'][1]], numpy.int)
 		w = numpy.zeros(n*(3*n+2*m+11)+4*m+6, numpy.float)
 		iact = numpy.zeros(m+1, numpy.intc)
@@ -352,8 +317,6 @@ class COBYLA(Optimizer):
 		if (iprint > 0):
 			if os.path.isfile(ifile):
 				os.remove(ifile)
-			#end
-		#end
 
 
 		# Run COBYLA
@@ -372,13 +335,9 @@ class COBYLA(Optimizer):
 					os.remove(name+'.bin')
 					os.rename(name+'_tmp.cue',name+'.cue')
 					os.rename(name+'_tmp.bin',name+'.bin')
-				#end
-			#end
-		#end
 
 		if (iprint > 0):
 			cobyla.closeunit(self.options['IOUT'][1])
-		#end
 
 
 		# Store Results
@@ -393,7 +352,6 @@ class COBYLA(Optimizer):
 			sol_options = copy.copy(self.options)
 			if 'defaults' in sol_options:
 				del sol_options['defaults']
-			#end
 
 			sol_evals = nfvals[0]
 
@@ -402,14 +360,12 @@ class COBYLA(Optimizer):
 			for key in sol_vars.keys():
 				sol_vars[key].value = xx[i]
 				i += 1
-			#end
 
 			sol_objs = copy.deepcopy(opt_problem._objectives)
 			i = 0
 			for key in sol_objs.keys():
 				sol_objs[key].value = ff[i]
 				i += 1
-			#end
 
 			if ncon > 0:
 				sol_cons = copy.deepcopy(opt_problem._constraints)
@@ -419,11 +375,8 @@ class COBYLA(Optimizer):
 					i += 1
 					if (i >= ncon):
 						break
-					#end
-				#end
 			else:
 				sol_cons = {}
-			#end
 
 			sol_lambda = {}
 
@@ -433,7 +386,6 @@ class COBYLA(Optimizer):
 				display_opts=disp_opts, Lambda=sol_lambda, myrank=myrank,
 				arguments=args, **kwargs)
 
-		#end
 
 		return ff, xx, sol_inform
 
@@ -488,7 +440,6 @@ class COBYLA(Optimizer):
 		iPrint = self.options['IPRINT'][1]
 		if (iPrint >= 0):
 			cobyla.pyflush(self.options['IOUT'][1])
-		#end
 
 
 

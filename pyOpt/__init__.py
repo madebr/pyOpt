@@ -21,6 +21,3 @@ for f in os.listdir(dir):
             __all__.extend(sys.modules['pyOpt.'+f].__all__)
         except Exception as e:
             continue
-        #end
-    #end
-#end

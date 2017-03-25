@@ -5,4 +5,3 @@ try:
     __all__ = ['FSQP']
 except:
     __all__ = []
-#end

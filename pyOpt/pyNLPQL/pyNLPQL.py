@@ -47,7 +47,6 @@ try:
 	from . import nlpql
 except:
 	raise ImportError('NLPQL shared library failed to import')
-#end
 
 # =============================================================================
 # Standard Python modules
@@ -74,7 +73,6 @@ inf = 10.E+20  # define a value for infinity
 eps = 1.0	# define a value for machine precision
 while ((eps/2.0 + 1.0) > 1.0):
 	eps = eps/2.0
-#end
 eps = 2.0*eps
 #eps = math.ldexp(1,-52)
 
@@ -107,7 +105,6 @@ class NLPQL(Optimizer):
 			self.poa = True
 		else:
 			raise ValueError("pll_type must be either None or 'POA'")
-		#end
 		
 		# 
 		name = 'NLPQL'
@@ -176,7 +173,6 @@ class NLPQL(Optimizer):
 		# 
 		if ((self.poa) and (sens_mode.lower() == 'pgc')):
 			raise NotImplementedError("pyNLPQL - Current implementation only allows single level parallelization, either 'POA' or 'pgc'")
-		#end
 		
 		if self.poa or (sens_mode.lower() == 'pgc'):
 			try:
@@ -184,20 +180,17 @@ class NLPQL(Optimizer):
 				from mpi4py import MPI
 			except ImportError:
 				print('pyNLPQL: Parallel objective Function Analysis requires mpi4py')
-			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
 			if (mpi4py.__version__[0] == '0'):
 				Bcast = comm.Bcast
 			elif (mpi4py.__version__[0] == '1'):
 				Bcast = comm.bcast
-			#end
 			self.pll = True
 			self.myrank = comm.Get_rank()
 		else:
 			self.pll = False
 			self.myrank = 0
-		#end
 		
 		myrank = self.myrank
 		
@@ -222,12 +215,9 @@ class NLPQL(Optimizer):
 						xg[group] = x[group_ids[group][0]]
 					else:
 						xg[group] = x[group_ids[group][0]:group_ids[group][1]]
-					#end
-				#end
 				xn = xg
 			else:
 				xn = x
-			#end
 			
 			# Flush Output Files
 			self.flushFiles()
@@ -244,18 +234,13 @@ class NLPQL(Optimizer):
 						hos_file.close()
 					else:
 						[ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
-					#end
-				#end
-			#end
 			
 			if self.pll:
 				self.hot_start = Bcast(self.hot_start,root=0)
-			#end
 			if self.hot_start and self.pll:
 				[ff,gg,fail] = Bcast([ff,gg,fail],root=0)
 			elif not self.hot_start:	
 				[ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
-			#end
 			
 			# Store History
 			if (myrank == 0):
@@ -264,15 +249,12 @@ class NLPQL(Optimizer):
 					log_file.write(ff,'obj')
 					log_file.write(gg,'con')
 					log_file.write(fail,'fail')
-				#end
-			#end
 			
 			# Objective Assigment
 			if isinstance(ff,complex):
 				f = ff.astype(float)
 			else:
 				f = ff
-			#end
 			
 			# Constraints Assigment (negative gg as nlpql uses g(x) >= 0)
 			for i in range(len(opt_problem._constraints.keys())):
@@ -280,8 +262,6 @@ class NLPQL(Optimizer):
 					g[i] = -gg[i].astype(float)
 				else:
 					g[i] = -gg[i]
-				#end
-			#end
 			
 			return f,g
 		
@@ -302,36 +282,27 @@ class NLPQL(Optimizer):
 					else:
 						dff = vals['grad_obj'][0].reshape((len(opt_problem._objectives.keys()),len(opt_problem._variables.keys())))
 						dgg = vals['grad_con'][0].reshape((len(opt_problem._constraints.keys()),len(opt_problem._variables.keys())))	
-					#end
-				#end
 				if self.pll:
 					self.hot_start = Bcast(self.hot_start,root=0)
-				#end
 				if self.hot_start and self.pll:
 					[dff,dgg] = Bcast([dff,dgg],root=0)
-				#end
-			#end
 			
 			if not self.hot_start:	
 				
 				#
 				dff,dgg = gradient.getGrad(x, group_ids, [f], -g[0:len(opt_problem._constraints.keys())], *args, **kwargs)
 				
-			#end
 			
 			# Store History
 			if self.sto_hst and (myrank == 0):
 				log_file.write(dff,'grad_obj')
 				log_file.write(dgg,'grad_con')
-			#end
 			
 			# Gradient Assignment
 			for i in range(len(opt_problem._variables.keys())):
 				df[i] = dff[0,i]
 				for j in range(len(opt_problem._constraints.keys())):
 					dg[j,i] = -dgg[j,i]
-				#end
-			#end
 			
 			return df,dg
 		
@@ -351,8 +322,6 @@ class NLPQL(Optimizer):
 				raise IOError('NLPQL cannot handle integer design variables')
 			elif (opt_problem._variables[key].type == 'd'):
 				raise IOError('NLPQL cannot handle discrete design variables')
-			#end
-		#end
 		xl = numpy.array(xl)
 		xu = numpy.array(xu)
 		xx = numpy.array(xx)
@@ -365,8 +334,6 @@ class NLPQL(Optimizer):
 				group_len = len(opt_problem._vargroups[key]['ids'])
 				group_ids[opt_problem._vargroups[key]['name']] = [k,k+group_len]
 				k += group_len
-			#end
-		#end
 		
 		# Constraints Handling
 		ncon = len(opt_problem._constraints.keys())
@@ -376,10 +343,7 @@ class NLPQL(Optimizer):
 			for key in opt_problem._constraints.keys():
 				if opt_problem._constraints[key].type == 'e':
 					neqc += 1
-				#end
 				#gg.append(opt_problem._constraints[key].value)
-			#end
-		#end
 		#gg = numpy.array(gg, numpy.float)
 		
 		# Objective Handling
@@ -388,7 +352,6 @@ class NLPQL(Optimizer):
 		ff = []
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
-		#end
 		ff = numpy.array(ff, numpy.float)
 		
 		
@@ -398,13 +361,11 @@ class NLPQL(Optimizer):
 		mmx = 200
 		if (ncon >= mmx):
 			mmx = ncon + 1
-		#end
 		mmax = numpy.array([mmx], numpy.int)
 		nn = numpy.array([nvar], numpy.int)
 		nmx = 200
 		if (nvar >= nmx):
 			nmx = nvar + 1
-		#end
 		nmax = numpy.array([nmx], numpy.int)
 		mnn2 = numpy.array([mm[0]+nn[0]+nn[0]+2], numpy.int)
 		#xx = _ConcatenateVector(self.variables, 'value')
@@ -426,22 +387,17 @@ class NLPQL(Optimizer):
 				iprint = numpy.array([self.options['iPrint'][1]], numpy.int)
 			else:
 				raise IOError('Incorrect Output Level Setting')
-			#end
 		else:
 			iprint = numpy.array([0], numpy.int)
-		#end
 		if (self.options['mode'][1]>=0 and self.options['mode'][1]<=18):
 			mode = self.options['mode'][1]
 		else:
 			raise IOError('Incorrect Mode Setting')
-		#end
 		iout = self.options['iout'][1]
 		ifile = self.options['iFile'][1]
 		if (iprint > 0):
 			if os.path.isfile(ifile):
 				os.remove(ifile)
-			#end
-		#end
 		ifail = numpy.array([0], numpy.int)
 		lwa0 = 100000
 		lwa1 = 4*mmax + 4*ncon + 19*nvar + 55
@@ -476,13 +432,9 @@ class NLPQL(Optimizer):
 					os.remove(name+'.bin')
 					os.rename(name+'_tmp.cue',name+'.cue')
 					os.rename(name+'_tmp.bin',name+'.bin')
-				#end
-			#end
-		#end
 		
 		if (iprint > 0):
 			nlpql.closeunit(self.options['iout'][1])
-		#end
 		
 		
 		# Store Results
@@ -497,7 +449,6 @@ class NLPQL(Optimizer):
 			sol_options = copy.copy(self.options)
 			if 'defaults' in sol_options:
 				del sol_options['defaults']
-			#end
 			
 			sol_evals = kwa[0] + kwa[1]*nvar
 			
@@ -506,14 +457,12 @@ class NLPQL(Optimizer):
 			for key in sol_vars.keys():
 				sol_vars[key].value = xx[i]
 				i += 1
-			#end
 			
 			sol_objs = copy.deepcopy(opt_problem._objectives)
 			i = 0
 			for key in sol_objs.keys():
 				sol_objs[key].value = ff[i]
 				i += 1
-			#end
 			
 			if ncon > 0:
 				sol_cons = copy.deepcopy(opt_problem._constraints)
@@ -521,19 +470,15 @@ class NLPQL(Optimizer):
 				for key in sol_cons.keys():
 					sol_cons[key].value = -gg[i]
 					i += 1
-				#end
 			else:
 				sol_cons = {}
-			#end
 			
 			if ncon > 0:
 				sol_lambda = numpy.zeros(ncon,float)
 				for i in range(ncon):
 					sol_lambda[i] = uu[i]
-				#end
 			else:
 				sol_lambda = {}
-			#end
 			
 			
 			opt_problem.addSol(self.__class__.__name__, sol_name, objfunc, sol_time, 
@@ -541,7 +486,6 @@ class NLPQL(Optimizer):
 				display_opts=disp_opts, Lambda=sol_lambda, Sensitivities=sens_type, 
 				myrank=myrank, arguments=args, **kwargs)
 			
-		#end
 		
 		return ff, xx, sol_inform
 		
@@ -586,7 +530,6 @@ class NLPQL(Optimizer):
 			return self.informs[infocode]
 		else:
 			return self.informs[100]
-		#end
 		
 		
 	def _on_flushFiles(self):
@@ -601,7 +544,6 @@ class NLPQL(Optimizer):
 		iPrint = self.options['iPrint'][1]
 		if (iPrint > 0):
 			nlpql.pyflush(self.options['iout'][1])
-		#end
 	
 
 

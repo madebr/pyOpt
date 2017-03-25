@@ -24,7 +24,6 @@ try:
     myrank = comm.Get_rank()
 except:
     raise ImportError('mpi4py is required for parallelization')
-#end
 
 # =============================================================================
 # Extension modules
@@ -69,7 +68,6 @@ nlpqlp_none.setOption('IPRINT',0)
 nlpqlp_none(opt_prob)
 if myrank == 0:
     print(opt_prob.solution(0))
-#end
 
 # Solve Problem (Parallel Gradient)
 nlpqlp_pgc = NLPQLP()
@@ -77,7 +75,6 @@ nlpqlp_pgc.setOption('IPRINT',0)
 nlpqlp_pgc(opt_prob,sens_mode='pgc')
 if myrank == 0:
     print(opt_prob.solution(1))
-#end
 
 # Solve Problem (Parallel Line Search)
 nlpqlp_spm = NLPQLP(pll_type='SPM')

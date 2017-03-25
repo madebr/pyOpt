@@ -5,4 +5,3 @@ try:
     __all__ = ['NSGA2']
 except:
     __all__ = []
-#end

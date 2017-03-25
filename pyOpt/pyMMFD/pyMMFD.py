@@ -40,7 +40,6 @@ try:
 	from . import mmfd
 except:
 	raise ImportError('MMFD shared library failed to import')
-#end
 
 # =============================================================================
 # Standard Python modules
@@ -67,7 +66,6 @@ inf = 10.E+20  # define a value for infinity
 eps = 1.0	# define a value for machine precision
 while ((eps/2.0 + 1.0) > 1.0):
 	eps = eps/2.0
-#end
 eps = 2.0*eps
 #eps = math.ldexp(1,-52)
 
@@ -100,7 +98,6 @@ class MMFD(Optimizer):
 			self.poa = True
 		else:
 			raise ValueError("pll_type must be either None or 'POA'")
-		#end
 		
 		#
 		name = 'MMFD'
@@ -148,7 +145,6 @@ class MMFD(Optimizer):
 		# 
 		if ((self.poa) and (sens_mode.lower() == 'pgc')):
 			raise NotImplementedError("pyMMFD - Current implementation only allows single level parallelization, either 'POA' or 'pgc'")
-		#end
 		
 		if self.poa or (sens_mode.lower() == 'pgc'):
 			try:
@@ -156,20 +152,17 @@ class MMFD(Optimizer):
 				from mpi4py import MPI
 			except ImportError:
 				print('pyMMFD: Parallel objective Function Analysis requires mpi4py')
-			#end
 			comm = MPI.COMM_WORLD
 			nproc = comm.Get_size()
 			if (mpi4py.__version__[0] == '0'):
 				Bcast = comm.Bcast
 			elif (mpi4py.__version__[0] == '1'):
 				Bcast = comm.bcast
-			#end
 			self.pll = True
 			self.myrank = comm.Get_rank()
 		else:
 			self.pll = False
 			self.myrank = 0
-		#end
 		
 		myrank = self.myrank
 		
@@ -194,12 +187,9 @@ class MMFD(Optimizer):
 						xg[group] = x[group_ids[group][0]]
 					else:
 						xg[group] = x[group_ids[group][0]:group_ids[group][1]]
-					#end
-				#end
 				xn = xg
 			else:
 				xn = x
-			#end
 			
 			# Flush Output Files
 			self.flushFiles()
@@ -216,18 +206,13 @@ class MMFD(Optimizer):
 						hos_file.close()
 					else:
 						[ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
-					#end
-				#end
-			#end
 			
 			if self.pll:
 				self.hot_start = Bcast(self.hot_start,root=0)
-			#end
 			if self.hot_start and self.pll:
 				[ff,gg,fail] = Bcast([ff,gg,fail],root=0)
 			elif not self.hot_start:	
 				[ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
-			#end
 			
 			# Store History
 			if (myrank == 0):
@@ -236,15 +221,12 @@ class MMFD(Optimizer):
 					log_file.write(ff,'obj')
 					log_file.write(gg,'con')
 					log_file.write(fail,'fail')
-				#end
-			#end
 			
 			# Objective Assigment
 			if isinstance(ff,complex):
 				f = ff.astype(float)
 			else:
 				f = ff
-			#end
 			
 			# Constraints Assigment
 			for i in range(len(opt_problem._constraints.keys())):
@@ -252,8 +234,6 @@ class MMFD(Optimizer):
 					g[i] = gg[i].astype(float)
 				else:
 					g[i] = gg[i]
-				#end
-			#end
 			
 			return f,g
 		
@@ -274,36 +254,27 @@ class MMFD(Optimizer):
 					else:
 						dff = vals['grad_obj'][0].reshape((len(opt_problem._objectives.keys()),len(opt_problem._variables.keys())))
 						dgg = vals['grad_con'][0].reshape((len(opt_problem._constraints.keys()),len(opt_problem._variables.keys())))	
-					#end
-				#end
 				if self.pll:
 					self.hot_start = Bcast(self.hot_start,root=0)
-				#end
 				if self.hot_start and self.pll:
 					[dff,dgg] = Bcast([dff,dgg],root=0)
-				#end
-			#end
 			
 			if not self.hot_start:
 				
 				# 
 				dff,dgg = gradient.getGrad(x, group_ids, [f], g, *args, **kwargs)
 				
-			#end
 			
 			# Store History
 			if self.sto_hst and (myrank == 0):
 				log_file.write(dff,'grad_obj')
 				log_file.write(dgg,'grad_con')
-			#end
 			
 			# Gradient Assignment
 			for i in range(len(opt_problem._variables.keys())):
 				df[i] = dff[0,i]
 				for j in range(len(opt_problem._constraints.keys())):
 					dg[i,j] = dgg[j,i]
-				#end
-			#end
 			
 			return df,dg
 		
@@ -323,8 +294,6 @@ class MMFD(Optimizer):
 				raise IOError('MMFD cannot handle integer design variables')
 			elif (opt_problem._variables[key].type == 'd'):
 				raise IOError('MMFD cannot handle discrete design variables')
-			#end
-		#end
 		xl = numpy.array(xl)
 		xu = numpy.array(xu)
 		xx = numpy.array(xx)
@@ -337,8 +306,6 @@ class MMFD(Optimizer):
 				group_len = len(opt_problem._vargroups[key]['ids'])
 				group_ids[opt_problem._vargroups[key]['name']] = [k,k+group_len]
 				k += group_len
-			#end
-		#end
 		
 		# Constraints Handling
 		ncon = len(opt_problem._constraints.keys())
@@ -351,12 +318,9 @@ class MMFD(Optimizer):
 					idg.append(1)
 				elif opt_problem._constraints[key].type == 'e':
 					idg.append(-1)
-				#end
 				gg.append(opt_problem._constraints[key].value)
-			#end
 		else:
 			raise IOError('MMFD support for unconstrained problems not implemented yet')
-		#end
 		gg = numpy.array(gg)
 		idg = numpy.array(idg, numpy.int)
 		
@@ -366,7 +330,6 @@ class MMFD(Optimizer):
 		ff = []
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
-		#end
 		ff = numpy.array(ff)
 		
 		
@@ -377,28 +340,22 @@ class MMFD(Optimizer):
 			iopt = numpy.array([self.options['IOPT'][1]], numpy.int)
 		else:
 			raise IOError('Incorrect Feasible Directions Approach')
-		#end
 		if (self.options['IONED'][1]>=0 and self.options['IONED'][1]<=3):
 			ioned = numpy.array([self.options['IONED'][1]], numpy.int)
 		else:
 			raise IOError('Incorrect One-Dimensional Search Method')
-		#end
 		if (myrank == 0):
 			if (self.options['IPRINT'][1]>=0 and self.options['IPRINT'][1]<=2):
 				iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
 			else:
 				raise IOError('Incorrect Output Level Setting')
-			#end
 		else:
 			iprint = numpy.array([0], numpy.int)
-		#end
 		#iout = numpy.array([self.options['IOUT'][1]], numpy.int)
 		ifile = self.options['IFILE'][1]
 		if (iprint > 0):
 			if os.path.isfile(ifile):
 				os.remove(ifile)
-			#end
-		#end
 		ct = numpy.array([self.options['CT'][1]], numpy.float)
 		ctmin = numpy.array([self.options['CTMIN'][1]], numpy.float)
 		
@@ -441,14 +398,10 @@ class MMFD(Optimizer):
 					os.remove(name+'.bin')
 					os.rename(name+'_tmp.cue',name+'.cue')
 					os.rename(name+'_tmp.bin',name+'.bin')
-				#end
-			#end		
-		#end
 		
 		if (iprint > 0):
 		#	mmfd.closeunit(self.options['IOUT'][1])
 			mmfd.closeunit(6)
-		#end
 		
 		
 		# Store Results
@@ -463,7 +416,6 @@ class MMFD(Optimizer):
 			sol_options = copy.copy(self.options)
 			if 'defaults' in sol_options:
 				del sol_options['defaults']
-			#end
 			
 			sol_evals = nfun[0] + ngrd[0]*nvar
 			
@@ -472,14 +424,12 @@ class MMFD(Optimizer):
 			for key in sol_vars.keys():
 				sol_vars[key].value = xx[i]
 				i += 1
-			#end
 			
 			sol_objs = copy.deepcopy(opt_problem._objectives)
 			i = 0
 			for key in sol_objs.keys():
 				sol_objs[key].value = ff[i]
 				i += 1
-			#end
 			
 			if ncon > 0:
 				sol_cons = copy.deepcopy(opt_problem._constraints)
@@ -487,10 +437,8 @@ class MMFD(Optimizer):
 				for key in sol_cons.keys():
 					sol_cons[key].value = gg[i]
 					i += 1
-				#end
 			else:
 				sol_cons = {}
-			#end
 			
 			sol_lambda = {}
 			
@@ -500,7 +448,6 @@ class MMFD(Optimizer):
 				display_opts=disp_opts, Lambda=sol_lambda, Sensitivities=sens_type, 
 				myrank=myrank, arguments=args, **kwargs)
 			
-		#end
 		
 		return ff, xx, sol_inform
 		
@@ -556,7 +503,6 @@ class MMFD(Optimizer):
 		if (iPrint > 0):
 			#mmfd.pyflush(self.options['IOUT'][1])
 			mmfd.pyflush(6)
-		#end
 	
 
 

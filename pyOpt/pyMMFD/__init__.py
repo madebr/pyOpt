@@ -5,4 +5,3 @@ try:
     __all__ = ['MMFD']
 except:
     __all__ = []
-#end
