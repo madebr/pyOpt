@@ -14,7 +14,7 @@ def configuration(parent_package='',top_path=None):
     config.add_extension('mmfd',
         sources=['source/f2py/mmfd.pyf'],
         libraries=['mmfd'])
-    config.add_data_files('LICENSE','README')
+    config.add_data_files('LICENSE','README.md')
     
     return config
     

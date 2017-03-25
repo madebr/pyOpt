@@ -14,7 +14,7 @@ def configuration(parent_package='',top_path=None):
     config.add_extension('conmin',
         sources=['source/f2py/conmin.pyf'],
         libraries=['conmin'])
-    config.add_data_files('LICENSE','README')
+    config.add_data_files('LICENSE','README.md')
     
     return config
     

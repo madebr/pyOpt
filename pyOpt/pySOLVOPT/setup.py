@@ -15,7 +15,7 @@ def configuration(parent_package='',top_path=None):
     config.add_extension('solvopt',
         sources=['source/f2py/solvopt.pyf'],
         libraries=['solvopt'])
-    config.add_data_files('LICENSE','README')
+    config.add_data_files('LICENSE','README.md')
     
     return config
     

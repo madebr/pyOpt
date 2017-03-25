@@ -14,7 +14,7 @@ def configuration(parent_package='',top_path=None):
     config.add_extension('cobyla',
         sources=['source/f2py/cobyla.pyf'],
         libraries=['cobyla'])
-    config.add_data_files('LICENSE','README')
+    config.add_data_files('LICENSE','README.md')
     
     return config
     

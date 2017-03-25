@@ -143,7 +143,7 @@ def configuration(parent_package='',top_path=None):
 		include_dirs=['source'],
 		libraries=['nsga2'],
 		extra_link_args=extra_link_args)
-	config.add_data_files('LICENSE','README')
+	config.add_data_files('LICENSE','README.md')
 	
 	return config
 	

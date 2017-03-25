@@ -15,7 +15,7 @@ def configuration(parent_package='',top_path=None):
     config.add_extension('algencan',
         sources=['source/f2py/algencan.pyf'],
         libraries=['algencan'])
-    config.add_data_files('LICENSE','README')
+    config.add_data_files('LICENSE','README.md')
     
     return config
     

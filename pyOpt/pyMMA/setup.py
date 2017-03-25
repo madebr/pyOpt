@@ -14,7 +14,7 @@ def configuration(parent_package='',top_path=None):
     config.add_extension('mma',
         sources=['source/f2py/mma.pyf'],
         libraries=['mma'])
-    config.add_data_files('LICENSE','README')
+    config.add_data_files('LICENSE','README.md')
     
     return config
     

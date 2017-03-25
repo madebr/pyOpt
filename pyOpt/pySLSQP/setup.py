@@ -14,7 +14,7 @@ def configuration(parent_package='',top_path=None):
     config.add_extension('slsqp',
         sources=['source/f2py/slsqp.pyf'],
         libraries=['slsqp'])
-    config.add_data_files('LICENSE','README')
+    config.add_data_files('LICENSE','README.md')
     
     return config
     

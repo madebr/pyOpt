@@ -14,7 +14,7 @@ def configuration(parent_package='',top_path=None):
     config.add_extension('ksopt',
         sources=['source/f2py/ksopt.pyf'],
         libraries=['ksopt'])
-    config.add_data_files('LICENSE','README')
+    config.add_data_files('LICENSE','README.md')
     
     return config
     

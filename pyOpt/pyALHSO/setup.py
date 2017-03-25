@@ -9,7 +9,7 @@ def configuration(parent_package='',top_path=None):
     
     config = Configuration('pyALHSO',parent_package,top_path)
     
-    config.add_data_files('LICENSE','README')
+    config.add_data_files('LICENSE','README.md')
     
     return config
     
