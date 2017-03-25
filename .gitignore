@@ -1,2 +1,7 @@
 build
 *.pyc
+**/f2py/*.c
+**/f2py/*.f
+*.so
+.idea
+
