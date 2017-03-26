@@ -103,8 +103,8 @@ class Gradient(object):
         # MPI Setup
         if (self.sens_mode.lower() == 'pgc'):
             try:
-                import mpi4py
-                from mpi4py import MPI
+                from openmpi import mpi4py
+                from openmpi.mpi4py import MPI
             except ImportError:
                 print('Error: mpi4py library failed to import')
 

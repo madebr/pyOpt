@@ -147,8 +147,8 @@ class ALGENCAN(Optimizer):
 		
 		if self.poa or (sens_mode.lower() == 'pgc'):
 			try:
-				import mpi4py
-				from mpi4py import MPI
+				from openmpi import mpi4py
+				from openmpi.mpi4py import MPI
 			except ImportError:
 				print('pyALGENCAN: Parallel objective Function Analysis requires mpi4py')
 			comm = MPI.COMM_WORLD
