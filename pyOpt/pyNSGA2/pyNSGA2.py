@@ -91,7 +91,6 @@ class NSGA2(Optimizer):
                 Documentation last updated:  Feb. 16, 2010 - Peter W. Jansen
                 '''
 
-                #
                 if (pll_type == None):
                         self.poa = False
                 elif (pll_type.upper() == 'POA'):
@@ -99,8 +98,6 @@ class NSGA2(Optimizer):
                 else:
                         raise ValueError("pll_type must be either None or 'POA'")
 
-
-                #
                 name = 'NSGA-II'
                 category = 'Global Optimizer'
                 def_opts = {
@@ -124,7 +121,6 @@ class NSGA2(Optimizer):
 
 
         def __solve__(self, opt_problem={}, store_sol=True, disp_opts=False, store_hst=False, hot_start=False, *args, **kwargs):
-
                 '''
                 Run Optimizer (Optimize Routine)
 
@@ -141,7 +137,6 @@ class NSGA2(Optimizer):
                 Documentation last updated:  February. 16, 2011 - Peter W. Jansen
                 '''
 
-                #
                 if self.poa:
                         try:
                                 import mpi4py
@@ -171,10 +166,8 @@ class NSGA2(Optimizer):
 
                 myrank = self.myrank
 
-                #
                 def_fname = 'nsga2'
                 hos_file, log_file, tmp_file = self._setHistory(opt_problem.name, store_hst, hot_start, def_fname)
-
 
                 #======================================================================
                 # NSGA-II - Objective/Constraint Values Function
@@ -190,11 +183,9 @@ class NSGA2(Optimizer):
                                         else:
                                                 xg[group] = x[group_ids[group][0]:group_ids[group][1]]
 
-
                                 xn = xg
                         else:
                                 xn = x
-
 
                         # Evaluate User Function
                         fail = 0
@@ -208,9 +199,6 @@ class NSGA2(Optimizer):
                                                 hos_file.close()
                                         else:
                                                 [ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
-
-
-
 
                         if self.pll:
                                 self.hot_start = Bcast(self.hot_start,root=0)
@@ -228,9 +216,6 @@ class NSGA2(Optimizer):
                                         log_file.write(gg,'con')
                                         log_file.write(fail,'fail')
 
-
-
-                        #
                         if (fail == 1):
                                 # Objective Assigment
                                 for i in range(len(opt_problem._objectives.keys())):
@@ -260,11 +245,7 @@ class NSGA2(Optimizer):
                                         else:
                                                 g[i] = -gg[i]
 
-
-
-
                         return f,g
-
 
 
                 # Variables Handling
@@ -314,12 +295,12 @@ class NSGA2(Optimizer):
                 #for key in opt_problem._objectives.keys():
                 #       nsga2.doubleArray_setitem(f,k,opt_problem._objectives[key].value)
                 #       k += 1
-                #
-
 
                 # Setup argument list values
                 nfeval = 0
                 popsize = self.options['PopSize'][1]
+                if popsize % 4 > 0:
+                    raise IOError("PopSize needs to be a multiple of 4 for NSGA2!")
                 ngen = self.options['maxGen'][1]
                 pcross_real = self.options['pCross_real'][1]
                 pmut_real = self.options['pMut_real'][1]
@@ -364,7 +345,6 @@ class NSGA2(Optimizer):
                                         os.rename(name+'_tmp.cue',name+'.cue')
                                         os.rename(name+'_tmp.bin',name+'.bin')
 
-
                 # Store Results
                 if store_sol:
                         sol_name = 'NSGA-II Solution to ' + opt_problem.name
@@ -391,58 +371,45 @@ class NSGA2(Optimizer):
                                 sol_objs[key].value = nsga2.doubleArray_getitem(f,i)
                                 i += 1
 
-
                         if m > 0:
                                 sol_cons = copy.deepcopy(opt_problem._constraints)
                                 i = 0
                                 for key in sol_cons.keys():
                                         sol_cons[key].value = -nsga2.doubleArray_getitem(g,i)
                                         i += 1
-
                         else:
                                 sol_cons = {}
 
-
                         sol_lambda = {}
-
 
                         opt_problem.addSol(self.__class__.__name__, sol_name, objfunc, sol_time,
                                 sol_evals, sol_inform, sol_vars, sol_objs, sol_cons, sol_options,
                                 display_opts=disp_opts, Lambda=sol_lambda, myrank=myrank,
                                 arguments=args, **kwargs)
 
-
-
                 fstar = [0.]*l
                 for i in range(l):
                         fstar[i] = nsga2.doubleArray_getitem(f,i)
                         i += 1
 
-
                 xstar = [0.]*n
                 for i in range(n):
                         xstar[i] = nsga2.doubleArray_getitem(x,i)
 
-
                 inform = {}
-
                 return fstar, xstar, {'fevals':nfeval,'time':sol_time,'inform':inform}
 
 
-
         def _on_setOption(self, name, value):
-
                 '''
                 Set Optimizer Option Value (Optimizer Specific Routine)
 
                 Documentation last updated:  May. 16, 2008 - Ruben E. Perez
                 '''
-
                 pass
 
 
         def _on_getOption(self, name):
-
                 '''
                 Get Optimizer Option Value (Optimizer Specific Routine)
 
@@ -453,7 +420,6 @@ class NSGA2(Optimizer):
 
 
         def _on_getInform(self, infocode):
-
                 '''
                 Get Optimizer Result Information (Optimizer Specific Routine)
 
@@ -468,7 +434,6 @@ class NSGA2(Optimizer):
 
 
         def _on_flushFiles(self):
-
                 '''
                 Flush the Output Files (Optimizer Specific Routine)
 
@@ -483,7 +448,6 @@ class NSGA2(Optimizer):
 # NSGA2 Optimizer Test
 #==============================================================================
 if __name__ == '__main__':
-
         # Test NSGA2
         print('Testing ...')
         nsga2 = NSGA2()
