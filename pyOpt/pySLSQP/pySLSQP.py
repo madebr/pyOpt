@@ -185,12 +185,10 @@ class SLSQP(Optimizer):
 
         myrank = self.myrank
 
-        #
         def_fname = self.options['IFILE'][1].split('.')[0]
         hos_file, log_file, tmp_file = self._setHistory(
             opt_problem.name, store_hst, hot_start, def_fname)
 
-        #
         gradient = Gradient(opt_problem, sens_type, sens_mode, sens_step,
                             *args, **kwargs)
 
