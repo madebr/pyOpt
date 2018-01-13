@@ -106,7 +106,7 @@ class ALPSO(Optimizer):
 
             try:
                 from . import alpso_spm
-                from openmpi.mpi4py import MPI
+                from mpi4py import MPI
             except:
                 raise ImportError(
                     'pyALPSO: ALPSO SPM shared library failed to import')
@@ -121,7 +121,7 @@ class ALPSO(Optimizer):
 
             try:
                 from . import alpso_dpm
-                from openmpi.mpi4py import MPI
+                from mpi4py import MPI
             except:
                 raise ImportError(
                     'pyALPSO: ALPSO DPM shared library failed to import')
@@ -132,7 +132,7 @@ class ALPSO(Optimizer):
 
             try:
                 from . import alpso_poa
-                from openmpi.mpi4py import MPI
+                from mpi4py import MPI
             except:
                 raise ImportError(
                     'pyALPSO: ALPSO POA shared library failed to import')

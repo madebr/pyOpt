@@ -20,7 +20,7 @@ import os, sys, time, math
 # External Python modules
 # =============================================================================
 try:
-    from openmpi.mpi4py import MPI
+    from mpi4py import MPI
     comm = MPI.COMM_WORLD
     myrank = comm.Get_rank()
 except:

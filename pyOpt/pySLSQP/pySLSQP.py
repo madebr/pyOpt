@@ -163,8 +163,8 @@ class SLSQP(Optimizer):
 
         if self.poa or (sens_mode.lower() == 'pgc'):
             try:
-                from openmpi import mpi4py
-                from openmpi.mpi4py import MPI
+                import mpi4py
+                from mpi4py import MPI
             except ImportError:
                 print(
                     'pySLSQP: Parallel objective Function Analysis requires mpi4py'
