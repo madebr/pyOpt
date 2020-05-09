@@ -1012,8 +1012,7 @@ class Solution(Optimization):
         if self.display_opt:
             text1 += '\n	Options:\n '
             opt_keys = self.options_set.keys()
-            opt_keys.sort()
-            for key in opt_keys:
+            for key in sorted(opt_keys):
                 ns = 25-len(key)
                 text1 += '		'+ key +':' + str(self.options_set[key][1]).rjust(ns,'.') + '\n'
         text1 += '\n    Solution: \n'
