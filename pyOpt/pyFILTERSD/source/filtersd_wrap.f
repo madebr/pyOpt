@@ -88,6 +88,7 @@ c  call filterSD
 c
 c   10 continue
 c
+      nv=0
       call filterSD(n,m,x,al,f,fmin,cstype,bl,bu,ws,lws,v,nv,
      *  maxa,maxla,maxu,maxiu,kmax,maxg,rho,htol,rgtol,maxit,
      *  iprint,iout,ifail)
