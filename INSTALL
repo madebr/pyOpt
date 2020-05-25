@@ -36,7 +36,7 @@ To install the pyOpt package in a folder on the Python search path
 Alternatively, to use pyOpt from the current directory without
 installing it run:
     
->>> python setup.py inplace
+>>> python setup.py build_ext --inplace
 
 this will compile all available optimizers and place the libraries in the corresponding directory.
 
@@ -56,4 +56,5 @@ Notes:
     * By default pyOpt will attempt to use compilers available on the system. To get a list of 
       available compilers and their corresponding flag on a specific system use:
       
-      >>> python setup.py compilers
+      >>> python setup.py config_fc --help-compiler
+      >>> python setup.py config_fc --help-fcompiler

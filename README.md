@@ -25,6 +25,36 @@ Some of the features of pyOpt:
     
 see QUICKGUIDE.md for further details.
 
+## Building and installing
+
+### Requirements:
+
+- python
+- numpy and numpy-ext
+- fortran compiler
+- swig 
+
+
+### Build commands
+
+Build default pyOpt
+
+```sh
+python setup.py build_ext --inplace
+```
+
+Build debug pyOpt with no optimization
+
+```sh
+python setup.py config_fc --debug --noopt build_ext --inplace
+```
+
+Get information about the available compilers
+
+```sh
+python setup.py config_fc --help-fcompiler
+```
+
 
 ## Licensing
 Distributed using the GNU Lesser General Public License (LGPL); see 
