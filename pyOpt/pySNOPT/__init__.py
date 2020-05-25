@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 try:
     from .pySNOPT import SNOPT
     __all__ = ['SNOPT']

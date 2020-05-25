@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 pyMMFD - A Python pyOpt interface to MMFD (part of NASA's ADS). 
 
@@ -503,16 +502,3 @@ class MMFD(Optimizer):
 		if (iPrint > 0):
 			#mmfd.pyflush(self.options['IOUT'][1])
 			mmfd.pyflush(6)
-	
-
-
-#==============================================================================
-# MMFD Optimizer Test
-#==============================================================================
-if __name__ == '__main__':
-	
-	# Test MMFD
-	print('Testing ...')
-	MMFD = MMFD()
-	print(MMFD)
-	

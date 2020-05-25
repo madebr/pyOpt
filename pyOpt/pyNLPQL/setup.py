@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-
-import os, sys
+import os
 
 
 def configuration(parent_package='', top_path=None):

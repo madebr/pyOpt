@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 pySDPEN - A Python pyOpt interface to SDPEN.
 
@@ -414,16 +413,3 @@ class SDPEN(Optimizer):
 		iprint = self.options['iprint'][1]
 		if (iprint >= 0):
 			sdpen.pyflush(self.options['iout'][1])	
-	
-
-
-#==============================================================================
-# SDPEN Optimizer Test
-#==============================================================================
-if __name__ == '__main__':
-	
-	# Test SDPEN
-	print('Testing ...')
-	SDPEN = SDPEN()
-	print(SDPEN)
-	

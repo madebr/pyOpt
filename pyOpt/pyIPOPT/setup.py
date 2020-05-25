@@ -1,12 +1,9 @@
-#!/usr/local/bin/python
-
-
-def configuration(parent_package='',top_path=None):
+def configuration(parent_package='', top_path=None):
 
     from numpy.distutils.misc_util import Configuration
 
-    config = Configuration('pyIPOPT',parent_package,top_path)
-    config.add_data_files('LICENSE','README')
+    config = Configuration('pyIPOPT',parent_package, top_path)
+    config.add_data_files('source/LICENSE', 'source/README.md')
 
     return config
 

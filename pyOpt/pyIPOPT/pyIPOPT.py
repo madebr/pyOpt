@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 """
 pyIPOPT - A Python pyOpt interface to IPOPT.
 
@@ -54,12 +53,10 @@ from pyOpt import Gradient
 inf = 10.E+20  # define a value for infinity
 # =============================================================================
 eps = 1.0  # define a value for machine precision
-while ((eps / 2.0 + 1.0) > 1.0):
+while (eps / 2.0 + 1.0) > 1.0:
     eps = eps / 2.0
 
 eps = 2.0 * eps
-
-# eps = math.ldexp(1,-52)
 
 # =============================================================================
 # IPOPT Optimizer Class
@@ -90,7 +87,6 @@ class IPOPT(Optimizer):
             'print_user_options': [str, 'no'],
             # Switch to print all algorithmic options
             'print_options_documentation': [str, 'no'],
-            'output_file': [str, ''],  # File name of desired output file
             'file_print_level': [int, 5],  # Verbosity level for output file
             'option_file_name': [str, ''],  # File name of options file
 
@@ -725,13 +721,13 @@ class IPOPT(Optimizer):
         xu = []
         xx = []
         for key in opt_problem._variables.keys():
-            if (opt_problem._variables[key].type == 'c'):
+            if opt_problem._variables[key].type == 'c':
                 xl.append(opt_problem._variables[key].lower)
                 xu.append(opt_problem._variables[key].upper)
                 xx.append(opt_problem._variables[key].value)
-            elif (opt_problem._variables[key].type == 'i'):
+            elif opt_problem._variables[key].type == 'i':
                 raise IOError('IPOPT cannot handle integer design variables')
-            elif (opt_problem._variables[key].type == 'd'):
+            elif opt_problem._variables[key].type == 'd':
                 raise IOError('IPOPT cannot handle discrete design variables')
 
         xl = numpy.array(xl)
@@ -754,10 +750,10 @@ class IPOPT(Optimizer):
         buc = []
         if ncon > 0:
             for key in opt_problem._constraints.keys():
-                if (opt_problem._constraints[key].type == 'e'):
+                if opt_problem._constraints[key].type == 'e':
                     blc.append(opt_problem._constraints[key].equal)
                     buc.append(opt_problem._constraints[key].equal)
-                elif (opt_problem._constraints[key].type == 'i'):
+                elif opt_problem._constraints[key].type == 'i':
                     blc.append(opt_problem._constraints[key].lower)
                     buc.append(opt_problem._constraints[key].upper)
 
@@ -915,10 +911,3 @@ class IPOPT(Optimizer):
         Documentation last updated:  August. 09, 2009 - Ruben E. Perez
         """
         pass
-
-
-if __name__ == '__main__':
-    # IPOPT Optimizer Test
-    print('Testing ...')
-    ipopt = IPOPT()
-    print(ipopt)

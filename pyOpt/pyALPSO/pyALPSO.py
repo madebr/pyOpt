@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 pyALPSO - A Python pyOpt interface to ALPSO.
 
@@ -560,14 +559,3 @@ class ALPSO(Optimizer):
         '''
 
         pass
-
-
-#==============================================================================
-# ALPSO Optimizer Test
-#==============================================================================
-if __name__ == '__main__':
-
-    # Test ALPSO
-    print('Testing ...')
-    alpso = ALPSO()
-    print(alpso)

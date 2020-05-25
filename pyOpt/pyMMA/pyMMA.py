@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 pyMMA - A Python pyOpt interface to MMA. 
 
@@ -522,16 +521,3 @@ class MMA(Optimizer):
 		iPrint = self.options['IPRINT'][1]
 		if (iPrint >= 0):
 			mma.pyflush(self.options['IOUT'][1])
-	
-
-
-#==============================================================================
-# MMA Optimizer Test
-#==============================================================================
-if __name__ == '__main__':
-	
-	# Test MMA
-	print('Testing ...')
-	mma = MMA()
-	print(mma)
-	

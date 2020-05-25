@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 pyPSQP - A Python pyOpt interface to PSQP.
 
@@ -548,16 +547,3 @@ class PSQP(Optimizer):
                 iprint = self.options['IPRINT'][1]
                 if (iprint > 0):
                         psqp.pyflush(self.options['IOUT'][1])
-
-
-
-#==============================================================================
-# PSQP Optimizer Test
-#==============================================================================
-if __name__ == '__main__':
-
-        # Test PSQP
-        print('Testing ...')
-        psqp = PSQP()
-        print(psqp)
-

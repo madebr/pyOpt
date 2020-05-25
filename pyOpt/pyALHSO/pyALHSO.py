@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 pyALHSO - A Python interface to ALHSO.
 
@@ -714,16 +713,4 @@ class HSO(Optimizer):
 		'''
 		
 		pass
-	
-
-
-#==============================================================================
-# ALHSO Optimizer Test
-#==============================================================================
-if __name__ == '__main__':
-	
-	# Test ALHSO
-	print('Testing ...')
-	ALHSO = ALHSO()
-	print(ALHSO)
 	

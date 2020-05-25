@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 pyGCMMA - A Python pyOpt interface to GCMMA. 
 
@@ -601,16 +600,3 @@ class GCMMA(Optimizer):
 		iPrint = self.options['IPRINT'][1]
 		if (iPrint >= 0):
 			gcmma.pyflush(self.options['IOUT'][1])
-	
-
-
-#==============================================================================
-# GCMMA Optimizer Test
-#==============================================================================
-if __name__ == '__main__':
-	
-	# Test GCMMA
-	print('Testing ...')
-	gcmma = GCMMA()
-	print(gcmma)
-	

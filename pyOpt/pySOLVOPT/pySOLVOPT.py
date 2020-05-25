@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 pySOLVOPT - A Python pyOpt interface to SOLVOPT. 
 
@@ -622,16 +621,3 @@ class SOLVOPT(Optimizer):
 		iprint = self.options['iprint'][1]
 		if (iprint >= 0):
 			solvopt.pyflush(self.options['iout'][1])	
-	
-
-
-#==============================================================================
-# SOLVOPT Optimizer Test
-#==============================================================================
-if __name__ == '__main__':
-	
-	# Test SOLVOPT
-	print('Testing ...')
-	solvopt = SOLVOPT()
-	print(solvopt)
-	

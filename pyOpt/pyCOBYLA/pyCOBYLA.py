@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 pyCOBYLA - A Python pyOpt interface to COBYLA.
 
@@ -459,14 +458,3 @@ class COBYLA(Optimizer):
         iPrint = self.options['IPRINT'][1]
         if (iPrint >= 0):
             cobyla.pyflush(self.options['IOUT'][1])
-
-
-#==============================================================================
-# COBYLA Optimizer Test
-#==============================================================================
-if __name__ == '__main__':
-
-    # Test COBYLA
-    print('Testing ...')
-    COBYLA = COBYLA()
-    print(COBYLA)

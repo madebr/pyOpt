@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 try:
     from .pyCONMIN import CONMIN
     __all__ = ['CONMIN']

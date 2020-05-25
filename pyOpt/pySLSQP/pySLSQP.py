@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 pySLSQP - A Python pyOpt interface to SLSQP.
 
@@ -512,14 +511,3 @@ class SLSQP(Optimizer):
         iPrint = self.options['IPRINT'][1]
         if (iPrint >= 0):
             slsqp.pyflush(self.options['IOUT'][1])
-
-
-#==============================================================================
-# SLSQP Optimizer Test
-#==============================================================================
-if __name__ == '__main__':
-
-    # Test SLSQP
-    print('Testing ...')
-    slsqp = SLSQP()
-    print(slsqp)

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 pyALGENCAN - A Python pyOpt interface to ALGENCAN. 
 
@@ -519,16 +518,3 @@ class ALGENCAN(Optimizer):
 		iPrint = self.options['iprint'][1]
 		if (iPrint >= 0):
 			algencan.pyflush(10)	
-	
-
-
-#==============================================================================
-# ALGENCAN Optimizer Test
-#==============================================================================
-if __name__ == '__main__':
-	
-	# Test ALGENCAN
-	print('Testing ...')
-	algencan = ALGENCAN()
-	print(algencan)
-	

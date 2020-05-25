@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 try:
     from .pyFSQP import FSQP
     __all__ = ['FSQP']

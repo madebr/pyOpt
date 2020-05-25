@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 alpso_poa - Python Version of the Augmented Lagrangian Particle Swarm Optimizer
 
@@ -1285,21 +1284,3 @@ def alpso(dimensions,constraints,neqcons,xtype,x0,xmin,xmax,swarmsize,nhn,
         opt_lambda = Bcast(opt_lambda, root=0)
 
         return opt_x,opt_f,opt_g,opt_lambda,nfevals,'%.8f' %(rseed)
-
-
-
-#==============================================================================
-# Optimizers Test
-#==============================================================================
-if __name__ == '__main__':
-
-        print('Testing ...')
-
-        # Test alpso
-        alpso = alpso()
-        print(alpso)
-
-        # Test pso
-        pso = pso()
-        print(pso)
-

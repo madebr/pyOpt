@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 pyMIDACO - A Python pyOpt interface to MIDACO.
 
@@ -555,16 +554,3 @@ class MIDACO(Optimizer):
                 if (iprint > 0):
                         midaco.pyflush(self.options['IOUT1'][1])
                         midaco.pyflush(self.options['IOUT2'][1])
-
-
-
-#==============================================================================
-# MIDACO Optimizer Test
-#==============================================================================
-if __name__ == '__main__':
-
-        # Test MIDACO
-        print('Testing ...')
-        midaco = MIDACO()
-        print(midaco)
-

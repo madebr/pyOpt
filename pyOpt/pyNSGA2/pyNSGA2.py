@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 pyNSGA2 - A Python pyOpt interface to NSGA-II.
 
@@ -441,15 +440,3 @@ class NSGA2(Optimizer):
                 '''
 
                 pass
-
-
-
-#==============================================================================
-# NSGA2 Optimizer Test
-#==============================================================================
-if __name__ == '__main__':
-        # Test NSGA2
-        print('Testing ...')
-        nsga2 = NSGA2()
-        print(nsga2)
-

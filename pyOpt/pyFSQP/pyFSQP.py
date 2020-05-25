@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 pyFSQP - A Python pyOpt interface to FSQP. 
 
@@ -586,16 +585,3 @@ class FSQP(Optimizer):
 		iprint = self.options['iprint'][1]
 		if (iprint > 1):
 			ffsqp.pyflush(self.options['iout'][1])	
-	
-
-
-#==============================================================================
-# FSQP Optimizer Test
-#==============================================================================
-if __name__ == '__main__':
-	
-	# Test FSQP
-	print('Testing ...')
-	fsqp = FSQP()
-	print(fsqp)
-	

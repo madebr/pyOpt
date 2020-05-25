@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 pyKSOPT - A Python pyOpt interface to KSOPT.
 
@@ -480,16 +479,3 @@ class KSOPT(Optimizer):
 		iPrint = self.options['IPRINT'][1]
 		if (iPrint > 0):
 			ksopt.pyflush(self.options['IOUT'][1])
-
-
-
-#==============================================================================
-# KSOPT Optimizer Test
-#==============================================================================
-if __name__ == '__main__':
-
-	# Test KSOPT
-	print('Testing ...')
-	KSOPT = KSOPT()
-	print(KSOPT)
-

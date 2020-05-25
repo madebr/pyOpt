@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 try:
     from .pyMMFD import MMFD
     __all__ = ['MMFD']

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 pyNLPQL - A Python pyOpt interface to NLPQL. 
 
@@ -544,16 +543,3 @@ class NLPQL(Optimizer):
 		iPrint = self.options['iPrint'][1]
 		if (iPrint > 0):
 			nlpql.pyflush(self.options['iout'][1])
-	
-
-
-#==============================================================================
-# NLPQL Optimizer Test
-#==============================================================================
-if __name__ == '__main__':
-	
-	# Test NLPQL
-	print('Testing ...')
-	nlpql = NLPQL()
-	print(nlpql)
-	

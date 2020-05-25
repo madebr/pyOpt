@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 '''
 pySNOPT - A Python pyOpt interface to SNOPT.
 
@@ -823,16 +822,3 @@ class SNOPT(Optimizer):
 		#
 		#else:
 		#	raise IOError('Error: could not find file %s' %(filename))
-
-
-
-#==============================================================================
-# SNOPT Optimizer Test
-#==============================================================================
-if __name__ == '__main__':
-
-	# Test SNOPT
-	print('Testing ...')
-	snopt = SNOPT()
-	print(snopt)
-
