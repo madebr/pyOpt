@@ -1,52 +1,15 @@
 #!/usr/bin/env python
 
-import os,sys
+import os
+import sys
 from numpy.distutils.command.build_ext import build_ext
 
-if os.path.exists('MANIFEST'): 
+if os.path.exists('MANIFEST'):
     os.remove('MANIFEST')
 
 if sys.version_info[:2] < (2, 4):
     print(('pyOpt requires Python version 2.4 or later (%d.%d detected).' %sys.version_info[:2]))
     sys.exit(-1)
-
-try:                  
-    import numpy
-    if int(numpy.__version__.split('.')[0]) < 1:
-        print(('pyOpt requires NumPy version 1.0 or later (%s detected).' %numpy.__version__))
-        sys.exit(-1)
-except ImportError:
-    print('NumPy version 1.0 or later must be installed to build pyOpt')
-    sys.exit(-1)
-
-if sys.argv[-1].endswith('setup.py'):
-    print('\nTo install, run "python setup.py install"\n\nTo build, run "python setup.py inplace"\n')
-    sys.exit(-1)
-
-if sys.argv[1] == 'inplace':
-    sys.argv[1:2] = ['build_src','--inplace','build_ext','--inplace','build']
-
-if sys.argv[1] == 'install':
-    arg = []
-    i = 2
-    while i < len(sys.argv):
-        if (sys.argv[i].startswith('--compiler=') or sys.argv[i].startswith('--fcompiler=')):
-            arg.append(sys.argv[i])
-            del sys.argv[i]
-        else:
-            i += 1
-    if arg != []:
-        arg.insert(0,'build')
-        sys.argv[1:1] = arg
-
-if sys.argv[1] == 'compilers':
-    del sys.argv[1]
-    from numpy.distutils.fcompiler import show_fcompilers
-    show_fcompilers()
-    print('\n')
-    from numpy.distutils.ccompiler import show_compilers
-    show_compilers()
-    sys.exit()
 
 
 class build_opt(build_ext):
@@ -63,10 +26,12 @@ def configuration(parent_package='',top_path=None):
     from numpy.distutils.misc_util import Configuration
     
     config = Configuration(None,parent_package,top_path)
-    config.set_options(ignore_setup_xxx_py=True,
-                       assume_default_configuration=True,
-                       delegate_options_to_subpackages=True,
-                       quiet=True)
+    config.set_options(
+        ignore_setup_xxx_py=True,
+        assume_default_configuration=True,
+        delegate_options_to_subpackages=True,
+        quiet=True,
+    )
     
     config.add_subpackage('pyOpt')
     
@@ -105,6 +70,4 @@ if __name__ == '__main__':
                             'Topic :: Education'],
         configuration    = configuration,
         cmdclass = {"build_ext": build_opt},
-        #**configuration().todict()
     )
-    

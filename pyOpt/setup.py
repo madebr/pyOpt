@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-import os,sys
+import os
 
-def configuration(parent_package='',top_path=None):
 
+def configuration(parent_package, top_path):
     from numpy.distutils.misc_util import Configuration
 
-    config = Configuration('pyOpt',parent_package,top_path)
+    config = Configuration('pyOpt', parent_package, top_path)
 
     # need: auto add_subpackage from source availability
     config.add_subpackage('pyALGENCAN')
@@ -31,7 +31,8 @@ def configuration(parent_package='',top_path=None):
     config.add_subpackage('pySNOPT')
     config.add_subpackage('pySOLVOPT')
 
-    config.add_data_files('LICENSE','README.md')
+    for fn in 'LICENSE', 'README':
+        config.add_data_files(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), fn))
 
     return config
 
@@ -39,4 +40,3 @@ def configuration(parent_package='',top_path=None):
 if __name__ == '__main__':
     from numpy.distutils.core import setup
     setup(**configuration(top_path='').todict())
-
