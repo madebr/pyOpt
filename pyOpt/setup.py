@@ -17,7 +17,7 @@ def configuration(parent_package, top_path):
     config.add_subpackage('pyFILTERSD')
     config.add_subpackage('pyFSQP')
     config.add_subpackage('pyGCMMA')
-    config.add_subpackage('pyIPOPT')
+    # config.add_subpackage('pyIPOPT')
     config.add_subpackage('pyKSOPT')
     config.add_subpackage('pyMIDACO')
     config.add_subpackage('pyMMA')

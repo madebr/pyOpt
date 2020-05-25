@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-import os,sys
+import os
+import sys
 
 from .pyOpt_history import History
 from .pyOpt_parameter import Parameter
@@ -15,9 +16,9 @@ __all__ = ['History','Parameter','Variable','Gradient','Constraint','Objective',
 
 dir = os.path.dirname(os.path.realpath(__file__))
 for f in os.listdir(dir):
-    if f.startswith('py') and os.path.isdir(os.path.join(dir,f)):
+    if f.startswith('py') and os.path.isdir(os.path.join(dir,f)) and f not in ("pyIPOPT", ):
         try:
-            exec('from .%s import %s' %(f,f.strip('py')))
+            exec('from .%s import %s' %(f, f[2:]))
             __all__.extend(sys.modules['pyOpt.'+f].__all__)
         except Exception as e:
             continue
