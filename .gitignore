@@ -1,3 +1,8 @@
+# optimization history, saved state and output
+*.cue
+*.bin
+*.out
+
 build
 *.pyc
 **/f2py/*.c
@@ -6,4 +11,4 @@ build
 .idea
 
 *.egg-info
-venv
+venv*
