@@ -91,10 +91,10 @@ class NSGA2(Optimizer):
                 Documentation last updated:  Feb. 16, 2010 - Peter W. Jansen
                 '''
 
-                if (pll_type == None):
-                        self.poa = False
-                elif (pll_type.upper() == 'POA'):
-                        self.poa = True
+                if pll_type == None:
+                    self.poa = False
+                elif pll_type.upper() == 'POA':
+                    self.poa = True
                 else:
                         raise ValueError("pll_type must be either None or 'POA'")
 
@@ -120,7 +120,7 @@ class NSGA2(Optimizer):
                 Optimizer.__init__(self, name, category, def_opts, informs, *args, **kwargs)
 
 
-        def __solve__(self, opt_problem={}, store_sol=True, disp_opts=False, store_hst=False, hot_start=False, *args, **kwargs):
+        def __solve__(self, opt_problem, store_sol=True, disp_opts=False, store_hst=False, hot_start=False, *args, **kwargs):
                 '''
                 Run Optimizer (Optimize Routine)
 
@@ -146,12 +146,12 @@ class NSGA2(Optimizer):
 
                         comm = MPI.COMM_WORLD
                         nproc = comm.Get_size()
-                        if (mpi4py.__version__[0] == '0'):
+                        if mpi4py.__version__[0] == '0':
                                 Barrier = comm.Barrier
                                 Send = comm.Send
                                 Recv = comm.Recv
                                 Bcast = comm.Bcast
-                        elif (mpi4py.__version__[0] >= '1'):
+                        elif mpi4py.__version__[0] >= '1':
                                 Barrier = comm.barrier
                                 Send = comm.send
                                 Recv = comm.recv
@@ -178,7 +178,7 @@ class NSGA2(Optimizer):
                         if opt_problem.use_groups:
                                 xg = {}
                                 for group in group_ids.keys():
-                                        if (group_ids[group][1]-group_ids[group][0] == 1):
+                                        if group_ids[group][1]-group_ids[group][0] == 1:
                                                 xg[group] = x[group_ids[group][0]]
                                         else:
                                                 xg[group] = x[group_ids[group][0]:group_ids[group][1]]
@@ -191,7 +191,7 @@ class NSGA2(Optimizer):
                         fail = 0
                         ff = []
                         gg = []
-                        if (myrank == 0):
+                        if myrank == 0:
                                 if self.hot_start:
                                         [vals,hist_end] = hos_file.read(ident=['obj', 'con', 'fail'])
                                         if hist_end:
@@ -209,14 +209,14 @@ class NSGA2(Optimizer):
                                 [ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
 
                         # Store History
-                        if (myrank == 0):
+                        if myrank == 0:
                                 if self.sto_hst:
                                         log_file.write(x,'x')
                                         log_file.write(ff,'obj')
                                         log_file.write(gg,'con')
                                         log_file.write(fail,'fail')
 
-                        if (fail == 1):
+                        if fail == 1:
                                 # Objective Assigment
                                 for i in range(len(opt_problem._objectives.keys())):
                                         f[i] = inf
@@ -330,11 +330,11 @@ class NSGA2(Optimizer):
                 # Run NSGA-II
                 nsga2.set_pyfunc(objconfunc)
                 t0 = time.time()
-                nsga2.nsga2(n,m,l,f,x,g,nfeval,xl,xu,popsize,ngen,pcross_real,
+                res, nfeval = nsga2.nsga2(n,m,l,f,x,g,nfeval,xl,xu,popsize,ngen,pcross_real,
                         pmut_real,eta_c,eta_m,pcross_bin,pmut_bin,printout,seed,xinit)
                 sol_time = time.time() - t0
 
-                if (myrank == 0):
+                if myrank == 0:
                         if self.sto_hst:
                                 log_file.close()
                                 if tmp_file:

@@ -8,21 +8,29 @@
 # include "rand.h"
 
 /* Routine to evaluate objective function values and constraints for a population */
-void evaluate_pop (population *pop, Global global)
+int evaluate_pop (population *pop, Global global)
 {
-    int i;
+    int i, res;
     for (i=0; i<global.popsize; i++)
     {
-        evaluate_ind (&(pop->ind[i]),global);
+        res = evaluate_ind (&(pop->ind[i]),global);
+        if (res)
+        {
+            return res;
+        }
     }
-    return;
+    return 0;
 }
 
 /* Routine to evaluate objective function values and constraints for an individual */
-void evaluate_ind (individual *ind, Global global)
+int evaluate_ind (individual *ind, Global global)
 {
-    int j;
-    nsga2func (global.nreal, global.nbin, global.nobj, global.ncon, ind->xreal, ind->xbin, ind->gene, ind->obj, ind->constr);
+    int j, res;
+    res = nsga2func (global.nreal, global.nbin, global.nobj, global.ncon, ind->xreal, ind->xbin, ind->gene, ind->obj, ind->constr);
+    if (res)
+    {
+        return res;
+    }
     if (global.ncon==0)
     {
         ind->constr_violation = 0.0;
@@ -38,5 +46,5 @@ void evaluate_ind (individual *ind, Global global)
             }
         }
     }
-    return;
+    return res;
 }

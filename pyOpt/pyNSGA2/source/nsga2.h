@@ -84,7 +84,7 @@ Global;
 /* -------------------------------------------------------------------------------
  * Headers
  * ---------------------------------------------------------------------------- */
-int nsga2(int nvar, int ncon, int nobj, double f[], double x[], double g[], int nfeval, double xl[], double xu[],	int popsize, int ngen, double pcross_real, double pmut_real, double eta_c, double eta_m, double pcross_bin, double pmut_bin, int printout, double seed, int xinit);
+int nsga2(int nvar, int ncon, int nobj, double f[], double x[], double g[], int *nfeval, double xl[], double xu[],	int popsize, int ngen, double pcross_real, double pmut_real, double eta_c, double eta_m, double pcross_bin, double pmut_bin, int printout, double seed, int xinit);
 
 void allocate_memory_pop (population *pop, int size, Global global);
 void allocate_memory_ind (individual *ind, Global global);
@@ -107,8 +107,8 @@ void decode_ind (individual *ind, Global global);
 
 int check_dominance (individual *a, individual *b, Global global);
 
-void evaluate_pop (population *pop, Global global);
-void evaluate_ind (individual *ind, Global global);
+int evaluate_pop (population *pop, Global global);
+int evaluate_ind (individual *ind, Global global);
 
 void fill_nondominated_sort (population *mixed_pop, population *new_pop, Global global);
 void crowding_fill (population *mixed_pop, population *new_pop, int count, int front_size, list *cur, Global global);
@@ -127,7 +127,7 @@ void mutation_ind (individual *ind, Global global, int *nrealmut, int *nbinmut);
 void bin_mutate_ind (individual *ind, Global global, int *nbinmut);
 void real_mutate_ind (individual *ind, Global global, int *nrealmut);
 
-//void nsga2func (int nreal, int nbin, int nobj, int ncon, double *xreal, double *xbin, int **gene, double *obj, double *constr);
+int nsga2func (int nreal, int nbin, int nobj, int ncon, double *xreal, double *xbin, int **gene, double *obj, double *constr);
 
 void assign_rank_and_crowding_distance (population *new_pop, Global global);
 

@@ -70,12 +70,12 @@
  * NSGA2
  * ---------------------------------------------------------------------------- */
 int nsga2(int nvar, int ncon, int nobj, double f[], double x[], double g[],
-    int nfeval, double xl[], double xu[],   int popsize, int ngen,
+    int *nfeval, double xl[], double xu[], int popsize, int ngen,
     double pcross_real, double pmut_real, double eta_c, double eta_m,
     double pcross_bin, double pmut_bin, int printout, double seed, int xinit)
 {
     // declaration of local variables and structures
-    int i, j;
+    int i, j, res;
     int nreal, nbin, *nbits, bitlength;
     double *min_realvar, *max_realvar;
     double *min_binvar, *max_binvar;
@@ -250,7 +250,12 @@ int nsga2(int nvar, int ncon, int nobj, double f[], double x[], double g[],
         fprintf(fpt6,"\n\n Initialization done, now performing first generation");
     }
     decode_pop(parent_pop, global);
-    evaluate_pop(parent_pop, global);
+    res = evaluate_pop(parent_pop, global);
+    *nfeval += 1;
+    if (res)
+    {
+        return 1;
+    }
     assign_rank_and_crowding_distance (parent_pop, global);
     if (printout >= 1)
     {
@@ -282,6 +287,7 @@ int nsga2(int nvar, int ncon, int nobj, double f[], double x[], double g[],
         mutation_pop(child_pop, global, nrealmut, nbinmut);
         decode_pop(child_pop, global);
         evaluate_pop(child_pop, global);
+        *nfeval += 1;
         merge (parent_pop, child_pop, mixed_pop, global);
         fill_nondominated_sort (mixed_pop, parent_pop, global);
 
