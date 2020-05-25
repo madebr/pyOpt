@@ -42,7 +42,7 @@ except:
 # =============================================================================
 # Standard Python modules
 # =============================================================================
-import os, sys
+import os
 import copy, time
 
 # =============================================================================
@@ -129,7 +129,7 @@ class PSQP(Optimizer):
                 Optimizer.__init__(self, name, category, def_opts, informs, *args, **kwargs)
 
 
-        def __solve__(self, opt_problem={}, sens_type='FD', store_sol=True, store_hst=False, hot_start=False, disp_opts=False, sens_mode='', sens_step={}, *args, **kwargs):
+        def __solve__(self, opt_problem, sens_type='FD', store_sol=True, store_hst=False, hot_start=False, disp_opts=False, sens_mode='', sens_step={}, *args, **kwargs):
 
                 '''
                 Run Optimizer (Optimize Routine)
@@ -151,10 +151,10 @@ class PSQP(Optimizer):
                 '''
 
                 #
-                if ((self.poa) and (sens_mode.lower() == 'pgc')):
+                if self.poa and sens_mode.lower() == 'pgc':
                         raise NotImplementedError("pyPSQP - Current implementation only allows single level parallelization, either 'POA' or 'pgc'")
 
-                if self.poa or (sens_mode.lower() == 'pgc'):
+                if self.poa or sens_mode.lower() == 'pgc':
                         try:
                                 import mpi4py
                                 from mpi4py import MPI
@@ -223,7 +223,7 @@ class PSQP(Optimizer):
                                 [f,g,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
 
                         # Store History
-                        if (myrank == 0):
+                        if myrank == 0:
                                 if self.sto_hst:
                                         log_file.write(x,'x')
                                         log_file.write(f,'obj')
@@ -438,7 +438,7 @@ class PSQP(Optimizer):
                         iprint,iout,ifile,iterm,pobj,pdobj,pcon,pdcon)
                 sol_time = time.time() - t0
 
-                if (myrank == 0):
+                if myrank == 0:
                         if self.sto_hst:
                                 log_file.close()
                                 if tmp_file:

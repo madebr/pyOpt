@@ -65,7 +65,7 @@ class Optimizer(object):
     Abstract Class for Optimizer Object
     '''
 
-    def __init__(self, name={}, category={}, def_options={}, informs={}, *args, **kwargs):
+    def __init__(self, name=None, category=None, def_options=None, informs=None, *args, **kwargs):
         '''
         Optimizer Class Initialization
 
@@ -79,11 +79,11 @@ class Optimizer(object):
         Documentation last updated:  Feb. 03, 2011 - Peter W. Jansen
         '''
 
-        self.name = name
-        self.category = category
+        self.name = name or {}
+        self.category = category or {}
         self.options = {}
-        self.options['defaults'] = def_options
-        self.informs = informs
+        self.options['defaults'] = def_options or {}
+        self.informs = informs or {}
 
         # Initialize Options
         def_keys = def_options.keys()
@@ -95,7 +95,7 @@ class Optimizer(object):
         for key in kopt_keys:
             self.setOption(key,koptions[key])
 
-    def __solve__(self, opt_problem={}, *args, **kwargs):
+    def __solve__(self, opt_problem, *args, **kwargs):
         '''
         Run Optimizer (Optimizer Specific Routine)
 
@@ -105,16 +105,16 @@ class Optimizer(object):
 
         Documentation last updated:  Feb. 03, 2011 - Peter W. Jansen
         '''
-        pass
+        raise NotImplementedError()
 
 
-    def __call__(self, opt_problem={}, *args, **kwargs):
+    def __call__(self, opt_problem, *args, **kwargs):
         '''
         Run Optimizer (Calling Routine)
 
         **Keyword arguments:**
 
-        - opt_problem -> INST: Optimization problem instance, *Default* = {}
+        - opt_problem -> INST: Optimization problem instance
 
         Additional arguments and keyword arguments are passed to the objective function call
 

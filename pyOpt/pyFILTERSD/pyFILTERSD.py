@@ -366,7 +366,7 @@ class FILTERSD(Optimizer):
 			iprint = numpy.array([0], numpy.int)
 		iout = numpy.array([self.options['iout'][1]], numpy.int)
 		ifile = self.options['ifile'][1]
-		if (iprint > 0):
+		if iprint > 0:
 			if os.path.isfile(ifile):
 				os.remove(ifile)
 		ifail = numpy.array([0], numpy.int)
@@ -386,7 +386,7 @@ class FILTERSD(Optimizer):
 		filtersd.filtersd_wrap(nn,mm,xx,xl,xu,al,ff,gg,inf,ubd,rho,htol,rgtol,maxit,maxgr,dchk,dtol,iprint,iout,ifile,ifail,nfevs,ngevs,functions,gradients)
 		sol_time = time.time() - t0
 
-		if (myrank == 0):
+		if myrank == 0:
 			if self.sto_hst:
 				log_file.close()
 				if tmp_file:
@@ -503,7 +503,7 @@ class FILTERSD(Optimizer):
 
 		#
 		iprint = self.options['iprint'][1]
-		if (iprint > 0):
+		if iprint > 0:
 			filtersd.pyflush(self.options['iout'][1])
 
 
