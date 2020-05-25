@@ -5,3 +5,5 @@ build
 *.so
 .idea
 
+*.egg-info
+venv
