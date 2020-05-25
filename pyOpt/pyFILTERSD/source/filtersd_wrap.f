@@ -53,7 +53,7 @@ c
       do i=n+1,n+m
         bl(i)=-ainf
         bu(i)=0.D0
-        al(i)=lm(i)
+        al(i)=lm(i-n)
       enddo
 c
       fmin=-ainf
@@ -112,7 +112,7 @@ c
         xx(i)=x(i)
       enddo
       do i=n+1,n+m
-        lm(i)=al(i)
+        lm(i-n)=al(i)
       enddo
 c
 c  print final results (h,rgnorm,k,itn,)
