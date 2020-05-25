@@ -4,97 +4,93 @@ Solves Rosenbrock's Unconstrained Problem.
 
     min 	100*(x2-x1^2)**2 + (1-x1)^2
     s.t.:	-10 <= xi <= 10,  i = 1,2
-    
+
     f* = 0 , x* = [1, 1]
 '''
 
-
-# =============================================================================
-# Standard Python modules
-# =============================================================================
-import os, sys, time
-import pdb
-
-# =============================================================================
-# Extension modules
-# =============================================================================
-#from pyOpt import *
 from pyOpt import Optimization
-from pyOpt import PSQP
-from pyOpt import SLSQP
-from pyOpt import CONMIN
-from pyOpt import COBYLA
-from pyOpt import SOLVOPT
-from pyOpt import KSOPT
-from pyOpt import NSGA2
-from pyOpt import SDPEN
 
 
-# =============================================================================
-# 
-# =============================================================================
 def objfunc(x):
-    
-    f = 100*(x[1]-x[0]**2)**2+(1-x[0])**2
+    f = 100 * (x[1] - x[0] ** 2) ** 2 + (1 - x[0]) ** 2
     g = []
-    
-    fail = 0
-    return f,g, fail
-    
 
-# =============================================================================
-# 
-# ============================================================================= 
-opt_prob = Optimization('Rosenbrock Unconstraint Problem',objfunc)
-opt_prob.addVar('x1','c',lower=-10.0,upper=10.0,value=-3.0)
-opt_prob.addVar('x2','c',lower=-10.0,upper=10.0,value=-4.0)
+    fail = 0
+    return f, g, fail
+
+
+def getlastsolution(prob: Optimization):
+    new_index = prob.firstavailableindex(prob.getSolSet())
+    return prob.getSol(new_index - 1)
+
+
+# Instantiate Optimization Problem 
+opt_prob = Optimization('Rosenbrock Unconstraint Problem', objfunc)
+opt_prob.addVar('x1', 'c', lower=-10.0, upper=10.0, value=-3.0)
+opt_prob.addVar('x2', 'c', lower=-10.0, upper=10.0, value=-4.0)
 opt_prob.addObj('f')
 print(opt_prob)
 
 # Instantiate Optimizer (PSQP) & Solve Problem
+from pyOpt import PSQP
+
 psqp = PSQP()
-psqp.setOption('IPRINT',0)
-psqp(opt_prob,sens_type='FD')
+psqp.setOption('IPRINT', 0)
+psqp(opt_prob, sens_type='FD')
 print(opt_prob.solution(0))
 
 # Instantiate Optimizer (SLSQP) & Solve Problem
+from pyOpt import SLSQP
+
 slsqp = SLSQP()
-slsqp.setOption('IPRINT',-1)
-slsqp(opt_prob,sens_type='FD')
-print(opt_prob.solution(1))
+slsqp.setOption('IPRINT', -1)
+slsqp(opt_prob, sens_type='FD')
+print(getlastsolution(opt_prob))
 
 # Instantiate Optimizer (CONMIN) & Solve Problem
+from pyOpt import CONMIN
+
 conmin = CONMIN()
-conmin.setOption('IPRINT',0)
-conmin(opt_prob,sens_type='CS')
-print(opt_prob.solution(2))
+conmin.setOption('IPRINT', 0)
+conmin(opt_prob, sens_type='CS')
+print(getlastsolution(opt_prob))
 
 # Instantiate Optimizer (COBYLA) & Solve Problem
+from pyOpt import COBYLA
+
 cobyla = COBYLA()
-cobyla.setOption('IPRINT',0)
+cobyla.setOption('IPRINT', 0)
 cobyla(opt_prob)
-print(opt_prob.solution(3))
+print(getlastsolution(opt_prob))
 
 # Instantiate Optimizer (SOLVOPT) & Solve Problem
+from pyOpt import SOLVOPT
+
 solvopt = SOLVOPT()
-solvopt.setOption('iprint',-1)
-solvopt(opt_prob,sens_type='FD')
-print(opt_prob.solution(4))
+solvopt.setOption('iprint', -1)
+solvopt(opt_prob, sens_type='FD')
+print(getlastsolution(opt_prob))
 
 # Instantiate Optimizer (KSOPT) & Solve Problem
+from pyOpt import KSOPT
+
 ksopt = KSOPT()
-ksopt.setOption('IPRINT',0)
-ksopt(opt_prob,sens_type='FD')
-print(opt_prob.solution(5))
+ksopt.setOption('IPRINT', 0)
+ksopt(opt_prob, sens_type='FD')
+print(getlastsolution(opt_prob))
 
 # Instantiate Optimizer (NSGA2) & Solve Problem
+from pyOpt import NSGA2
+
 nsga2 = NSGA2()
-nsga2.setOption('PrintOut',0)
+nsga2.setOption('PrintOut', 0)
 nsga2(opt_prob)
-print(opt_prob.solution(6))
+print(getlastsolution(opt_prob))
 
 # Instantiate Optimizer (SDPEN) & Solve Problem
+from pyOpt import SDPEN
+
 sdpen = SDPEN()
-sdpen.setOption('iprint',-1)
+sdpen.setOption('iprint', -1)
 sdpen(opt_prob)
-print(opt_prob.solution(7))
+print(getlastsolution(opt_prob))
