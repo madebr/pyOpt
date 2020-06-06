@@ -24,7 +24,7 @@ def objfunc(x):
     return f, g, fail
 
 
-def getlastsolution(prob: Optimization):
+def getlastsolution(prob):
     new_index = prob.firstavailableindex(prob.getSolSet())
     return prob.getSol(new_index - 1)
 
