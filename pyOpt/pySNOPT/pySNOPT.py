@@ -507,22 +507,22 @@ class SNOPT(Optimizer):
 		iPrint = self.options['iPrint'][1]
 		if (myrank != 0):
 			iPrint = 0
-		PrintFile = self.options['Print file'][1]
+		PrintFile = self.options['Print file'][1].encode('utf-8')
 		if (iPrint != 0):
 			if os.path.isfile(PrintFile):
 				os.remove(PrintFile)
-			ierror = snopt.openunit(iPrint, numpy.array(PrintFile), numpy.array('new'), numpy.array('sequential'))
+			ierror = snopt.openunit(iPrint, numpy.array(PrintFile), numpy.array(b'new'), numpy.array(b'sequential'))
 			if (ierror != 0):
 				raise IOError('Failed to properly open %s, ierror = %3d' %(PrintFile,ierror))
 
 		iSumm = self.options['iSumm'][1]
 		if (myrank != 0):
 			iSumm = 0
-		SummFile = self.options['Summary file'][1]
+		SummFile = self.options['Summary file'][1].encode('utf-8')
 		if (iSumm != 0):
 			if os.path.isfile(SummFile):
 				os.remove(SummFile)
-			ierror = snopt.openunit(iSumm, numpy.array(SummFile), numpy.array('new'), numpy.array('sequential'))
+			ierror = snopt.openunit(iSumm, numpy.array(SummFile), numpy.array(b'new'), numpy.array(b'sequential'))
 			if (ierror != 0):
 				raise IOError('Failed to properly open %s, ierror = %3d' %(SummFile,ierror))
 		lencw = 500
