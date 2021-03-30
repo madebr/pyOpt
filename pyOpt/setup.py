@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 import os
-
+import setuptools_scm  # noqa: F401
+import toml  # noqa: F401
 
 def configuration(parent_package, top_path):
     from numpy.distutils.misc_util import Configuration
