@@ -14,40 +14,40 @@ env:
   CIBW_ARCHS_MACOS: auto universal2
   CIBW_TEST_SKIP: "*universal2:arm64"
 
-  jobs:
-    make_sdist:
-      name: Make SDist
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v1
-          with:
-            submodules: true
+jobs:
+  make_sdist:
+    name: Make SDist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
 
-        - name: Build SDist
-          run: pipx run --spec build pyproject-build --sdist
+      - name: Build SDist
+        run: pipx run --spec build pyproject-build --sdist
 
-        - uses: actions/upload-artifact@v2
-          with:
-            path: dist/*.tar.gz
+      - uses: actions/upload-artifact@v2
+        with:
+          path: dist/*.tar.gz
 
-    build_wheels:
-      name: Wheel on ${{ matrix.os }}
-      runs-on: ${{ matrix.os }}
-      strategy:
-        fail-fast: false
-        matrix:
-          os: [ ubuntu-20.04, macos-10.15 ]
+  build_wheels:
+    name: Wheel on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-20.04, macos-10.15 ]
 
-      steps:
-        - uses: actions/checkout@v1
-          with:
-            submodules: true
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
 
 
-        - name: Upload wheels
-          uses: actions/upload-artifact@v2
-          with:
-            path: wheelhouse/*.whl
+      - name: Upload wheels
+        uses: actions/upload-artifact@v2
+        with:
+          path: wheelhouse/*.whl
 
 #    upload_all:
 #      needs: [build_wheels, make_sdist]
