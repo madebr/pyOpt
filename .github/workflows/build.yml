@@ -49,15 +49,15 @@ env:
           with:
             path: wheelhouse/*.whl
 
-    upload_all:
-      needs: [build_wheels, make_sdist]
-      runs-on: ubuntu-latest
-      if: github.event_name == 'release' && github.event.action == 'published'
-
-      - uses: actions/download-artifact@v2
-        with:
-          name: artifact
-          path: dist
+#    upload_all:
+#      needs: [build_wheels, make_sdist]
+#      runs-on: ubuntu-latest
+#      if: github.event_name == 'release' && github.event.action == 'published'
+#
+#        - uses: actions/download-artifact@v2
+#          with:
+#            name: artifact
+#            path: dist
 
   #    - uses: pypa/gh-action-pypi-publish@v1.4.1
   #      with:
