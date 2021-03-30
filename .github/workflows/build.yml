@@ -52,12 +52,12 @@ on:
     runs-on: ubuntu-latest
     if: github.event_name == 'release' && github.event.action == 'published'
 
-    - uses: actions/download-artifact@v2
-      with:
-        name: artifact
-        path: dist
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifact
+          path: dist
 
-    - uses: pypa/gh-action-pypi-publish@v1.4.1
-      with:
-        user: __token__
-        password: ${{ secrets.pypi_password }}  # TODO: set pypi password
+      - uses: pypa/gh-action-pypi-publish@v1.4.1
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}  # TODO: set pypi password
