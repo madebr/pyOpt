@@ -1,0 +1,63 @@
+name: Wheels
+
+on:
+  workflow_dispatch:
+  release:
+    types:
+    - published
+  env:
+    CIBW_TEST_EXTRAS: test
+    CIBW_TEST_COMMAND: pytest {project}/tests
+    CIBW_BUILD_VERBOSITY: 1
+    # Optional: support Universal2 for Apple Silicon with these two lines:
+    CIBW_ARCHS_MACOS: auto universal2
+    CIBW_TEST_SKIP: "*univeral2:arm64"
+
+  make_sdist:
+    name: Make SDist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
+
+      - name: Build SDist
+        run: pipx run --spec build pyproject-build --sdist
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: dist/*.tar.gz
+
+  build_wheels:
+    name: Wheel on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-20.04, macos-10.15 ]
+
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
+
+
+      - name: Upload wheels
+        uses: actions/upload-artifact@v2
+        with:
+          path: wheelhouse/*.whl
+
+  upload_all:
+    needs: [build_wheels, make_sdist]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' && github.event.action == 'published'
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: artifact
+        path: dist
+
+    - uses: pypa/gh-action-pypi-publish@v1.4.1
+      with:
+        user: __token__
+        password: ${{ secrets.pypi_password }}  # TODO: set pypi password

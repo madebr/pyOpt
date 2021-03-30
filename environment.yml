@@ -1,4 +1,4 @@
-name: pyopt38
+name: pyopt-env
 channels:
   - conda-forge
   - defaults

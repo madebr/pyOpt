@@ -25,9 +25,12 @@ jobs:
           miniforge-version: latest
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
+          activate-environment: pyopt-env
 
       - name: Install package
+        shell: bash -l {0}
         run: python -m pip install -e .[all]
 
       - name: Test package
+        shell: bash -l {0}
         run: python -m pytest
