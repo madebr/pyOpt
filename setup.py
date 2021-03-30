@@ -2,8 +2,6 @@
 
 import os
 import sys
-import setuptools_scm  # noqa: F401
-import toml  # noqa: F401
 from numpy.distutils.command.build_ext import build_ext
 
 # if os.path.exists('MANIFEST'):
