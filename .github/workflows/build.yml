@@ -1,6 +1,7 @@
 name: Wheels
 
 on:
+  push:
   workflow_dispatch:
   release:
     types:
@@ -11,8 +12,9 @@ env:
   CIBW_BUILD_VERBOSITY: 1
   # Optional: support Universal2 for Apple Silicon with these two lines:
   CIBW_ARCHS_MACOS: auto universal2
-  CIBW_TEST_SKIP: "*univeral2:arm64"
+  CIBW_TEST_SKIP: "*universal2:arm64"
 
+jobs:
   make_sdist:
     name: Make SDist
     runs-on: ubuntu-latest
@@ -46,17 +48,17 @@ env:
         uses: actions/upload-artifact@v2
         with:
           path: wheelhouse/*.whl
-#
-#  upload_all:
-#    needs: [build_wheels, make_sdist]
-#    runs-on: ubuntu-latest
-#    if: github.event_name == 'release' && github.event.action == 'published'
-#
-#    - uses: actions/download-artifact@v2
-#      with:
-#        name: artifact
-#        path: dist
-#
+
+  upload_all:
+    needs: [build_wheels, make_sdist]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' && github.event.action == 'published'
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: artifact
+        path: dist
+
 #    - uses: pypa/gh-action-pypi-publish@v1.4.1
 #      with:
 #        user: __token__
