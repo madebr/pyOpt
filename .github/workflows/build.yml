@@ -36,6 +36,11 @@ jobs:
     strategy:
       matrix:
         os: [ macos-latest ]
+    env:
+      CIBW_BUILD: ${{ matrix.py }}-*
+#      CIBW_BEFORE_BUILD: yum install swig && yum install gcc-gfortran
+
+
     steps:
       - uses: actions/checkout@v2
       - uses: conda-incubator/setup-miniconda@v2
@@ -43,11 +48,6 @@ jobs:
           environment-file: environment.yml
           activate-environment: pyopy-env
           miniforge-version: latest
-    env:
-      CIBW_BUILD: ${{ matrix.py }}-*
-      CIBW_BEFORE_BUILD: yum install swig && yum install gcc-gfortran
-
-    steps:
       - uses: actions/checkout@v1
         with:
           submodules: true
