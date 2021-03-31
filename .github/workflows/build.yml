@@ -43,6 +43,10 @@ jobs:
         with:
           submodules: true
 
+      - uses: joerick/cibuildwheel@v1.9.0
+        env:
+          CIBW_SKIP: pp* cp27-win*
+
 
       - name: Upload wheels
         uses: actions/upload-artifact@v2
