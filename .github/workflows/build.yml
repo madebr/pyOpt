@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   release:
     types:
-    - published
+      - published
 env:
   CIBW_TEST_EXTRAS: test
   CIBW_TEST_COMMAND: pytest {project}/tests
@@ -30,20 +30,23 @@ jobs:
         with:
           path: dist/*.tar.gz
 
-  build_wheels:
+  wheels:
     name: Wheel on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-20.04, macos-10.15 ]
+        os: [ ubuntu-latest, macos-latest ]
+        py: [ cp37, cp38, cp39 ]
+    env:
+      CIBW_BUILD: ${{ matrix.py }}-*
 
     steps:
       - uses: actions/checkout@v1
         with:
           submodules: true
 
-      - uses: joerick/cibuildwheel@v1.9.0
+      - uses: joerick/cibuildwheel@v1.10.0
         env:
           CIBW_SKIP: pp* cp27-win*
 
@@ -53,15 +56,15 @@ jobs:
         with:
           path: wheelhouse/*.whl
 
-#    upload_all:
-#      needs: [build_wheels, make_sdist]
-#      runs-on: ubuntu-latest
-#      if: github.event_name == 'release' && github.event.action == 'published'
-#
-#        - uses: actions/download-artifact@v2
-#          with:
-#            name: artifact
-#            path: dist
+  #    upload_all:
+  #      needs: [build_wheels, make_sdist]
+  #      runs-on: ubuntu-latest
+  #      if: github.event_name == 'release' && github.event.action == 'published'
+  #
+  #        - uses: actions/download-artifact@v2
+  #          with:
+  #            name: artifact
+  #            path: dist
 
   #    - uses: pypa/gh-action-pypi-publish@v1.4.1
   #      with:
