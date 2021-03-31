@@ -40,20 +40,16 @@ jobs:
 
     env:
       CIBW_BUILD: ${{ matrix.py }}-*
-#      CIBW_BEFORE_BUILD: yum install swig && yum install gcc-gfortran
-
 
     steps:
       - uses: actions/checkout@v2
       - uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: ${{ matrix.py }}
-          environment-file: environment.yml
+          environment-file: util/build/macos-build-env
           activate-environment: pyopy-env
           miniforge-version: latest
       - uses: actions/checkout@v1
-        with:
-          submodules: true
 
       - uses: joerick/cibuildwheel@v1.10.0
         env:
@@ -79,8 +75,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-        with:
-          submodules: true
 
       - uses: joerick/cibuildwheel@v1.10.0
         env:
@@ -105,4 +99,4 @@ jobs:
       - uses: pypa/gh-action-pypi-publish@v1.4.1
         with:
           user: __token__
-          password: ${{ secrets.pypi_password }}
+          password: ${{ secrets.pypi_password }}  # TODO

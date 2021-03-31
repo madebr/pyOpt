@@ -3,10 +3,9 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - gcc_linux-64
-  - gfortran_impl_linux-64
-  - gfortran_linux-64
-  - gxx_linux-64
+  - compilers
   - numpy
   - pip
   - swig
+  - wheel
+  - setuptools

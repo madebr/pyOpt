@@ -4,12 +4,9 @@ import os
 import sys
 from numpy.distutils.command.build_ext import build_ext
 
-# if os.path.exists('MANIFEST'):
-#     os.remove('MANIFEST')
-# from setuptools import setup
-
-if sys.version_info[:2] < (2, 4):
-    print(('pyOpt requires Python version 2.4 or later (%d.%d detected).' %sys.version_info[:2]))
+if sys.version_info[:2] < (3, 7):
+    raise RuntimeError(('pyOpt requires Python version 2.4 or later ({:d}.{:d} detected).'.format(
+        sys.version_info[:2])))
     sys.exit(-1)
 
 
