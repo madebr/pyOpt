@@ -30,14 +30,19 @@ jobs:
         with:
           path: dist/*.tar.gz
 
-  wheels:
+  macoswheels:
     name: Wheel on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
     strategy:
-      fail-fast: false
       matrix:
-        os: [ ubuntu-latest, macos-latest ]
-        py: [ cp37, cp38, cp39 ]
+        os: [ macos-latest ]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          environment-file: environment.yml
+          activate-environment: pyopy-env
+          miniforge-version: latest
     env:
       CIBW_BUILD: ${{ matrix.py }}-*
       CIBW_BEFORE_BUILD: yum install swig && yum install gcc-gfortran
@@ -57,17 +62,44 @@ jobs:
         with:
           path: wheelhouse/*.whl
 
-  #    upload_all:
-  #      needs: [build_wheels, make_sdist]
-  #      runs-on: ubuntu-latest
-  #      if: github.event_name == 'release' && github.event.action == 'published'
-  #
-  #        - uses: actions/download-artifact@v2
-  #          with:
-  #            name: artifact
-  #            path: dist
+  linuxwheels:
+    name: Wheel on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest]
+#        py: [ cp37, cp38, cp39 ]
+    env:
+      CIBW_BUILD: ${{ matrix.py }}-*
+      CIBW_BEFORE_BUILD: yum install swig && yum install gcc-gfortran
 
-  #    - uses: pypa/gh-action-pypi-publish@v1.4.1
-  #      with:
-  #        user: __token__
-  #        password: ${{ secrets.pypi_password }}
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
+
+      - uses: joerick/cibuildwheel@v1.10.0
+        env:
+          CIBW_SKIP: pp* cp27-win*
+
+
+      - name: Upload wheels
+        uses: actions/upload-artifact@v2
+        with:
+          path: wheelhouse/*.whl
+
+  upload_all:
+    needs: [linuxwheels, macoswheels, make_sdist]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifact
+          path: dist
+
+      - uses: pypa/gh-action-pypi-publish@v1.4.1
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}
