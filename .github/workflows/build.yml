@@ -20,9 +20,9 @@ jobs:
     name: Make SDist
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
         with:
-          submodules: true
+          fetch-depth: 0
 
       - name: Build SDist
         run: pipx run --spec build pyproject-build --sdist
@@ -44,6 +44,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: ${{ matrix.py }}
@@ -75,7 +77,9 @@ jobs:
       CIBW_BEFORE_BUILD: yum -y install swig && yum -y install gcc-gfortran
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - uses: joerick/cibuildwheel@v1.10.0
         env:
