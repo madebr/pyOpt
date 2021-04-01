@@ -46,7 +46,7 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: ${{ matrix.py }}
-          environment-file: util/build/macos-build-env
+          environment-file: util/build/build-env.yml
           activate-environment: pyopy-env
           miniforge-version: latest
       - uses: actions/checkout@v1
