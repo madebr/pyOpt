@@ -71,7 +71,7 @@ jobs:
         py: [ cp37, cp38, cp39 ]
     env:
       CIBW_BUILD: ${{ matrix.py }}-*
-      CIBW_BEFORE_BUILD: yum install swig && yum install gcc-gfortran
+      CIBW_BEFORE_BUILD: yum -y install swig && yum -y install gcc-gfortran
 
     steps:
       - uses: actions/checkout@v1
