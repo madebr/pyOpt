@@ -8,6 +8,7 @@ on:
       - published
 env:
   CIBW_TEST_EXTRAS: test
+  CIBW_TEST_REQUIRES: pip install .[dev]
   CIBW_TEST_COMMAND: pytest {project}/tests
   CIBW_BUILD_VERBOSITY: 1
   # Optional: support Universal2 for Apple Silicon with these two lines:
@@ -46,7 +47,7 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: ${{ matrix.py }}
-          environment-file: util/build/build-env.yml
+          environment-file: util/env/build-env.yml
           activate-environment: pyopy-env
           miniforge-version: latest
       - uses: actions/checkout@v1
