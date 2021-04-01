@@ -35,8 +35,10 @@ def configuration(parent_package='',top_path=None):
     return config
 
 extras={
-    "dev": ["pytest"],
+    "test": ["pytest"],
 }
+extras['dev'] = extras['test']
+
 extras["all"] = sum(extras.values(), [])
 
 

@@ -8,7 +8,6 @@ on:
       - published
 env:
   CIBW_TEST_EXTRAS: test
-  CIBW_TEST_REQUIRES: .[dev]
   CIBW_TEST_COMMAND: pytest {project}/tests
   CIBW_BUILD_VERBOSITY: 1
   # Optional: support Universal2 for Apple Silicon with these two lines:
