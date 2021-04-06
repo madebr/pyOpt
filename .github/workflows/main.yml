@@ -1,7 +1,6 @@
-name: CI
+name: CI tests
 
 on:
-  pull_request:
   push:
 
 jobs:
