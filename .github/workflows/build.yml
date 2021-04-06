@@ -6,8 +6,9 @@ on:
   release:
     types:
       - published
-  tags:
-    - "*"
+  push:
+    tags:
+      - "*"
 env:
   CIBW_TEST_EXTRAS: test
   CIBW_TEST_COMMAND: pytest {project}/tests
