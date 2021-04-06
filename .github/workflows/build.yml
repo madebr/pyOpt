@@ -11,7 +11,6 @@ env:
   CIBW_TEST_COMMAND: pytest {project}/tests
   CIBW_BUILD_VERBOSITY: 1
   # Optional: support Universal2 for Apple Silicon with these two lines:
-  CIBW_ARCHS_MACOS: auto universal2
   CIBW_TEST_SKIP: "*universal2:arm64"
 
 jobs:
@@ -32,13 +31,14 @@ jobs:
 
   macoswheels:
     name: Wheel on macos ${{ matrix.py }}
-    runs-on: macos-latest
+    runs-on: macos-10.15
     strategy:
       matrix:
         py: [ 3.7, 3.8, 3.9 ]
 
     env:
-      CIBW_BUILD: ${{ matrix.py }}-*
+      CIBW_BUILD: cp${{ matrix.py }}-*
+      CIBW_ARCHS_MACOS: auto universal2
 
     steps:
       - uses: actions/checkout@v2
@@ -50,7 +50,9 @@ jobs:
           environment-file: util/env/build-env.yml
           activate-environment: pyopt-env
           miniforge-version: latest
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - uses: joerick/cibuildwheel@v1.10.0
         env:
