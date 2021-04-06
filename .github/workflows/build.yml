@@ -38,19 +38,18 @@ jobs:
 
     env:
       CIBW_BUILD: cp${{ matrix.py }}-*
-      CIBW_PLATFORM: macos
       CIBW_ARCHS_MACOS: auto universal2
 
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          python-version: ${{ matrix.py }}
-          environment-file: util/env/build-env.yml
-          activate-environment: pyopt-env
-          miniforge-version: latest
+#      - uses: conda-incubator/setup-miniconda@v2
+#        with:
+#          python-version: ${{ matrix.py }}
+#          environment-file: util/env/build-env.yml
+#          activate-environment: pyopt-env
+#          miniforge-version: latest
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
