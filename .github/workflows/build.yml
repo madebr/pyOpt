@@ -30,34 +30,27 @@ jobs:
           path: dist/*.tar.gz
 
   macoswheels:
-    name: Wheel on macos ${{ matrix.py }}
+    name: Wheel on macos ${{ matrix.arch }}
     runs-on: macos-10.15
     strategy:
       fail-fast: false
       matrix:
-        py: [ 3.7, 3.8, 3.9 ]
         arch: [ auto64, universal2 ]
         build: [ "*" ]
 
     env:
-      CIBW_ARCHS_MACOS: auto64 universal2
 
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      #      - uses: conda-incubator/setup-miniconda@v2
-      #        with:
-      #          python-version: ${{ matrix.py }}
-      #          environment-file: util/env/build-env.yml
-      #          activate-environment: pyopt-env
-      #          miniforge-version: latest
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
       - uses: joerick/cibuildwheel@v1.10.0
         env:
+          CIBW_ARCHS_MACOS: auto64 universal2
           CIBW_ARCHS: ${{ matrix.arch }}
           CIBW_SKIP: pp* cp27-win*
           FFLAGS: '-fallow-argument-mismatch'
