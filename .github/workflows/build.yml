@@ -60,7 +60,7 @@ jobs:
         env:
           CIBW_ARCHS: ${{ matrix.arch }}
           CIBW_SKIP: pp* cp27-win*
-          CIBW_BEFORE_BUILD: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && brew install gcc && export PATH=/usr/local/bin:$PATH
+          CIBW_BEFORE_BUILD: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && brew install gcc swig && export PATH=/usr/local/bin:$PATH
 
 
 
