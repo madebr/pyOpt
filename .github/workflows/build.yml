@@ -38,8 +38,6 @@ jobs:
         arch: [ auto64, universal2 ]
         build: [ "*" ]
 
-    env:
-
     steps:
       - uses: actions/checkout@v2
         with:
