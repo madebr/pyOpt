@@ -62,6 +62,7 @@ jobs:
           CIBW_SKIP: pp* cp27-win*
           CC: gcc-10
           FC: gfortran-10
+          FFLAGS: -fallow-argument-mismatch
           CIBW_BEFORE_BUILD: brew install swig
 
 
