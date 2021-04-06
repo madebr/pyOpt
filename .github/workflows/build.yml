@@ -30,7 +30,16 @@ jobs:
         with:
           path: dist/*.tar.gz
 
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          environment-file: util/env/build-env.yml
+          miniforge-version: latest
+          auto-update-conda: true
+          python-version: ${{ matrix.python-version }}
+          activate-environment: pyopt-env
+
       - name: Test install sdist
+        shell: bash -l {0}
         run: pip install dist/*.tar.gz
 
   macoswheels:
