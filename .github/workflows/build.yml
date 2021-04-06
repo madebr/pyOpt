@@ -7,8 +7,8 @@ on:
     types:
       - published
   push:
-    tags:
-      - "*"
+#    tags:  # TODO: activate GA in pull requests
+#      - "*"
 env:
   CIBW_TEST_EXTRAS: test
   CIBW_TEST_COMMAND: pytest {project}/tests
