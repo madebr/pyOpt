@@ -33,8 +33,11 @@ jobs:
     name: Wheel on macos ${{ matrix.py }}
     runs-on: macos-10.15
     strategy:
+      fail-fast: false
       matrix:
         py: [ 3.7, 3.8, 3.9 ]
+        arch: [ auto64 ]
+        build: [ "*" ]
 
     env:
       CIBW_BUILD: cp${{ matrix.py }}-*
