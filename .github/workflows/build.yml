@@ -31,11 +31,10 @@ jobs:
           path: dist/*.tar.gz
 
   macoswheels:
-    name: Wheel on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}-latest
+    name: Wheel on macos ${{ matrix.py }}
+    runs-on: macos-latest
     strategy:
       matrix:
-        os: [ macos-latest ]
         py: [ 37, 38, 39 ]
 
     env:
@@ -64,12 +63,11 @@ jobs:
           path: wheelhouse/*.whl
 
   linuxwheels:
-    name: Wheel on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: Wheel on ubuntu-20.04 ${{ matrix.py }}
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest]
         py: [ cp37, cp38, cp39 ]
     env:
       CIBW_BUILD: ${{ matrix.py }}-*
