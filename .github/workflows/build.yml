@@ -38,6 +38,7 @@ jobs:
 
     env:
       CIBW_BUILD: cp${{ matrix.py }}-*
+      CIBW_PLATFORM: macos
       CIBW_ARCHS_MACOS: auto universal2
 
     steps:
