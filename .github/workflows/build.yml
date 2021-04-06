@@ -35,7 +35,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        py: [ "3.7", "3.8", "3.9" ]
+        py: [ 3.7, 3.8, 3.9 ]
 
     env:
       CIBW_BUILD: ${{ matrix.py }}-*
@@ -48,7 +48,7 @@ jobs:
         with:
           python-version: ${{ matrix.py }}
           environment-file: util/env/build-env.yml
-          activate-environment: pyopy-env
+          activate-environment: pyopt-env
           miniforge-version: latest
       - uses: actions/checkout@v1
 
