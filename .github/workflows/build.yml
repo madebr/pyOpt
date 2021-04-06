@@ -35,7 +35,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        py: [ 37, 38, 39 ]
+        py: [ "3.7", "3.8", "3.9" ]
 
     env:
       CIBW_BUILD: ${{ matrix.py }}-*
