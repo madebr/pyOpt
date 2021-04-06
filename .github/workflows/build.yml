@@ -28,6 +28,9 @@ jobs:
         with:
           path: dist/*.tar.gz
 
+      - name: Test install sdist
+        run: pip install dist/*.tar.gz
+
   macoswheels:
     name: Wheel on ${{ matrix.os }} ${{ matrix.arch }}
     runs-on: macos-latest
