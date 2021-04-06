@@ -38,7 +38,7 @@ jobs:
 
     env:
       CIBW_BUILD: cp${{ matrix.py }}-*
-      CIBW_ARCHS_MACOS: auto universal2
+      CIBW_ARCHS_MACOS: auto64 universal2
 
     steps:
       - uses: actions/checkout@v2
