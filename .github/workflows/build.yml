@@ -35,7 +35,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [ auto64, universal2 ]
+        arch: [ auto64 ]
         build: [ "*" ]
 
     steps:
@@ -48,14 +48,11 @@ jobs:
 
       - uses: joerick/cibuildwheel@v1.10.0
         env:
-          CIBW_ARCHS_MACOS: auto64 universal2
+          CIBW_ARCHS_MACOS: auto64
           CIBW_ARCHS: ${{ matrix.arch }}
           CIBW_SKIP: pp* cp27-win*
-          FFLAGS: '-fallow-argument-mismatch'
+          FFLAGS: '-fallow-argument-mismatch'  # gfortran 10 will fail with some files otherwise
           CIBW_BEFORE_BUILD: brew install swig && brew rm gcc && brew install gcc
-
-
-
 
       - name: Upload wheels
         uses: actions/upload-artifact@v2
