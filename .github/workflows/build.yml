@@ -60,8 +60,8 @@ jobs:
         env:
           CIBW_ARCHS: ${{ matrix.arch }}
           CIBW_SKIP: pp* cp27-win*
-          CC: gcc-9
-          FC: gfortran-9
+          CC: gcc-10
+          FC: gfortran-10
           CIBW_BEFORE_BUILD: brew install swig
 
 
