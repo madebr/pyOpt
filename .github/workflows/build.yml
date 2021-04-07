@@ -26,10 +26,6 @@ jobs:
       - name: Build SDist
         run: pipx run --spec build pyproject-build --sdist
 
-      - uses: actions/upload-artifact@v2
-        with:
-          path: dist/*.tar.gz
-
       - uses: conda-incubator/setup-miniconda@v2
         with:
           environment-file: util/env/build-env.yml
@@ -41,6 +37,11 @@ jobs:
       - name: Test install sdist
         shell: bash -l {0}
         run: pip install dist/*.tar.gz
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: dist/*.tar.gz
+
 
   macoswheels:
     name: Wheel on ${{ matrix.os }} ${{ matrix.arch }}
