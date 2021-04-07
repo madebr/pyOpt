@@ -58,6 +58,7 @@ jobs:
 
       - name: Create alias for gcc and gfortran.
         run: |
+          shopt -s expand_aliases
           alias gcc=gcc-10
           alias gfortran=gfortran-10
 
@@ -67,7 +68,8 @@ jobs:
           CIBW_ARCHS: ${{ matrix.arch }}
           CIBW_SKIP: pp* cp27-win*
           FFLAGS: '-fallow-argument-mismatch'  # gfortran 10 will fail with some files otherwise
-          CIBW_BEFORE_BUILD: brew install swig #  && brew rm gcc && brew install gcc
+          # TODO: pretty unelegant below, we have gcc-10 and gfortran-10 available, how to alias them?
+          CIBW_BEFORE_BUILD: brew install swig  # && brew rm gcc && brew install gcc
 
       - name: Upload wheels
         uses: actions/upload-artifact@v2
