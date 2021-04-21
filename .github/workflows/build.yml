@@ -37,7 +37,7 @@ jobs:
       - name: Test install sdist
         shell: bash -l {0}
         run: |
-          tar -zxvf dist/*.tar.gz
+          tar -zxvf dist/*.tar.gz -c dist
           ls dist/*
 #          pip install -v dist/*.tar.gz
 
