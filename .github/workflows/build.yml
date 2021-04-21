@@ -31,12 +31,14 @@ jobs:
           environment-file: util/env/build-env.yml
           miniforge-version: latest
           auto-update-conda: true
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.8
           activate-environment: pyopt-env
 
       - name: Test install sdist
         shell: bash -l {0}
         run: |
+          tar -zxvf dist/*.tar.gz
+          ls dist/*
           pip install -v dist/*.tar.gz
 
       - uses: actions/upload-artifact@v2
