@@ -38,7 +38,8 @@ jobs:
         shell: bash -l {0}
         run: |
           pip install -U pip
-          pip install -v dist/*.tar.gz
+          python -m pip install dist/*
+#          pip install -v dist/*.tar.gz
 
       - uses: actions/upload-artifact@v2
         with:
