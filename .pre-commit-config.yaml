@@ -80,8 +80,8 @@ repos:
     hooks:
       - id: check-manifest
         stages: [ manual ]
-  -   repo: https://github.com/sondrelg/pep585-upgrade
-      rev: '5f7033a0d0174c65105b041500060b993c1bc211'  # Use the sha / tag you want to point at
-      hooks:
-          -   id: upgrade-type-hints
-              args: [ '--futures=true' ]
+  - repo: https://github.com/sondrelg/pep585-upgrade
+    rev: '5f7033a0d0174c65105b041500060b993c1bc211'  # Use the sha / tag you want to point at
+    hooks:
+      - id: upgrade-type-hints
+        args: [ '--futures=true' ]
