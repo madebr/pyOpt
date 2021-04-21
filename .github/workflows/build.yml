@@ -39,7 +39,7 @@ jobs:
         run: |
           tar -zxvf dist/*.tar.gz
           ls dist/*
-          pip install -v dist/*.tar.gz
+#          pip install -v dist/*.tar.gz
 
       - uses: actions/upload-artifact@v2
         with:
