@@ -44,10 +44,12 @@ extras["all"] = sum(extras.values(), [])
 
 if __name__ == '__main__':
     from numpy.distutils.core import setup
-    from distutils.command.sdist import sdist
+    # from distutils.command.sdist import sdist
     setup(
         configuration=configuration,
-        cmdclass = {"build_ext": build_opt, 'sdist': sdist},
+        cmdclass = {"build_ext": build_opt,
+                    # 'sdist': sdist
+                    },
         extras_require=extras
 
-    )
+)

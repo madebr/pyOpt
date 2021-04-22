@@ -31,7 +31,7 @@ def configuration(parent_package, top_path):
     config.add_subpackage('pySNOPT')
     config.add_subpackage('pySOLVOPT')
 
-    for fn in 'LICENSE', 'README':
+    for fn in 'LICENSE', 'README.md':
         config.add_data_files(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), fn))
 
     return config
