@@ -48,7 +48,7 @@ if __name__ == '__main__':
     setup(
         configuration=configuration,
         cmdclass = {"build_ext": build_opt,
-                    # 'sdist': sdist
+                    # 'sdist': sdist  # TODO: why does this not work? Why need manifest to include pyOpt?
                     },
         extras_require=extras
 
