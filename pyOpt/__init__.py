@@ -29,4 +29,7 @@ from .pySLSQP import *
 # from .pySNOPT import SNOPT
 from .pySOLVOPT import *
 
+# from .version import version as __version__
+
+
 __all__ = ['History', 'Parameter', 'Variable', 'Gradient', 'Constraint', 'Objective', 'Optimization', 'Optimizer']

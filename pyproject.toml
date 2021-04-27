@@ -1,0 +1,15 @@
+[build-system]
+requires = [
+    "setuptools>=42",
+    "wheel",
+    "numpy==1.13.3; python_version<'3.7'",
+    "oldest-supported-numpy; python_version>='3.7'",
+    "setuptools>=42",
+    "setuptools_scm[toml]>=3.4",
+]
+
+
+[tool.setuptools_scm]
+write_to = "pyOpt/version.py"
+
+build-backend = "setuptools.build_meta"

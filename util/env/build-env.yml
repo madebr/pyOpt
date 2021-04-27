@@ -1,0 +1,10 @@
+name: pyopt-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - compilers
+  - numpy
+  - pip
+  - swig
+  - wheel

@@ -1,0 +1,122 @@
+name: Wheels
+
+on:
+  pull_request:
+  workflow_dispatch:
+  release:
+    types:
+      - published
+  push:
+#    tags:  # TODO: activate GA in pull requests
+#      - "*"
+env:
+  CIBW_TEST_EXTRAS: test
+  CIBW_TEST_COMMAND: pytest {project}/tests
+  CIBW_BUILD_VERBOSITY: 1
+
+jobs:
+  make_sdist:
+    name: Make SDist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Build SDist
+        run: pipx run --spec build pyproject-build --sdist
+
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          environment-file: util/env/build-env.yml
+          miniforge-version: latest
+          auto-update-conda: true
+          python-version: 3.8
+          activate-environment: pyopt-env
+
+      - name: Test install sdist
+        shell: bash -l {0}
+        run: |
+          pip install -U pip
+          python -m pip install dist/*
+#          pip install -v dist/*.tar.gz
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: dist/*.tar.gz
+
+
+  macoswheels:
+    name: Wheel on ${{ matrix.os }} ${{ matrix.arch }}
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ auto64 ]
+        build: [ "*" ]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+# TODO: why does this not work? why do we need the gcc install?
+#      - name: Create alias for gcc and gfortran.
+#        run: |
+#          shopt -s expand_aliases
+#          alias gcc=gcc-10
+#          alias gfortran=gfortran-10
+
+      - uses: joerick/cibuildwheel@v1.10.0
+        env:
+          CIBW_ARCHS_MACOS: auto64
+          CIBW_ARCHS: ${{ matrix.arch }}
+          CIBW_SKIP: pp* cp27-win*
+          FFLAGS: '-fallow-argument-mismatch'  # gfortran 10 will fail with some files otherwise
+          # TODO: pretty unelegant below, we have gcc-10 and gfortran-10 available, how to alias them?
+          CIBW_BEFORE_BUILD: brew install swig && brew rm gcc && brew install gcc
+
+      - name: Upload wheels
+        uses: actions/upload-artifact@v2
+        with:
+          path: wheelhouse/*.whl
+
+  linuxwheels:
+    name: Wheel on  ${{ matrix.os }} with ${{ matrix.py }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        py: [ cp37, cp38, cp39 ]
+    env:
+      CIBW_BUILD: ${{ matrix.py }}-*
+      CIBW_BEFORE_BUILD: yum -y install swig && yum -y install gcc-gfortran
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: joerick/cibuildwheel@v1.10.0
+        env:
+          CIBW_SKIP: pp* cp27-win*
+
+      - name: Upload wheels
+        uses: actions/upload-artifact@v2
+        with:
+          path: wheelhouse/*.whl
+
+  upload_all:
+    needs: [ linuxwheels, macoswheels, make_sdist ]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifact
+          path: dist
+
+      - uses: pypa/gh-action-pypi-publish@v1.4.1
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}  # TODO
