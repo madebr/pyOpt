@@ -60,7 +60,6 @@ import numpy
 from pyOpt.pyOpt_gradient import Gradient
 from pyOpt.pyOpt_optimizer import Optimizer
 
-
 # =============================================================================
 # Misc Definitions
 # =============================================================================

@@ -53,8 +53,8 @@ import numpy
 # =============================================================================
 from .pyOpt_constraint import Constraint
 from .pyOpt_objective import Objective
-from .pyOpt_variable import Variable
 from .pyOpt_parameter import Parameter
+from .pyOpt_variable import Variable
 
 # =============================================================================
 # Misc Definitions
