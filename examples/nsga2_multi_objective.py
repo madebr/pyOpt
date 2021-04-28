@@ -1,4 +1,4 @@
-from pyOpt import Optimization, NSGA2
+from pyOpt import NSGA2, Optimization
 
 
 def objfunc(xdict):

@@ -20,16 +20,16 @@ C     ARRAY ARGUMENTS
       double precision d(nind),g(n),gtrial(n),l(n),lambda(m),rho(m),
      +        u(n),x(n),xtrial(n)
 
-C     Solves the "unconstrained" inner problem that arises from the 
+C     Solves the "unconstrained" inner problem that arises from the
 C     active-set method to solve box-constrained minimization problem
 C
 C            Minimize f(x) subject to l <= x <= u
-C     
-C     described in 
 C
-C     M. Andretta, E. G. Birgin e J. M. Martínez. "Practical active-set 
-C     Euclidian trust-region method with spectral projected gradients 
-C     for bound-constrained minimization". Optimization 54, pp. 
+C     described in
+C
+C     M. Andretta, E. G. Birgin e J. M. Martínez. "Practical active-set
+C     Euclidian trust-region method with spectral projected gradients
+C     for bound-constrained minimization". Optimization 54, pp.
 C     305-325, 2005.
 
 C     betinfo:
@@ -71,15 +71,15 @@ C     Print presentation information
 C          write(*, 1000)
           write(10,1000)
       end if
-      
+
 C     Initialization
 
       if ( .not. sameface ) then
           trdelta = max( trdelta, newdelta )
       end if
-      
+
       newdelta = 0.0d0
-      
+
       memfail  = .false.
 
       frstit   = .true.
@@ -87,10 +87,10 @@ C     Initialization
 C     ==================================================================
 C     Compute distance to the boundary
 C     ==================================================================
-      
+
 C     step 1: calculate the distance between x and the boundary.
-C             dbound is the largest positive delta such that the ball 
-C             centered at x with radius delta is still inside the box 
+C             dbound is the largest positive delta such that the ball
+C             centered at x with radius delta is still inside the box
 C             (set of constraints).
 
       dbound = bignum
@@ -98,7 +98,7 @@ C             (set of constraints).
       do i = 1,nind
           dbound = min( dbound, x(i) - l(i) )
       end do
-      
+
       do i = 1,nind
           dbound = min( dbound, u(i) - x(i) )
       end do
@@ -113,7 +113,7 @@ C     Calculate infinite-norm of gradient.
 C     ==================================================================
 C     Close to the boundary: perform inner SPG iteration
 C     ==================================================================
-      
+
 C     step 2: close to the boundary, stop.
 
       if ( dbound .lt. 2.0d0 * trdelmin ) then
@@ -122,16 +122,16 @@ C     step 2: close to the boundary, stop.
               xtrial(i) = x(i)
               gtrial(i) = g(i)
           end do
-              
+
           ftrial  = f
 
           betinfo = 8
-              
+
           if ( iprintinn .ge. 5 ) then
-C              write(*, 9010) 
-              write(10,9010) 
+C              write(*, 9010)
+              write(10,9010)
           end if
-              
+
           return
 
       end if
@@ -139,16 +139,16 @@ C              write(*, 9010)
 C     ==================================================================
 C     Far from the boundary: perform trust-region iteration
 C     ==================================================================
-      
+
       triter = triter + 1
 
-C     step 3: far from the boundary, solve trust-region subproblem. 
+C     step 3: far from the boundary, solve trust-region subproblem.
 C             Evaluate function Hessian at x.
 
       call calchal(nind,x,m,lambda,rho,equatn,linear,hlin,hcol,hval,
      +hnnz,inform)
       if ( inform .lt. 0 ) return
-      
+
       do i = 1,nind
           hdiag(i) = 0
       end do
@@ -163,13 +163,13 @@ C             Evaluate function Hessian at x.
               else
                   hval(hdiag(lin)) = hval(hdiag(lin)) + hval(i)
                   hval(i) = 0.0d0
-              end if 
+              end if
           end if
       end do
 
       do i = 1,nind
          if ( hdiag(i) .eq. 0 ) then
-            hnnz       = hnnz + 1            
+            hnnz       = hnnz + 1
             hlin(hnnz) = i
             hcol(hnnz) = i
             hval(hnnz) = 0.0d0
@@ -177,9 +177,9 @@ C             Evaluate function Hessian at x.
          end if
       end do
 
-C     step 4: solve the trust-region subproblem using More-Sorensen's 
-C             algorithm to minimize "exactly" quadratics subjected to 
-C             balls. 
+C     step 4: solve the trust-region subproblem using More-Sorensen's
+C             algorithm to minimize "exactly" quadratics subjected to
+C             balls.
 
 C     If trust-region radius is too small, the inner algorithm stops.
 
@@ -191,19 +191,19 @@ C     If trust-region radius is too small, the inner algorithm stops.
               xtrial(i) = x(i)
               gtrial(i) = g(i)
           end do
-          
+
           ftrial  = f
 
           betinfo = 4
-          
+
           if ( iprintinn .ge. 5 ) then
-C              write(*, 9040) 
-              write(10,9040) 
+C              write(*, 9040)
+              write(10,9040)
           end if
-          
+
           return
       end if
-      
+
       call moresor(nind,g,hnnz,hlin,hcol,hval,hdiag,trdelta,mssig,
      +0.0d0,mseps,msmaxit,mslamb,pd,d,chcnt,memfail,dinfo)
 
@@ -214,8 +214,8 @@ C              write(*, 9040)
 C     If maximum allowed number of MEQB iterations is achieved, another
 C     direction d is calculated.
 
-      if ( dinfo .eq. 5 ) then 
-          
+      if ( dinfo .eq. 5 ) then
+
           if ( iprintinn .ge. 5 ) then
 C              write(*, 2000)
               write(10,2000)
@@ -225,9 +225,9 @@ C              write(*, 2000)
      +    dinfo)
 
       end if
-      
-C     If both internal gradient and Hessian matrix are null, subroutines 
-C     MEQB and dogleg stop with dinfo = 0 and then the inner algorithm 
+
+C     If both internal gradient and Hessian matrix are null, subroutines
+C     MEQB and dogleg stop with dinfo = 0 and then the inner algorithm
 C     stops declaring "second-order stationary point".
 
       if ( dinfo .eq. 0 ) then
@@ -236,19 +236,19 @@ C     stops declaring "second-order stationary point".
               xtrial(i) = x(i)
               gtrial(i) = g(i)
           end do
-          
+
           ftrial  = f
 
           betinfo = 7
-          
+
           if ( iprintinn .ge. 5 ) then
-C              write(*, 9020) 
-              write(10,9020) 
+C              write(*, 9020)
+              write(10,9020)
           end if
-          
+
           return
       end if
-      
+
 C     Print direction
 
       if ( iprintinn .ge. 5 ) then
@@ -260,50 +260,50 @@ C     Evaluate the quadratic model of the objective function at d.
 
       call squad(nind,d,g,hnnz,hlin,hcol,hval,phi)
 
-C     If the value of the quadratic model at d is 0 it means that x is a 
+C     If the value of the quadratic model at d is 0 it means that x is a
 C     second-order stationary point. In this case, inner algorithm stops
 C     declaring this.
-      
+
       if ( ( abs( phi ) .le. phieps ) .and. ( gsupn .le. epsg ) ) then
 
           do i = 1,n
               xtrial(i) = x(i)
               gtrial(i) = g(i)
           end do
-          
+
           ftrial  = f
 
           betinfo = 7
-          
+
           if ( iprintinn .ge. 5 ) then
-C              write(*, 9020) 
-              write(10,9020) 
+C              write(*, 9020)
+              write(10,9020)
           end if
-          
+
           return
       end if
-      
+
 C     Calculate predicted decrease of objective function
-      
+
       pred = abs( phi )
-      
+
 C     Calculate d Euclidian-norm
-      
+
       deucn = 0.0d0
       do i = 1,nind
           deucn = deucn + d(i)**2
       end do
       deucn = sqrt( deucn )
-      
+
 C     To avoid NaN and Inf directions
 
       if ( .not. ( deucn .le. bignum ) ) then
-      
+
           trdelta = 2.5d-1 * trdelta
 
           if ( iprintinn .ge. 5 ) then
-C              write(*, 2060) 
-              write(10,2060) 
+C              write(*, 2060)
+              write(10,2060)
           end if
 
           if ( trdelta .lt. macheps * max( 1.0d0, xeucn ) ) then
@@ -312,16 +312,16 @@ C              write(*, 2060)
                   xtrial(i) = x(i)
                   gtrial(i) = g(i)
               end do
-              
+
               ftrial  = f
 
               betinfo = 5
-              
+
               if ( iprintinn .ge. 5 ) then
-C                  write(*, 9070) 
-                  write(10,9070) 
+C                  write(*, 9070)
+                  write(10,9070)
               end if
-              
+
               return
           end if
 
@@ -333,7 +333,7 @@ C                  write(*, 9070)
       end if
 
 C     Calculate point xtrial = x + d.
-      
+
       do i = 1,nind
           xtrial(i) = x(i) + d(i)
       end do
@@ -345,11 +345,11 @@ C     false and amax is set to the biggest positive scalar such that
 C     x + amax*d is inside the box.
 
       call compamax(nind,x,l,u,d,amax,rbdnnz,rbdind,rbdtype)
-      
+
 C     ==================================================================
 C     Point on the boundary
-C     ==================================================================      
-      
+C     ==================================================================
+
 C     If xtrial is not interior to the box, xtrial = x + d is replaced
 C     by xtrial = x + amax*d. Now xtrial is definitely interior. Actually,
 C     it is in the boundary. If the objective function decreases in
@@ -358,22 +358,22 @@ C     Otherwise, a new trust-region radius trdelta is chosen (smaller than
 C     dbound) and a new quadratic model minimizer is calculated (which
 C     is necessarily interior because of the choice of trdelta).
 
-      if ( amax .le. 1.0d0 ) then 
-          
+      if ( amax .le. 1.0d0 ) then
+
           if ( iprintinn .ge. 5 ) then
-C              write(*, 2010) 
-              write(10,2010) 
+C              write(*, 2010)
+              write(10,2010)
           end if
-          
+
           do i = 1,nind
               xtrial(i) = x(i) + amax * d(i)
           end do
-          
+
           stpl = amax
 
-C         Set x(i) to l(i) or u(i) for the indices i that got to the 
+C         Set x(i) to l(i) or u(i) for the indices i that got to the
 C         boundary (to prevent errors).
-          
+
           do i = 1,rbdnnz
               index = rbdind(i)
               if ( rbdtype(i) .eq. 'L' ) then
@@ -388,7 +388,7 @@ C         boundary (to prevent errors).
           call calcal(nind,xtrial,m,lambda,rho,equatn,linear,ftrial,
      +    inform)
           if ( inform .lt. 0 ) return
-          
+
 C         Print functional value
 
           if ( iprintinn .ge. 5 ) then
@@ -397,61 +397,61 @@ C              write(*, 1030) trdelta,ftrial,fcnt
           end if
 
 C         Test whether f is very small
-      
+
           if ( ftrial .le. fmin ) then
-              
+
               call calcnal(nind,xtrial,m,lambda,rho,equatn,linear,
      +        gtrial,inform)
               if ( inform .lt. 0 ) return
 
               betinfo = 2
-              
+
               if ( iprintinn .ge. 5 ) then
-C                  write(*, 9050) 
-                  write(10,9050) 
+C                  write(*, 9050)
+                  write(10,9050)
               end if
-              
+
               return
-          end if      
-          
-C         If the new point x + d is too close to the previous point x, 
+          end if
+
+C         If the new point x + d is too close to the previous point x,
 C         inner algorithm stops
 
           samep = .true.
           do i = 1,nind
-              if ( xtrial(i) .gt. x(i) + 
+              if ( xtrial(i) .gt. x(i) +
      +             macheps * max( 1.0d0, abs( x(i) ) ) .or.
-     +             xtrial(i) .lt. x(i) - 
+     +             xtrial(i) .lt. x(i) -
      +             macheps * max( 1.0d0, abs( x(i) ) ) ) then
                   samep = .false.
               end if
           end do
-          
+
           if ( samep .and. ftrial .le. f + macheps23 * abs(f) ) then
-              
+
               betinfo = 3
-              
+
               if ( iprintinn .ge. 5 ) then
-C                  write(*, 9060) 
-                  write(10,9060) 
+C                  write(*, 9060)
+                  write(10,9060)
               end if
-              
+
               return
           end if
 
 C         Test if function value decreases at xtrial
-        
-          if ( ( ftrial .le. f ) .or. 
+
+          if ( ( ftrial .le. f ) .or.
      +         ( ( deucn .le. macheps23 * xeucn ) .and.
      +         ( ftrial .le. f + macheps23 * abs( f ) ) ) ) then
-              
+
               if ( iprintinn .ge. 5 ) then
-C                  write(*, 2030) 
-                  write(10,2030) 
+C                  write(*, 2030)
+                  write(10,2030)
               end if
-              
+
               if ( extrp4 ) then
-                  
+
                   call extrapolation(nind,x,l,u,m,lambda,rho,equatn,
      +            linear,g,xtrial,ftrial,gtrial,d,stpl,amax,rbdnnz,
      +            rbdind,rbdtype,fmin,beta,etaext,maxextrap,extinfo,
@@ -471,48 +471,48 @@ C                 be used)
                   if ( frstit ) then
                       trdelta = 2.0d0 * max( trdelta, stpl * deucn )
                   end if
-                  
+
                   if ( betinfo .eq. 2 ) then
                       if ( iprintinn .ge. 5 ) then
-C                          write(*, 9050) 
-                          write(10,9050) 
+C                          write(*, 9050)
+                          write(10,9050)
                       end if
-                      
+
                       return
                   end if
-                  
+
                   betinfo = 1
-                  
+
 C                 Calculate actual reduction of objective function
 
                   ared = f - ftrial
 
                   go to 200
-                  
+
               else
-                  
+
 C                 Update the trust-region radius (which may or may not
 C                 be used)
-               
+
                   trdelta = 2.0d0 * trdelta
-                  
+
 C                 Calculate actual reduction of objective function
 
                   ared = f - ftrial
-                  
+
 C                 Compute gtrial.
-                  
+
                   call calcnal(nind,xtrial,m,lambda,rho,equatn,linear,
      +            gtrial,inform)
                   if ( inform .lt. 0 ) return
-                  
+
                   betinfo = 1
-                  
+
                   go to 200
               end if
-              
+
           else
-              tmp      = trdelmin + msrho * 
+              tmp      = trdelmin + msrho *
      +                   ( ( dbound / (1.0d0 + mssig ) ) - trdelmin )
               newdelta = trdelta
               trdelta  = max( trdelmin, tmp )
@@ -521,8 +521,8 @@ C                 Compute gtrial.
               frstit   = .false.
 
               if ( iprintinn .ge. 5 ) then
-C                  write(*, 2040) 
-                  write(10,2040) 
+C                  write(*, 2040)
+                  write(10,2040)
               end if
 
               go to 100
@@ -532,7 +532,7 @@ C                  write(*, 2040)
 C     ==================================================================
 C     Point interior to the box
 C     ==================================================================
-      
+
 C     step 5: in this case xtrial is inside the box. Acceptance or
 C             rejection of the trust-region subproblem solution.
 
@@ -549,57 +549,57 @@ C          write(*, 1030) trdelta,ftrial,fcnt
       end if
 
 C     Test whether f is very small
-      
+
       if ( ftrial .le. fmin ) then
-          
+
           call calcnal(nind,xtrial,m,lambda,rho,equatn,linear,gtrial,
      +    inform)
           if ( inform .lt. 0 ) return
 
           betinfo = 2
-          
+
           if ( iprintinn .ge. 5 ) then
-C              write(*, 9050) 
-              write(10,9050) 
+C              write(*, 9050)
+              write(10,9050)
           end if
-          
+
           return
       end if
-      
+
 C     If the new point x + d is too close to the previous point x, inner
 C     algorithm stops
 
       samep = .true.
       do i = 1,nind
-c         if ( abs( x(i) - xtrial(i) ) .gt. 
+c         if ( abs( x(i) - xtrial(i) ) .gt.
 c    +         macheps * max( abs( xtrial(i) ), 1.0d0 ) ) then
           if ( xtrial(i) .gt. x(i) + macheps * max(1.0d0,abs(x(i))) .or.
-     +         xtrial(i) .lt. x(i) - macheps * max(1.0d0,abs(x(i))) ) 
+     +         xtrial(i) .lt. x(i) - macheps * max(1.0d0,abs(x(i))) )
      +    then
               samep = .false.
           end if
       end do
-      
+
 c     if ( samep .and. ftrial - f .le. macheps23 * abs(f) ) then
       if ( samep .and. ftrial .le. f + macheps23 * abs(f) ) then
-          
+
           betinfo = 3
-          
+
           if ( iprintinn .ge. 5 ) then
-C              write(*, 9060) 
-              write(10,9060) 
+C              write(*, 9060)
+              write(10,9060)
           end if
-          
+
           return
       end if
-      
+
 C     Calculate actual reduction of objective function
-      
+
       ared = f - ftrial
-      
-C     If there is not sufficient decrease of the function, the 
-C     trust-region radius is decreased and the new quadratic model 
-C     minimizer will be calculated. 
+
+C     If there is not sufficient decrease of the function, the
+C     trust-region radius is decreased and the new quadratic model
+C     minimizer will be calculated.
 
       if ( iprintinn .ge. 5 ) then
 C          write(*, 1010) deucn,pred,ared
@@ -616,7 +616,7 @@ C          write(*, 1010) deucn,pred,ared
 
 c     if ( deucn .le. macheps23 * xeucn .and.
 c    +     ared  .le. macheps23 * abs( f ) ) then
-         
+
 c     if ( samep .and. ared .le. macheps23 * abs(f) ) then
 
       if ( samep .and. ftrial .ge. f - macheps23 * abs(f) ) then
@@ -624,54 +624,54 @@ c     if ( samep .and. ared .le. macheps23 * abs(f) ) then
           call calcnal(nind,xtrial,m,lambda,rho,equatn,linear,gtrial,
      +    inform)
           if ( inform .lt. 0 ) return
-          
+
           go to 200
 
       end if
-      
+
       if ( ( pred .le. phieps .or. ared .ge. tralpha*pred ) .and.
      +     ( pred .gt. phieps .or. f .ge. ftrial ) ) then
 
-C         If extrapolation at step 5 is not to be performed, point 
+C         If extrapolation at step 5 is not to be performed, point
 C         xtrial is accepted.
 
           if ( extrp5 ) then
-          
+
               call extrapolation(nind,x,l,u,m,lambda,rho,equatn,linear,
      +        g,xtrial,ftrial,gtrial,d,stpl,amax,rbdnnz,rbdind,rbdtype,
      +        fmin,beta,etaext,maxextrap,extinfo,inform)
-              
+
               if ( inform .lt. 0 ) return
-              
+
               if ( extinfo .eq. 2 ) then
                   betinfo = 2
               else
                   betinfo = 0
               end if
-              
+
               if ( frstit ) then
                   trdelta = max( trdelta, stpl * deucn )
               end if
-              
+
               if ( betinfo .eq. 2 ) then
                   if ( iprintinn .ge. 5 ) then
-C                      write(*, 9050) 
-                      write(10,9050) 
+C                      write(*, 9050)
+                      write(10,9050)
                   end if
-                  
+
                   return
               end if
-              
+
 C             Update actual reduction of objective function
-              
+
               ared = f - ftrial
-              
+
           else
-              
+
               call calcnal(nind,xtrial,m,lambda,rho,equatn,linear,
      +        gtrial,inform)
               if ( inform .lt. 0 ) return
-              
+
           end if
 
       else
@@ -683,20 +683,20 @@ c         due to numerical issues, we may have deucn > trdelta
           frstit  = .false.
 
           if ( iprintinn .ge. 5 ) then
-C              write(*, 2050) 
-              write(10,2050) 
+C              write(*, 2050)
+              write(10,2050)
           end if
-          
+
           go to 100
 
       end if
-      
+
 C     ==================================================================
 C     Prepare for next call to this routine
 C     ==================================================================
-      
-C     Update the trust-region radius (which may or may not be used). 
-C     This update can only be done when the current iteration was a 
+
+C     Update the trust-region radius (which may or may not be used).
+C     This update can only be done when the current iteration was a
 C     trust-region iteration (and not an inner SPG one).
 
  200  continue
@@ -705,38 +705,38 @@ C     trust-region iteration (and not an inner SPG one).
           trdelta = max( 2.5d-1 * deucn, trdelmin )
       else
           if ( ( ared .ge. 0.5d0 * pred ) .and.
-     +         ( deucn .ge. trdelta - macheps23 * 
+     +         ( deucn .ge. trdelta - macheps23 *
      +         max( trdelta, 1.0d0 ) ) ) then
               trdelta = max( 2.0d0 * trdelta, trdelmin )
           else
               trdelta = max( trdelta, trdelmin )
           end if
       end if
-      
+
 C     If new point x is in the boundary, the inner algorithm stops
 C     and returns x as solution.
 
       if ( stpl .ge. amax ) then
-          
+
           betinfo = 1
-          
+
           if ( iprintinn .ge. 5 ) then
-C              write(*, 9030) 
-              write(10,9030) 
+C              write(*, 9030)
+              write(10,9030)
           end if
-          
+
       else
-          
+
           betinfo = 0
-          
+
           if ( iprintinn .ge. 5 ) then
-C              write(*, 9000) 
-              write(10,9000) 
+C              write(*, 9000)
+              write(10,9000)
           end if
       end if
-      
+
 C     Non-executable statements
-      
+
  1000 format(/,5X,'Trust-region iteration')
  1010 format(  5X,'deucn = ',1P,D7.1,' pred = ',1P,D11.4,
      +            ' ared = ',1P,D11.4)
@@ -760,7 +760,7 @@ C     Non-executable statements
  9010 format(  5X,'Flag of TR: ',
      +            'First-order stationary point close to boundary.')
  9020 format(/,5X,'Flag of TR: Second-order stationary point.')
- 9030 format(  5X,'Flag of TR: Point on the boundary.')      
+ 9030 format(  5X,'Flag of TR: Point on the boundary.')
  9040 format(  5X,'Flag of TR: Trust-region radius too small.')
  9050 format(  5X,'Flag of TR: Unbounded objective function?')
  9060 format(  5X,'Flag of TR: Very similar consecutive points.')
@@ -778,7 +778,7 @@ C     ******************************************************************
 C     SCALAR ARGUMENTS
       integer hnnz,nred
       double precision phi
-      
+
 C     ARRAY ARGUMENTS
       integer hcol(hnnz),hlin(hnnz)
       double precision g(nred),hval(hnnz),x(nred)
@@ -789,86 +789,86 @@ C     Evaluates the quadratic model phi(x) = 1/2 x^T H x + g^T x.
 
 C     LOCAL SCALARS
       integer col,i,lin
-      
+
 C     LOCAL ARRAYS
       double precision wd(nmax)
 
       do i = 1,nred
           wd(i) = 0.0d0
       end do
-      
+
       do i = 1,hnnz
           lin = hlin(i)
           col = hcol(i)
-          
+
           wd(lin) = wd(lin) + hval(i) * x(col)
           if ( lin .ne. col ) then
               wd(col) = wd(col) + hval(i) * x(lin)
           end if
       end do
-      
+
       phi = 0.0d0
       do i = 1,nred
           phi = phi + wd(i) * x(i)
       end do
-      
+
       phi = phi * 0.5d0
-      
+
       do i = 1,nred
           phi = phi + g(i) * x(i)
       end do
-      
-      end      
-      
+
+      end
+
 C     *****************************************************************
 C     *****************************************************************
 
-C     Algorithm that finds a unconstrained minimizer of objective 
-C     function inside the box of constraints, hits the boundary 
-C     (obtaining function decrease), or finds an interior point where 
-C     the objective function has sufficient decrease (compared to its 
+C     Algorithm that finds a unconstrained minimizer of objective
+C     function inside the box of constraints, hits the boundary
+C     (obtaining function decrease), or finds an interior point where
+C     the objective function has sufficient decrease (compared to its
 C     value at x). Extrapolation may be done.
 C
-C     When the current point x is "close to" the boundary, a Spectral 
-C     Projected Gradient (SPG) iteration is used to calculate the new 
-C     point. If this new point is at the boundary, the algorithm stops. 
+C     When the current point x is "close to" the boundary, a Spectral
+C     Projected Gradient (SPG) iteration is used to calculate the new
+C     point. If this new point is at the boundary, the algorithm stops.
 C     Otherwise, a new iteration begins.
 C
-C     When x is "far from" the boundary, trust-region radius is 
-C     determined and d is calculated using More-Sorensen algorithm to 
-C     solve the trust-region subproblem (which is to find a minimizer a 
-C     to a function quadratic model provided that the minimizer's 
+C     When x is "far from" the boundary, trust-region radius is
+C     determined and d is calculated using More-Sorensen algorithm to
+C     solve the trust-region subproblem (which is to find a minimizer a
+C     to a function quadratic model provided that the minimizer's
 C     Euclidian-norm is smaller than a given delta). The new point is
-C     xtrial = x + d. 
+C     xtrial = x + d.
 C
-C     If xtrial lies outside the box of constraints, it is truncated on 
-C     the boundary. This new y on the boundary will be candidate to be a 
-C     solution. If function value at new xtrial is smaller than function 
-C     value at x, inner algorithm stops with xtrial. Otherwise, the 
-C     trust-region radius is decreased so that the new solution d' to 
+C     If xtrial lies outside the box of constraints, it is truncated on
+C     the boundary. This new y on the boundary will be candidate to be a
+C     solution. If function value at new xtrial is smaller than function
+C     value at x, inner algorithm stops with xtrial. Otherwise, the
+C     trust-region radius is decreased so that the new solution d' to
 C     the trust-region subproblem makes x + d' be interior to the box.
 C     More-Sorensen algorithm is used to calculate d' too.
 C
-C     If xtrial lies inside the box, sufficient decrease of objective 
+C     If xtrial lies inside the box, sufficient decrease of objective
 C     function is tested. If it is true, xtrial is accepted as a solution
-C     candidate. If xtrial in on the boundary, inner algorithm stops and 
-C     if it is interior, a new iteration begins. If sufficient decrease is 
-C     not obtained, trust-region radius is decreased and a new quadratic 
-C     model minimizer is calculated (as in a classical trust-region 
+C     candidate. If xtrial in on the boundary, inner algorithm stops and
+C     if it is interior, a new iteration begins. If sufficient decrease is
+C     not obtained, trust-region radius is decreased and a new quadratic
+C     model minimizer is calculated (as in a classical trust-region
 C     algorithm for unconstrained minimization).
 C
-C     If the user wants, after calculating the candidate solution xtrial, 
-C     extrapolation may be performed. For this, set extrpi to true, 
-C     where i is the step of the inner algorithm that can call 
+C     If the user wants, after calculating the candidate solution xtrial,
+C     extrapolation may be performed. For this, set extrpi to true,
+C     where i is the step of the inner algorithm that can call
 C     extrapolation procedure. If extrp4 is true, extrapolation will be
 C     tried after xtrial hit the boundary. And if extrp5 is true,
 C     extrapolation will be tried after xtrial is calculated by
 C     trust-region algorithm, when xtrial is interior and provides
 C     sufficient decrease of objective function.
 C
-C     If gradient at current point is null, inner algorithm stops 
-C     declaring "first-order stationary point". If quadratic model 
-C     minimum is 0, inner algorithm stops declaring "second-order 
+C     If gradient at current point is null, inner algorithm stops
+C     declaring "first-order stationary point". If quadratic model
+C     minimum is 0, inner algorithm stops declaring "second-order
 C     stationary point".
 C
 C     M. Andretta, E. G. Birgin and J. M. Martinez, ''Practical active-set
@@ -876,7 +876,7 @@ C     Euclidian trust-region method with spectral projected gradients for
 C     bound-constrained minimization'', Optimization 54, pp. 305-325, 2005.
 C
 C     On Entry
-C      
+C
 C     n        integer
 C              dimension of full space
 C
@@ -897,18 +897,18 @@ C     lambda   double precision lambda(m)
 C     rho      double precision rho(m)
 C     equatn   logical equatn(m)
 C     linear   logical linear(m)
-C              These five parameters are not used nor modified by 
+C              These five parameters are not used nor modified by
 C              BETRA and they are passed as arguments to the user-
-C              defined subroutines evalal and evalnal to compute the 
-C              objective function and its gradient, respectively. 
-C              Clearly, in an Augmented Lagrangian context, if BETRA is 
-C              being used to solve the bound-constrained subproblems, m 
-C              would be the number of constraints, lambda the Lagrange 
+C              defined subroutines evalal and evalnal to compute the
+C              objective function and its gradient, respectively.
+C              Clearly, in an Augmented Lagrangian context, if BETRA is
+C              being used to solve the bound-constrained subproblems, m
+C              would be the number of constraints, lambda the Lagrange
 C              multipliers approximation and rho the penalty parameters.
-C              equatn is logical array that, for each constraint, 
+C              equatn is logical array that, for each constraint,
 C              indicates whether the constraint is an equality constraint
 C              (.true.) or an inequality constraint (.false.). Finally,
-C              linear is logical array that, for each constraint, 
+C              linear is logical array that, for each constraint,
 C              indicates whether the constraint is a linear constraint
 C              (.true.) or a nonlinear constraint (.false.)
 C
@@ -918,15 +918,15 @@ C
 C     g        double precision g(n)
 C              gradient at x
 C
-C     trdelta  double precision 
+C     trdelta  double precision
 C              trust-region radius
 C
 C     newdelta double precision
-C              trust-region radius is set to the maximum between newdelta 
+C              trust-region radius is set to the maximum between newdelta
 C              and trdelta
-C     
+C
 C     mslamb   double precision
-C              value that More-Sorensen algorithm calculates to find 
+C              value that More-Sorensen algorithm calculates to find
 C              the trust-region subproblem solution (MEQB)
 C
 C     epsg     double precision
@@ -942,13 +942,13 @@ C     gpeucn   double precision
 C              projected-gradient Euclidian norm
 C
 C     On Return
-C      
+C
 C     trdelta  double precision
 C              updated trut-region radius
 C
 C     newdelta double precision
-C              when the trust-region radius trdelta is decreased so that 
-C              the point x + d fit the current face, newdelta is set to 
+C              when the trust-region radius trdelta is decreased so that
+C              the point x + d fit the current face, newdelta is set to
 C              the previous value of trdelta. Otherwise, it is set to 0
 C
 C     mslamb   double precision
@@ -959,11 +959,11 @@ C              direction computed such that xtrial = x + d
 C
 C     rbdind   integer rbdind(n)
 C              indices of variables that reached their bounds
-C     
+C
 C     rbdtype  character rbdtype(n)
-C              if variable rbdind(i) reached its lower bound, 
+C              if variable rbdind(i) reached its lower bound,
 C              rbdtype(i) = 'L'. If variable rbdind(i) reached its upper
-C              bound, rbdtype(i) = 'U'. 
+C              bound, rbdtype(i) = 'U'.
 C
 C     xtrial   double precision xtrial(n)
 C              solution candidate, with inform as described bellow
@@ -984,9 +984,9 @@ C     memfail  logical
 C              true iff linear solver failed because of lack of memory
 C
 C     betinfo  integer
-C              This output parameter tells what happened in this 
+C              This output parameter tells what happened in this
 C              subroutine, according to the following conventions:
-C      
+C
 C              0 = Sufficient decrease of the function;
 C
 C              1 = x hits the boundary;

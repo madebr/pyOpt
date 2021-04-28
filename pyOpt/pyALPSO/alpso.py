@@ -43,8 +43,11 @@ To Do:
 # =============================================================================
 # Standard Python modules
 # =============================================================================
-import os, sys, random, time
+import os
 import pdb
+import random
+import sys
+import time
 from math import floor
 
 # =============================================================================
@@ -75,8 +78,7 @@ def alpso(dimensions, constraints, neqcons, xtype, x0, xmin, xmax, swarmsize, nh
           nhm, maxOutIter, maxInnIter, minInnIter, stopCriteria, stopIters, etol,
           itol, rtol, atol, dtol, prtOutIter, prtInnIter, r0, vinit, vmax, c1, c2, w1, w2,
           ns, nf, vcrazy, fileout, filename, logfile, hstfile, rseed, scale, nhs, objfunc):
-    """
-    Python Version of the Augmented Lagrangian Particle Swarm Optimizer
+    """Python Version of the Augmented Lagrangian Particle Swarm Optimizer.
 
     Documentation last updated:  April. 29, 2008 - Ruben E. Perez
     """

@@ -1,8 +1,8 @@
 !    -*- f90 -*-
 ! Note: the context of this file is case sensitive.
 
-python module mmfd__user__routines 
-    interface mmfd_user_interface 
+python module mmfd__user__routines
+    interface mmfd_user_interface
         subroutine objfun(ndv,ncon,xx,obj,g)
             integer intent(in) :: ndv
             integer intent(in) :: ncon
@@ -21,7 +21,7 @@ python module mmfd__user__routines
         end subroutine objgrd
     end interface mmfd_user_interface
 end python module mmfd__user__routines
-python module mmfd ! in 
+python module mmfd ! in
     interface  ! in :mmfd
         subroutine mmfd(iiopt,iioned,iiprint,ndv,ncon,xx,xl,xu,obj,g,idg,wk,nrwk,iwk,nriwk,ifile,ct,ctmin,dabobj,delobj,thetaz,pmlt,itmax,itrmop,nfun,ngrd,objfun,objgrd) ! in :mmfd:source/mmfd.f
             use mmfd__user__routines
@@ -68,5 +68,5 @@ python module mmfd ! in
         subroutine closeunit(unitnum) ! in :mmfd:source/closeunit.f
             integer intent(in) :: unitnum
         end subroutine closeunit
-    end interface 
+    end interface
 end python module mmfd

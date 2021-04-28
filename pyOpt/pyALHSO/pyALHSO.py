@@ -20,7 +20,7 @@ __version__ = '$Revision: $'
 
 '''
 To Do:
-	- 
+	-
 '''
 
 # =============================================================================
@@ -31,11 +31,13 @@ try:
 except:
 	raise ImportError('ALHSO shared library failed to import')
 
+import copy
 # =============================================================================
 # Standard Python modules
 # =============================================================================
-import os, sys
-import copy, time
+import os
+import sys
+import time
 
 # =============================================================================
 # External Python modules
@@ -63,23 +65,22 @@ eps = 2.0*eps
 # ALHSO Optimizer Class
 # =============================================================================
 class ALHSO(Optimizer):
-	
+
 	'''
 	ALHSO Optimizer Class - Inherited from Optimizer Abstract Class
 	'''
-	
+
 	def __init__(self, pll_type=None, *args, **kwargs):
-		
-		'''
-		ALHSO Optimizer Class Initialization
-		
+
+		"""ALHSO Optimizer Class Initialization.
+
 		**Keyword arguments:**
-		
+
 		- pll_type -> STR: Parallel Implementation (None, 'POA'-Parallel Objective Analysis), *Default* = None
-		
+
 		Documentation last updated:  Feb. 16, 2010 - Peter W. Jansen
-		'''
-		
+		"""
+
 		#
 		if (pll_type == None):
 			self.poa = False
@@ -87,8 +88,8 @@ class ALHSO(Optimizer):
 			self.poa = True
 		else:
 			raise ValueError("pll_type must be either None or 'POA'")
-		
-		# 
+
+		#
 		name = 'ALHSO'
 		category = 'Global Optimizer'
 		def_opts = {
@@ -101,7 +102,7 @@ class ALHSO(Optimizer):
 		'stopcriteria':[int,1],			# Stopping Criteria Flag
 		'stopiters':[int,10],			# Consecutively Number of Outer Iterations for which the Stopping Criteria must be Satisfied
 		'etol':[float,1e-6],			# Absolute Tolerance for Equality constraints
-		'itol':[float,1e-6],			# Absolute Tolerance for Inequality constraints 
+		'itol':[float,1e-6],			# Absolute Tolerance for Inequality constraints
 		'atol':[float,1e-6],			# Absolute Tolerance for Objective Function
 		'rtol':[float,1e-6],			# Relative Tolerance for Objective Function
 		'prtoutiter':[int,0],			# Number of Iterations Before Print Outer Loop Information
@@ -111,37 +112,36 @@ class ALHSO(Optimizer):
 		'fileout':[int,1],				# Flag to Turn On Output to filename
 		'filename':[str,'ALHSO.out'],	# We could probably remove fileout flag if filename or fileinstance is given
 		'seed':[float,0],				# Random Number Seed (0 - Auto-Seed based on time clock)
-		'scaling':[int,1],				# Design Variables Scaling Flag (0 - no scaling, 1 - scaling between [-1,1]) 
+		'scaling':[int,1],				# Design Variables Scaling Flag (0 - no scaling, 1 - scaling between [-1,1])
 		}
 		informs = {}
 		Optimizer.__init__(self, name, category, def_opts, informs, *args, **kwargs)
-		
-		
+
+
 	def __solve__(self, opt_problem={}, store_sol=True, disp_opts=False, store_hst=False, hot_start=False, *args, **kwargs):
-		
-		'''
-		Run Optimizer (Optimize Routine)
-		
+
+		"""Run Optimizer (Optimize Routine)
+
 		**Keyword arguments:**
-		
+
 		- opt_problem -> INST: Optimization instance
-		- store_sol -> BOOL: Store solution in Optimization class flag, *Default* = True 
+		- store_sol -> BOOL: Store solution in Optimization class flag, *Default* = True
 		- disp_opts -> BOOL: Flag to display options in solution text, *Default* = False
 		- store_hst -> BOOL/STR: Flag/filename to store optimization history, *Default* = False
 		- hot_start -> BOOL/STR: Flag/filename to read optimization history, *Default* = False
-		
+
 		Additional arguments and keyword arguments are passed to the objective function call.
-		
+
 		Documentation last updated:  February. 17, 2011 - Peter W. Jansen
-		'''
-		
+		"""
+
 		#
 		if 'display_opts' in kwargs:
 			sol_dispOpt = kwargs['display_opts']
 			del kwargs['display_opts']
 		else:
 			sol_dispOpt = False
-		
+
 		#
 		if self.poa:
 			try:
@@ -160,19 +160,19 @@ class ALHSO(Optimizer):
 		else:
 			self.pll = False
 			self.myrank = 0
-		
+
 		myrank = self.myrank
-		
+
 		#
 		def_fname = self.options['filename'][1].split('.')[0]
 		hos_file, log_file, tmp_file = self._setHistory(opt_problem.name, store_hst, hot_start, def_fname)
-		
-		
+
+
 		#======================================================================
 		# ALHSO - Objective/Constraint Values Function
 		#======================================================================
 		def objconfunc(x, *args, **kwargs):
-			
+
 			# Variables Groups Handling
 			if opt_problem.use_groups:
 				xg = {}
@@ -184,7 +184,7 @@ class ALHSO(Optimizer):
 				xn = xg
 			else:
 				xn = x
-			
+
 			# Evaluate User Function
 			fail = 0
 			ff = []
@@ -197,14 +197,14 @@ class ALHSO(Optimizer):
 						hos_file.close()
 					else:
 						[ff,gg,fail] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
-			
+
 			if self.pll:
 				self.hot_start = Bcast(self.hot_start,root=0)
 			if self.hot_start and self.pll:
 				[ff,gg,fail] = Bcast([ff,gg,fail],root=0)
-			else:	
+			else:
 				[ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
-			
+
 			# Store History
 			if (myrank == 0):
 				if self.sto_hst:
@@ -212,7 +212,7 @@ class ALHSO(Optimizer):
 					log_file.write(ff,'obj')
 					log_file.write(gg,'con')
 					log_file.write(fail,'fail')
-			
+
 			# Assigenment
 			g = numpy.zeros(len(opt_problem._constraints.keys()),float)
 			if (fail == 1):
@@ -233,11 +233,11 @@ class ALHSO(Optimizer):
 						g[i] = gg[i].astype(float)
 					else:
 						g[i] = gg[i]
-			
+
 			return f,g
-		
-		
-		
+
+
+
 		# Variables Handling
 		n = len(opt_problem._variables.keys())
 		xl = numpy.zeros(n,float)
@@ -252,8 +252,8 @@ class ALHSO(Optimizer):
 			else:
 				type[i] = 1
 			i += 1
-		
-		# Variables Groups Handling 
+
+		# Variables Groups Handling
 		if opt_problem.use_groups:
 			group_ids = {}
 			k = 0
@@ -261,7 +261,7 @@ class ALHSO(Optimizer):
 				group_len = len(opt_problem._vargroups[key]['ids'])
 				group_ids[opt_problem._vargroups[key]['name']] = [k,k+group_len]
 				k += group_len
-		
+
 		# Constraints Handling
 		m = len(opt_problem._constraints.keys())
 		me = 0
@@ -271,12 +271,12 @@ class ALHSO(Optimizer):
 				if opt_problem._constraints[key].type == 'e':
 					me += 1
 			#i += 1
-		
+
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
 		nobj = len(opt_problem._objectives.keys())
-		
-		
+
+
 		# Setup argument list values
 		hms = self.options['hms'][1]
 		imax = self.options['maxoutiter'][1]
@@ -284,7 +284,7 @@ class ALHSO(Optimizer):
 		if (self.options['stopcriteria'][1]>=0 and self.options['stopcriteria'][1]<=1):
 			stop = self.options['stopcriteria'][1]
 		else:
-			raise IOError('Incorrect Stopping Criteria Setting')
+			raise OSError('Incorrect Stopping Criteria Setting')
 		nstop = self.options['stopiters'][1]
 		etol = self.options['etol'][1]
 		itol = self.options['itol'][1]
@@ -306,7 +306,7 @@ class ALHSO(Optimizer):
 			if (self.options['fileout'][1]>=0 and self.options['fileout'][1]<=2):
 				fileout = self.options['fileout'][1]
 			else:
-				raise IOError('Incorrect fileout Setting')
+				raise OSError('Incorrect fileout Setting')
 		else:
 			fileout = 0
 		filename = self.options['filename'][1]
@@ -329,15 +329,15 @@ class ALHSO(Optimizer):
 			for key in opt_problem._variables.keys():
 				xs.append(opt_problem._variables[key].value)
 			xs = numpy.array(xs)
-		
-		
+
+
 		# Run ALHSO
 		t0 = time.time()
 		opt_x,opt_f,opt_g,opt_lambda,nfevals,rseed = alhso.alhso(n,m,me,
 			type,xs,xl,xu,hms,imax,cmax,stop,nstop,etol,itol,atol,rtol,oout,
 			iout,rinit,hmcr,par,bw,fileout,filename,seed,scale,objconfunc)
-		sol_time = time.time() - t0 
-		
+		sol_time = time.time() - t0
+
 		if (myrank == 0):
 			if self.sto_hst:
 				log_file.close()
@@ -348,34 +348,34 @@ class ALHSO(Optimizer):
 					os.remove(name+'.bin')
 					os.rename(name+'_tmp.cue',name+'.cue')
 					os.rename(name+'_tmp.bin',name+'.bin')
-		
+
 		# Store Results
 		if store_sol:
-			
+
 			sol_name = 'ALHSO Solution to ' + opt_problem.name
-			
+
 			sol_options = copy.copy(self.options)
 			if 'defaults' in sol_options:
 				del sol_options['defaults']
-			
+
 			sol_inform = {}
 			#sol_inform['value'] = inform
 			#sol_inform['text'] = self.getInform(inform)
-			
+
 			sol_evals = nfevals
-			
+
 			sol_vars = copy.deepcopy(opt_problem._variables)
 			i = 0
 			for key in sol_vars.keys():
 				sol_vars[key].value = opt_x[i]
 				i += 1
-			
+
 			sol_objs = copy.deepcopy(opt_problem._objectives)
 			i = 0
 			for key in sol_objs.keys():
 				sol_objs[key].value = opt_f	# Note: takes only one!
 				i += 1
-			
+
 			if m > 0:
 				sol_cons = copy.deepcopy(opt_problem._constraints)
 				i = 0
@@ -384,98 +384,93 @@ class ALHSO(Optimizer):
 					i += 1
 			else:
 				sol_cons = {}
-			
+
 			if m > 0:
 				sol_lambda = numpy.zeros(m ,float)
 				for i in range(m):
 					sol_lambda[i] = opt_lambda[i]
 			else:
 				sol_lambda = {}
-			
-			
-			opt_problem.addSol(self.__class__.__name__, sol_name, objfunc, sol_time, 
-				sol_evals, sol_inform, sol_vars, sol_objs, sol_cons, sol_options, 
+
+
+			opt_problem.addSol(self.__class__.__name__, sol_name, objfunc, sol_time,
+				sol_evals, sol_inform, sol_vars, sol_objs, sol_cons, sol_options,
 				display_opts=disp_opts, Lambda=sol_lambda, Seed=rseed,
 				myrank=myrank, arguments=args, **kwargs)
-		
-		
+
+
 		return opt_f, opt_x, {'opt_g':opt_g,'fevals':sol_evals,'time':sol_time}
-		
-		
+
+
 	def _on_setOption(self, name, value):
-		
-		'''
-		Set Optimizer Option Value (Optimizer Specific Routine)
-		
+
+		"""Set Optimizer Option Value (Optimizer Specific Routine)
+
 		Documentation last updated:  May. 16, 2008 - Ruben E. Perez
-		'''
-		
+		"""
+
 		pass
-		
-		
+
+
 	def _on_getOption(self, name):
-		
-		'''
-		Get Optimizer Option Value (Optimizer Specific Routine)
-		
+
+		"""Get Optimizer Option Value (Optimizer Specific Routine)
+
 		Documentation last updated:  May. 16, 2008 - Ruben E. Perez
-		'''
-		
+		"""
+
 		pass
-		
-		
+
+
 	def _on_getInform(self, infocode):
-		
-		'''
-		Get Optimizer Result Information (Optimizer Specific Routine)
-		
+
+		"""Get Optimizer Result Information (Optimizer Specific Routine)
+
 		Keyword arguments:
 		-----------------
 		id -> STRING: Option Name
-		
+
 		Documentation last updated:  May. 16, 2008 - Ruben E. Perez
-		'''
-		
+		"""
+
 		pass
-		
-		
+
+
 	def _on_flushFiles(self):
-		
-		'''
-		Flush the Output Files (Optimizer Specific Routine)
-		
+
+		"""Flush the Output Files (Optimizer Specific Routine)
+
 		Documentation last updated:  August. 09, 2009 - Ruben E. Perez
-		'''
-		
-		pass	
-	
+		"""
+
+		pass
+
 
 
 # =============================================================================
 # HSO Optimizer Class
 # =============================================================================
 class HSO(Optimizer):
-	
+
 	'''
 	HSO Optimizer Class - Inherited from Optimizer Abstract Class
 	'''
-	
+
 	def __init__(self, *args, **kwargs):
-		
-		'''
-		HSO Optimizer Class Initialization
-		
+
+		"""HSO Optimizer Class Initialization.
+
 		Documentation last updated:  October. 22, 2008 - Ruben E. Perez
-		'''
-		
-		# 
+		"""
+
+		#
 		name = 'HSO'
 		category = 'Global Optimizer'
 		def_opts = {
 		'hms':[int,10],				# Memory Size [4,10]
-		'dbw':[float,0.01],			# 
-		'hmcr':[float,0.96],		# 
-		'par':[float,0.6],			# 
+		'dbw':[float,0.01],			#
+		'hmcr':[float,0.96],		#
+		'par':[float,0.6],			#
 		'maxiter':[int,1e4],		# Maximum Number Iterations
 		'printout':[int,0],			# Flag to Turn On Information Output
 		'xinit':[int,0],			# Initial Position Flag (0 - no position, 1 - position given)
@@ -483,29 +478,28 @@ class HSO(Optimizer):
 		}
 		informs = {}
 		Optimizer.__init__(self, name, category, def_opts, informs, *args, **kwargs)
-		
-		
+
+
 	def __solve__(self, opt_problem={}, store_sol=True, disp_opts=False, *args, **kwargs):
-		
-		'''
-		Run Optimizer (Optimize Routine)
-		
+
+		"""Run Optimizer (Optimize Routine)
+
 		Documentation last updated:  May. 16, 2008 - Ruben E. Perez
-		'''
-		
+		"""
+
 		#
 		if 'display_opts' in kwargs:
 			sol_dispOpt = kwargs['display_opts']
 			del kwargs['display_opts']
 		else:
 			sol_dispOpt = False
-		
-		
+
+
 		#======================================================================
 		# HSO - Objective/Constraint Values Function
 		#======================================================================
 		def objconfunc(x, *args, **kwargs):
-			
+
 			# Variables Groups Handling
 			if opt_problem.use_groups:
 				xg = {}
@@ -517,11 +511,11 @@ class HSO(Optimizer):
 				xn = xg
 			else:
 				xn = x
-			
+
 			# Evaluate User Function
 			[ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
-			
-			# 
+
+			#
 			g = numpy.zeros(len(opt_problem._constraints.keys()),float)
 			if (fail == 1):
 				# Objective Assigment
@@ -541,11 +535,11 @@ class HSO(Optimizer):
 						g[i] = gg[i].astype(float)
 					else:
 						g[i] = gg[i]
-			
+
 			return f,g
-		
-		
-		
+
+
+
 		# Variables Handling
 		n = len(opt_problem._variables.keys())
 		xl = numpy.zeros(n,float)
@@ -560,8 +554,8 @@ class HSO(Optimizer):
 			else:
 				type[i] = 1
 			i += 1
-		
-		# Variables Groups Handling 
+
+		# Variables Groups Handling
 		if opt_problem.use_groups:
 			group_ids = {}
 			k = 0
@@ -569,7 +563,7 @@ class HSO(Optimizer):
 				group_len = len(opt_problem._vargroups[key]['ids'])
 				group_ids[opt_problem._vargroups[key]['name']] = [k,k+group_len]
 				k += group_len
-		
+
 		# Constraints Handling
 		m = len(opt_problem._constraints.keys())
 		me = 0
@@ -579,12 +573,12 @@ class HSO(Optimizer):
 				if opt_problem._constraints[key].type == 'e':
 					me += 1
 			#i += 1
-		
+
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
 		nobj = len(opt_problem._objectives.keys())
-		
-		
+
+
 		# Setup argument list values
 		hms = self.options['hms'][1]
 		dbw = self.options['dbw'][1]
@@ -595,7 +589,7 @@ class HSO(Optimizer):
 		if (self.options['printout'][1]>=0 or self.options['printout'][1]<=1):
 			printout = self.options['printout'][1]
 		else:
-			raise IOError('Incorrect printout Setting')
+			raise OSError('Incorrect printout Setting')
 		seed = self.options['seed'][1]
 		if seed == 0:
 			seed = time.time()
@@ -605,41 +599,41 @@ class HSO(Optimizer):
 			for key in opt_problem._variables.keys():
 				xs.append(opt_problem._variables[key].value)
 			xs = numpy.array(xs)
-		
-		
+
+
 		# Run HSO
 		t0 = time.time()
 		opt_x,opt_f,opt_g,nfevals,rseed = alhso.chso(n,m,me,type,xs,xl,xu,bw,hms,hmcr,par,maxiter,printout,seed,objconfunc)
-		sol_time = time.time() - t0 
-		
-		
+		sol_time = time.time() - t0
+
+
 		# Store Results
 		if store_sol:
-			
+
 			sol_name = 'HSO Solution to ' + opt_problem.name
-			
+
 			sol_options = copy.copy(self.options)
 			if 'defaults' in sol_options:
 				del sol_options['defaults']
-			
+
 			sol_inform = {}
 			#sol_inform['value'] = inform
 			#sol_inform['text'] = self.getInform(inform)
-			
+
 			sol_evals = nfevals
-			
+
 			sol_vars = copy.deepcopy(opt_problem._variables)
 			i = 0
 			for key in sol_vars.keys():
 				sol_vars[key].value = opt_x[i]
 				i += 1
-			
+
 			sol_objs = copy.deepcopy(opt_problem._objectives)
 			i = 0
 			for key in sol_objs.keys():
 				sol_objs[key].value = opt_f	# Note: takes only one!
 				i += 1
-			
+
 			if m > 0:
 				sol_cons = copy.deepcopy(opt_problem._constraints)
 				i = 0
@@ -648,7 +642,7 @@ class HSO(Optimizer):
 					i += 1
 			else:
 				sol_cons = {}
-			
+
 			sol_lambda = {}
 			#if m > 0:
 			#	sol_lambda = numpy.zeros(m ,float)
@@ -656,61 +650,57 @@ class HSO(Optimizer):
 			#		sol_lambda[i] = opt_lambda[i]
 			#else:
 			#	sol_lambda = {}
-			
-			
-			opt_problem.addSol(self.__class__.__name__, sol_name, objfunc, sol_time, 
-				sol_evals, sol_inform, sol_vars, sol_objs, sol_cons, sol_options, 
+
+
+			opt_problem.addSol(self.__class__.__name__, sol_name, objfunc, sol_time,
+				sol_evals, sol_inform, sol_vars, sol_objs, sol_cons, sol_options,
 				display_opts=disp_opts, Lambda=sol_lambda, Seed=rseed,
 				arguments=args, **kwargs)
-		
-		
+
+
 		return opt_f, opt_x, {}
-		
-		
+
+
 	def _on_setOption(self, name, value):
-		
-		'''
-		Set Optimizer Option Value (Optimizer Specific Routine)
-		
+
+		"""Set Optimizer Option Value (Optimizer Specific Routine)
+
 		Documentation last updated:  May. 16, 2008 - Ruben E. Perez
-		'''
-		
+		"""
+
 		pass
-		
-		
+
+
 	def _on_getOption(self, name):
-		
-		'''
-		Get Optimizer Option Value (Optimizer Specific Routine)
-		
+
+		"""Get Optimizer Option Value (Optimizer Specific Routine)
+
 		Documentation last updated:  May. 16, 2008 - Ruben E. Perez
-		'''
-		
+		"""
+
 		pass
-		
-		
+
+
 	def _on_getInform(self, infocode):
-		
-		'''
-		Get Optimizer Result Information (Optimizer Specific Routine)
-		
+
+		"""Get Optimizer Result Information (Optimizer Specific Routine)
+
 		Keyword arguments:
 		-----------------
 		id -> STRING: Option Name
-		
+
 		Documentation last updated:  May. 16, 2008 - Ruben E. Perez
-		'''
-		
+		"""
+
 		pass
-		
-		
+
+
 	def _on_flushFiles(self):
-		
-		'''
-		Flush the Output Files (Optimizer Specific Routine)
-		
+
+		"""Flush the Output Files (Optimizer Specific Routine)
+
 		Documentation last updated:  August. 09, 2009 - Ruben E. Perez
-		'''
-		
+		"""
+
 		pass
-	
+

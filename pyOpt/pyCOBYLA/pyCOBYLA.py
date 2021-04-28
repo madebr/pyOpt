@@ -39,11 +39,13 @@ try:
 except:
     raise ImportError('COBYLA shared library failed to import')
 
+import copy
 # =============================================================================
 # Standard Python modules
 # =============================================================================
-import os, sys
-import copy, time
+import os
+import sys
+import time
 
 # =============================================================================
 # External Python modules
@@ -78,15 +80,14 @@ class COBYLA(Optimizer):
     '''
 
     def __init__(self, pll_type=None, *args, **kwargs):
-        '''
-        COBYLA Optimizer Class Initialization
+        """COBYLA Optimizer Class Initialization.
 
         **Keyword arguments:**
 
         - pll_type -> STR: Parallel Implementation (None, 'POA'-Parallel Objective Analysis), *Default* = None
 
         Documentation last updated:  Feb. 16, 2010 - Peter W. Jansen
-        '''
+        """
 
         #
         if (pll_type == None):
@@ -124,8 +125,7 @@ class COBYLA(Optimizer):
                   hot_start=False,
                   *args,
                   **kwargs):
-        '''
-        Run Optimizer (Optimize Routine)
+        """Run Optimizer (Optimize Routine)
 
         **Keyword arguments:**
 
@@ -138,7 +138,7 @@ class COBYLA(Optimizer):
         Additional arguments and keyword arguments are passed to the objective function call.
 
         Documentation last updated:  February. 2, 2011 - Peter W. Jansen
-        '''
+        """
 
         if self.poa:
             try:
@@ -263,9 +263,9 @@ class COBYLA(Optimizer):
                 xu.append(opt_problem._variables[key].upper)
                 xx.append(opt_problem._variables[key].value)
             elif (opt_problem._variables[key].type == 'i'):
-                raise IOError('COBYLA cannot handle integer design variables')
+                raise OSError('COBYLA cannot handle integer design variables')
             elif (opt_problem._variables[key].type == 'd'):
-                raise IOError('COBYLA cannot handle discrete design variables')
+                raise OSError('COBYLA cannot handle discrete design variables')
 
         xl = numpy.array(xl)
         xu = numpy.array(xu)
@@ -288,7 +288,7 @@ class COBYLA(Optimizer):
         if ncon > 0:
             for key in opt_problem._constraints.keys():
                 if opt_problem._constraints[key].type == 'e':
-                    raise IOError('COBYLA cannot handle equality constraints')
+                    raise OSError('COBYLA cannot handle equality constraints')
                     #neqc += 1
 
                 #gg.append(opt_problem._constraints[key].value)
@@ -324,7 +324,7 @@ class COBYLA(Optimizer):
             if (self.options['IPRINT'][1] >= 0):
                 iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
             else:
-                raise IOError('Incorrect Output Level Setting')
+                raise OSError('Incorrect Output Level Setting')
 
         else:
             iprint = numpy.array([0], numpy.int)
@@ -421,39 +421,35 @@ class COBYLA(Optimizer):
         return ff, xx, sol_inform
 
     def _on_setOption(self, name, value):
-        '''
-        Set Optimizer Option Value (Optimizer Specific Routine)
+        """Set Optimizer Option Value (Optimizer Specific Routine)
 
         Documentation last updated:  May. 17, 2008 - Ruben E. Perez
-        '''
+        """
         pass
 
     def _on_getOption(self, name):
-        '''
-        Get Optimizer Option Value (Optimizer Specific Routine)
+        """Get Optimizer Option Value (Optimizer Specific Routine)
 
         Documentation last updated:  May. 17, 2008 - Ruben E. Perez
-        '''
+        """
         pass
 
     def _on_getInform(self, infocode):
-        '''
-        Get Optimizer Result Information (Optimizer Specific Routine)
+        """Get Optimizer Result Information (Optimizer Specific Routine)
 
         Keyword arguments:
         -----------------
         id -> STRING: Option Name
 
         Documentation last updated:  May. 17, 2008 - Ruben E. Perez
-        '''
+        """
         return self.informs[infocode]
 
     def _on_flushFiles(self):
-        '''
-        Flush the Output Files (Optimizer Specific Routine)
+        """Flush the Output Files (Optimizer Specific Routine)
 
         Documentation last updated:  August. 09, 2009 - Ruben E. Perez
-        '''
+        """
 
         iPrint = self.options['IPRINT'][1]
         if (iPrint >= 0):

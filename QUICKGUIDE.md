@@ -11,15 +11,15 @@ pyOpt is design to solve general constrained nonlinear optimization problems:
 ```
     min  f(x)
      x
-   
+
     s.t. g_j(x)  = 0, j = 1, ..., m_e
          g_j(x) <= 0, j = m_e + 1, ..., m
-   
+
         x_i_L <= x_i <= x_i_U, i = 1, ..., n
 ```
 
   where:
-  
+
   * `x` is the vector of design variables
   * `f(x)` is a nonlinear function
   * `g(x)` is a linear or nonlinear function
@@ -72,7 +72,7 @@ opt_prob.addObj('name', value=0.0, optimum=0.0)
 ```
 
 ### Adding Design Variables
-	
+
 #### Single Design variable
 
 ```python
@@ -125,7 +125,7 @@ opt = pySNOPT.SNOPT()
 ```
 
 ### Setting Optimizer Options
-	
+
 During instantiation:
 
 ```python
@@ -185,7 +185,7 @@ where:
 ```python
 opt_prob.write2file(outfile='', disp_sols=False, solutions=[])
 ```
-  
+
 where:
 
 *   `outfile`: filename or file instance (default name=`opt_prob name[0].txt`)

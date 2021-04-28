@@ -94,9 +94,9 @@ C                 sc(j) = 1.0d0
 C             end do
 C
 C             and a single call to tevalgjacp with p=0 and work equal
-C             to 'J' or 'T' may be preserved to compute the gradient 
+C             to 'J' or 'T' may be preserved to compute the gradient
 C             of the objective function g.
- 
+
 C             Scale constraints
 
               do j = 1,m

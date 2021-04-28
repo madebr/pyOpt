@@ -1051,14 +1051,14 @@ C     SCALAR ARGUMENTS
 C     ARRAY ARGUMENTS
       double precision g(n),p(m),q(n),x(n)
 
-C     The meaning of argument work follows: work = 'j' or 'J' means that 
-C     q is an input array argument and that p = Jacobian x q must be 
-C     computed, while work = 't' or 'T' means that p is an input array 
-C     argument and that q = Jacobian^t x p must be computed. Moreover, a 
-C     capital letter (i.e. 'J' or 'T') means that the gradient of the 
-C     objective function g must also be computed. A lower letter (i.e. 
-C     'j' or 't') means that only the product with the Jacobian is 
-C     required. In the later case, input array argument g MUST NOT be 
+C     The meaning of argument work follows: work = 'j' or 'J' means that
+C     q is an input array argument and that p = Jacobian x q must be
+C     computed, while work = 't' or 'T' means that p is an input array
+C     argument and that q = Jacobian^t x p must be computed. Moreover, a
+C     capital letter (i.e. 'J' or 'T') means that the gradient of the
+C     objective function g must also be computed. A lower letter (i.e.
+C     'j' or 't') means that only the product with the Jacobian is
+C     required. In the later case, input array argument g MUST NOT be
 C     modified nor referenced.
 
       include "dim.par"

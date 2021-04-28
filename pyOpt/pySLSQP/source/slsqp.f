@@ -180,11 +180,11 @@ C***********************************************************************
      1        JW(L_JW), LA, M, MEQ, MINEQ, MODE, N, N1, IPRINT, IOUT,
      2        NFUNC, NGRAD,
      3        IEXACT, INCONS, IRESET, ITERMX, LINE, N2, N3
-     
+
       DOUBLE PRECISION ACC, A(LA,N+1), C(LA), F, G(N+1),
-     *     X(N), XL(N), XU(N), W(L_W), 
+     *     X(N), XL(N), XU(N), W(L_W),
      *     ALPHA, F0, GS, H1, H2, H3, H4, T, T0, TOL
-     
+
       EXTERNAL SLFUNC,SLGRAD
 
       CHARACTER*(*) IFILE
@@ -279,9 +279,9 @@ C
      * ITERMX,LINE,N1,N2,N3)
 C
       IF (ABS(MODE).EQ.1) GOTO 4
-C      
+C
     3 CONTINUE
-    
+
 C
 C   PRINT FINAL
 C
@@ -297,12 +297,12 @@ C
 C     ------------------------------------------------------------------
 C                                FORMATS
 C     ------------------------------------------------------------------
-C  
+C
  1000 FORMAT(////,3X,
      1 60H------------------------------------------------------------,
      2 15H---------------,
      3 /,5X,59HSTART OF THE SEQUENTIAL LEAST SQUARES PROGRAMMING ALGORITHM,
-     4     /,3X, 
+     4     /,3X,
      5 60H------------------------------------------------------------,
      6 15H---------------)
  1100 FORMAT(/,5X,11HPARAMETERS:,/,8X,5HACC =,D13.4,/,8X,9HMAXITER =,
@@ -313,4 +313,4 @@ C
  1460 FORMAT(8X,30HNUMBER OF GRAD-CALLS:  NGRAD =,I4)
 C
       END
-      
+

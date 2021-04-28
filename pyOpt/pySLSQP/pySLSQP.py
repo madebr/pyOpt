@@ -40,11 +40,13 @@ try:
 except ImportError:
     raise ImportError('SLSQP shared library failed to import')
 
+import copy
 # =============================================================================
 # Standard Python modules
 # =============================================================================
-import os, sys
-import copy, time
+import os
+import sys
+import time
 
 # =============================================================================
 # External Python modules
@@ -54,8 +56,7 @@ import numpy
 # =============================================================================
 # Extension modules
 # =============================================================================
-from pyOpt import Optimizer
-from pyOpt import Gradient
+from pyOpt import Gradient, Optimizer
 
 # =============================================================================
 # Misc Definitions
@@ -80,15 +81,14 @@ class SLSQP(Optimizer):
     '''
 
     def __init__(self, pll_type=None, *args, **kwargs):
-        '''
-        SLSQP Optimizer Class Initialization
+        """SLSQP Optimizer Class Initialization.
 
         **Keyword arguments:**
 
         - pll_type -> STR: Parallel Implementation (None, 'POA'-Parallel Objective Analysis), *Default* = None
 
         Documentation last updated:  Feb. 16, 2010 - Peter W. Jansen
-        '''
+        """
 
         if (pll_type == None):
             self.poa = False
@@ -136,8 +136,7 @@ class SLSQP(Optimizer):
                   sens_step={},
                   *args,
                   **kwargs):
-        '''
-        Run Optimizer (Optimize Routine)
+        """Run Optimizer (Optimize Routine)
 
         **Keyword arguments:**
 
@@ -153,7 +152,7 @@ class SLSQP(Optimizer):
         Additional arguments and keyword arguments are passed to the objective function call.
 
         Documentation last updated:  February. 2, 2011 - Peter W. Jansen
-        '''
+        """
 
         if ((self.poa) and (sens_mode.lower() == 'pgc')):
             raise NotImplementedError(
@@ -314,9 +313,9 @@ class SLSQP(Optimizer):
                 xu.append(opt_problem._variables[key].upper)
                 xx.append(opt_problem._variables[key].value)
             elif (opt_problem._variables[key].type == 'i'):
-                raise IOError('SLSQP cannot handle integer design variables')
+                raise OSError('SLSQP cannot handle integer design variables')
             elif (opt_problem._variables[key].type == 'd'):
-                raise IOError('SLSQP cannot handle discrete design variables')
+                raise OSError('SLSQP cannot handle discrete design variables')
 
         xl = numpy.array(xl)
         xu = numpy.array(xu)
@@ -471,42 +470,38 @@ class SLSQP(Optimizer):
         return ff, xx, sol_inform
 
     def _on_setOption(self, name, value):
-        '''
-        Set Optimizer Option Value (Optimizer Specific Routine)
+        """Set Optimizer Option Value (Optimizer Specific Routine)
 
         Documentation last updated:  May. 07, 2008 - Ruben E. Perez
-        '''
+        """
 
         pass
 
     def _on_getOption(self, name):
-        '''
-        Get Optimizer Option Value (Optimizer Specific Routine)
+        """Get Optimizer Option Value (Optimizer Specific Routine)
 
         Documentation last updated:  May. 07, 2008 - Ruben E. Perez
-        '''
+        """
 
         pass
 
     def _on_getInform(self, infocode):
-        '''
-        Get Optimizer Result Information (Optimizer Specific Routine)
+        """Get Optimizer Result Information (Optimizer Specific Routine)
 
         Keyword arguments:
         -----------------
         id -> STRING: Option Name
 
         Documentation last updated:  May. 07, 2008 - Ruben E. Perez
-        '''
+        """
 
         return self.informs[infocode]
 
     def _on_flushFiles(self):
-        '''
-        Flush the Output Files (Optimizer Specific Routine)
+        """Flush the Output Files (Optimizer Specific Routine)
 
         Documentation last updated:  August. 09, 2009 - Ruben E. Perez
-        '''
+        """
 
         iPrint = self.options['IPRINT'][1]
         if (iPrint >= 0):

@@ -128,13 +128,13 @@
       LIA = 1
 *
 *  OPEN WRITE FILE
-*    
+*
       IF (IPRNT.NE.0) THEN
           OPEN(UNIT=IOUT,FILE=IFILE,STATUS='UNKNOWN')
       END IF
-* 
+*
 *  CALL PSQP
-* 
+*
       NB = 0
       CALL PSQP(NF,NB,NC,X,IX,XL,XU,CF,IC,CL,CU,RA,RA(LCFO),RA(LCFD),
      +          RA(LGC),IA,RA(LCR),RA(LCZ),RA(LCP),RA(LGF),RA(LG),

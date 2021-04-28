@@ -46,8 +46,11 @@ To Do:
 # =============================================================================
 # Standard Python modules
 # =============================================================================
-import os, sys, random, time
+import os
 import pdb
+import random
+import sys
+import time
 from math import floor
 
 # =============================================================================
@@ -87,11 +90,10 @@ def alpso(dimensions, constraints, neqcons, xtype, x0, xmin, xmax, swarmsize,
           stopIters, etol, itol, rtol, atol, dtol, prtOutIter, prtInnIter, r0,
           vinit, vmax, c1, c2, w1, w2, ns, nf, vcrazy, fileout, filename,
           logfile, hstfile, rseed, scale, nhs, objfunc):
-    '''
-        Python Version of the Augmented Lagrangian Particle Swarm Optimizer
+    """Python Version of the Augmented Lagrangian Particle Swarm Optimizer.
 
-        Documentation last updated:  April. 29, 2008 - Ruben E. Perez
-        '''
+    Documentation last updated:  April. 29, 2008 - Ruben E. Perez
+    """
 
     # MPI Setup
     comm = MPI.COMM_WORLD
@@ -904,26 +906,26 @@ def alpso(dimensions, constraints, neqcons, xtype, x0, xmin, xmax, swarmsize,
         if myrank == 0:
             if (prtOutIter != 0 and numpy.mod(k_out, prtOutIter) == 0):
                 # Output to screen
-                print(("=" * 80 + "\n"))
-                print(("NUMBER OF ITERATIONS: %d\n" % (k_out)))
-                print(("NUMBER OF OBJECTIVE FUNCTION EVALUATIONS: %d\n" %
-                       (nfevals)))
+                print("=" * 80 + "\n")
+                print("NUMBER OF ITERATIONS: %d\n" % (k_out))
+                print("NUMBER OF OBJECTIVE FUNCTION EVALUATIONS: %d\n" %
+                       (nfevals))
                 print("OBJECTIVE FUNCTION VALUE:")
-                print(("\tF = %.16ge\n" % (float(swarm_f))))
+                print("\tF = %.16ge\n" % (float(swarm_f)))
                 if (constraints > 0):
                     # Equality Constraints
                     print("EQUALITY CONSTRAINTS VALUES:")
                     for l in range(neqcons):
-                        print(("\tH(%d) = %g" % (l, swarm_g[l])))
+                        print("\tH(%d) = %g" % (l, swarm_g[l]))
 
                     # Inequality Constraints
                     print("\nINEQUALITY CONSTRAINTS VALUES:")
                     for l in range(neqcons, constraints):
-                        print(("\tG(%d) = %g" % (l, swarm_g[l])))
+                        print("\tG(%d) = %g" % (l, swarm_g[l]))
 
                 print("\nLAGRANGIAN MULTIPLIERS VALUES:")
                 for l in range(constraints):
-                    print(("\tL(%d) = %g" % (l, lambda_val[l])))
+                    print("\tL(%d) = %g" % (l, lambda_val[l]))
 
                 print("\nBEST POSITION:")
                 if (scale == 1) or (fileout == 3):
@@ -941,7 +943,7 @@ def alpso(dimensions, constraints, neqcons, xtype, x0, xmin, xmax, swarmsize,
                         text += ("\n")
 
                 print(text)
-                print(("=" * 80 + "\n"))
+                print("=" * 80 + "\n")
 
             if (fileout == 1) or (fileout == 3):
                 # Output to filename
@@ -1185,27 +1187,27 @@ def alpso(dimensions, constraints, neqcons, xtype, x0, xmin, xmax, swarmsize,
     if myrank == 0:
         if (prtOutIter != 0):
             # Output to screen
-            print(("=" * 80 + "\n"))
-            print(("RANDOM SEED VALUE: %.8f\n" % (rseed)))
-            print(("NUMBER OF ITERATIONS: %d\n" % (k_out)))
+            print("=" * 80 + "\n")
+            print("RANDOM SEED VALUE: %.8f\n" % (rseed))
+            print("NUMBER OF ITERATIONS: %d\n" % (k_out))
             print(
-                ("NUMBER OF OBJECTIVE FUNCTION EVALUATIONS: %d\n" % (nfevals)))
+                "NUMBER OF OBJECTIVE FUNCTION EVALUATIONS: %d\n" % (nfevals))
             print("OBJECTIVE FUNCTION VALUE:")
-            print(("\tF = %.16g\n" % (float(swarm_f))))
+            print("\tF = %.16g\n" % (float(swarm_f)))
             if (constraints > 0):
                 # Equality Constraints
                 print("EQUALITY CONSTRAINTS VALUES:")
                 for l in range(neqcons):
-                    print(("\tH(%d) = %g" % (l, swarm_g[l])))
+                    print("\tH(%d) = %g" % (l, swarm_g[l]))
 
                 # Inequality Constraints
                 print("\nINEQUALITY CONSTRAINTS VALUES:")
                 for l in range(neqcons, constraints):
-                    print(("\tG(%d) = %g" % (l, swarm_g[l])))
+                    print("\tG(%d) = %g" % (l, swarm_g[l]))
 
             print("\nLAGRANGIAN MULTIPLIERS VALUES:")
             for l in range(constraints):
-                print(("\tL(%d) = %g" % (l, float(lambda_val[l]))))
+                print("\tL(%d) = %g" % (l, float(lambda_val[l])))
 
             print("\nBEST POSITION:")
             if (scale == 1):
@@ -1223,7 +1225,7 @@ def alpso(dimensions, constraints, neqcons, xtype, x0, xmin, xmax, swarmsize,
                     text += ("\n")
 
             print(text)
-            print(("=" * 80 + "\n"))
+            print("=" * 80 + "\n")
 
         if (fileout == 1) or (fileout == 3):
             ofile.close()

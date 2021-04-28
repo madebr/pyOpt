@@ -184,9 +184,9 @@ C     is performed only when xtmp is in fact a projected point.
 
           samep = .true.
           do i = 1,nind
-              if ( xtmp(i) .gt. 
+              if ( xtmp(i) .gt.
      +             xp(i) + macheps23 * max( 1.0d0, abs( xp(i) ) ) .or.
-     +             xtmp(i) .lt. 
+     +             xtmp(i) .lt.
      +             xp(i) - macheps23 * max( 1.0d0, abs( xp(i) ) ) ) then
                   samep = .false.
               end if

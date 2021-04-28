@@ -40,11 +40,13 @@ try:
 except:
         raise ImportError('MIDACO shared library failed to import')
 
+import copy
 # =============================================================================
 # Standard Python modules
 # =============================================================================
-import os, sys
-import copy, time
+import os
+import sys
+import time
 
 # =============================================================================
 # External Python modules
@@ -79,15 +81,14 @@ class MIDACO(Optimizer):
 
         def __init__(self, pll_type=None, *args, **kwargs):
 
-                '''
-                MIDACO Optimizer Class Initialization
+                """MIDACO Optimizer Class Initialization.
 
                 **Keyword arguments:**
 
                 - pll_type -> STR: Parallel Implementation (None, 'POA'-Parallel Objective Analysis), *Default* = None
 
                 Documentation last updated:  Feb. 16, 2010 - Peter W. Jansen
-                '''
+                """
 
                 #
                 if (pll_type == None):
@@ -183,8 +184,7 @@ class MIDACO(Optimizer):
 
         def __solve__(self, opt_problem={}, store_sol=True, disp_opts=False, store_hst=False, hot_start=False, *args, **kwargs):
 
-                '''
-                Run Optimizer (Optimize Routine)
+                """Run Optimizer (Optimize Routine)
 
                 **Keyword arguments:**
 
@@ -197,7 +197,7 @@ class MIDACO(Optimizer):
                 Additional arguments and keyword arguments are passed to the objective function call.
 
                 Documentation last updated:  February. 17, 2011 - Peter W. Jansen
-                '''
+                """
                 #
                 if self.poa or self.spm:
                         try:
@@ -413,7 +413,7 @@ class MIDACO(Optimizer):
                 if (self.options['PRINTEVAL'][1] > 0):
                         printeval = numpy.array([self.options['PRINTEVAL'][1]], numpy.int)
                 else:
-                        raise IOError('Incorrect PRINTEVAL Setting')
+                        raise OSError('Incorrect PRINTEVAL Setting')
                 iout1 = numpy.array([self.options['IOUT1'][1]], numpy.int)
                 iout2 = numpy.array([self.options['IOUT2'][1]], numpy.int)
                 ifile1 = self.options['IFILE1'][1]
@@ -506,48 +506,44 @@ class MIDACO(Optimizer):
 
         def _on_setOption(self, name, value):
 
-                '''
-                Set Optimizer Option Value (Optimizer Specific Routine)
+                """Set Optimizer Option Value (Optimizer Specific Routine)
 
                 Documentation last updated:  May. 07, 2008 - Ruben E. Perez
-                '''
+                """
 
                 pass
 
 
         def _on_getOption(self, name):
 
-                '''
-                Get Optimizer Option Value (Optimizer Specific Routine)
+                """Get Optimizer Option Value (Optimizer Specific Routine)
 
                 Documentation last updated:  May. 07, 2008 - Ruben E. Perez
-                '''
+                """
 
                 pass
 
 
         def _on_getInform(self, infocode):
 
-                '''
-                Get Optimizer Result Information (Optimizer Specific Routine)
+                """Get Optimizer Result Information (Optimizer Specific Routine)
 
                 Keyword arguments:
                 -----------------
                 id -> STRING: Option Name
 
                 Documentation last updated:  May. 07, 2008 - Ruben E. Perez
-                '''
+                """
 
                 return self.informs[infocode]
 
 
         def _on_flushFiles(self):
 
-                '''
-                Flush the Output Files (Optimizer Specific Routine)
+                """Flush the Output Files (Optimizer Specific Routine)
 
                 Documentation last updated:  August. 09, 2009 - Ruben E. Perez
-                '''
+                """
 
                 #
                 iprint = self.options['IPRINT'][1]

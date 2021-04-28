@@ -1,5 +1,5 @@
 '''
-pyALGENCAN - A Python pyOpt interface to ALGENCAN. 
+pyALGENCAN - A Python pyOpt interface to ALGENCAN.
 
 Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
@@ -37,12 +37,14 @@ try:
 except ImportError:
 	raise ImportError('ALGENCAN shared library failed to import')
 
+import copy
 # =============================================================================
 # Standard Python modules
 # =============================================================================
-import os, sys
-import copy, time
+import os
 import pdb
+import sys
+import time
 
 # =============================================================================
 # External Python modules
@@ -52,8 +54,7 @@ import numpy
 # =============================================================================
 # Extension modules
 # =============================================================================
-from pyOpt import Optimizer
-from pyOpt import Gradient
+from pyOpt import Gradient, Optimizer
 
 # =============================================================================
 # Misc Definitions
@@ -71,23 +72,22 @@ eps = 2.0*eps
 # ALGENCAN Optimizer Class
 # =============================================================================
 class ALGENCAN(Optimizer):
-	
+
 	'''
 	ALGENCAN Optimizer Class - Inherited from Optimizer Abstract Class
 	'''
-	
+
 	def __init__(self, pll_type=None, *args, **kwargs):
-		
-		'''
-		ALGENCAN Optimizer Class Initialization
-		
+
+		"""ALGENCAN Optimizer Class Initialization.
+
 		**Keyword arguments:**
-		
+
 		- pll_type -> STR: Parallel Implementation (None, 'POA'-Parallel Objective Analysis), *Default* = None
-		
+
 		Documentation last updated:  Feb. 16, 2010 - Peter W. Jansen
-		'''
-		
+		"""
+
 		#
 		if (pll_type == None):
 			self.poa = False
@@ -95,7 +95,7 @@ class ALGENCAN(Optimizer):
 			self.poa = True
 		else:
 			raise ValueError("pll_type must be either None or 'POA'")
-		
+
 		#
 		name = 'ALGENCAN'
 		category = 'Local Optimizer'
@@ -117,33 +117,32 @@ class ALGENCAN(Optimizer):
 		3 : "Maximum of iterations reached.",
 		}
 		Optimizer.__init__(self, name, category, def_opts, informs, *args, **kwargs)
-		
-		
+
+
 	def __solve__(self, opt_problem={}, sens_type='FD', store_sol=True, disp_opts=False, store_hst=False, hot_start=False, sens_mode='', sens_step={}, *args, **kwargs):
-		
-		'''
-		Run Optimizer (Optimize Routine)
-		
+
+		"""Run Optimizer (Optimize Routine)
+
 		**Keyword arguments:**
-		
+
 		- opt_problem -> INST: Optimization instance
-		- sens_type -> STR/FUNC: Gradient type, *Default* = 'FD' 
-		- store_sol -> BOOL: Store solution in Optimization class flag, *Default* = True 
+		- sens_type -> STR/FUNC: Gradient type, *Default* = 'FD'
+		- store_sol -> BOOL: Store solution in Optimization class flag, *Default* = True
 		- disp_opts -> BOOL: Flag to display options in solution text, *Default* = False
 		- store_hst -> BOOL/STR: Flag/filename to store optimization history, *Default* = False
 		- hot_start -> BOOL/STR: Flag/filename to read optimization history, *Default* = False
 		- sens_mode -> STR: Flag for parallel gradient calculation, *Default* = ''
 		- sens_step -> FLOAT: Sensitivity setp size, *Default* = {} [corresponds to 1e-6 (FD), 1e-20(CS)]
-		
+
 		Additional arguments and keyword arguments are passed to the objective function call.
-		
+
 		Documentation last updated:  February. 2, 2011 - Peter W. Jansen
-		'''
-		
-		# 
+		"""
+
+		#
 		if ((self.poa) and (sens_mode.lower() == 'pgc')):
 			raise NotImplementedError("pyALGENCAN - Current implementation only allows single level parallelization, either 'POA' or 'pgc'")
-		
+
 		if self.poa or (sens_mode.lower() == 'pgc'):
 			try:
 				import mpi4py
@@ -161,60 +160,60 @@ class ALGENCAN(Optimizer):
 		else:
 			self.pll = False
 			self.myrank = 0
-		
+
 		myrank = self.myrank
-		
-		# 
+
+		#
 		def_fname = self.options['ifile'][1].split('.')[0]
 		hos_file, log_file, tmp_file = self._setHistory(opt_problem.name, store_hst, hot_start, def_fname)
-		
+
 		#
 		gradient = Gradient(opt_problem, sens_type, sens_mode, sens_step, *args, **kwargs)
-		
-		
-		# 
+
+
+		#
 		def evalf(n,x,f,flag):
 			flag = -1
 			return f,flag
-		
+
 		def evalg(n,x,g,flag):
 			flag = -1
 			return g,flag
-		
+
 		def evalh(n,x,hlin,hcol,hval,hnnz,flag):
 			flag = -1
 			return hlin,hcol,hval,hnnz,flag
-		
+
 		def evalc(n,x,ind,c,flag):
 			flag = -1
 			return c,flag
-		
+
 		def evaljac(n,x,ind,jcvar,jcval,jcnnz,flag):
 			flag = -1
 			return jcvar,jcval,jcnnz,flag
-		
+
 		def evalgjacp(n,x,g,m,p,q,work,gotj,flag):
 			flag = -1
 			return g,p,q,gotj,flag
-		
+
 		def evalhc(n,x,ind,hclin,hccol,hcval,hcnnz,flag):
 			flag = -1
 			return hclin,hccol,hcval,hcnnz,flag
-		
+
 		def evalhl(n,x,m,lmbda,scalef,scalec,hllin,hlcol,hlval,hlnnz,flag):
 			flag = -1
 			return hllin,hlcol,hlval,hlnnz,flag
-		
+
 		def evalhlp(n,x,m,lmbda,sf,sc,p,hp,goth,flag):
 			flag = -1
 			return hp,goth,flag
-		
-		
+
+
 		#======================================================================
 		# ALGENCAN - Objective/Constraint Values Function
 		#======================================================================
 		def evalfc(n,x,f,m,g,flag):
-			
+
 			# Variables Groups Handling
 			if opt_problem.use_groups:
 				xg = {}
@@ -226,10 +225,10 @@ class ALGENCAN(Optimizer):
 				xn = xg
 			else:
 				xn = x
-			
+
 			# Flush Output Files
 			self.flushFiles()
-			
+
 			# Evaluate User Function
 			flag = 0
 			if (myrank == 0):
@@ -240,14 +239,14 @@ class ALGENCAN(Optimizer):
 						hos_file.close()
 					else:
 						[ff,gg,flag] = [vals['obj'][0][0],vals['con'][0],int(vals['fail'][0][0])]
-			
+
 			if self.pll:
 				self.hot_start = Bcast(self.hot_start,root=0)
 			if self.hot_start and self.pll:
 				[ff,gg,fail] = Bcast([ff,gg,fail],root=0)
-			elif not self.hot_start:	
+			elif not self.hot_start:
 				[ff,gg,fail] = opt_problem.obj_fun(xn, *args, **kwargs)
-			
+
 			# Store History
 			if (myrank == 0):
 				if self.sto_hst:
@@ -255,28 +254,28 @@ class ALGENCAN(Optimizer):
 					log_file.write(ff,'obj')
 					log_file.write(gg,'con')
 					log_file.write(fail,'fail')
-			
+
 			# Objective Assigment
 			if isinstance(ff,complex):
 				f = ff.astype(float)
 			else:
 				f = ff
-			
+
 			# Constraints Assigment
 			for i in range(len(opt_problem._constraints.keys())):
 				if isinstance(gg[i],complex):
 					g[i] = gg[i].astype(float)
 				else:
 					g[i] = gg[i]
-			
+
 			return f,g,fail
-		
-		
+
+
 		#======================================================================
 		# ALGENCAN - Objective/Constraint Gradients Function
 		#======================================================================
 		def evalgjac(n,x,jfval,m,jcfun,jcvar,jcval,jcnnz,flag):
-			
+
 			if self.hot_start:
 				if (myrank == 0):
 					[vals,hist_end] = hos_file.read(ident=['grad_obj','grad_con'])
@@ -285,27 +284,27 @@ class ALGENCAN(Optimizer):
 						hos_file.close()
 					else:
 						dff = vals['grad_obj'][0].reshape((len(opt_problem._objectives.keys()),len(opt_problem._variables.keys())))
-						dgg = vals['grad_con'][0].reshape((len(opt_problem._constraints.keys()),len(opt_problem._variables.keys())))	
+						dgg = vals['grad_con'][0].reshape((len(opt_problem._constraints.keys()),len(opt_problem._variables.keys())))
 				if self.pll:
 					self.hot_start = Bcast(self.hot_start,root=0)
 				if self.hot_start and self.pll:
 					[dff,dgg] = Bcast([dff,dgg],root=0)
-			
-			if not self.hot_start:	
-				
+
+			if not self.hot_start:
+
 				[ff,gg,fail] = opt_problem.obj_fun(x, *args, **kwargs)
 				dff,dgg = gradient.getGrad(x, group_ids, [ff], gg, *args, **kwargs)
-				
-			
+
+
 			# Store History
 			if self.sto_hst and (myrank == 0):
 				log_file.write(dff,'grad_obj')
 				log_file.write(dgg,'grad_con')
-			
+
 			# Objective Gradient Assigment
 			for i in range(len(opt_problem._variables.keys())):
 				jfval[i] = dff[0,i]
-			
+
 			# Constraint Gradient Assigment
 			jcnnz = 0
 			for jj in range(len(opt_problem._constraints.keys())):
@@ -314,11 +313,11 @@ class ALGENCAN(Optimizer):
 					jcvar[jcnnz] = ii + 1
 					jcval[jcnnz] = dgg[jj,ii]
 					jcnnz += 1
-			
+
 			return jfval,jcfun,jcvar,jcval,jcnnz,fail
-		
-		
-		
+
+
+
 		# Variables Handling
 		n = len(opt_problem._variables.keys())
 		xl = []
@@ -330,13 +329,13 @@ class ALGENCAN(Optimizer):
 				xu.append(opt_problem._variables[key].upper)
 				xx.append(opt_problem._variables[key].value)
 			elif (opt_problem._variables[key].type == 'i'):
-				raise IOError('NLPQL cannot handle integer design variables')
+				raise OSError('NLPQL cannot handle integer design variables')
 			elif (opt_problem._variables[key].type == 'd'):
-				raise IOError('NLPQL cannot handle discrete design variables')
+				raise OSError('NLPQL cannot handle discrete design variables')
 		xl = numpy.array(xl)
 		xu = numpy.array(xu)
 		xx = numpy.array(xx)
-		
+
 		# Variables Groups Handling
 		group_ids = {}
 		if opt_problem.use_groups:
@@ -345,7 +344,7 @@ class ALGENCAN(Optimizer):
 				group_len = len(opt_problem._vargroups[key]['ids'])
 				group_ids[opt_problem._vargroups[key]['name']] = [k,k+group_len]
 				k += group_len
-		
+
 		# Constraints Handling
 		m = len(opt_problem._constraints.keys())
 		equatn = []
@@ -358,10 +357,10 @@ class ALGENCAN(Optimizer):
 					equatn.append(False)
 				linear.append(False)
 		else:
-			raise IOError('ALGENCAN support for unconstrained problems not implemented yet')
+			raise OSError('ALGENCAN support for unconstrained problems not implemented yet')
 		equatn = numpy.array(equatn)
 		linear = numpy.array(linear)
-		
+
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
 		nobj = len(opt_problem._objectives.keys())
@@ -369,8 +368,8 @@ class ALGENCAN(Optimizer):
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
 		ff = numpy.array(ff)
-		
-		
+
+
 		# Setup argument list values
 		nn = numpy.array([n], numpy.int)
 		mm = numpy.array([m], numpy.int)
@@ -379,7 +378,7 @@ class ALGENCAN(Optimizer):
 		epsfeas = numpy.array([self.options['epsfeas'][1]], numpy.float)
 		epsopt = numpy.array([self.options['epsopt'][1]], numpy.float)
 		efacc = numpy.array([self.options['efacc'][1]], numpy.float)
-		eoacc = numpy.array([self.options['eoacc'][1]], numpy.float)	
+		eoacc = numpy.array([self.options['eoacc'][1]], numpy.float)
 		checkder = numpy.array([self.options['checkder'][1]], numpy.bool)
 		iprint = numpy.array([self.options['iprint'][1]], numpy.int)
 		if (myrank != 0):
@@ -396,12 +395,12 @@ class ALGENCAN(Optimizer):
 		snorm = numpy.array([0], numpy.float)
 		nlpsupn = numpy.array([0], numpy.float)
 		inform = numpy.array([0], numpy.int)
-		
+
 		# Run ALGENCAN
 		t0 = time.time()
 		algencan.algencan(epsfeas,epsopt,efacc,eoacc,iprint,ncomp,nn,xx,xl,xu,mm,lm,equatn,linear,coded,checkder,ff,cnormu,snorm,nlpsupn,inform,ifile,evalf,evalg,evalh,evalc,evaljac,evalhc,evalfc,evalgjac,evalgjacp,evalhl,evalhlp)
 		sol_time = time.time() - t0
-		
+
 		if (myrank == 0):
 			if self.sto_hst:
 				log_file.close()
@@ -412,41 +411,41 @@ class ALGENCAN(Optimizer):
 					os.remove(name+'.bin')
 					os.rename(name+'_tmp.cue',name+'.cue')
 					os.rename(name+'_tmp.bin',name+'.bin')
-		
+
 		if (iprint > 0):
 			algencan.closeunit(10)
-		
-		
-		# 
+
+
+		#
 		[fs,gg,fail] = opt_problem.obj_fun(xx, *args, **kwargs)
-		
+
 		# Store Results
 		sol_inform = {}
 		sol_inform['value'] = inform[0]
 		sol_inform['text'] = self.getInform(inform[0])
-		
+
 		if store_sol:
-			
+
 			sol_name = 'ALGENCAN Solution to ' + opt_problem.name
-			
+
 			sol_options = copy.copy(self.options)
 			if 'defaults' in sol_options:
 				del sol_options['defaults']
-			
+
 			sol_evals = 0
-			
+
 			sol_vars = copy.deepcopy(opt_problem._variables)
 			i = 0
 			for key in sol_vars.keys():
 				sol_vars[key].value = xx[i]
 				i += 1
-			
+
 			sol_objs = copy.deepcopy(opt_problem._objectives)
 			i = 0
 			for key in sol_objs.keys():
 				sol_objs[key].value = ff[i]
 				i += 1
-			
+
 			if m > 0:
 				sol_cons = copy.deepcopy(opt_problem._constraints)
 				i = 0
@@ -455,66 +454,62 @@ class ALGENCAN(Optimizer):
 					i += 1
 			else:
 				sol_cons = {}
-			
+
 			sol_lambda = lm
-			
-			
-			opt_problem.addSol(self.__class__.__name__, sol_name, objfunc, sol_time, 
-				sol_evals, sol_inform, sol_vars, sol_objs, sol_cons, sol_options, 
+
+
+			opt_problem.addSol(self.__class__.__name__, sol_name, objfunc, sol_time,
+				sol_evals, sol_inform, sol_vars, sol_objs, sol_cons, sol_options,
 				display_opts=disp_opts, Lambda=sol_lambda, Sensitivities=sens_type,
 				myrank=myrank, arguments=args, **kwargs)
-			
-			
+
+
 		return ff, xx, sol_inform
-		
-		
-		
+
+
+
 	def _on_setOption(self, name, value):
-		
-		'''
-		Set Optimizer Option Value (Optimizer Specific Routine)
-		
+
+		"""Set Optimizer Option Value (Optimizer Specific Routine)
+
 		Documentation last updated:  May. 07, 2008 - Ruben E. Perez
-		'''
-		
+		"""
+
 		pass
-		
-		
+
+
 	def _on_getOption(self, name):
-		
-		'''
-		Get Optimizer Option Value (Optimizer Specific Routine)
-		
+
+		"""Get Optimizer Option Value (Optimizer Specific Routine)
+
 		Documentation last updated:  May. 07, 2008 - Ruben E. Perez
-		'''
-		
+		"""
+
 		pass
-		
-		
+
+
 	def _on_getInform(self, infocode):
-		
-		'''
-		Get Optimizer Result Information (Optimizer Specific Routine)
-		
+
+		"""Get Optimizer Result Information (Optimizer Specific Routine)
+
 		Keyword arguments:
 		-----------------
 		id -> STRING: Option Name
-		
+
 		Documentation last updated:  May. 07, 2008 - Ruben E. Perez
-		'''
-		
+		"""
+
 		return self.informs[infocode]
-		
-		
+
+
 	def _on_flushFiles(self):
-		
-		'''
-		Flush the Output Files (Optimizer Specific Routine)
-		
+
+		"""Flush the Output Files (Optimizer Specific Routine)
+
 		Documentation last updated:  August. 09, 2009 - Ruben E. Perez
-		'''
-		
-		# 
+		"""
+
+		#
 		iPrint = self.options['iprint'][1]
 		if (iPrint >= 0):
-			algencan.pyflush(10)	
+			algencan.pyflush(10)

@@ -27,7 +27,7 @@ python module nlpqlp__user__routines
         end subroutine nlgrad
     end interface nlpqlp_user_interface
 end python module nlpqlp__user__routines
-python module nlpqlp ! in 
+python module nlpqlp ! in
     interface  ! in :nlpqlp
         subroutine nlpqlp_wrap(l,m,me,mmax,n,nmax,mnn2,x,f,g,df,dg,u,xl,xu,c,d,acc,accqp,stpmin,maxfun,maxit,maxnm,rhob,mode,ifail,iprint,iout,ifile,wa,lwa,kwa,lkwa,active,lactiv,lql,nfun,ngrd,nlfunc,nlgrad) ! in :nlpqlp:source/nlpqlp_wrap.for
             use nlpqlp__user__routines
@@ -85,5 +85,5 @@ python module nlpqlp ! in
         subroutine closeunit(unitnum) ! in :nlpqlp:source/closeunit.f
             integer intent(in) :: unitnum
         end subroutine closeunit
-    end interface 
+    end interface
 end python module nlpqlp

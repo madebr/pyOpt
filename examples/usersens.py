@@ -1,16 +1,14 @@
 #!/usr/bin/env python
-'''
-Solves Constrained Rosen-Suzuki Function
+"""Solves Constrained Rosen-Suzuki Function.
 
-    - Different gradient calculation approaches are used
+- Different gradient calculation approaches are used
 
-    f* = -6 , x* = [0, 1, 2, -1]
-'''
+f* = -6 , x* = [0, 1, 2, -1]
+"""
 
 import numpy
 
-from pyOpt import Optimization
-from pyOpt import CONMIN
+from pyOpt import CONMIN, Optimization
 
 
 def objfunc(x):
@@ -58,7 +56,7 @@ def getlastsolution(prob: Optimization):
 
 
 # =============================================================================
-# 
+#
 # =============================================================================
 
 # Instantiate Optimization Problem

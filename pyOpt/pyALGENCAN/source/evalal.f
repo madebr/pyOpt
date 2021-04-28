@@ -144,13 +144,13 @@ C             ADD THE GRADIENT OF THE OBJECTIVE FUNCTION
               end do
 
           else ! if ( gjaccoded ) then
-C         In fact, this else is the choice for gjaccoded or 'not 
-C         gjacpcoded and not gjaccoded', in which case the calling 
-C         sequence starting with sevalgjac below will end up using 
-C         finite differences to approximate first derivatives of the 
+C         In fact, this else is the choice for gjaccoded or 'not
+C         gjacpcoded and not gjaccoded', in which case the calling
+C         sequence starting with sevalgjac below will end up using
+C         finite differences to approximate first derivatives of the
 C         objective function and the constraints
 
-C             COMPUTE THE GRADIENT OF THE OBJECTIVE FUNCTION AND 
+C             COMPUTE THE GRADIENT OF THE OBJECTIVE FUNCTION AND
 C             JACOBIAN OF CONSTRAINTS
               call sevalgjac(n,x,g,m,jcfun,jcvar,jcval,jcnnz,inform)
               if ( inform .lt. 0 ) return
@@ -170,7 +170,7 @@ C             COMPUTE \nabla L = \nabla f + \sum_j lambda_j * \nabla c_j
               do j = 1,m
                   if ( equatn(j) .or. lambda(j) .gt. 0.0d0 ) then
                       do i = jcsta(j),jcsta(j) + jclen(j) - 1
-                          nl(jcvar(i)) = 
+                          nl(jcvar(i)) =
      +                    nl(jcvar(i)) + lambda(j) * jcval(i)
                       end do
 
@@ -217,7 +217,7 @@ C                 COMPUTE THE GRADIENT OF THE j-TH CONSTRAINT
 
 C                 ADD lambda_j * \nabla c_j
                   do i = jcsta(j),jcsta(j) + jclen(j) - 1
-                      nl(jcvar(i)) = 
+                      nl(jcvar(i)) =
      +                nl(jcvar(i)) + lambda(j) * jcval(i)
                   end do
 
@@ -356,10 +356,10 @@ C     ARRAY ARGUMENTS
 
 C     This subroutine computes the gradient of the Augmented Lagrangian
 C     function at a point xp, which is near to x, taking care of the
-C     non-differentiability (i.e. considering the contribution of the 
-C     same constraints that contributed to compute the gradient of the 
-C     augmented Lagrangian at x). The augmented Lagrangian gradient must 
-C     have been previously computed at x. If iglin = true, linear 
+C     non-differentiability (i.e. considering the contribution of the
+C     same constraints that contributed to compute the gradient of the
+C     augmented Lagrangian at x). The augmented Lagrangian gradient must
+C     have been previously computed at x. If iglin = true, linear
 C     constraints are ignored.
 
       include "dim.par"
@@ -383,7 +383,7 @@ C     LOCAL ARRAYS
 
       if ( fccoded ) then
 
-C         COMPUTE nalp = gp + Jacobian^T dpdcp IGNORING THE LINEAR 
+C         COMPUTE nalp = gp + Jacobian^T dpdcp IGNORING THE LINEAR
 C         CONSTRAINTS IF iglin IS TRUE
 
           if ( gjacpcoded ) then
@@ -414,10 +414,10 @@ C             ADD THE GRADIENT OF THE OBJECTIVE FUNCTION
               end do
 
           else ! if ( gjaccoded ) then
-C         In fact, this else is the choice for gjaccoded or 'not 
-C         gjacpcoded and not gjaccoded', in which case the calling 
-C         sequence starting with sevalgjac below will end up using 
-C         finite differences to approximate first derivatives of the 
+C         In fact, this else is the choice for gjaccoded or 'not
+C         gjacpcoded and not gjaccoded', in which case the calling
+C         sequence starting with sevalgjac below will end up using
+C         finite differences to approximate first derivatives of the
 C         objective function and the constraints
 
 C             COMPUTE CONSTRAINTS AT xp
@@ -464,7 +464,7 @@ C         COMPUTE GRADIENT OF THE OBJECTIVE FUNCTION
               nalp(i) = gp(i)
           end do
 
-C         ADD Jacobian^T dpdcp IGNORING THE LINEAR CONSTRAINTS 
+C         ADD Jacobian^T dpdcp IGNORING THE LINEAR CONSTRAINTS
 C         IF iglin IS TRUE
           do j = 1,m
               if ( ( equatn(j) .or. dpdc(j) .gt. 0.0d0 ) .and.
@@ -482,7 +482,7 @@ C                 COMPUTE THE GRADIENT OF THE j-TH CONSTRAINT
 
 C                 ADD dPdc * dcdx
                   do i = 1,jcpnnz
-                      nalp(jcpvar(i)) = 
+                      nalp(jcpvar(i)) =
      +                nalp(jcpvar(i)) + dpdcpj * jcpval(i)
                   end do
               end if

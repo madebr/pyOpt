@@ -61,11 +61,13 @@ try:
 except:
 	raise ImportError('SNOPT shared library failed to import')
 
+import copy
 # =============================================================================
 # Standard Python modules
 # =============================================================================
-import os, sys
-import copy, time
+import os
+import sys
+import time
 
 # =============================================================================
 # External Python modules
@@ -75,8 +77,7 @@ import numpy
 # =============================================================================
 # Extension modules
 # =============================================================================
-from pyOpt import Optimizer
-from pyOpt import Gradient
+from pyOpt import Gradient, Optimizer
 
 # =============================================================================
 # Misc Definitions
@@ -101,15 +102,14 @@ class SNOPT(Optimizer):
 
 	def __init__(self, pll_type=None, *args, **kwargs):
 
-		'''
-		SNOPT Optimizer Class Initialization
+		"""SNOPT Optimizer Class Initialization.
 
 		**Keyword arguments:**
 
 		- pll_type -> STR: Parallel Implementation (None, 'POA'-Parallel Objective Analysis), *Default* = None
 
 		Documentation last updated:  Feb. 16, 2010 - Peter W. Jansen
-		'''
+		"""
 
 		#
 		if (pll_type == None):
@@ -297,8 +297,7 @@ class SNOPT(Optimizer):
 
 	def __solve__(self, opt_problem={}, sens_type='FD', store_sol=True, disp_opts=False, store_hst=False, hot_start=False, sens_mode='', sens_step={}, *args, **kwargs):
 
-		'''
-		Run Optimizer (Optimize Routine)
+		"""Run Optimizer (Optimize Routine)
 
 		**Keyword arguments:**
 
@@ -314,7 +313,7 @@ class SNOPT(Optimizer):
 		Additional arguments and keyword arguments are passed to the objective function call.
 
 		Documentation last updated:  Feb. 2, 2011 - Peter W. Jansen
-		'''
+		"""
 
 		#
 		if ((self.poa) and (sens_mode.lower() == 'pgc')):
@@ -456,9 +455,9 @@ class SNOPT(Optimizer):
 				bux.append(opt_problem._variables[key].upper)
 				xs.append(opt_problem._variables[key].value)
 			elif (opt_problem._variables[key].type == 'i'):
-				raise IOError('SNOPT cannot handle integer design variables')
+				raise OSError('SNOPT cannot handle integer design variables')
 			elif (opt_problem._variables[key].type == 'd'):
-				raise IOError('SNOPT cannot handle discrete design variables')
+				raise OSError('SNOPT cannot handle discrete design variables')
 		blx = numpy.array(blx)
 		bux = numpy.array(bux)
 		xs = numpy.array(xs)
@@ -513,7 +512,7 @@ class SNOPT(Optimizer):
 				os.remove(PrintFile)
 			ierror = snopt.openunit(iPrint, numpy.array(PrintFile), numpy.array(b'new'), numpy.array(b'sequential'))
 			if (ierror != 0):
-				raise IOError('Failed to properly open %s, ierror = %3d' %(PrintFile,ierror))
+				raise OSError('Failed to properly open %s, ierror = %3d' %(PrintFile,ierror))
 
 		iSumm = self.options['iSumm'][1]
 		if (myrank != 0):
@@ -524,7 +523,7 @@ class SNOPT(Optimizer):
 				os.remove(SummFile)
 			ierror = snopt.openunit(iSumm, numpy.array(SummFile), numpy.array(b'new'), numpy.array(b'sequential'))
 			if (ierror != 0):
-				raise IOError('Failed to properly open %s, ierror = %3d' %(SummFile,ierror))
+				raise OSError('Failed to properly open %s, ierror = %3d' %(SummFile,ierror))
 		lencw = 500
 		leniw = 500 + 100 * (ncon+nvar)
 		lenrw = 500 + 200 * (ncon+nvar)
@@ -721,11 +720,10 @@ class SNOPT(Optimizer):
 
 	def _on_setOption(self, name, value):
 
-		'''
-		Set Optimizer Option Value (Optimizer Specific Routine)
+		"""Set Optimizer Option Value (Optimizer Specific Routine)
 
 		Documentation last updated:  May. 07, 2008 - Ruben E. Perez
-		'''
+		"""
 
 		#
 		self.set_options.append([name,value])
@@ -733,26 +731,24 @@ class SNOPT(Optimizer):
 
 	def _on_getOption(self, name):
 
-		'''
-		Get Optimizer Option Value (Optimizer Specific Routine)
+		"""Get Optimizer Option Value (Optimizer Specific Routine)
 
 		Documentation last updated:  May. 07, 2008 - Ruben E. Perez
-		'''
+		"""
 
 		pass
 
 
 	def _on_getInform(self, infocode):
 
-		'''
-		Get Optimizer Result Information (Optimizer Specific Routine)
+		"""Get Optimizer Result Information (Optimizer Specific Routine)
 
 		Keyword arguments:
 		-----------------
 		id -> STRING: Option Name
 
 		Documentation last updated:  May. 07, 2008 - Ruben E. Perez
-		'''
+		"""
 
 		#
 		mjr_code = (infocode[0]/10)*10
@@ -767,11 +763,10 @@ class SNOPT(Optimizer):
 
 	def _on_flushFiles(self):
 
-		'''
-		Flush the Output Files (Optimizer Specific Routine)
+		"""Flush the Output Files (Optimizer Specific Routine)
 
 		Documentation last updated:  August. 09, 2009 - Ruben E. Perez
-		'''
+		"""
 
 		#
 		iPrint = self.options['iPrint'][1]
@@ -784,15 +779,14 @@ class SNOPT(Optimizer):
 
 	def SaveSpecsFile(self, filename):
 
-		'''
-		Save Options in a SPECS File
+		"""Save Options in a SPECS File.
 
 		Keyword arguments:
 		-----------------
 		filename -> STRING: Spec File Name
 
 		Documentation last updated:  May. 08, 2008 - Ruben E. Perez
-		'''
+		"""
 
 		#
 
@@ -800,15 +794,14 @@ class SNOPT(Optimizer):
 
 	def ReadSpecsFile(self, filename):
 
-		'''
-		Read in a SPECS file
+		"""Read in a SPECS file.
 
 		Keyword arguments:
 		-----------------
 		filename -> STRING: Spec File Name
 
 		Documentation last updated:  May. 08, 2008 - Ruben E. Perez
-		'''
+		"""
 
 		##
 		#if (os.path.isfile(filename)):

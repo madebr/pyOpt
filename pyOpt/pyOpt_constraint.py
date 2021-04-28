@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-'''
-pyOpt_constraint
+"""pyOpt_constraint.
 
 Holds the Python Design Optimization Classes (base and inherited).
 
@@ -18,22 +17,19 @@ History
 -------
     v. 1.0  - Initial Class Creation (RP, 2008)
     v. 1.1  - Pretty Print of Optimization Problems (PJ, 2008)
-'''
+"""
 
 __version__ = '$Revision: $'
 
 inf = 10.E+20  # define a value for infinity
 
 
-class Constraint(object):
-    '''
-    Optimization Constraint Class
-    '''
+class Constraint:
+    """Optimization Constraint Class."""
 
     def __init__(self, name, type='i', *args, **kwargs):
 
-        '''
-        Constraint Class Initialization
+        """Constraint Class Initialization.
 
         **Arguments:**
 
@@ -47,7 +43,7 @@ class Constraint(object):
         - choices -> DICT: Variable Choices
 
         Documentation last updated:  Feb. 03, 2011 - Peter W. Jansen
-        '''
+        """
 
         #
         self.name = name
@@ -71,43 +67,40 @@ class Constraint(object):
             else:
                 self.equal = 0.0
         else:
-            raise IOError('Constraint type not understood -- use either i(nequality) or e(quality)')
+            raise OSError('Constraint type not understood -- use either i(nequality) or e(quality)')
 
         # if (kwargs['nvars']):
         #	self.sensitivity = numpy.zeros(kwargs['nvars'],float)
 
     def ListAttributes(self):
 
-        '''
-        Print Structured Attributes List
+        """Print Structured Attributes List.
 
         Documentation last updated:  March. 10, 2008 - Ruben E. Perez
-        '''
+        """
 
         ListAttributes(self)
 
     def __str__(self):
 
-        '''
-        Print Constraint
+        """Print Constraint.
 
         Documentation last updated:  April. 30, 2008 - Peter W. Jansen
-        '''
+        """
 
         if self.type == 'e':
             return ('	    Name        Type' + ' ' * 25 + 'Bound\n' + '	 ' + str(self.name).center(
-                9) + '    e %23f = %5.2e\n' % (self.value, self.equal))
+                9) + f'    e {self.value:23f} = {self.equal:5.2e}\n')
         if self.type == 'i':
             return ('	    Name        Type' + ' ' * 25 + 'Bound\n' + '	 ' + str(self.name).center(
-                9) + '	  i %15.2e <= %8f <= %8.2e\n' % (self.lower, self.value, self.upper))
+                9) + f'	  i {self.lower:15.2e} <= {self.value:8f} <= {self.upper:8.2e}\n')
 
 
 def ListAttributes(self):
-    '''
-    Print Structured Attributes List
+    """Print Structured Attributes List.
 
     Documentation last updated:  March. 24, 2008 - Ruben E. Perez
-    '''
+    """
 
     print('\n')
     print('Attributes List of: ' + repr(self.__dict__['name']) + ' - ' + self.__class__.__name__ + ' Instance\n')

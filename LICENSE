@@ -4,25 +4,25 @@ Copyright (c) 2008-2014, pyOpt Developers
 
 
 The pyOpt framework is distributed under the terms of the
-GNU Lesser General Public License (LGPL). Note however that 
-each optimizer integrated into the framework may hold a 
+GNU Lesser General Public License (LGPL). Note however that
+each optimizer integrated into the framework may hold a
 different license as specified in each optimizer LICENSE file.
 
-The pyOpt framework is free software: you can redistribute it 
-and/or modify it under the terms of the GNU Lesser General 
-Public License as published by the Free Software Foundation, 
-either version 3 of the License, or (at your option) any 
+The pyOpt framework is free software: you can redistribute it
+and/or modify it under the terms of the GNU Lesser General
+Public License as published by the Free Software Foundation,
+either version 3 of the License, or (at your option) any
 later version.
 
-This program is distributed "AS IS", in the hope that it will 
+This program is distributed "AS IS", in the hope that it will
 be useful, but WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
-ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
-THE SOFTWARE. See the GNU Lesser General Public License for more 
+ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE. See the GNU Lesser General Public License for more
 details.
 
 

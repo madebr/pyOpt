@@ -1,5 +1,5 @@
 This directory contains the Fortran source for MIDACO where
-the original print subroutine has been modified for pyOpt. 
-The directory also contains a wrapping routine for pyOpt, 
-midaco_wrap.f, and two helper files called openunit.f and 
+the original print subroutine has been modified for pyOpt.
+The directory also contains a wrapping routine for pyOpt,
+midaco_wrap.f, and two helper files called openunit.f and
 closeunit.f to manipulate Fortran units from Python.

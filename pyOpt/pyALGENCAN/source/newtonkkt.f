@@ -1156,7 +1156,7 @@ C     Matrix
           x(j) = lambda(j)
           if ( .not. equatn(j) ) then
              l(j) =   0.0d0
-          else 
+          else
              l(j) = - 1.0d+20
           end if
           u(j) =   1.0d+20

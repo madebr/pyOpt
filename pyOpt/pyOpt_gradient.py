@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-'''
-pyOpt_gradient
+"""pyOpt_gradient.
 
 Holds the Python Design Optimization Gradient Calculation Class.
 
@@ -17,7 +16,7 @@ Developers:
 History
 -------
     v. 1.0  - Initial Class Creation (PJ,RP 2010)
-'''
+"""
 
 __version__ = '$Revision: $'
 '''
@@ -25,12 +24,13 @@ To Do:
     - add calc fail flag
 '''
 
+import copy
 # =============================================================================
 # Standard Python modules
 # =============================================================================
-import os, sys
-import copy
+import os
 import pdb
+import sys
 
 # =============================================================================
 # External Python modules
@@ -57,15 +57,12 @@ eps = 2.0 * eps
 # =============================================================================
 # Gradient Class
 # =============================================================================
-class Gradient(object):
-    '''
-    Abstract Class for Optimizer Gradient Calculation Object
-    '''
+class Gradient:
+    """Abstract Class for Optimizer Gradient Calculation Object."""
 
     def __init__(self, opt_problem, sens_type, sens_mode='', sens_step={}, *args, **kwargs):
 
-        '''
-        Optimizer Gradient Calculation Class Initialization
+        """Optimizer Gradient Calculation Class Initialization.
 
         **Arguments:**
 
@@ -78,7 +75,7 @@ class Gradient(object):
         - sens_step -> INT: Step size, *Default* = {} [=1e-6(FD), 1e-20(CS)]
 
         Documentation last updated:  Feb. 03, 2011 - Peter W. Jansen
-        '''
+        """
 
         #
         self.opt_problem = opt_problem
@@ -132,8 +129,7 @@ class Gradient(object):
             self.mydvs = range(len(opt_problem._variables.keys()))
 
     def getGrad(self, x, group_ids, f, g, *args, **kwargs):
-        '''
-        Get Gradient
+        """Get Gradient.
 
         **Arguments:**
 
@@ -143,7 +139,7 @@ class Gradient(object):
         - g -> ARRAY: Constraint values
 
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
-        '''
+        """
 
         opt_problem = self.opt_problem
         sens_type = self.sens_type
@@ -296,11 +292,10 @@ class Gradient(object):
         return df, dg
 
     def getHess(self, *args, **kwargs):
-        '''
-        Get Hessian
+        """Get Hessian.
 
         Documentation last updated:  June. 20, 2010 - Ruben E. Perez
-        '''
+        """
 
         return
 

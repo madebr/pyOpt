@@ -1,8 +1,8 @@
 !    -*- f90 -*-
 ! Note: the context of this file is case sensitive.
 
-python module solvopt__user__routines 
-    interface solvopt_user_interface 
+python module solvopt__user__routines
+    interface solvopt_user_interface
         subroutine fun(n,x,f)
             integer intent(in) :: n
             double precision dimension(n),intent(in),depend(n) :: x
@@ -25,7 +25,7 @@ python module solvopt__user__routines
         end subroutine gradc
     end interface solvopt_user_interface
 end python module solvopt__user__routines
-python module solvopt ! in 
+python module solvopt ! in
     interface  ! in :solvopt
         subroutine solvopt(n,x,f,fun,flg,grad,options,flfc,func,flgc,gradc,b,g,g0,g1,gt,gc,z,x1,xopt,xrec,grec,xx,deltax,idx,iout,ifile) ! in :solvopt:source/solvopt.f
             use solvopt__user__routines
@@ -71,5 +71,5 @@ python module solvopt ! in
         subroutine closeunit(unitnum) ! in :cobyla:source/closeunit.f
             integer intent(in) :: unitnum
         end subroutine closeunit
-    end interface 
+    end interface
 end python module solvopt

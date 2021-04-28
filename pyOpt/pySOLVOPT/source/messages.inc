@@ -4,7 +4,7 @@ c This is an include file to compile with solvopt.f(or)
        character*(*) warn1,warn20,warn21,warn4,warn31,warn32
        character*(*) warn09,warn08,termwarn0,termwarn1,appwarn
        character*(*) endwarn1, endwarn2, endwarn3, endwarn4
-       parameter (errmes='SolvOpt error:') 
+       parameter (errmes='SolvOpt error:')
        parameter (wrnmes='SolvOpt warning:')
        parameter (error2='Improper space dimension.')
        parameter (error32='Function equals infinity at the point.')

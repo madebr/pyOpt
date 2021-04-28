@@ -1,12 +1,11 @@
 #!/usr/bin/env python
-'''
-Solves Rosenbrock's Unconstrained Problem.
+"""Solves Rosenbrock's Unconstrained Problem.
 
-    min 	100*(x2-x1^2)**2 + (1-x1)^2
-    s.t.:	-10 <= xi <= 10,  i = 1,2
+min         100*(x2-x1^2)**2 + (1-x1)^2
+s.t.:       -10 <= xi <= 10,  i = 1,2
 
-    f* = 0 , x* = [1, 1]
-'''
+f* = 0 , x* = [1, 1]
+"""
 
 from pyOpt import Optimization
 
@@ -24,7 +23,7 @@ def getlastsolution(prob: Optimization):
     return prob.getSol(new_index - 1)
 
 
-# Instantiate Optimization Problem 
+# Instantiate Optimization Problem
 opt_prob = Optimization('Rosenbrock Unconstraint Problem', objfunc)
 opt_prob.addVar('x1', 'c', lower=-10.0, upper=10.0, value=-3.0)
 opt_prob.addVar('x2', 'c', lower=-10.0, upper=10.0, value=-4.0)

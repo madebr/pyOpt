@@ -1,48 +1,49 @@
 #!/usr/bin/env python
-'''
-Solves Constrained Toy Problem Using Variable Groups.
+"""Solves Constrained Toy Problem Using Variable Groups.
 
-    min 	x1^2 + x2^2
-    s.t.:	3 - x1 <= 0
-            2 - x2 <= 0
-            -10 <= x1 <= 10
-            -10 <= x2 <= 10 
-'''
+min         x1^2 + x2^2
+s.t.:       3 - x1 <= 0
+        2 - x2 <= 0
+        -10 <= x1 <= 10
+        -10 <= x2 <= 10
+"""
 
 # =============================================================================
 # Standard Python modules
 # =============================================================================
-import os, sys, time
+import os
+import sys
+import time
+
 import numpy
 
 # =============================================================================
 # Extension modules
 # =============================================================================
-from pyOpt import Optimization
-from pyOpt import SLSQP
+from pyOpt import SLSQP, Optimization
 
 
 # =============================================================================
-# 
+#
 # =============================================================================
 def objfunc(xn):
-    
+
     x0 = xn['x']
     x1 = xn['z']
-    
+
     f = x0**2 + x1**2
     g = [0.0]*2
     g[0] = 3 - x0
     g[1] = 2 - x1
-    
+
     fail = 0
-    
+
     return f,g,fail
-    
+
 
 # =============================================================================
-# 
-# ============================================================================= 
+#
+# =============================================================================
 
 # Instantiate Optimization Problem
 opt_prob = Optimization('TOY Constrained Problem',objfunc,use_groups=True)
@@ -63,4 +64,3 @@ print(opt_prob)
 slsqp = SLSQP()
 slsqp(opt_prob)
 print(opt_prob.solution(0))
-

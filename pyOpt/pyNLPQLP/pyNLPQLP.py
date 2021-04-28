@@ -1,5 +1,5 @@
 '''
-pyNLPQLP - A Python pyOpt interface to NLPQLP. 
+pyNLPQLP - A Python pyOpt interface to NLPQLP.
 
 Copyright (c) 2008-2014 by pyOpt Developers
 All rights reserved.
@@ -24,7 +24,7 @@ __version__ = '$Revision: $'
 
 '''
 To Do:
-	- 
+	-
 '''
 
 # =============================================================================
@@ -35,11 +35,13 @@ try:
 except:
 	raise ImportError('NLPQLP shared library failed to import')
 
+import copy
 # =============================================================================
 # Standard Python modules
 # =============================================================================
-import os, sys
-import copy, time
+import os
+import sys
+import time
 
 # =============================================================================
 # External Python modules
@@ -49,8 +51,7 @@ import numpy
 # =============================================================================
 # Extension modules
 # =============================================================================
-from pyOpt import Optimizer
-from pyOpt import Gradient
+from pyOpt import Gradient, Optimizer
 
 # =============================================================================
 # Misc Definitions
@@ -75,15 +76,14 @@ class NLPQLP(Optimizer):
 
 	def __init__(self, pll_type=None, *args, **kwargs):
 
-		'''
-		NLPQLP Optimizer Class Initialization
+		"""NLPQLP Optimizer Class Initialization.
 
 		**Keyword arguments:**
 
 		- pll_type -> STR: Parallel Implementation (None, 'POA'-Parallel Objective Analysis), *Default* = None
 
 		Documentation last updated:  Feb. 16, 2010 - Peter W. Jansen
-		'''
+		"""
 
 		#
 		if (pll_type == None):
@@ -140,8 +140,7 @@ class NLPQLP(Optimizer):
 
 	def __solve__(self, opt_problem={}, sens_type='FD', store_sol=True, store_hst=False, hot_start=False, disp_opts=False, sens_mode='', sens_step={}, *args, **kwargs):
 
-		'''
-		Run Optimizer (Optimize Routine)
+		"""Run Optimizer (Optimize Routine)
 
 		**Keyword arguments:**
 
@@ -157,7 +156,7 @@ class NLPQLP(Optimizer):
 		Additional arguments and keyword arguments are passed to the objective function call.
 
 		Documentation last updated:  February. 2, 2013 - Peter W. Jansen
-		'''
+		"""
 
 		#
 		if ((self.pll_type != None) and (sens_mode.lower() == 'pgc')):
@@ -350,9 +349,9 @@ class NLPQLP(Optimizer):
 				for proc in range(nproc):
 					xx[i,proc] = opt_problem._variables[key].value
 			elif (opt_problem._variables[key].type == 'i'):
-				raise IOError('NLPQLP cannot handle integer design variables')
+				raise OSError('NLPQLP cannot handle integer design variables')
 			elif (opt_problem._variables[key].type == 'd'):
-				raise IOError('NLPQLP cannot handle discrete design variables')
+				raise OSError('NLPQLP cannot handle discrete design variables')
 			i += 1
 
 		# Variables Groups Handling
@@ -383,7 +382,7 @@ class NLPQLP(Optimizer):
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
 		if (len(opt_problem._objectives.keys())>1):
-			raise IOError('NLPQLP cannot handle multi-objective problems')
+			raise OSError('NLPQLP cannot handle multi-objective problems')
 		ff = []
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
@@ -417,13 +416,13 @@ class NLPQLP(Optimizer):
 		if (self.options['MODE'][1]>=0 and self.options['MODE'][1]<=18):
 			mode = self.options['MODE'][1]
 		else:
-			raise IOError('Incorrect Mode Setting')
+			raise OSError('Incorrect Mode Setting')
 		ifail = numpy.array([0], numpy.int)
 		if (myrank == 0):
 			if (self.options['IPRINT'][1]>=0 and self.options['IPRINT'][1]<=4):
 				iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
 			else:
-				raise IOError('Incorrect Output Level Setting')
+				raise OSError('Incorrect Output Level Setting')
 		else:
 			iprint = numpy.array([0], numpy.int)
 		iout = self.options['IOUT'][1]
@@ -517,37 +516,34 @@ class NLPQLP(Optimizer):
 
 	def _on_setOption(self, name, value):
 
-		'''
-		Set Optimizer Option Value (Optimizer Specific Routine)
+		"""Set Optimizer Option Value (Optimizer Specific Routine)
 
 		Documentation last updated:  November. 30, 2010 - Ruben E. Perez
-		'''
+		"""
 
 		pass
 
 
 	def _on_getOption(self, name):
 
-		'''
-		Get Optimizer Option Value (Optimizer Specific Routine)
+		"""Get Optimizer Option Value (Optimizer Specific Routine)
 
 		Documentation last updated:  November. 30, 2010 - Ruben E. Perez
-		'''
+		"""
 
 		pass
 
 
 	def _on_getInform(self, infocode):
 
-		'''
-		Get Optimizer Result Information (Optimizer Specific Routine)
+		"""Get Optimizer Result Information (Optimizer Specific Routine)
 
 		Keyword arguments:
 		-----------------
 		id -> STRING: Option Name
 
 		Documentation last updated:  November. 30, 2010 - Ruben E. Perez
-		'''
+		"""
 
 		#
 		if (infocode <= 10):
@@ -558,11 +554,10 @@ class NLPQLP(Optimizer):
 
 	def _on_flushFiles(self):
 
-		'''
-		Flush the Output Files (Optimizer Specific Routine)
+		"""Flush the Output Files (Optimizer Specific Routine)
 
 		Documentation last updated:  November. 30, 2010 - Ruben E. Perez
-		'''
+		"""
 
 		#
 		iprint = self.options['IPRINT'][1]

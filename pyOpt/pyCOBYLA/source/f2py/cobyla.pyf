@@ -1,8 +1,8 @@
 !    -*- f90 -*-
 ! Note: the context of this file is case sensitive.
 
-python module cobyla__user__routines 
-    interface cobyla_user_interface 
+python module cobyla__user__routines
+    interface cobyla_user_interface
         subroutine calcfc(n,m,x,f,con)
             integer intent(in) :: n
             integer intent(in) :: m
@@ -12,7 +12,7 @@ python module cobyla__user__routines
         end subroutine calcfc
     end interface cobyla_user_interface
 end python module cobyla__user__routines
-python module cobyla ! in 
+python module cobyla ! in
     interface  ! in : cobyla
         subroutine cobyla(calcfc,n,m,x,rhobeg,rhoend,iprint,maxfun,w,iact,ifail,nfvals,iout,ifile,ff,gg) ! in :cobyla:source/cobyla.f
             use cobyla__user__routines
@@ -46,5 +46,5 @@ python module cobyla ! in
         subroutine closeunit(unitnum) ! in :cobyla:source/closeunit.f
             integer intent(in) :: unitnum
         end subroutine closeunit
-    end interface 
+    end interface
 end python module cobyla

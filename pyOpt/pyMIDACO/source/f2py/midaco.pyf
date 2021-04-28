@@ -13,7 +13,7 @@ python module midaco__user__routines
         end subroutine objfun
     end interface midaco_user_interface
 end python module midaco__user__routines
-python module midaco ! in 
+python module midaco ! in
     interface  ! in :midaco
         subroutine midaco_wrap(l,n,nint,m,me,x,xl,xu,f,g,param,maxeval,maxtime,ifail,neval,iprint,printeval,iout1,iout2,ifile1,ifile2,license_key,liw,iw,lrw,rw,objfun)
             use midaco__user__routines
@@ -58,5 +58,5 @@ python module midaco ! in
         subroutine closeunit(unitnum)
             integer intent(in) :: unitnum
         end subroutine closeunit
-    end interface 
+    end interface
 end python module midaco

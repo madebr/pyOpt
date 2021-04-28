@@ -1,20 +1,22 @@
 #!/usr/bin/env python
-'''
-Solves Runarsson's G08 Problem Using ALPSO Parallelization Options
+"""Solves Runarsson's G08 Problem Using ALPSO Parallelization Options.
 
-    min 	-(sin(2*pi*x1)**3*sin(2*pi*x2))
-    s.t.:	x1**2 - x2 + 1 <= 0
-            1 - x1 + (x2-4)**2 <= 0
-            0 <= xi <= 10,  i = 1,2
+min         -(sin(2*pi*x1)**3*sin(2*pi*x2))
+s.t.:       x1**2 - x2 + 1 <= 0
+        1 - x1 + (x2-4)**2 <= 0
+        0 <= xi <= 10,  i = 1,2
 
-    x* = [1.2279713, 4.2453733]
-    f* = -0.095825
-'''
+x* = [1.2279713, 4.2453733]
+f* = -0.095825
+"""
 
+import math
 # =============================================================================
 # Standard Python modules
 # =============================================================================
-import os, sys, time, math
+import os
+import sys
+import time
 
 # =============================================================================
 # External Python modules
@@ -30,8 +32,7 @@ except:
 # Extension modules
 # =============================================================================
 #from pyOpt import *
-from pyOpt import Optimization
-from pyOpt import ALPSO
+from pyOpt import ALPSO, Optimization
 
 
 # =============================================================================
@@ -81,4 +82,3 @@ alpso_poa = ALPSO(pll_type='POA')
 alpso_poa.setOption('fileout',0)
 alpso_poa(opt_prob)
 print(opt_prob.solution(2))
-

@@ -1,16 +1,14 @@
 #!/usr/bin/env python
-'''
-Solves Constrained Toy Problem Storing Optimization History.
+"""Solves Constrained Toy Problem Storing Optimization History.
 
-    min     x1^2 + x2^2
-    s.t.:   3 - x1 <= 0
-            2 - x2 <= 0
-            -10 <= x1 <= 10
-            -10 <= x2 <= 10
-'''
+min     x1^2 + x2^2
+s.t.:   3 - x1 <= 0
+        2 - x2 <= 0
+        -10 <= x1 <= 10
+        -10 <= x2 <= 10
+"""
 
-from pyOpt import Optimization
-from pyOpt import SLSQP
+from pyOpt import SLSQP, Optimization
 
 
 def objfunc(x):
@@ -25,7 +23,7 @@ def objfunc(x):
 
 
 # =============================================================================
-# 
+#
 # =============================================================================
 
 # Instantiate Optimization Problem

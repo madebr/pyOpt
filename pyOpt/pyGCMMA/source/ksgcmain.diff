@@ -1,5 +1,5 @@
 1c1,7
-< 
+<
 ---
 >       SUBROUTINE GCMMA(N,M,INNMAX,ITER,MAXIT,INNTOT,GEPS,
 >      1  DABOBJ,DELOBJ,ITRM,INFORM,XVAL,XMMA,XMIN,XMAX,XLOW,
@@ -39,8 +39,8 @@
 >       EXTERNAL FUNC1,FUNC2
 >       CHARACTER*(*) IFILE
 102,103c116,117
-< C    RAA0   = Parameter raa_0 in the MMA subproblem. 
-< C    RAA(i) = Parameter raa_i in the MMA subproblem. 
+< C    RAA0   = Parameter raa_0 in the MMA subproblem.
+< C    RAA(i) = Parameter raa_i in the MMA subproblem.
 ---
 > C    RAA0   = Parameter raa_0 in the MMA subproblem.
 > C    RAA(i) = Parameter raa_i in the MMA subproblem.
@@ -60,7 +60,7 @@
 >       NFUNC1=0
 >       NFUNC2=0
 >       IOBJ=0
->       KOBJ=0 
+>       KOBJ=0
 > C
 136a147,174
 >       NFUNC1=NFUNC1+1
@@ -68,7 +68,7 @@
 >       OBJ0=F0VAL
 > C
 > C     ------------------------------------------------------------------
-> C                           PRINT INITIAL INFO 
+> C                           PRINT INITIAL INFO
 > C     ------------------------------------------------------------------
 > C
 >       IF (IPRINT.LT.0) GO TO 30
@@ -90,10 +90,10 @@
 >  16   WRITE (IOUT,1460) XVAL(I)
 > C      WRITE (*,1470)
 > C      DO 17 J=I,M
-> C 17   WRITE (IOUT,1460) FVAL(J) 
+> C 17   WRITE (IOUT,1460) FVAL(J)
 138,140c176
 < C  The USER may now write the current (starting) solution.
-< C 
+< C
 <       CALL OUTXOF(ITER,INNER,M,N,XVAL,F0VAL,FVAL,FMAX)
 ---
 > C     ------------------------------------------------------------------
@@ -109,7 +109,7 @@
 >       OBJ1=F0NEW
 205,218c246,285
 < C  The USER may now write the current solution.
-< C 
+< C
 <       CALL OUTXOF(ITER,INNER,M,N,XVAL,F0VAL,FVAL,FMAX)
 < C
 < C  One more outer iteration is started as long as
@@ -124,7 +124,7 @@
 <       ITE=0
 ---
 > C     ------------------------------------------------------------------
-> C                           PRINT ITERATION RESULTS 
+> C                           PRINT ITERATION RESULTS
 > C     ------------------------------------------------------------------
 > C
 >       IF (IPRINT.LT.0) GO TO 80
@@ -161,7 +161,7 @@
 >       AOBJB=ABS(AOBJD)
 >       IF (AOBJB.LT.DELOBJ) IOBJ=IOBJ+1
 >       IF (AOBJB.GE.DELOBJ) IOBJ=0
->       IF (KOBJ.GT.ITRM.OR.IOBJ.GT.ITRM) GO TO 90 
+>       IF (KOBJ.GT.ITRM.OR.IOBJ.GT.ITRM) GO TO 90
 >       OBJ0=F0VAL
 220a288,297
 > C     ------------------------------------------------------------------
@@ -179,46 +179,46 @@
 <       END
 ---
 > C     ------------------------------------------------------------------
-> C                           PRINT FINAL RESULTS 
+> C                           PRINT FINAL RESULTS
 > C     ------------------------------------------------------------------
 > C
 >       IF (IPRINT.LT.0) GO TO 200
 >       IF (IPRINT.EQ.0) WRITE (*,1150)
 >       IF (IPRINT.GT.0) WRITE(IOUT,1150)
->       IF (ITER.GE.MAXIT.AND.IPRINT.EQ.0) WRITE (*,1160) 
+>       IF (ITER.GE.MAXIT.AND.IPRINT.EQ.0) WRITE (*,1160)
 >       IF (ITER.GE.MAXIT.AND.IPRINT.GT.0) WRITE(IOUT,1160)
->       IF (IOBJ.GE.ITRM.AND.IPRINT.EQ.0) WRITE (*,1180) ITRM 
+>       IF (IOBJ.GE.ITRM.AND.IPRINT.EQ.0) WRITE (*,1180) ITRM
 >       IF (IOBJ.GE.ITRM.AND.IPRINT.GT.0) WRITE(IOUT,1180) ITRM
->       IF (KOBJ.GE.ITRM.AND.IPRINT.EQ.0) WRITE (*,1190) ITRM 
->       IF (KOBJ.GE.ITRM.AND.IPRINT.GT.0) WRITE(IOUT,1190) ITRM 
+>       IF (KOBJ.GE.ITRM.AND.IPRINT.EQ.0) WRITE (*,1190) ITRM
+>       IF (KOBJ.GE.ITRM.AND.IPRINT.GT.0) WRITE(IOUT,1190) ITRM
 >       IF (IPRINT.EQ.0) WRITE (*,1200) ITER
 >       IF (IPRINT.GT.0) WRITE(IOUT,1200) ITER
 >       IF (IPRINT.GT.0) WRITE(IOUT,1650) NFUNC1
 >       IF (IPRINT.GT.0) WRITE(IOUT,1750) NFUNC2
 > C
 >  200  CONTINUE
-> C     
+> C
 >       RETURN
 > C
 > C     ------------------------------------------------------------------
 > C                                FORMATS
 > C     ------------------------------------------------------------------
-> C  
+> C
 > 1430  FORMAT (//5X,6HITER =,I5,5X,5HOBJ =,7E16.8)
 > 1440  FORMAT (//5X,28HINITIAL FUNCTION INFORMATION//5X,5HOBJ =,7E16.8)
-> 1450  FORMAT (/5X,29HDECISION VARIABLES (X-VECTOR)) 
+> 1450  FORMAT (/5X,29HDECISION VARIABLES (X-VECTOR))
 > 1460  FORMAT (3X,7E13.4)
 > 1470  FORMAT (/5X,28HCONSTRAINT VALUES (G-VECTOR))
-> 1150  FORMAT (/5X,21HTERMINATION CRITERION) 
-> 1160  FORMAT (10X,17HITER EQUALS MAXIT)    
-> 1180  FORMAT (10X,43HABS(1-OBJ(I-1)/OBJ(I)) LESS THAN DELFUN FOR,I3,11H 
->      1ITERATIONS) 
-> 1190  FORMAT (10X,43HABS(OBJ(I)-OBJ(I-1))   LESS THAN DABFUN FOR,I3,11H 
->      1ITERATIONS) 
+> 1150  FORMAT (/5X,21HTERMINATION CRITERION)
+> 1160  FORMAT (10X,17HITER EQUALS MAXIT)
+> 1180  FORMAT (10X,43HABS(1-OBJ(I-1)/OBJ(I)) LESS THAN DELFUN FOR,I3,11H
+>      1ITERATIONS)
+> 1190  FORMAT (10X,43HABS(OBJ(I)-OBJ(I-1))   LESS THAN DABFUN FOR,I3,11H
+>      1ITERATIONS)
 > 1200  FORMAT (/5X,22HNUMBER OF ITERATIONS =,I5)
 > 1650  FORMAT(8X,30HNUMBER OF FUNC-CALLS:  NFUNC =,I4)
 > 1750  FORMAT(8X,30HNUMBER OF GRAD-CALLS:  NGRAD =,I4)
 226c341
-< 
+<
 ---
 >       END

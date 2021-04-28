@@ -37,11 +37,13 @@ try:
 except:
     raise ImportError('FILTERSD shared library failed to import')
 
+import copy
 # =============================================================================
 # Standard Python modules
 # =============================================================================
-import os, sys
-import copy, time
+import os
+import sys
+import time
 
 # =============================================================================
 # External Python modules
@@ -51,8 +53,7 @@ import numpy
 # =============================================================================
 # Extension modules
 # =============================================================================
-from pyOpt import Optimizer
-from pyOpt import Gradient
+from pyOpt import Gradient, Optimizer
 
 # =============================================================================
 # Misc Definitions
@@ -77,15 +78,14 @@ class FILTERSD(Optimizer):
 
     def __init__(self, pll_type=None, *args, **kwargs):
 
-        '''
-        FILTERSD Optimizer Class Initialization
+        """FILTERSD Optimizer Class Initialization.
 
         **Keyword arguments:**
 
         - pll_type -> STR: Parallel Implementation (None, 'POA'-Parallel Objective Analysis), *Default* = None
 
         Documentation last updated:  Feb. 16, 2010 - Peter W. Jansen
-        '''
+        """
 
         #
         if (pll_type == None):
@@ -132,8 +132,7 @@ class FILTERSD(Optimizer):
 
     def __solve__(self, opt_problem={}, sens_type='FD', store_sol=True, store_hst=False, hot_start=False, disp_opts=False, sens_mode='', sens_step={}, *args, **kwargs):
 
-        '''
-        Run Optimizer (Optimize Routine)
+        """Run Optimizer (Optimize Routine)
 
         **Keyword arguments:**
 
@@ -149,7 +148,7 @@ class FILTERSD(Optimizer):
         Additional arguments and keyword arguments are passed to the objective function call.
 
         Documentation last updated:  February. 2, 2013 - Ruben E. Perez
-        '''
+        """
 
         #
         if ((self.poa) and (sens_mode.lower() == 'pgc')):
@@ -329,7 +328,7 @@ class FILTERSD(Optimizer):
         if ncon > 0:
             for key in opt_problem._constraints.keys():
                 if opt_problem._constraints[key].type == 'e':
-                    raise IOError('FILTERSD cannot handle equality constraints')
+                    raise OSError('FILTERSD cannot handle equality constraints')
                 gg.append(opt_problem._constraints[key].value)
             gg = numpy.array(gg, numpy.float)
         else:
@@ -361,7 +360,7 @@ class FILTERSD(Optimizer):
             if (self.options['iprint'][1]>=0):
                 iprint = numpy.array([self.options['iprint'][1]], numpy.int)
             else:
-                raise IOError('Incorrect Output Level Setting')
+                raise OSError('Incorrect Output Level Setting')
         else:
             iprint = numpy.array([0], numpy.int)
         iout = numpy.array([self.options['iout'][1]], numpy.int)
@@ -458,48 +457,44 @@ class FILTERSD(Optimizer):
 
     def _on_setOption(self, name, value):
 
-        '''
-        Set Optimizer Option Value (Optimizer Specific Routine)
+        """Set Optimizer Option Value (Optimizer Specific Routine)
 
         Documentation last updated:  November. 30, 2010 - Ruben E. Perez
-        '''
+        """
 
         pass
 
 
     def _on_getOption(self, name):
 
-        '''
-        Get Optimizer Option Value (Optimizer Specific Routine)
+        """Get Optimizer Option Value (Optimizer Specific Routine)
 
         Documentation last updated:  November. 30, 2010 - Ruben E. Perez
-        '''
+        """
 
         pass
 
 
     def _on_getInform(self, infocode):
 
-        '''
-        Get Optimizer Result Information (Optimizer Specific Routine)
+        """Get Optimizer Result Information (Optimizer Specific Routine)
 
         Keyword arguments:
         -----------------
         id -> STRING: Option Name
 
         Documentation last updated:  November. 30, 2010 - Ruben E. Perez
-        '''
+        """
 
         return self.informs[infocode]
 
 
     def _on_flushFiles(self):
 
-        '''
-        Flush the Output Files (Optimizer Specific Routine)
+        """Flush the Output Files (Optimizer Specific Routine)
 
         Documentation last updated:  November. 30, 2010 - Ruben E. Perez
-        '''
+        """
 
         #
         iprint = self.options['iprint'][1]
@@ -517,4 +512,3 @@ if __name__ == '__main__':
     print('Testing ...')
     filtersd = FILTERSD()
     print(filtersd)
-

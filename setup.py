@@ -2,11 +2,12 @@
 
 import os
 import sys
+
 from numpy.distutils.command.build_ext import build_ext
 
 if sys.version_info[:2] < (3, 7):
-    raise RuntimeError(('pyOpt requires Python version 3.7 or later ({:d}.{:d} detected).'.format(
-        sys.version_info[:2])))
+    raise RuntimeError('pyOpt requires Python version 3.7 or later ({:d}.{:d} detected).'.format(
+        sys.version_info[:2]))
     sys.exit(-1)
 
 
@@ -44,6 +45,7 @@ extras["all"] = sum(extras.values(), [])
 
 if __name__ == '__main__':
     from numpy.distutils.core import setup
+
     # from distutils.command.sdist import sdist
     setup(
         configuration=configuration,

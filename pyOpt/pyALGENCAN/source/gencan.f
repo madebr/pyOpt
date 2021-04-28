@@ -412,7 +412,7 @@ C     moving from the current point, by checking the functional value
 C     Test whether we have performed many iterations without
 C     moving from the current point, by checking their gradients
 
-      if ( gpsupn .ge. gpsupnb - macheps23 * gpsupnb .or. 
+      if ( gpsupn .ge. gpsupnb - macheps23 * gpsupnb .or.
      +     gpeucn .ge. gpeucnb - macheps23 * gpeucnb ) then
           itngp = itngp + 1
       else
@@ -422,14 +422,14 @@ C     moving from the current point, by checking their gradients
 C     Test whether we have performed many iterations without
 C     moving from the current point, by checking the step norm
 
-      if ( ssupn .le. max( macheps23, macheps * xsupn ) .or. 
+      if ( ssupn .le. max( macheps23, macheps * xsupn ) .or.
      +     seucn .le. max( macheps23, macheps * xeucn ) ) then
           itnxp = itnxp + 1
       else
           itnxp = 0
       end if
 
-C     If there was no progress in the objective functional value, its 
+C     If there was no progress in the objective functional value, its
 C     gradient and the current point, stop
 
       if ( itnfp .ge. maxinnitnp .and. itngp .ge. maxinnitnp .and.
@@ -584,8 +584,8 @@ C             Set iteration type
      +         ( inniter .eq. 'NW' .and. memfail ) .or.
      +         ( inniter .eq. 'TR' .and. memfail ) .or.
      +         ( inniter .eq. 'TR' .and. trinfo .eq. UNDEFSTEP ) .or.
-     +         ( inniter .eq. 'TR' .and. trinfo .eq. TOOSMLTRR ) .or. 
-     +         ( inniter .eq. 'TR' .and. trinfo .eq. FSTORDPNT ) .or. 
+     +         ( inniter .eq. 'TR' .and. trinfo .eq. TOOSMLTRR ) .or.
+     +         ( inniter .eq. 'TR' .and. trinfo .eq. FSTORDPNT ) .or.
      +         ( inniter .eq. 'TR' .and. trinfo .eq. SECORDPNT ) .or.
      +         ( inniter .eq. 'TR' .and. trinfo .eq. TCLSBNDRY ) ) then
 
@@ -640,7 +640,7 @@ C         Set iteration type for the next iteration
               dsupn = max( dsupn, abs( d(i) ) )
           end do
 
-          if (   memfail .or. 
+          if (   memfail .or.
      +         ( ittype .eq. 3 .and. adsupn .gt. maxelem ) .or.
      +         ( ittype .eq. 3 .and. amax .le. macheps12 * dsupn ) )
      +    then

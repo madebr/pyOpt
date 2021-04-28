@@ -69,7 +69,7 @@ c
         open(unit=iout,file=ifile(1:len_trim(ifile)),
      *    status='unknown')
       endif
-c   
+c
 c  check gradients
 c
       if(dchk.gt.0)then
@@ -83,7 +83,7 @@ c
         enddo
       endif
       if(ifail.lt.0) return
-c  
+c
 c  call filterSD
 c
 c   10 continue

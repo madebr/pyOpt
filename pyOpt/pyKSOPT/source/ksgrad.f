@@ -66,7 +66,7 @@ c
       if (xtest .le. xub(inext)) go to 90
 c
 c          adjust delta-x for upper bound
- 
+
       delx1 = delx
       delx = abs(xub(inext) - xhere)
       if (delx .ge. delmin) go to 90

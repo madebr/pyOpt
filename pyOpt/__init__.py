@@ -1,12 +1,3 @@
-from .pyOpt_history import History
-from .pyOpt_parameter import Parameter
-from .pyOpt_variable import Variable
-from .pyOpt_gradient import Gradient
-from .pyOpt_constraint import Constraint
-from .pyOpt_objective import Objective
-from .pyOpt_optimization import Optimization
-from .pyOpt_optimizer import Optimizer
-
 from .pyALGENCAN import *
 from .pyALHSO import *
 from .pyALPSO import *
@@ -23,6 +14,14 @@ from .pyMIDACO import *
 # from .pyNLPQL import NLPQL
 # from .pyNLPQLP import NLPQLP
 from .pyNSGA2 import *
+from .pyOpt_constraint import Constraint
+from .pyOpt_gradient import Gradient
+from .pyOpt_history import History
+from .pyOpt_objective import Objective
+from .pyOpt_optimization import Optimization
+from .pyOpt_optimizer import Optimizer
+from .pyOpt_parameter import Parameter
+from .pyOpt_variable import Variable
 from .pyPSQP import *
 from .pySDPEN import *
 from .pySLSQP import *

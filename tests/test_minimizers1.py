@@ -1,13 +1,12 @@
 def test_rosenbrock():
     # !/usr/bin/env python
-    '''
-    Solves Rosenbrock's Unconstrained Problem.
+    """Solves Rosenbrock's Unconstrained Problem.
 
-        min 	100*(x2-x1^2)**2 + (1-x1)^2
-        s.t.:	-10 <= xi <= 10,  i = 1,2
+    min     100*(x2-x1^2)**2 + (1-x1)^2
+    s.t.:   -10 <= xi <= 10,  i = 1,2
 
-        f* = 0 , x* = [1, 1]
-    '''
+    f* = 0 , x* = [1, 1]
+    """
 
     from pyOpt import Optimization
 

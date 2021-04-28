@@ -1,7 +1,7 @@
 !    -*- f90 -*-
 ! Note: the context of this file is case sensitive.
 
-python module filtersd__user__routines 
+python module filtersd__user__routines
     interface filtersd_user_interface
         subroutine functions(n,m,x,f,c,user,iuser)
             intent(callback) functions
@@ -26,7 +26,7 @@ python module filtersd__user__routines
         end subroutine gradients
     end interface filtersd_user_interface
 end python module filtersd__user__routines
-python module filtersd ! in 
+python module filtersd ! in
     interface  ! in :filtersd
         subroutine filtersd_wrap(n,m,xx,xl,xu,lm,f,g,ainf,ubgv,rho,htol,rgtol,maxit,mxgs,dchk,dtol,iprint,iout,ifile,ifail,nfs,ngs)
             use filtersd__user__routines
@@ -286,5 +286,5 @@ python module filtersd ! in
         subroutine closeunit(unitnum) ! in :filtersd:source/closeunit.f90
             integer intent(in) :: unitnum
         end subroutine closeunit
-    end interface 
+    end interface
 end python module filtersd

@@ -30,7 +30,7 @@ python module nlpql__user__routines
         end subroutine nlgrad
     end interface nlpql_user_interface
 end python module nlpql__user__routines
-python module nlpql ! in 
+python module nlpql ! in
     interface  ! in :nlpql
           subroutine nlpql1(m,me,mmax,n,nmax,mnn2,x,f,g,df,dg,u,xl,xu,c,d,acc,scbou,maxfun,maxit,iprint,mode,iout,ifile,ifail,wa,lwa,kwa,lkwa,active,lactiv,lmerit,lql,eps,nlfunc,nlgrad) ! in :nlpql:source/nlpql1.f
             use nlpql__user__routines

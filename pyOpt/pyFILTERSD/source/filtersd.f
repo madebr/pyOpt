@@ -14,7 +14,7 @@ c  THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THE ECLIPSE PUBLIC
 c  LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM
 c  CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT
 
-c  Solves an NLP problem of the form: find a local solution x to 
+c  Solves an NLP problem of the form: find a local solution x to
 c
 c          minimize    f(x)
 c                            [  x   ]
@@ -28,7 +28,7 @@ c  subroutine 'functions'. The user is also required to supply a subroutine
 c  'gradients' which calculates gradients of f(x) and c(x) with respect to x.
 c
 c  If linearized constraints and the trust region are incompatible, the code
-c  enters 'phase 1' in which an 'l1 feasibility problem' is solved. If this 
+c  enters 'phase 1' in which an 'l1 feasibility problem' is solved. If this
 c  is unsuccessful in resolving the situation then the code exits with
 c  ifail=3 and returns a 'locally infeasible point' in x.
 c
@@ -51,7 +51,7 @@ c              that are infeasible in the L1 solution. cstype(i)='A' if the
 c              lower bound on c/s i is infeasible, 'Z' if the upper bound is
 c              infeasible, else 'N' if feasible.
 C  bl(n+m) lower bounds on x and c(x) (use numbers no less than -ainfty
-c            (see below) and where possible supply realistic bounds on x)  
+c            (see below) and where possible supply realistic bounds on x)
 C  bu(n+m) upper bounds on x and c(x) (use numbers no greater than ainfty)
 c  ws(*)   double precision workspace
 c  lws(*)  integer workspace
@@ -62,7 +62,7 @@ C  nv      number of values set in v
 C  maxa    maximum number of entries in the Jacobian a(*) set by gradients
 C  maxla   number of entries required for sparse matrix indices and pointers
 C            la(0:*) to be set up in lws(*) (maxla>=maxa+m+3).
-C            Set maxla=1 if using dense matrix format 
+C            Set maxla=1 if using dense matrix format
 C  maxu    length of workspace user(*) passed through to user subroutines
 C            'functions' and 'gradients'
 C  maxiu   length of workspace iuser(*) passed through to user subroutines
@@ -93,7 +93,7 @@ c  User Routines
 c  =============
 c  The user must supply two subroutines to calculate f(x), c(x) and their
 c  first derivatives as follows
-c 
+c
 c     subroutine functions(n,m,x,f,c,user,iuser)
 c     implicit double precision (a-h,o-z)
 c     dimension x(*),c(*),user(*),iuser(*)

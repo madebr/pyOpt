@@ -1,8 +1,8 @@
 !    -*- f90 -*-
 ! Note: the context of this file is case sensitive.
 
-python module gcmma__user__routines 
-    interface gcmma_user_interface 
+python module gcmma__user__routines
+    interface gcmma_user_interface
         subroutine func1(m,n,xmma,f0new,fnew)
             integer intent(in) :: m
             integer intent(in) :: n
@@ -21,7 +21,7 @@ python module gcmma__user__routines
         end subroutine func2
     end interface gcmma_user_interface
 end python module gcmma__user__routines
-python module gcmma ! in 
+python module gcmma ! in
     interface  ! in :gcmma
         subroutine gcmma(n,m,innmax,iter,maxit,inntot,geps,dabobj,delobj,itrm,inform,xval,xmma,xmin,xmax,xlow,xupp,alfa,beta,f0val,fval,fmax,df0dx,dfdx,p,q,p0,q0,b,f0app,fapp,raa0,raa,y,z,a,c,ulam,gradf,dsrch,hessf,iyfree,iprint,iout,ifile,nfunc1,nfunc2,func1,func2) ! in :gcmma:source/ksgcmain.f
             use gcmma__user__routines
@@ -89,5 +89,5 @@ python module gcmma ! in
         subroutine closeunit(unitnum) ! in :gcmma:source/closeunit.f
             integer intent(in) :: unitnum
         end subroutine closeunit
-    end interface 
+    end interface
 end python module gcmma

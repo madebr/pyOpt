@@ -248,14 +248,14 @@ C
 C     Calculate the step to the new vertex and its sign.
 C
       TEMP=GAMMA*RHO*VSIG(JDROP)
-      IF (IPRINT .EQ. 3) THEN 
+      IF (IPRINT .EQ. 3) THEN
          WRITE(IOUT,*) '  SIMI =', (SIMI(JDROP,I),I=1,N)
       END IF
       DO 290 I=1,N
   290 DX(I)=TEMP*SIMI(JDROP,I)
       IF (IPRINT .EQ. 3) THEN
          WRITE(IOUT,*) '  DX =', (DX(I),I=1,N)
-      END IF         
+      END IF
       CVMAXP=0.0d0
       CVMAXM=0.0d0
       DO 310 K=1,MP

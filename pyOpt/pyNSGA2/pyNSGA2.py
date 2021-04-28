@@ -40,11 +40,13 @@ except:
         raise ImportError('NSGA-II shared library failed to import')
 
 
+import copy
 # =============================================================================
 # Standard Python modules
 # =============================================================================
-import os, sys
-import copy, time
+import os
+import sys
+import time
 
 # =============================================================================
 # External Python modules
@@ -80,15 +82,14 @@ class NSGA2(Optimizer):
 
         def __init__(self, pll_type=None, *args, **kwargs):
 
-                '''
-                NSGA2 Optimizer Class Initialization
+                """NSGA2 Optimizer Class Initialization.
 
                 **Keyword arguments:**
 
                 - pll_type -> STR: Parallel Implementation (None, 'POA'-Parallel Objective Analysis), *Default* = None
 
                 Documentation last updated:  Feb. 16, 2010 - Peter W. Jansen
-                '''
+                """
 
                 if pll_type == None:
                     self.poa = False
@@ -120,8 +121,7 @@ class NSGA2(Optimizer):
 
 
         def __solve__(self, opt_problem, store_sol=True, disp_opts=False, store_hst=False, hot_start=False, *args, **kwargs):
-                '''
-                Run Optimizer (Optimize Routine)
+                """Run Optimizer (Optimize Routine)
 
                 **Keyword arguments:**
 
@@ -134,7 +134,7 @@ class NSGA2(Optimizer):
                 Additional arguments and keyword arguments are passed to the objective function call.
 
                 Documentation last updated:  February. 16, 2011 - Peter W. Jansen
-                '''
+                """
 
                 if self.poa:
                         try:
@@ -259,9 +259,9 @@ class NSGA2(Optimizer):
                                 nsga2.doubleArray_setitem(xl,i,opt_problem._variables[key].lower)
                                 nsga2.doubleArray_setitem(xu,i,opt_problem._variables[key].upper)
                         elif (opt_problem._variables[key].type == 'i'):
-                                raise IOError('Current NSGA-II cannot handle integer design variables')
+                                raise OSError('Current NSGA-II cannot handle integer design variables')
                         elif (opt_problem._variables[key].type == 'd'):
-                                raise IOError('Current NSGA-II cannot handle discrete design variables')
+                                raise OSError('Current NSGA-II cannot handle discrete design variables')
                         i += 1
 
                 # Variables Groups Handling
@@ -281,7 +281,7 @@ class NSGA2(Optimizer):
                 if m > 0:
                         for key in opt_problem._constraints.keys():
                                 if opt_problem._constraints[key].type == 'e':
-                                        raise IOError('Current NSGA-II cannot handle equality constraints')
+                                        raise OSError('Current NSGA-II cannot handle equality constraints')
 
                                 #nsga2.doubleArray_setitem(g,j,opt_problem._constraints[key].value)
                         #j += 1
@@ -299,7 +299,7 @@ class NSGA2(Optimizer):
                 nfeval = 0
                 popsize = self.options['PopSize'][1]
                 if popsize % 4 > 0:
-                    raise IOError("PopSize needs to be a multiple of 4 for NSGA2!")
+                    raise OSError("PopSize needs to be a multiple of 4 for NSGA2!")
                 ngen = self.options['maxGen'][1]
                 pcross_real = self.options['pCross_real'][1]
                 pmut_real = self.options['pMut_real'][1]
@@ -310,7 +310,7 @@ class NSGA2(Optimizer):
                 if (self.options['PrintOut'][1]>=0 and self.options['PrintOut'][1]<=2):
                         printout = self.options['PrintOut'][1]
                 else:
-                        raise IOError('Incorrect Stopping Criteria Setting')
+                        raise OSError('Incorrect Stopping Criteria Setting')
 
                 seed = self.options['seed'][1]
                 if (seed == 0) and not self.hot_start:
@@ -400,43 +400,39 @@ class NSGA2(Optimizer):
 
 
         def _on_setOption(self, name, value):
-                '''
-                Set Optimizer Option Value (Optimizer Specific Routine)
+                """Set Optimizer Option Value (Optimizer Specific Routine)
 
                 Documentation last updated:  May. 16, 2008 - Ruben E. Perez
-                '''
+                """
                 pass
 
 
         def _on_getOption(self, name):
-                '''
-                Get Optimizer Option Value (Optimizer Specific Routine)
+                """Get Optimizer Option Value (Optimizer Specific Routine)
 
                 Documentation last updated:  May. 17, 2008 - Ruben E. Perez
-                '''
+                """
 
                 pass
 
 
         def _on_getInform(self, infocode):
-                '''
-                Get Optimizer Result Information (Optimizer Specific Routine)
+                """Get Optimizer Result Information (Optimizer Specific Routine)
 
                 Keyword arguments:
                 -----------------
                 id -> STRING: Option Name
 
                 Documentation last updated:  May. 17, 2008 - Ruben E. Perez
-                '''
+                """
 
                 pass
 
 
         def _on_flushFiles(self):
-                '''
-                Flush the Output Files (Optimizer Specific Routine)
+                """Flush the Output Files (Optimizer Specific Routine)
 
                 Documentation last updated:  August. 09, 2009 - Ruben E. Perez
-                '''
+                """
 
                 pass

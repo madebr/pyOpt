@@ -10,8 +10,8 @@
 
   real*8 :: x(n),z(n),d(n)
   real*8 :: alfa_d(n),alfa,alfa_max
-  real*8 :: f,fz 
-  real*8 :: bl(n),bu(n),eps(qq-1),alfa_stop,maxeps 
+  real*8 :: f,fz
+  real*8 :: bl(n),bu(n),eps(qq-1),alfa_stop,maxeps
   real*8 :: fstop(n+1)
 
   num_fal=0
@@ -30,11 +30,11 @@
   ! -----------------------------------------------------------
 
   !  ---- scelta iniziale delle direzioni ----------------------
-  do i=1,n      
-    d(i)=1.d0 
+  do i=1,n
+    d(i)=1.d0
   end do
-  ! -----------------------------------------------------------  
-     
+  ! -----------------------------------------------------------
+
   call funct(n,m,x,eps,f)
   nf=nf+1
 
@@ -54,10 +54,10 @@
     enddo
   endif
 
-  !---------------------------   
+  !---------------------------
   !     ciclo principale
   !---------------------------
-  do 
+  do
 
     if(iprint.ge.1) then
       write(iout,*) '----------------------------------------------'
@@ -76,18 +76,18 @@
     !-------------------------------------
     call linesearchbox(n,m,x,f,d,alfa,alfa_d,z,fz,i_corr,num_fal,&
                 alfa_max,i_corr_fall,iprint,iout,bl,bu,ni,nf,eps)
-              
+
     if(dabs(alfa).ge.1.d-12) then
       x(i_corr) = x(i_corr)+alfa*d(i_corr)
       f=fz
       fstop(i_corr)=f
-      
+
       num_fal=0
       ni=ni+1
     else
-      if(i_corr_fall.lt.2) then 
-        fstop(i_corr)=fz         
-        
+      if(i_corr_fall.lt.2) then
+        fstop(i_corr)=fz
+
         num_fal=num_fal+1
         ni=ni+1
       endif
@@ -99,7 +99,7 @@
       i_corr=i_corr+1
     else
       i_corr=1
-    end if 
+    end if
 
     call stop(n,alfa_d,istop,alfa_max,nf,ni,fstop,f,alfa_stop,nf_max)
 
@@ -123,9 +123,9 @@
         endif
       endif
     enddo
-    if(cambio_eps) then 
-      do i=1,n 
-        alfa_d(i)=dmax1(1.d-3,dmin1(1.d0,dabs(x(i)))) 
+    if(cambio_eps) then
+      do i=1,n
+        alfa_d(i)=dmax1(1.d-3,dmin1(1.d0,dabs(x(i))))
       enddo
     endif
   enddo

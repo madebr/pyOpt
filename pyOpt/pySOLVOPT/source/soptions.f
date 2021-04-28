@@ -1,7 +1,7 @@
       subroutine soptions(default)
 c SOPTIONS returns the default values for the optional parameters
 c used by SolvOpt.
-      double precision default(13) 
+      double precision default(13)
        default(1)=-1.d0
        default(2)=1.d-4
        default(3)=1.d-6

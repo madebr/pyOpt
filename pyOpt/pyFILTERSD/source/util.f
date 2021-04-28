@@ -254,7 +254,7 @@ c     character out*16
 c     out = ''
 c     ieeer = ieee_flags ( 'clearall','all','',out )
 c     ieeer=ieee_handler('clear','overflow',abort)
-c  this call of ieee_handler assumes that 
+c  this call of ieee_handler assumes that
 c         ieeer=ieee_handler('set','overflow',abort)
 c  has been set in the driver. If not this call of ieee_handler and that below
 c  should be removed
@@ -277,7 +277,7 @@ c     endif
 c     ieeer=ieee_handler('set','overflow',abort)
 c     return
 c     end
-      
+
       function xlen(a,x,n)
       implicit double precision (a-h,o-z)
       dimension x(*)
@@ -288,7 +288,7 @@ c     end
       xlen=sqrt(xlen)
       return
       end
-      
+
       subroutine linf(n,x,z,iz)
       implicit double precision (a-h,o-z)
       dimension x(*)

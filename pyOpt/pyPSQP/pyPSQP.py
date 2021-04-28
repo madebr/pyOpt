@@ -38,11 +38,12 @@ try:
 except:
         raise ImportError('PSQP shared library failed to import')
 
+import copy
 # =============================================================================
 # Standard Python modules
 # =============================================================================
 import os
-import copy, time
+import time
 
 # =============================================================================
 # External Python modules
@@ -52,8 +53,7 @@ import numpy
 # =============================================================================
 # Extension modules
 # =============================================================================
-from pyOpt import Optimizer
-from pyOpt import Gradient
+from pyOpt import Gradient, Optimizer
 
 # =============================================================================
 # Misc Definitions
@@ -78,15 +78,14 @@ class PSQP(Optimizer):
 
         def __init__(self, pll_type=None, *args, **kwargs):
 
-                '''
-                PSQP Optimizer Class Initialization
+                """PSQP Optimizer Class Initialization.
 
                 **Keyword arguments:**
 
                 - pll_type -> STR: Parallel Implementation (None, 'POA'-Parallel Objective Analysis), *Default* = None
 
                 Documentation last updated:  Feb. 16, 2010 - Peter W. Jansen
-                '''
+                """
 
                 #
                 if (pll_type == None):
@@ -130,8 +129,7 @@ class PSQP(Optimizer):
 
         def __solve__(self, opt_problem, sens_type='FD', store_sol=True, store_hst=False, hot_start=False, disp_opts=False, sens_mode='', sens_step={}, *args, **kwargs):
 
-                '''
-                Run Optimizer (Optimize Routine)
+                """Run Optimizer (Optimize Routine)
 
                 **Keyword arguments:**
 
@@ -147,7 +145,7 @@ class PSQP(Optimizer):
                 Additional arguments and keyword arguments are passed to the objective function call.
 
                 Documentation last updated:  February. 2, 2011 - Ruben E. Perez
-                '''
+                """
 
                 #
                 if self.poa and sens_mode.lower() == 'pgc':
@@ -409,7 +407,7 @@ class PSQP(Optimizer):
                         if (self.options['IPRINT'][1] <= 2):
                                 iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
                         else:
-                                raise IOError('Incorrect Output Level Setting')
+                                raise OSError('Incorrect Output Level Setting')
                 else:
                         iprint = numpy.array([0], numpy.int)
                 iout = numpy.array([self.options['IOUT'][1]], numpy.int)
@@ -500,48 +498,44 @@ class PSQP(Optimizer):
 
         def _on_setOption(self, name, value):
 
-                '''
-                Set Optimizer Option Value (Optimizer Specific Routine)
+                """Set Optimizer Option Value (Optimizer Specific Routine)
 
                 Documentation last updated:  November. 30, 2010 - Ruben E. Perez
-                '''
+                """
 
                 pass
 
 
         def _on_getOption(self, name):
 
-                '''
-                Get Optimizer Option Value (Optimizer Specific Routine)
+                """Get Optimizer Option Value (Optimizer Specific Routine)
 
                 Documentation last updated:  November. 30, 2010 - Ruben E. Perez
-                '''
+                """
 
                 pass
 
 
         def _on_getInform(self, infocode):
 
-                '''
-                Get Optimizer Result Information (Optimizer Specific Routine)
+                """Get Optimizer Result Information (Optimizer Specific Routine)
 
                 Keyword arguments:
                 -----------------
                 id -> STRING: Option Name
 
                 Documentation last updated:  November. 30, 2010 - Ruben E. Perez
-                '''
+                """
 
                 return self.informs[infocode]
 
 
         def _on_flushFiles(self):
 
-                '''
-                Flush the Output Files (Optimizer Specific Routine)
+                """Flush the Output Files (Optimizer Specific Routine)
 
                 Documentation last updated:  November. 30, 2010 - Ruben E. Perez
-                '''
+                """
 
                 #
                 iprint = self.options['IPRINT'][1]

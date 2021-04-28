@@ -1,13 +1,9 @@
 #!/usr/bin/env python
-'''
-Solves Langermann Multimodal Problem with Automatic Optimization Refinement.
-'''
+"""Solves Langermann Multimodal Problem with Automatic Optimization Refinement."""
 
 from numpy import cos, exp, pi
 
-from pyOpt import Optimization
-from pyOpt import NSGA2
-from pyOpt import SLSQP
+from pyOpt import NSGA2, SLSQP, Optimization
 
 
 def objfunc(x):

@@ -349,7 +349,7 @@ C              write(*, 1300)
           return
       end if
 
-C     Test whether we are at a stationary of the infeasibility 
+C     Test whether we are at a stationary of the infeasibility
 C     infeasible point
 
 c      if ( csupn .gt. epsfeas .and. ncsupn .le. epsopt ** 1.5d0  ) then
@@ -395,8 +395,8 @@ C     ==================================================================
 C     Near the solution, try to solve the KKT system by Newton's method
 C     ==================================================================
 
-      if ( seconde .and. .not. skipacc .and. 
-     +     .not. ( efacc .lt. 0.0d0 .and. eoacc .lt. 0.0d0 ) .and. 
+      if ( seconde .and. .not. skipacc .and.
+     +     .not. ( efacc .lt. 0.0d0 .and. eoacc .lt. 0.0d0 ) .and.
      +     ( nwcalls .gt. 0 .or.
      +     ( snorm .le. efacc     .and. nlpsupn .le. eoacc    ) .or.
      +     ( snorm .le. epsfeas12 .and. nlpsupn .le. epsopt12 ) .or.
@@ -552,7 +552,7 @@ C                  write(*, 1210)
           end if
 
       else if ( rhorestart ) then
- 
+
           if ( cifacnt .ge. 2 ) then
 
               rhoa = min( rhoa * rhomult, 1.0d0 )
@@ -688,7 +688,7 @@ C     Track consecutve failures of the inner solver at feasible points
       else
           cifacnt = 0
       end if
- 
+
 C     Compute continuous projected Lagrangian gradient norm
 
       call sevalnl(n,x,m,lambda,equatn,linear,nl,inform)
@@ -1018,7 +1018,7 @@ C     LOCAL ARRAYS
       else ! if ( gcoded .and. jaccoded ) then
 c     This else is the choice when gcoded and jaccoded and also when
 c     first derivatives were not provided by the user. In such case,
-c     sevaljac below will ultimately call subrotuines to compute 
+c     sevaljac below will ultimately call subrotuines to compute
 c     derivatives by finite differences.
           do i = 1,n
               nc(i) = 0.0d0

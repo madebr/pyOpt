@@ -1,20 +1,18 @@
 #!/usr/bin/env python
-'''
-Solves Constrained Rosenbrock's Passing Arguments into Objective Function.
+"""Solves Constrained Rosenbrock's Passing Arguments into Objective Function.
 
-    min 	A1*(X(2)-X(1)^2)^2 + (A2-x(1))^2
-    s.t.:	X(1)^2 + X(2)^2 - A2 <= 0
-            -1.0 <= xi <= 1.0,  i = 1,2
-            
-    arguments (passing into objfunc as kwargs)
-        A1 = 100.0, A2 = 1.0    (kwarg passing as list of args)
-        A3 = 1.0                (kwarg passing as single arg)
-    
-    f* = 0.0457 , x* = [0.7864, 0.6177]
-'''
+min         A1*(X(2)-X(1)^2)^2 + (A2-x(1))^2
+s.t.:       X(1)^2 + X(2)^2 - A2 <= 0
+        -1.0 <= xi <= 1.0,  i = 1,2
 
-from pyOpt import Optimization
-from pyOpt import SLSQP
+arguments (passing into objfunc as kwargs)
+    A1 = 100.0, A2 = 1.0    (kwarg passing as list of args)
+    A3 = 1.0                (kwarg passing as single arg)
+
+f* = 0.0457 , x* = [0.7864, 0.6177]
+"""
+
+from pyOpt import SLSQP, Optimization
 
 
 def objfunc(x, **kwargs):
@@ -32,10 +30,10 @@ def objfunc(x, **kwargs):
 
 
 # =============================================================================
-# 
+#
 # =============================================================================
 
-# Instantiate Optimization Problem 
+# Instantiate Optimization Problem
 opt_prob = Optimization('Rosenbrock Constrained Problem', objfunc)
 opt_prob.addVar('x1', 'c', lower=0.0, upper=1.0, value=0.5)
 opt_prob.addVar('x2', 'c', lower=0.0, upper=1.0, value=0.5)

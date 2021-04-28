@@ -28,11 +28,11 @@ try:
 except ImportError:
     print('Error: IPOPT shared library failed to import')
 
+import copy
 # =============================================================================
 # Standard Python modules
 # =============================================================================
 import os
-import copy
 import time
 
 # =============================================================================
@@ -43,9 +43,7 @@ import numpy
 # =============================================================================
 # Extension modules
 # =============================================================================
-from pyOpt import Optimizer
-from pyOpt import History
-from pyOpt import Gradient
+from pyOpt import Gradient, History, Optimizer
 
 # =============================================================================
 # Misc Definitions
@@ -394,8 +392,7 @@ class IPOPT(Optimizer):
                   sens_step={},
                   *args,
                   **kwargs):
-        """
-        Run Optimizer (Optimize Routine)
+        """Run Optimizer (Optimize Routine)
 
         **Keyword arguments:**
 
@@ -726,9 +723,9 @@ class IPOPT(Optimizer):
                 xu.append(opt_problem._variables[key].upper)
                 xx.append(opt_problem._variables[key].value)
             elif opt_problem._variables[key].type == 'i':
-                raise IOError('IPOPT cannot handle integer design variables')
+                raise OSError('IPOPT cannot handle integer design variables')
             elif opt_problem._variables[key].type == 'd':
-                raise IOError('IPOPT cannot handle discrete design variables')
+                raise OSError('IPOPT cannot handle discrete design variables')
 
         xl = numpy.array(xl)
         xu = numpy.array(xu)

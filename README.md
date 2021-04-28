@@ -2,8 +2,8 @@
 PYthon OPTimization Framework
 Copyright (c) 2008-2014, pyOpt Developers
 
-pyOpt is an object-oriented framework for formulating and solving 
-nonlinear constrained optimization problems. 
+pyOpt is an object-oriented framework for formulating and solving
+nonlinear constrained optimization problems.
 
 Some of the features of pyOpt:
 
@@ -22,7 +22,7 @@ Some of the features of pyOpt:
 *   Optimization solution histories can be stored during the
     optimization process. A partial history can also be used
     to warm-restart the optimization
-    
+
 see QUICKGUIDE.md for further details.
 
 ## Building and installing
@@ -32,7 +32,7 @@ see QUICKGUIDE.md for further details.
 - python
 - numpy and numpy-ext
 - fortran compiler
-- swig 
+- swig
 
 
 ### Build commands
@@ -57,19 +57,19 @@ python setup.py config_fc --help-fcompiler
 
 
 ## Licensing
-Distributed using the GNU Lesser General Public License (LGPL); see 
+Distributed using the GNU Lesser General Public License (LGPL); see
 the LICENSE file for details.
 
 Please cite pyOpt and the authors of the respective optimization
-algorithms in any publication for which you find it useful. 
+algorithms in any publication for which you find it useful.
 (This is not a legal requirement, just a polite request.)
 
 
 ## Contact and Feedback
 
 If you have questions, comments, problems, want to contribute to the
-framework development, or want to report a bug, please contact the 
+framework development, or want to report a bug, please contact the
 main developers:
-    
+
 -   [Dr. Ruben E. Perez](mailto:Ruben.Perez@rmc.ca)
 -   [Peter W. Jansen](mailto:Peter.Jansen@rmc.ca)

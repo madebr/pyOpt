@@ -234,7 +234,7 @@ C      write(* ,130) 'evalgjac'
           if ( inform .lt. 0 ) return
       end if
 
-C     CHECK GRADIENT OF OBJECTIVE FUNCTION PLUS PRODUCT OF 
+C     CHECK GRADIENT OF OBJECTIVE FUNCTION PLUS PRODUCT OF
 C     JACOBIAN OF CONSTRAINTS TIMES A GIVEN VECTOR
 
  1060 continue
@@ -920,7 +920,7 @@ C     ARRAY ARGUMENTS
 
 C     This subrotutine checks the user supplied subroutine evalgjac for
 C     computing the gradient of the objective function plus the Jacobian
-C     of the constraints. It uses central finite differences with two 
+C     of the constraints. It uses central finite differences with two
 C     different discretization steps.
 
       include "dim.par"
@@ -937,7 +937,7 @@ C     LOCAL ARRAYS
       double precision cminus(mmax),cplus(mmax),g(nmax),jcval(jcnnzmax)
 
 
-C     COMPUTE GRADIENT OF OBJECTIVE FUNCTION AND JACOBIAN OF 
+C     COMPUTE GRADIENT OF OBJECTIVE FUNCTION AND JACOBIAN OF
 C     CONSTRAINTS AT THE CURRENT POINT
 
       call vsetp(n,x)
@@ -1095,4 +1095,3 @@ C     NON-EXECUTABLE STATEMENTS
  230  format(  1X,'All the elements of this gradient are null.')
 
       end
-

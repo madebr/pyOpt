@@ -1,8 +1,8 @@
 !    -*- f90 -*-
 ! Note: the context of this file is case sensitive.
 
-python module mma__user__routines 
-    interface mma_user_interface 
+python module mma__user__routines
+    interface mma_user_interface
         subroutine func(m,n,xval,f0val,df0dx,fval,dfdx)
             integer intent(in) :: m
             integer intent(in) :: n
@@ -14,7 +14,7 @@ python module mma__user__routines
         end subroutine func
     end interface mma_user_interface
 end python module mma__user__routines
-python module mma ! in 
+python module mma ! in
     interface  ! in :mma
         subroutine mma(n,m,iter,maxit,geps,dabobj,delobj,itrm,inform,xval,xmma,xmin,xmax,xlow,xupp,alfa,beta,f0val,fval,fmax,df0dx,dfdx,p,q,p0,q0,b,y,z,a,c,ulam,gradf,dsrch,hessf,iyfree,iprint,iout,ifile,nfunc,func) ! in :mma:source/ksmmamain.f
             use mma__user__routines

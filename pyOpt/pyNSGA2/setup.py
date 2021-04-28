@@ -1,13 +1,13 @@
 import os
 import sys
-
-from distutils.errors import DistutilsSetupError
-from numpy.distutils.command import build_src
-from numpy.distutils.misc_util import appendpath
-from numpy.distutils.command.build_src import get_swig_modulename, get_swig_target
 from distutils.dep_util import newer_group
-from numpy.distutils import log
+from distutils.errors import DistutilsSetupError
 
+from numpy.distutils import log
+from numpy.distutils.command import build_src
+from numpy.distutils.command.build_src import (get_swig_modulename,
+                                               get_swig_target)
+from numpy.distutils.misc_util import appendpath
 
 # numpy/distutils/command/build_src.py
 # 584    if name != ext_name:
@@ -81,7 +81,7 @@ def swig_sources(self, sources, extension):
                     target_dir = os.path.dirname(base)
                     target_file = _find_swig_target(target_dir, name)
                     if not os.path.isfile(target_file):
-                        raise DistutilsSetupError("%r missing" % (target_file,))
+                        raise DistutilsSetupError(f"{target_file!r} missing")
                     log.warn('   Yes! Using %r as up-to-date target.' \
                              % (target_file))
             target_dirs.append(target_dir)
@@ -111,7 +111,7 @@ def swig_sources(self, sources, extension):
         target = swig_targets[source]
         depends = [source] + extension.depends
         if self.force or newer_group(depends, target, 'newer'):
-            log.info("%s: %s" % (os.path.basename(swig) \
+            log.info("{}: {}".format(os.path.basename(swig) \
                                  + (is_cpp and '++' or ''), source))
             self.spawn(swig_cmd + self.swig_opts \
                        + ["-o", target, '-outdir', py_target_dir, source])
@@ -124,7 +124,7 @@ def swig_sources(self, sources, extension):
 
 def _find_swig_target(target_dir, name):
     for ext in ['.cpp', '.c']:
-        target = os.path.join(target_dir, '%s_wrap%s' % (name, ext))
+        target = os.path.join(target_dir, f'{name}_wrap{ext}')
         if os.path.isfile(target):
             break
     return target

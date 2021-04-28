@@ -95,7 +95,7 @@ c  total storage needed is
       call gradients(n,m,x,ws(last1),ws,lws)
 c     if (iprint.gt.0)
 c       write(nout,4) 'ws_0',(ws(j),j=last1,last1+7)
-c     endif 
+c     endif
       do i=1,n
         xi=x(i)
         x(i)=x(i)+al(i)
@@ -108,7 +108,7 @@ c     endif
           if((dfi.ge.a_ij-tol.and.dfi.le.ah_ij+tol).or.
      *      (dfi.ge.ah_ij-tol.and.dfi.le.a_ij+tol))goto10
           if (iprint.gt.0)then
-            write(nout,1) 
+            write(nout,1)
      *        'derivative inconsistency in constraint/variable',j,i
             write(nout,*) 'deriv at x, diff quotient, deriv at x+h =',
      *          a_ij,dfi,ah_ij

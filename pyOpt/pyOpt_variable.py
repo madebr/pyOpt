@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-'''
-pyOpt_variable
+"""pyOpt_variable.
 
 Holds the Python Design Optimization Classes (base and inherited).
 
@@ -18,7 +17,7 @@ History
 -------
     v. 1.0  - Initial Class Creation (RP, 2008)
     v. 1.1  - Pretty Print of Optimization Problems (PJ, 2008)
-'''
+"""
 
 __version__ = '$Revision: $'
 
@@ -30,8 +29,9 @@ To Do:
 # =============================================================================
 # Standard Python modules
 # =============================================================================
-import os, sys
+import os
 import pdb
+import sys
 
 # =============================================================================
 # External Python modules
@@ -52,16 +52,13 @@ inf = 10.E+20  # define a value for infinity
 # =============================================================================
 # Variable Class
 # =============================================================================
-class Variable(object):
+class Variable:
 
-    '''
-    Optimization Variable Class
-    '''
+    """Optimization Variable Class."""
 
     def __init__(self, name, type='c', value=0.0, *args, **kwargs):
 
-        '''
-        Variable Class Initialization
+        """Variable Class Initialization.
 
         **Arguments:**
 
@@ -76,7 +73,7 @@ class Variable(object):
         - choices -> LIST: Variable Choices
 
         Documentation last updated:  Feb. 07, 2011 - Peter W. Jansen
-        '''
+        """
 
         #
         self.name = name
@@ -107,49 +104,47 @@ class Variable(object):
 
 
             if self.lower == []:
-                raise IOError('An integer variable requires to input a lower bound value')
+                raise OSError('An integer variable requires to input a lower bound value')
 
             if self.upper == []:
-                raise IOError('An integer variable requires to input an upper bound value')
+                raise OSError('An integer variable requires to input an upper bound value')
 
         elif (type[0].lower() == 'd'):
             for key in kwargs.keys():
                 if (key == 'choices'):
                     self.choices = kwargs['choices']
                 else:
-                    raise IOError('A discrete variable requires to input an array of choices')
+                    raise OSError('A discrete variable requires to input an array of choices')
 
 
             try:
                 self.value = self.choices[int(value)]
             except:
-                raise IOError('A discrete variable requires the value input to be a integer pointer value of the choices array')
+                raise OSError('A discrete variable requires the value input to be a integer pointer value of the choices array')
 
             self.lower = int(0)
             self.upper = int(len(self.choices))
         else:
-            raise IOError('Variable type not understood -- use either c(ontinuous), i(nteger) or d(iscrete)')
+            raise OSError('Variable type not understood -- use either c(ontinuous), i(nteger) or d(iscrete)')
 
 
 
     def ListAttributes(self):
 
-        '''
-        Print Structured Attributes List
+        """Print Structured Attributes List.
 
         Documentation last updated:  March. 10, 2008 - Ruben E. Perez
-        '''
+        """
 
         ListAttributes(self)
 
 
     def __str__(self):
 
-        '''
-        Print Structured List of Variable
+        """Print Structured List of Variable.
 
         Documentation last updated:  April. 30, 2008 - Peter W. Jansen
-        '''
+        """
 
         if (self.type == 'd'):
             return ('Name    Type       Value       Lower Bound  Upper Bound\n'+'	 '+str(self.name).center(9) +'%5s	%14f %14.2e %12.2e \n' %(self.type, self.choices[int(self.value)], min(self.choices), max(self.choices)))
@@ -164,11 +159,10 @@ class Variable(object):
 #==============================================================================
 def ListAttributes(self):
 
-        '''
-        Print Structured Attributes List
+        """Print Structured Attributes List.
 
         Documentation last updated:  March. 24, 2008 - Ruben E. Perez
-        '''
+        """
 
         print('\n')
         print('Attributes List of: ' + repr(self.__dict__['name']) + ' - ' + self.__class__.__name__ + ' Instance\n')
@@ -191,4 +185,3 @@ if __name__ == '__main__':
     # Test Variable
     var = Variable('x')
     var.ListAttributes()
-

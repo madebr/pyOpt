@@ -42,11 +42,13 @@ To Do:
 #       pass
 #
 
+import copy
 # =============================================================================
 # Standard Python modules
 # =============================================================================
-import os, sys
-import copy, time
+import os
+import sys
+import time
 
 # =============================================================================
 # External Python modules
@@ -81,15 +83,14 @@ class ALPSO(Optimizer):
         '''
 
     def __init__(self, pll_type=None, *args, **kwargs):
-        '''
-        ALPSO Optimizer Class Initialization
+        """ALPSO Optimizer Class Initialization.
 
         **Keyword arguments:**
 
         - pll_type -> STR: ALPSO Parallel Implementation (None, SPM- Static, DPM- Dynamic, POA-Parallel Analysis), *Default* = None
 
         Documentation last updated:  February. 2, 2011 - Ruben E. Perez
-        '''
+        """
 
         if (pll_type == None):
 
@@ -104,8 +105,9 @@ class ALPSO(Optimizer):
         elif (pll_type.upper() == 'SPM'):
 
             try:
-                from . import alpso_spm
                 from mpi4py import MPI
+
+                from . import alpso_spm
             except:
                 raise ImportError(
                     'pyALPSO: ALPSO SPM shared library failed to import')
@@ -119,8 +121,9 @@ class ALPSO(Optimizer):
             #
 
             try:
-                from . import alpso_dpm
                 from mpi4py import MPI
+
+                from . import alpso_dpm
             except:
                 raise ImportError(
                     'pyALPSO: ALPSO DPM shared library failed to import')
@@ -130,8 +133,9 @@ class ALPSO(Optimizer):
         elif (pll_type.upper() == 'POA'):
 
             try:
-                from . import alpso_poa
                 from mpi4py import MPI
+
+                from . import alpso_poa
             except:
                 raise ImportError(
                     'pyALPSO: ALPSO POA shared library failed to import')
@@ -242,8 +246,7 @@ class ALPSO(Optimizer):
                   hot_start=False,
                   *args,
                   **kwargs):
-        '''
-        Run Optimizer (Optimize Routine)
+        """Run Optimizer (Optimize Routine)
 
         **Keyword arguments:**
 
@@ -257,7 +260,7 @@ class ALPSO(Optimizer):
         Additional arguments and keyword arguments are passed to the objective function call.
 
         Documentation last updated:  February. 2, 2011 - Ruben E. Perez
-        '''
+        """
 
         if 'display_opts' in kwargs:
             sol_dispOpt = kwargs['display_opts']
@@ -362,7 +365,7 @@ class ALPSO(Optimizer):
             ['gbest', 'dlring', 'slring', 'wheel', 'spatial', 'sfrac']):
             nhm = self.options['HoodModel'][1].lower()
         else:
-            raise IOError('Incorrect Neighboorhood Model Setting')
+            raise OSError('Incorrect Neighboorhood Model Setting')
 
         nhs = self.options['HoodSelf'][1]
         imax = self.options['maxOuterIter'][1]
@@ -376,7 +379,7 @@ class ALPSO(Optimizer):
                 self.options['stopCriteria'][1] <= 1):
             stop = self.options['stopCriteria'][1]
         else:
-            raise IOError('Incorrect Stopping Criteria Setting')
+            raise OSError('Incorrect Stopping Criteria Setting')
 
         nstop = self.options['stopIters'][1]
         etol = self.options['etol'][1]
@@ -402,7 +405,7 @@ class ALPSO(Optimizer):
                 self.options['fileout'][1] <= 3):
             fileout = self.options['fileout'][1]
         else:
-            raise IOError('Incorrect fileout Setting')
+            raise OSError('Incorrect fileout Setting')
         filename = self.options['filename'][1]
 
         seed = self.options['seed'][1]
@@ -521,41 +524,37 @@ class ALPSO(Optimizer):
         }
 
     def _on_setOption(self, name, value):
-        '''
-        Set Optimizer Option Value (Optimizer Specific Routine)
+        """Set Optimizer Option Value (Optimizer Specific Routine)
 
         Documentation last updated:  May. 16, 2008 - Ruben E. Perez
-        '''
+        """
 
         pass
 
     def _on_getOption(self, name):
-        '''
-        Get Optimizer Option Value (Optimizer Specific Routine)
+        """Get Optimizer Option Value (Optimizer Specific Routine)
 
         Documentation last updated:  May. 16, 2008 - Ruben E. Perez
-        '''
+        """
 
         pass
 
     def _on_getInform(self, infocode):
-        '''
-        Get Optimizer Result Information (Optimizer Specific Routine)
+        """Get Optimizer Result Information (Optimizer Specific Routine)
 
         Keyword arguments:
         -----------------
         id -> STRING: Option Name
 
         Documentation last updated:  May. 16, 2008 - Ruben E. Perez
-        '''
+        """
 
         pass
 
     def _on_flushFiles(self):
-        '''
-        Flush the Output Files (Optimizer Specific Routine)
+        """Flush the Output Files (Optimizer Specific Routine)
 
         Documentation last updated:  August. 09, 2009 - Ruben E. Perez
-        '''
+        """
 
         pass

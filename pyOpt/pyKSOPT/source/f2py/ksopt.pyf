@@ -1,8 +1,8 @@
 !    -*- f90 -*-
 ! Note: the context of this file is case sensitive.
 
-python module ksopt__user__routines 
-    interface ksopt_user_interface 
+python module ksopt__user__routines
+    interface ksopt_user_interface
         subroutine objfun(ndv,nobj,ncon,x,obj,g)
             integer intent(in) :: ndv
             integer intent(in) :: nobj
@@ -23,7 +23,7 @@ python module ksopt__user__routines
         end subroutine grdfun
     end interface ksopt_user_interface
 end python module ksopt__user__routines
-python module ksopt ! in 
+python module ksopt ! in
     interface  ! in :ksopt
         subroutine ksmain(ndv,nobj,ncon,x,xlb,xub,obj,g,work,nwork,itmax,rdfun,rhomin,rhomax,iout,iprint,iname,nfeval,ngeval,objfun,grdfun) ! in :ksopt:source/ksmain.f
             use ksopt__user__routines
@@ -63,5 +63,5 @@ python module ksopt ! in
         subroutine closeunit(unitnum) ! in :mmfd:source/closeunit.f
             integer intent(in) :: unitnum
         end subroutine closeunit
-    end interface 
+    end interface
 end python module ksopt

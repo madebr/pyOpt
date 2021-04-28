@@ -575,7 +575,7 @@ c       alp(lev)=f
         lev=lev+1
         lp(lev)=plev
         if(iprint.ge.2)write(nout,*)
-     *    'degeneracy: increase level to ',lev       
+     *    'degeneracy: increase level to ',lev
         if(iprint.ge.1)write(nout,'(''pivots ='',I5,A,''level ='',I2,
      *    ''    f ='',E16.8)')npv,spaces(:3*lev-1),lev,f
           goto86
@@ -757,7 +757,7 @@ c     if(e.gt.tol)stop
         if(e.gt.tol*max(1.D0,abs(f)))write(nout,*)'function error = ',e,
      *    '   f(x) =',ff
         if(e.gt.tol*max(1.D0,abs(f)))stop
-      endif  
+      endif
 c       print 4,'g =',(g(i),i=1,n)
 c       print 4,'an =',(an(i),i=1,n)
 c       err=0.D0

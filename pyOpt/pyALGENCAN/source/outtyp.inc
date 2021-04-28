@@ -5,4 +5,3 @@ C     COMMON SCALARS
 C     COMMON BLOCKS
       common /outdat/ iprintctl,iprintinn,iprintout,nprint,mprint
       save   /outdat/
-

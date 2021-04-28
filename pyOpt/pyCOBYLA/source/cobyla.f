@@ -16,7 +16,7 @@ C     parameter RHO controls the size of the simplex and it is reduced
 C     automatically from RHOBEG to RHOEND. For each RHO the subroutine tries
 C     to achieve a good vector of variables for the current size, and then
 C     RHO is reduced until the value RHOEND is reached. Therefore RHOBEG and
-C     RHOEND should be set to reasonable initial changes to and the required   
+C     RHOEND should be set to reasonable initial changes to and the required
 C     accuracy in the variables respectively, but this accuracy should be
 C     viewed as a subject for experimentation because it is not guaranteed.
 C     The subroutine has an advantage over many of its competitors, however,

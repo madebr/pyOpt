@@ -70,7 +70,7 @@ c        n+1:n+m. The sign of ls(j) indicates whether the lower bound (+) or
 c        the upper bound (-) of constraint ls(j) is currently significant.
 c        Within the set of active constraints, locations 1:peq store the indices
 c        of any equality constraints, locations peq+1:n-k store the indices of
-c        any inequality constraints, and locations n-k+1:n store the indices of 
+c        any inequality constraints, and locations n-k+1:n store the indices of
 c        any free variables (variables not on a bound, which are used to
 c        parametrise the null space: ls(j) is always positive in this range)
 c          If mode>=2, the first n-k elements of ls must be set on entry
@@ -81,7 +81,7 @@ C        mlp=50 would usually be adequate but mlp=m is an upper bound)
 c  peq   pointer to the end of equality constraint indices in ls
 c  ws(*) real workspace for gdotx (see below), qlcpd and denseL.f (or schurQR.f)
 c          Set the total number in mxws (see "Common" below).
-c  lws(*) integer workspace for gdotx, qlcpd and denseL.f (or schurQR.f). 
+c  lws(*) integer workspace for gdotx, qlcpd and denseL.f (or schurQR.f).
 c          Set the total number in mxlws (see "Common" below).
 c        The storage maps for ws and lws are set by the routine stmap below
 c  cws(*) character workspace (if any) needed by funct
@@ -89,7 +89,7 @@ C  v(maxg) set nv estimates of the eigenvalues of the reduced Hessian of f(x)
 C          (for example from a previous run of glcpd). Set nv=1 and v(1)=1.D0
 C          in absence of other information. New values of v are left on exit
 C  nv    Number of estimates in v
-C  rgtol required accuracy in the reduced gradient l2 norm: it is advisable not 
+C  rgtol required accuracy in the reduced gradient l2 norm: it is advisable not
 C        to seek too high accuracy - rgtol may be increased by the code if it
 c        is deemed to be too small, see the definition of sgnf below
 C  m0de  mode of operation (larger numbers imply extra information):
@@ -1279,7 +1279,7 @@ c  potential degeneracy block at level lev
           alp(lev)=f
           f=0.D0
           if(iprint.ge.2)write(nout,*)
-     *      'degeneracy: increase level to ',lev       
+     *      'degeneracy: increase level to ',lev
           if(iprint.ge.1)write(nout,'(''pivots ='',I5,A,''level ='',I2,
      *      ''    f ='',E16.8)')npv,spaces(:3*lev-1),lev,f
           goto86

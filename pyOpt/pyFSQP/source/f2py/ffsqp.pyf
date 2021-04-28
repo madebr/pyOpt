@@ -15,7 +15,7 @@ python module ffsqp__user__routines
             double precision dimension(nparam),intent(in),depend(nparam) :: x
             double precision intent(in,out) :: gj
         end subroutine constr
-        subroutine gradob(nparam,j,x,gradfj,obj) 
+        subroutine gradob(nparam,j,x,gradfj,obj)
             integer intent(in) :: nparam
             integer intent(in) :: j
             double precision dimension(nparam),intent(in),depend(nparam) :: x
@@ -31,7 +31,7 @@ python module ffsqp__user__routines
         end subroutine gradcn
     end interface ffsqp_user_interface
 end python module ffsqp__user__routines
-python module ffsqp ! in 
+python module ffsqp ! in
     interface  ! in :ffsqp
         subroutine ffsqp(nparam,nf,nineqn,nineq,neqn,neq,mode,iprint,miter,inform,bigbnd,eps,epseqn,udelta,bl,bu,x,f,g,iw,iwsize,w,nwsize,obj,constr,gradob,gradcn,iounit,ifile) ! in :ffsqp:source/ffsqp.f
             use ffsqp__user__routines
@@ -111,5 +111,5 @@ python module ffsqp ! in
         subroutine closeunit(unitnum) ! in :conmin:source/closeunit.f
             integer intent(in) :: unitnum
         end subroutine closeunit
-    end interface 
+    end interface
 end python module ffsqp

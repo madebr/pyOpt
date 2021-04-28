@@ -2,22 +2,22 @@ Release 1.2.0 (July 31, 2014)
 ===============================
 
 * Added unconstrained problems support for all optimizers
-  (COBYLA,CONMIN and SNOPT improvements contributed by 
+  (COBYLA,CONMIN and SNOPT improvements contributed by
   Herbert Schilling, NASA Glenn).
-  
+
 * Update MIDACO optimizer support to version 4.0.
 
 * Update ALGENCAN optimizer support to version 2.4.
 
-* Updated NLPQLP optimizer fixing memory buffer bug 
+* Updated NLPQLP optimizer fixing memory buffer bug
   (reported by Simon Rudolph, Technische Universitat Munchen).
 
 * Updated FilterSD optimizer support to version 2.0.
 
-* Updated SLSQP optimizer fixing error 
+* Updated SLSQP optimizer fixing error
   (reported by Mueen Nawaz, Intel).
 
-* Updated NSGA2 optimizer adding initial solution support 
+* Updated NSGA2 optimizer adding initial solution support
   (reported by Smit Patel).
 
 
@@ -44,10 +44,10 @@ Release 1.1.0 (March 22, 2013)
   source is now included with a trial license
   that allows to test problems up to four variables.
 
-* Updated SLSQP optimizer to make it thread-safe 
+* Updated SLSQP optimizer to make it thread-safe
   (reported by Dr. K.T. Moore, NASA).
 
-* Updated package __init__ to fix circular dependencies 
+* Updated package __init__ to fix circular dependencies
   (reported by Dr. K.A. Weinman, DLR).
 
 * Added ALGENCAN optimizer functionality.
@@ -68,7 +68,7 @@ Release 1.0.1 (June 10, 2011)
 
 * Fix minor issue with SNOPT no print-out option.
 
-* Updated Optimization class to address minor issue 
+* Updated Optimization class to address minor issue
   with multiple optimization problem instances.
 
 

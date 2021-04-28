@@ -2,8 +2,8 @@
 ! Note: the context of this file is case sensitive.
 
 
-python module sdpen__user__routines 
-    interface sdpen_user_interface 
+python module sdpen__user__routines
+    interface sdpen_user_interface
         subroutine fobcon(n,m,x,f,g)
             intent(callback) fobcon
             external fobcon
@@ -15,7 +15,7 @@ python module sdpen__user__routines
         end subroutine fobcon
     end interface sdpen_user_interface
 end python module sdpen__user__routines
-python module sdpen ! in 
+python module sdpen ! in
     interface  ! in :sdpen
         subroutine penseq(n,m,x,lb,ub,fob,constr,alfa_stop,nf_max,iprint,iout,ifile,istop,num_funct) ! in :sdpen:source/penseq.f90
             use sdpen__user__routines
@@ -63,5 +63,5 @@ python module sdpen ! in
         subroutine closeunit(unitnum) ! in :sdpen:source/closeunit.f90
             integer intent(in) :: unitnum
         end subroutine closeunit
-    end interface 
+    end interface
 end python module sdpen

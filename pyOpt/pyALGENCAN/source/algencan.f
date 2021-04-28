@@ -12,9 +12,9 @@ C     SCALAR ARGUMENTS
       integer inform,iprint,m,n,ncomp
       double precision cnormu,efacc,eoacc,epsfeas,epsopt,fu,nlpsupn,
      +        snorm
-      
+
       character*(*) ifile
-      
+
 C     ARRAY ARGUMENTS
       logical coded(11),equatn(m),linear(m)
       double precision l(n),lambda(m),u(n),x(n)
@@ -119,26 +119,26 @@ C     Set user-provided subroutines indicators
 
 C     Check whether mandatory subroutines are being properly provided.
 
-C     For unconstrained and bound-constrained problems, EVALF must be 
-C     coded by the user. For constrained problems, EVALF and EVALC, or, 
-C     alternatively, EVALFC must be coded. (Note that EVALF/EVALC and 
-C     EVALFC should not be provided concurrently.) For feasibility 
-C     problems, a constant null objective function must be coded and the 
-C     problem solved with the IGNORE-OBJECTIVE-FUNCTION keyword. Coded 
-C     subroutines must be indicated by setting the entrances of array 
+C     For unconstrained and bound-constrained problems, EVALF must be
+C     coded by the user. For constrained problems, EVALF and EVALC, or,
+C     alternatively, EVALFC must be coded. (Note that EVALF/EVALC and
+C     EVALFC should not be provided concurrently.) For feasibility
+C     problems, a constant null objective function must be coded and the
+C     problem solved with the IGNORE-OBJECTIVE-FUNCTION keyword. Coded
+C     subroutines must be indicated by setting the entrances of array
 C     named CODED within subroutine INIP.
 
 C     Moreover, to avoid odd combinations, only the following choices
 C     will be considered valid:
 C
-C     If the objective function and the constraints are given by evalf 
-C     and evalc, respectively, first derivatives must be given by evalg 
-C     and evaljac, while second derivatives must be given by evalh and 
+C     If the objective function and the constraints are given by evalf
+C     and evalc, respectively, first derivatives must be given by evalg
+C     and evaljac, while second derivatives must be given by evalh and
 C     evalhc.
 C
 C     If the objective function and the constraints are given by evalfc
 C     then first derivatives may be given by evalgjac or evalgjacp. If
-C     first derivatives are given by evalgjac, second derivatives must 
+C     first derivatives are given by evalgjac, second derivatives must
 C     be given by evalhl. On the other hand, if first derivatives are
 C     given by evalgjacp, second derivatives must be given by evalhlp.
 C
@@ -147,24 +147,24 @@ C
 C     Variables being set below have the following meaning:
 C
 C     firstde: whether, following the rules dictated above, the user-
-C     provided subroutines will allow the method to compute first 
-C     derivatives. 
+C     provided subroutines will allow the method to compute first
+C     derivatives.
 C
 C     seconde: whether, following the rules dictated above, the user-
-C     provided subroutines will allow the method to compute the Hessian 
-C     matrix of the augmented Lagrangian (to minimize the augmented 
+C     provided subroutines will allow the method to compute the Hessian
+C     matrix of the augmented Lagrangian (to minimize the augmented
 C     Lagrangian subproblems using a second-order method) and/or the
 C     Hessian of the Lagrangian plus the Jacobian of the constraints
-C     (in order to solve the KKT system by Newton's method). 
+C     (in order to solve the KKT system by Newton's method).
 C
 C     truehpr: whether, following the rules dictated above, the user-
-C     provided subroutines will allow the method to compute the 
+C     provided subroutines will allow the method to compute the
 C     product of the true Hessian of the augmented Lagrangian times
 C     a given vector. It would allow the method to solve the augmented
 C     Lagrangian subproblems using a truncated-Newton method using
 C     Conjugate Gradients to solve the Newtonian linear systems.
 
-      fcsubt = 0      
+      fcsubt = 0
       if ( fcoded .and. ( ccoded .or. m .eq. 0 ) ) then
           fcsubt = 1
           firstde = .false.
@@ -193,7 +193,7 @@ C     Conjugate Gradients to solve the Newtonian linear systems.
               if ( hlpcoded ) then
                   truehpr = .true.
               end if
-          end if 
+          end if
       end if
 
 C     ==================================================================
@@ -278,7 +278,7 @@ C     ==================================================================
       iprintctl(5) = .true.  ! Solution file solution.txt
       iprintctl(6) = .false. ! Statistics file with table line
       iprintctl(7) = .true.  ! User-provided subs calls counters and timing
- 
+
       oprint = iprint
 
       if (oprint .eq. 0 ) then

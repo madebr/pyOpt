@@ -278,7 +278,7 @@ c       endif
 c         t=2.D0**nint(log(t)*z)
           s(n+i)=t
           do j=1,n
-            a(j,i)=a(j,i)/t 
+            a(j,i)=a(j,i)/t
           enddo
           bl(n+i)=bl(n+i)/t
           bu(n+i)=bu(n+i)/t

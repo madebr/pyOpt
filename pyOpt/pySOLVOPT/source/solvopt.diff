@@ -33,22 +33,22 @@
 >       dimension B(n,n),g(n),g0(n),g1(n),gt(n),gc(n),z(n)
 >       dimension x1(n),xopt(n),xrec(n),grec(n),xx(n),deltax(n)
 >       dimension idx(n)
->       
+>
 >       character endwarn*100
 125a121,123
 >       integer iout
 >       character*(*) ifile
->       
+>
 130,131c128,133
 <      4    infty /1.d100/, epsnorm /1.d-15/,  epsnorm2 /1.d-30/,
 <      5    allocerrstr/'Allocation Error = '/
 ---
 >      4    infty /1.d100/, epsnorm /1.d-15/,  epsnorm2 /1.d-30/
->      
+>
 >       if (options(5).gt.-one) then
 >         open(unit=iout,file=ifile(1:len_trim(ifile)),status='unknown')
 >       endif
->      
+>
 134,135c136,139
 <           print *, errmes
 <           print *, error2
@@ -63,82 +63,82 @@
 <       if (allocerr.ne.0) then
 <          options(9)=-one
 <          print *,allocerrstr,allocerr
-<       endif   
+<       endif
 <       allocate (g(n),stat=allocerr)
 <       if (allocerr.ne.0) then
 <          options(9)=-one
 <          print *,allocerrstr,allocerr
-<       endif   
+<       endif
 <       allocate (g0(n),stat=allocerr)
 <       if (allocerr.ne.0) then
 <          options(9)=-one
 <          print *,allocerrstr,allocerr
-<       endif   
+<       endif
 <       allocate (g1(n),stat=allocerr)
 <       if (allocerr.ne.0) then
 <          options(9)=-one
 <          print *,allocerrstr,allocerr
-<       endif   
+<       endif
 <       allocate (gt(n),stat=allocerr)
 <       if (allocerr.ne.0) then
 <          options(9)=-one
 <          print *,allocerrstr,allocerr
-<       endif   
+<       endif
 <       allocate (gc(n),stat=allocerr)
 <       if (allocerr.ne.0) then
 <          options(9)=-one
 <          print *,allocerrstr,allocerr
-<       endif   
+<       endif
 <       allocate (z(n),stat=allocerr)
 <       if (allocerr.ne.0) then
 <          options(9)=-one
 <          print *,allocerrstr,allocerr
-<       endif   
+<       endif
 <       allocate (x1(n),stat=allocerr)
 <       if (allocerr.ne.0) then
 <          options(9)=-one
 <          print *,allocerrstr,allocerr
-<       endif   
+<       endif
 <       allocate (xopt(n),stat=allocerr)
 <       if (allocerr.ne.0) then
 <          options(9)=-one
 <          print *,allocerrstr,allocerr
-<       endif   
+<       endif
 <       allocate (xrec(n),stat=allocerr)
 <       if (allocerr.ne.0) then
 <          options(9)=-one
 <          print *,allocerrstr,allocerr
-<       endif   
+<       endif
 <       allocate (grec(n),stat=allocerr)
 <       if (allocerr.ne.0) then
 <          options(9)=-one
 <          print *,allocerrstr,allocerr
-<       endif   
+<       endif
 <       allocate (xx(n),stat=allocerr)
 <       if (allocerr.ne.0) then
 <          options(9)=-one
 <          print *,allocerrstr,allocerr
-<       endif   
+<       endif
 <       allocate (deltax(n),stat=allocerr)
 <       if (allocerr.ne.0) then
 <          options(9)=-one
 <          print *,allocerrstr,allocerr
-<       endif   
+<       endif
 <       allocate (idx(n),stat=allocerr)
 <       if (allocerr.ne.0) then
 <          options(9)=-one
 <          print *,allocerrstr,allocerr
-<       endif   
+<       endif
 258c191
-<          dispdata=0  
+<          dispdata=0
 ---
 >          dispdata=0
 260c193
-<             dispwarn=.false. 
+<             dispwarn=.false.
 ---
 >             dispwarn=.false.
 262c195
-<             dispwarn=.true. 
+<             dispwarn=.true.
 ---
 >             dispwarn=.true.
 310c243,245
@@ -192,7 +192,7 @@
 >             write(iout,*) error43
 >             write(iout,*) error6
 401c340,342
-<             call gradc(x,gc)  
+<             call gradc(x,gc)
 ---
 >             call gradc(n,x,gc)
 > c	        write(iout,*) 'dg'
@@ -213,11 +213,11 @@
 >                write(iout,*) error63
 469a411,416
 >         if (options(5).gt.zero) then
->           write(iout,*) 
+>           write(iout,*)
 >      1        'Iteration # ..... Function Value ..... ',
 >      2        'Step Value ..... Gradient Norm'
 >         endif
->         
+>
 514,515c461,462
 <                 print *,wrnmes
 <                 print *,warn08
@@ -237,10 +237,10 @@
 > c	     write(iout,*) 'f'
 > c	     write(iout,*) f
 642,643c591,592
-<               print *,errmes 
+<               print *,errmes
 <               print *,error5
 ---
->               write(iout,*) errmes 
+>               write(iout,*) errmes
 >               write(iout,*) error5
 650c599,601
 <            call func(x,fc)
@@ -264,10 +264,10 @@
 >                write(iout,*) error32
 715,716c666,667
 <                        print *,termwarn1
-<                        print *,endwarn4 
+<                        print *,endwarn4
 ---
 >                        write(iout,*) termwarn1
->                        write(iout,*) endwarn4 
+>                        write(iout,*) endwarn4
 818c769,771
 <           call grad(x,g)
 ---
@@ -287,7 +287,7 @@
 >            write(iout,*) wrnmes
 >            write(iout,*) warn1
 865c818,820
-<                  call gradc(x,gc)  
+<                  call gradc(x,gc)
 ---
 >                  call gradc(n,x,gc)
 > c			     write(iout,*) 'dg'
@@ -306,17 +306,17 @@
 >                      write(iout,*) error63
 898,899c853,854
 <                  print *,wrnmes
-<                  print *,warn21 
+<                  print *,warn21
 ---
 >                  write(iout,*) wrnmes
->                  write(iout,*) warn21 
+>                  write(iout,*) warn21
 939,942c894,901
 <          print *,
 <      1        'Iteration # ..... Function Value ..... ',
 <      2        'Step Value ..... Gradient Norm'
 <          print '(5x,i5,7x,g13.5,6x,g13.5,7x,g13.5)', k,f,dx,ng
 ---
-> c         write(iout,*) 
+> c         write(iout,*)
 > c     1        'Iteration # ..... Function Value ..... ',
 > c     2        'Step Value ..... Gradient Norm'
 >          write(iout,'(5x,i5,7x,f13.5,6x,f13.5,7x,f13.5)') k,f,dx,ng
@@ -343,19 +343,19 @@
 ---
 >                        if (dispwarn) write(iout,*) termwarn0
 1050,1052c1009,1011
-<                        print *,termwarn1 
+<                        print *,termwarn1
 <                        print *,endwarn4
 <                        if (app) print *,appwarn
 ---
->                        write(iout,*) termwarn1 
+>                        write(iout,*) termwarn1
 >                        write(iout,*) endwarn4
 >                        if (app) write(iout,*) appwarn
 1066,1067c1025,1026
 <                   print *,wrnmes
-<                   print *,warn4 
+<                   print *,warn4
 ---
 >                   write(iout,*) wrnmes
->                   write(iout,*) warn4 
+>                   write(iout,*) warn4
 1076,1077c1035,1036
 <                   print *,termwarn1
 <                   print *,warn1
@@ -423,6 +423,6 @@
 1243,1247d1209
 < c deallocate working arrays:
 <        deallocate (idx,deltax,xx,grec,xrec,xopt,x1,z,gc,gt,g1,g0,g,B)
-<       
-<       end 
+<
+<       end
 <       subroutine null

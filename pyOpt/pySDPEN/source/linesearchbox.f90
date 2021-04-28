@@ -41,7 +41,7 @@
 
   do ielle=1,2
     if(d(j).gt.0.d0) then
-      if((alfa_d(j)-(bu(j)-x(j))).lt.(-1.d-6)) then                 
+      if((alfa_d(j)-(bu(j)-x(j))).lt.(-1.d-6)) then
         alfa=dmax1(1.d-24,alfa_d(j))
       else
         alfa=bu(j)-x(j)
@@ -55,27 +55,27 @@
         ifront=1
       endif
     endif
-    
+
     if(dabs(alfa).le.1.d-3*dmin1(1.d0,alfa_max)) then
       d(j)=-d(j)
       i_corr_fall=i_corr_fall+1
       alfa=0.d0
       ifront=0
-    
+
       if(iprint.ge.1) then
         write(iout,*) ' direzione opposta per alfa piccolo'
         write(iout,*) ' j =',j,'    d(j) =',d(j)
         write(iout,*) ' alfa=',alfa,'    alfamax=',alfa_max
       endif
-    
+
       cycle
-    
+
     endif
-    
+
     alfaex=alfa
-    
+
     z(j) = x(j)+alfa*d(j)
-   
+
     call funct(n,m,z,eps,fz)
     nf=nf+1
 
@@ -95,14 +95,14 @@
       ! espansione
 
       do
-      
+
         if((ifront.eq.1).or.(num_fal.gt.n-1)) then
   !     if((ifront.eq.1)) then
           alfa_d(j)=delta*alfa
           return
         end if
 
-        if(d(j).gt.0.d0) then 
+        if(d(j).gt.0.d0) then
           if((alfa/delta1-(bu(j)-x(j))).lt.(-1.d-6)) then
             alfaex=alfa/delta1
           else
@@ -123,14 +123,14 @@
             endif
           end if
         endif
-             
-        z(j) = x(j)+alfaex*d(j)    
-    
+
+        z(j) = x(j)+alfaex*d(j)
+
         call funct(n,m,z,eps,fzdelta)
         nf=nf+1
 
         if(iprint.ge.1) then
-          write(iout,*) ' fzex=',fzdelta,'  alfaex=',alfaex  
+          write(iout,*) ' fzex=',fzdelta,'  alfaex=',alfaex
         endif
         if(iprint.ge.2) then
           do i=1,n
@@ -143,12 +143,12 @@
         if(fzdelta.lt.fpar) then
           fz=fzdelta
           alfa=alfaex
-        else               
+        else
           alfa_d(j)=delta*alfa
           return
         end if
       enddo
-    else 
+    else
       d(j)=-d(j)
       ifront=0
 
@@ -167,5 +167,5 @@
 
   alfa=0.d0
 
-  return         
+  return
   end
