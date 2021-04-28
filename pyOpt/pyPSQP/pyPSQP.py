@@ -182,7 +182,7 @@ class PSQP(Optimizer):
                 #======================================================================
                 # PSQP - Objective/Constraint Values Storage
                 #======================================================================
-                def eval(x):
+                def psqp_eval(x):
 
                         # Variables Groups Handling
                         if opt_problem.use_groups:
@@ -286,7 +286,7 @@ class PSQP(Optimizer):
                 def pobj(n,x,f):
 
                         if ((self.stored_data['x'] != x).any()):
-                                eval(x)
+                                psqp_eval(x)
 
                         ff = self.stored_data['f']
 
@@ -299,7 +299,7 @@ class PSQP(Optimizer):
                 def pcon(n,k,x,g):
 
                         if ((self.stored_data['x'] != x).any()):
-                                eval(x)
+                                psqp_eval(x)
 
                         gg = self.stored_data['g']
 
@@ -312,7 +312,7 @@ class PSQP(Optimizer):
                 def pdobj(n,x,df):
 
                         if ((self.stored_data['x'] != x).any()):
-                                eval(x)
+                                psqp_eval(x)
 
                         df = self.stored_data['df']
 
@@ -325,7 +325,7 @@ class PSQP(Optimizer):
                 def pdcon(n,k,x,dg):
 
                         if ((self.stored_data['x'] != x).any()):
-                                eval(x)
+                                psqp_eval(x)
 
                         dg = self.stored_data['dg']
 
