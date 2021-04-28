@@ -30,7 +30,6 @@ import array as ARRAY
 # Standard Python modules
 # =============================================================================
 import os
-import pdb
 import shelve
 import sys
 
