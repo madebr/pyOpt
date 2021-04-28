@@ -42,7 +42,8 @@ import sys
 # =============================================================================
 # Extension modules
 # =============================================================================
-from pyOpt import History, Optimization
+from .pyOpt_history import History
+from .pyOpt_optimization import Optimization
 
 # =============================================================================
 # External Python modules

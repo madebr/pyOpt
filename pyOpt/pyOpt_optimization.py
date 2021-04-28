@@ -51,7 +51,10 @@ import numpy
 # =============================================================================
 # Extension modules
 # =============================================================================
-from pyOpt import Constraint, Objective, Parameter, Variable
+from .pyOpt_constraint import Constraint
+from .pyOpt_objective import Objective
+from .pyOpt_variable import Variable
+from .pyOpt_parameter import Parameter
 
 # =============================================================================
 # Misc Definitions
