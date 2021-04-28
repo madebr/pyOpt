@@ -72,7 +72,6 @@ jobs:
           CIBW_ARCHS_MACOS: auto64
           CIBW_ARCHS: ${{ matrix.arch }}
           CIBW_SKIP: pp* cp27-win*
-          FFLAGS: '-fallow-argument-mismatch'  # gfortran 10 will fail with some files otherwise
           # TODO: pretty unelegant below, we have gcc-10 and gfortran-10 available, how to alias them?
           CIBW_BEFORE_BUILD: brew install swig && brew rm gcc && brew install gcc
 
