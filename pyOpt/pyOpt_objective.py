@@ -132,4 +132,3 @@ if __name__ == '__main__':
     # Test Ojective
     obj = Objective('f')
     obj.ListAttributes()
-

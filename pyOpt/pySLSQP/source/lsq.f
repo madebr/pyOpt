@@ -181,4 +181,3 @@ c   restore Lagrange multipliers
 C   END OF SUBROUTINE LSQ
 
       END
-
