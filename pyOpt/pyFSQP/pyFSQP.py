@@ -194,7 +194,7 @@ class FSQP(Optimizer):
 		#======================================================================
 		# FSQP - Objective/Constraint Values Storage
 		#======================================================================
-		def eval(x):
+		def fsqp_eval(x):
 
 			# Variables Groups Handling
 			if opt_problem.use_groups:
@@ -301,7 +301,7 @@ class FSQP(Optimizer):
 		def obj(nparam,j,x,fj):
 
 			if ((self.stored_data['x'] != x).any()):
-				eval(x)
+				fsqp_eval(x)
 
 			ff = self.stored_data['f']
 			if (nobj == 1):
@@ -322,7 +322,7 @@ class FSQP(Optimizer):
 			# for given j, assign to gj the value of the jth constraint evaluated at x
 
 			if ((self.stored_data['x'] != x).any()):
-				eval(x)
+				fsqp_eval(x)
 
 			gg = self.stored_data['g']
 			if (j <= nic):
@@ -342,7 +342,7 @@ class FSQP(Optimizer):
 			# assign to gradfj the gradient of the jth objective function evaluated at x
 
 			if ((self.stored_data['x'] != x).any()):
-				eval(x)
+				fsqp_eval(x)
 
 			df = self.stored_data['df']
 			for i in range(len(opt_problem._variables.keys())):
@@ -359,7 +359,7 @@ class FSQP(Optimizer):
 			# assign to gradgj the gradient of the jth constraint evaluated at x
 
 			if ((self.stored_data['x'] != x).any()):
-				eval(x)
+				fsqp_eval(x)
 
 			dg = self.stored_data['dg']
 			if (j <= nic):
