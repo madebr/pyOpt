@@ -26,7 +26,8 @@ C     ARRAY ARGUMENTS
 
 C     LOCAL SCALARS
       integer i,fun,j,jcnnz,neq
-      double precision dum,scmin
+      double precision scmin
+      double precision dum(1)
 
 C     LOCAL ARRAYS
 c     integer jcfun(jcnnzmax),jcvar(jcnnzmax)

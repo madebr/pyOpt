@@ -100,7 +100,7 @@
 *     POINTERS FOR AUXILIARY ARRAYS
 *
       DOUBLE PRECISION F,CMAX,GMAX
-      INTEGER          IPRNT,ITERM,NB,NC,NF
+      INTEGER          IPRNT,IOUT,ITERM,NB,NC,NF
       DOUBLE PRECISION CF(*),CL(*),CU(*),RPAR(5),X(*),XL(*),XU(*)
       INTEGER          IC(*),IPAR(6),IX(*)
       INTEGER          NADD,NDEC,NFG,NFH,NFV,NIT,NREM,NRES
@@ -129,7 +129,7 @@
      +          RA(LGC),IA,RA(LCR),RA(LCZ),RA(LCP),RA(LGF),RA(LG),
      +          RA(LH),RA(LS),RA(LXO),RA(LGO),RPAR(1),RPAR(2),RPAR(3),
      +          RPAR(4),RPAR(5),CMAX,GMAX,F,IPAR(1),IPAR(2),IPAR(5),
-     +          IPAR(6),IPRNT,ITERM)
+     +          IPAR(6),IPRNT,IOUT,ITERM)
       DEALLOCATE(IA,RA)
       RETURN
       END

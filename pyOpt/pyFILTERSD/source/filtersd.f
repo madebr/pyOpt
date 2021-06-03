@@ -566,7 +566,7 @@ c     print 5,hJt,hJ
 c     print 2,'dq,df',dq,df
 c  filter test for LCP solution
       call testfil(hxdJt,hxdJ,filh,filf,nfil1,nfil,ifail)
-      if(ifail.eq.0)call testfil(hxdJt,hxdJ,hJt,hJ,1,1,ifail)
+      if(ifail.eq.0)call testfile_one_filh(hxdJt,hxdJ,hJt,hJ,ifail)
 c     print 6,'hxdJt,hxdJ,ifail',hxdJt,hxdJ,ifail
       if(ifail.eq.1.or.(dq.ge.tol.and.df.lt.sigma*dq))then
         if(hxdJt.eq.0.D0.or.dq.lt.tol)then
@@ -657,7 +657,7 @@ c  filter test for projection solution
         df=hJ-hxdJ
 c       print 2,'dq,df',dq,df
         call testfil(hxdJt,hxdJ,filh,filf,nfil1,nfil,ifail)
-        if(ifail.eq.0)call testfil(hxdJt,hxdJ,hJt,hJ,1,1,ifail)
+        if(ifail.eq.0)call testfile_one_filh(hxdJt,hxdJ,hJt,hJ,ifail)
 c       if(ifail.eq.1)print 2,'hxdJt/hxJt =',hxdJt/hxJt
 c       print 6,'project: hxdJt,hxdJ,ifail',hxdJt,hxdJ,ifail
         if(ifail.eq.1.or.df.lt.sigma*dq)then
@@ -846,7 +846,7 @@ c  filter test for LCP solution
       df=f-fxd
 c     print 2,'dq,df',dq,df
       call testfil(hxd,fxd,filh,filf,1,nfil,ifail)
-      if(ifail.eq.0)call testfil(hxd,fxd,h,f,1,1,ifail)
+      if(ifail.eq.0)call testfile_one_filh(hxd,fxd,h,f,ifail)
 c     print 6,'hxd,fxd,ifail',hxd,fxd,ifail
       if(ifail.eq.1.or.(dq.ge.tol.and.df.lt.sigma*dq))then
         if(hxd.eq.0.D0.or.dq.lt.tol)then
@@ -928,7 +928,7 @@ c  filter test for projection solution
         endif
         df=f-fxd
         call testfil(hxd,fxd,filh,filf,1,nfil,ifail)
-        if(ifail.eq.0)call testfil(hxd,fxd,h,f,1,1,ifail)
+        if(ifail.eq.0)call testfile_one_filh(hxd,fxd,h,f,ifail)
 c       if(ifail.eq.1)print 2,'hxd/hx =',hxd/hx
 c       print 6,'hxd,fxd,ifail',hxd,fxd,ifail
         if(ifail.eq.1.or.df.lt.sigma*dq)then
@@ -1014,6 +1014,15 @@ c     iph=2
       common/ngrc/mxgr
       data  ainfty, ubd, mlp, mxf,  mxgr
      *    / 1.D20,  1.D4, 50,  50, 1000000/
+      end
+
+      subroutine testfile_one_filh(h,f,filh,filf,ifail)
+      implicit double precision (a-h,o-z)
+      dimension filh_array(1),filf_array(1)
+      filh_array(1) = filh
+      filf_array(1) = filf
+      call testfil(h,f,filh_array,filf_array,1,1,ifail)
+      return
       end
 
       subroutine testfil(h,f,filh,filf,nfil1,nfil,ifail)

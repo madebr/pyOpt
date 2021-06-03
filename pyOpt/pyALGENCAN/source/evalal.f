@@ -87,7 +87,7 @@ C     ARRAY ARGUMENTS
 C     LOCAL SCALARS
       logical alllin,allnol
       integer i,ind,j,jcnnz
-      double precision dum
+      double precision dum(1)
 
 C     LOCAL ARRAYS
       integer jcfun(jcnnzmax)
@@ -640,7 +640,8 @@ C     ARRAY ARGUMENTS
 
 C     LOCAL SCALARS
       integer i,j
-      double precision ajtp,dum
+      double precision dum(1)
+      double precision ajtp
 
 C     LOCAL ARRAYS
       double precision ap(mmax),atap(nmax)
@@ -744,7 +745,8 @@ C     Augmented Lagrangian times a vector using incremental quotients.
 C     LOCAL SCALARS
       logical iglin
       integer i,j
-      double precision ajtp,dum,psupn,step,xsupn
+      double precision dum(1)
+      double precision ajtp,psupn,step,xsupn
 
 C     LOCAL  ARRAYS
       double precision ap(mmax),atap(nmax),gpparc(nmax),ptmp(nmax),
