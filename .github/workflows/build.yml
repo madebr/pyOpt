@@ -67,7 +67,7 @@ jobs:
 #          alias gcc=gcc-10
 #          alias gfortran=gfortran-10
 
-      - uses: joerick/cibuildwheel@v2.2.2
+      - uses: joerick/cibuildwheel@v2.3.0
         env:
           CIBW_ARCHS_MACOS: auto64
           CIBW_ARCHS: ${{ matrix.arch }}
@@ -96,7 +96,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: joerick/cibuildwheel@v2.2.2
+      - uses: joerick/cibuildwheel@v2.3.0
         env:
           CIBW_SKIP: pp* cp27-win*
 
