@@ -41,7 +41,7 @@ jobs:
           python -m pip install dist/*
 #          pip install -v dist/*.tar.gz
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           path: dist/*.tar.gz
 
@@ -76,7 +76,7 @@ jobs:
           CIBW_BEFORE_BUILD: brew install swig && brew rm gcc && brew install gcc
 
       - name: Upload wheels
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           path: wheelhouse/*.whl
 
@@ -101,7 +101,7 @@ jobs:
           CIBW_SKIP: pp* cp27-win*
 
       - name: Upload wheels
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           path: wheelhouse/*.whl
 
