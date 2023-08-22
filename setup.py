@@ -19,11 +19,11 @@ class build_opt(build_ext):
             self.announce(f'*** WARNING: Building of optimizer {ext.name} failed: {sys.exc_info()[1]}')
 
 
-def configuration(parent_package='',top_path=None):
+def configuration(parent_package='', top_path=None):
 
     from numpy.distutils.misc_util import Configuration
 
-    config = Configuration(None,parent_package,top_path)
+    config = Configuration(None, parent_package, top_path)
     config.set_options(
         ignore_setup_xxx_py=True,
         assume_default_configuration=True,
