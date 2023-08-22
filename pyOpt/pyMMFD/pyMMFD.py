@@ -320,7 +320,7 @@ class MMFD(Optimizer):
 		else:
 			raise OSError('MMFD support for unconstrained problems not implemented yet')
 		gg = numpy.array(gg)
-		idg = numpy.array(idg, numpy.int)
+		idg = numpy.array(idg, int)
 
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
@@ -332,24 +332,24 @@ class MMFD(Optimizer):
 
 
 		# Setup argument list values
-		ndv = numpy.array([nvar], numpy.int)
-		ncn = numpy.array([ncon], numpy.int)
+		ndv = numpy.array([nvar], int)
+		ncn = numpy.array([ncon], int)
 		if (self.options['IOPT'][1]>=0 and self.options['IOPT'][1]<=1):
-			iopt = numpy.array([self.options['IOPT'][1]], numpy.int)
+			iopt = numpy.array([self.options['IOPT'][1]], int)
 		else:
 			raise OSError('Incorrect Feasible Directions Approach')
 		if (self.options['IONED'][1]>=0 and self.options['IONED'][1]<=3):
-			ioned = numpy.array([self.options['IONED'][1]], numpy.int)
+			ioned = numpy.array([self.options['IONED'][1]], int)
 		else:
 			raise OSError('Incorrect One-Dimensional Search Method')
 		if (myrank == 0):
 			if (self.options['IPRINT'][1]>=0 and self.options['IPRINT'][1]<=2):
-				iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
+				iprint = numpy.array([self.options['IPRINT'][1]], int)
 			else:
 				raise OSError('Incorrect Output Level Setting')
 		else:
-			iprint = numpy.array([0], numpy.int)
-		#iout = numpy.array([self.options['IOUT'][1]], numpy.int)
+			iprint = numpy.array([0], int)
+		#iout = numpy.array([self.options['IOUT'][1]], int)
 		ifile = self.options['IFILE'][1]
 		if (iprint > 0):
 			if os.path.isfile(ifile):
@@ -363,20 +363,20 @@ class MMFD(Optimizer):
 		delobj = numpy.array([self.options['DELOBJ'][1]], float)
 		thetaz = numpy.array([self.options['THETAZ'][1]], float)
 		pmlt = numpy.array([self.options['PMLT'][1]], float)
-		itmax = numpy.array([self.options['ITMAX'][1]], numpy.int)
-		itrmop = numpy.array([self.options['ITRMOP'][1]], numpy.int)
+		itmax = numpy.array([self.options['ITMAX'][1]], int)
+		itrmop = numpy.array([self.options['ITRMOP'][1]], int)
 		nrwk0 = 500
 		nrwk1 = 10*(2*nvar+ncon)
 		nrwk2 = (ncon+2*nvar+3)
 		nrwk3 = (ncon+2*nvar)*((ncon+2*nvar)/2+1)
 		nrwkS = nrwk0 + nrwk1 + nrwk2 + nrwk3
-		nrwk = numpy.array([nrwkS], numpy.int)
+		nrwk = numpy.array([nrwkS], int)
 		wk = numpy.zeros([nrwk], float)
-		nriwk = numpy.array([nrwkS], numpy.int)
-		iwk = numpy.zeros([nriwk], numpy.int)
+		nriwk = numpy.array([nrwkS], int)
+		iwk = numpy.zeros([nriwk], int)
 
-		nfun = numpy.array([0], numpy.int)
-		ngrd = numpy.array([0], numpy.int)
+		nfun = numpy.array([0], int)
+		ngrd = numpy.array([0], int)
 
 
 		# Run MMFD

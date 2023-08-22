@@ -541,9 +541,9 @@ class SNOPT(Optimizer):
 
 		# Memory allocation
 		ne = ncon*nvar
-		nnCon = numpy.array(ncon, numpy.int)
-		nnObj = numpy.array(nvar, numpy.int)
-		nnJac = numpy.array(nvar, numpy.int)
+		nnCon = numpy.array(ncon, int)
+		nnObj = numpy.array(nvar, int)
+		nnJac = numpy.array(nvar, int)
 		neGcon = nnCon*nnJac
 		iExit = 0
 		mincw, miniw, minrw,cw = snopt.snmemb(iExit, ncon, nvar, ne, neGcon, nnCon, nnJac, nnObj, cw, iw, rw)
@@ -565,7 +565,7 @@ class SNOPT(Optimizer):
 
 
 		# Set Options
-		inform = numpy.array([-1], numpy.int)
+		inform = numpy.array([-1], int)
 		for i in range(len(self.set_options)):
 			name = self.set_options[i][0]
 			value = self.set_options[i][1]
@@ -603,11 +603,11 @@ class SNOPT(Optimizer):
 
 		# Setup argument list values
 		start = numpy.array(self.options['Start'][1])
-		nName = numpy.array([1], numpy.int)
-		nnCon = numpy.array(ncon, numpy.int)
-		nnObj = numpy.array(nvar, numpy.int)
-		nnJac = numpy.array(nvar, numpy.int)
-		iObj   = numpy.array([0], numpy.int)
+		nName = numpy.array([1], int)
+		nnCon = numpy.array(ncon, int)
+		nnObj = numpy.array(nvar, int)
+		nnJac = numpy.array(nvar, int)
+		iObj   = numpy.array([0], int)
 		ObjAdd = numpy.array([0.], float)
 		ProbNm = numpy.array(self.name)
 		a = numpy.zeros(ne, float)
@@ -624,22 +624,22 @@ class SNOPT(Optimizer):
 		xs = numpy.concatenate((xs, numpy.zeros(ncon,float)))
 		bl = numpy.concatenate((blx, blc))
 		bu = numpy.concatenate((bux, buc))
-		lencu = numpy.array([1], numpy.int)
-		leniu = numpy.array([1], numpy.int)
-		lenru = numpy.array([1], numpy.int)
+		lencu = numpy.array([1], int)
+		leniu = numpy.array([1], int)
+		lenru = numpy.array([1], int)
 		cu = numpy.array(["        "],'c')
-		iu = numpy.zeros([leniu[0]], numpy.int)
+		iu = numpy.zeros([leniu[0]], int)
 		ru = numpy.zeros([lenru[0]], float)
 		hs = numpy.zeros(nvar+ncon, 'i')
 		Names = numpy.array(["        "],'c')
 		pi = numpy.zeros(ncon, float)
 		rc = numpy.zeros(nvar+ncon, float)
-		#inform = numpy.array([-1], numpy.int)
-		mincw = numpy.array([0], numpy.int)
-		miniw = numpy.array([0], numpy.int)
-		minrw = numpy.array([0], numpy.int)
-		nS = numpy.array([0], numpy.int)
-		ninf = numpy.array([0], numpy.int)
+		#inform = numpy.array([-1], int)
+		mincw = numpy.array([0], int)
+		miniw = numpy.array([0], int)
+		minrw = numpy.array([0], int)
+		nS = numpy.array([0], int)
+		ninf = numpy.array([0], int)
 		sinf = numpy.array([0.], float)
 
 

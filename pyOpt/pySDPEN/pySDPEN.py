@@ -274,25 +274,25 @@ class SDPEN(Optimizer):
 
 
 		# Setup argument list values
-		n = numpy.array([nvar], numpy.int)
-		m = numpy.array([ncon], numpy.int)
+		n = numpy.array([nvar], int)
+		m = numpy.array([ncon], int)
 		alfa_stop = numpy.array([self.options['alfa_stop'][1]], float)
 		nf_max = numpy.array([self.options['nf_max'][1]], float)
 		if (myrank == 0):
 			if (self.options['iprint'][1]<=2):
-				iprint = numpy.array([self.options['iprint'][1]], numpy.int)
+				iprint = numpy.array([self.options['iprint'][1]], int)
 			else:
 				raise OSError('Incorrect Output Level Setting')
 		else:
-			iprint = numpy.array([-1], numpy.int)
-		nfvals = numpy.array([0], numpy.int)
-		iout = numpy.array([self.options['iout'][1]], numpy.int)
+			iprint = numpy.array([-1], int)
+		nfvals = numpy.array([0], int)
+		iout = numpy.array([self.options['iout'][1]], int)
 		ifile = self.options['ifile'][1]
 		if (iprint > 0):
 			if os.path.isfile(ifile):
 				os.remove(ifile)
-		istop = numpy.array([0], numpy.int)
-		nfvals = numpy.array([0], numpy.int)
+		istop = numpy.array([0], int)
+		nfvals = numpy.array([0], int)
 
 
 		# Run SDPEN

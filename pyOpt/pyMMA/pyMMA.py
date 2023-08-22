@@ -375,21 +375,21 @@ class MMA(Optimizer):
 		hessf = numpy.zeros([m*(m+1)/2], float)
 
 		# Specify that all variables are free to move
-		iyfree = numpy.ones([m], numpy.int)
+		iyfree = numpy.ones([m], int)
 
 		#
-		iter = numpy.array([0], numpy.int)
-		maxit = numpy.array([self.options['MAXIT'][1]], numpy.int)
+		iter = numpy.array([0], int)
+		maxit = numpy.array([self.options['MAXIT'][1]], int)
 		geps = numpy.array([self.options['GEPS'][1]], float)
 		dabobj = numpy.array([self.options['DABOBJ'][1]], float)
 		delobj = numpy.array([self.options['DELOBJ'][1]], float)
-		itrm = numpy.array([self.options['ITRM'][1]], numpy.int)
-		inform = numpy.array([0], numpy.int)
+		itrm = numpy.array([self.options['ITRM'][1]], int)
+		inform = numpy.array([0], int)
 		if (myrank == 0):
-			iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
+			iprint = numpy.array([self.options['IPRINT'][1]], int)
 		else:
-			iprint = numpy.array([0], numpy.int)
-		iout = numpy.array([self.options['IOUT'][1]], numpy.int)
+			iprint = numpy.array([0], int)
+		iout = numpy.array([self.options['IOUT'][1]], int)
 		ifile = self.options['IFILE'][1]
 		if (myrank == 0):
 			if (iprint >= 0):
@@ -397,7 +397,7 @@ class MMA(Optimizer):
 					os.remove(ifile)
 
 		#
-		nfunc = numpy.array([0], numpy.int)
+		nfunc = numpy.array([0], int)
 
 		# Run MMA
 		t0 = time.time()

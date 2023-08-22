@@ -345,32 +345,32 @@ class FILTERSD(Optimizer):
 
 
         # Setup argument list values
-        nn = numpy.array([nvar], numpy.int)
-        mm = numpy.array([ncon], numpy.int)
+        nn = numpy.array([nvar], int)
+        mm = numpy.array([ncon], int)
         al = numpy.zeros(mm, float)
         ubd = numpy.array([self.options['ubd'][1]], float)
         rho = numpy.array([self.options['rho'][1]], float)
         htol = numpy.array([self.options['htol'][1]], float)
         rgtol = numpy.array([self.options['rgtol'][1]], float)
-        maxit = numpy.array([self.options['maxit'][1]], numpy.int)
-        maxgr = numpy.array([self.options['maxgr'][1]], numpy.int)
-        dchk = numpy.array([self.options['dchk'][1]], numpy.int)
+        maxit = numpy.array([self.options['maxit'][1]], int)
+        maxgr = numpy.array([self.options['maxgr'][1]], int)
+        dchk = numpy.array([self.options['dchk'][1]], int)
         dtol = numpy.array([self.options['dtol'][1]], float)
         if (myrank == 0):
             if (self.options['iprint'][1]>=0):
-                iprint = numpy.array([self.options['iprint'][1]], numpy.int)
+                iprint = numpy.array([self.options['iprint'][1]], int)
             else:
                 raise OSError('Incorrect Output Level Setting')
         else:
-            iprint = numpy.array([0], numpy.int)
-        iout = numpy.array([self.options['iout'][1]], numpy.int)
+            iprint = numpy.array([0], int)
+        iout = numpy.array([self.options['iout'][1]], int)
         ifile = self.options['ifile'][1]
         if iprint > 0:
             if os.path.isfile(ifile):
                 os.remove(ifile)
-        ifail = numpy.array([0], numpy.int)
-        nfevs = numpy.array([0], numpy.int)
-        ngevs = numpy.array([0], numpy.int)
+        ifail = numpy.array([0], int)
+        nfevs = numpy.array([0], int)
+        ngevs = numpy.array([0], int)
 
 
         # Storage Arrays

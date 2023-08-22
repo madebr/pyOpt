@@ -386,11 +386,11 @@ class MIDACO(Optimizer):
 
 
                 # Setup argument list values
-                ll = numpy.array([nproc], numpy.int)
-                nn = numpy.array([nvar], numpy.int)
-                ni = numpy.array([nint], numpy.int)
-                mm = numpy.array([ncon], numpy.int)
-                me = numpy.array([neqc], numpy.int)
+                ll = numpy.array([nproc], int)
+                nn = numpy.array([nvar], int)
+                ni = numpy.array([nint], int)
+                mm = numpy.array([ncon], int)
+                me = numpy.array([neqc], int)
                 opts = [0]*9
                 opts[0] = self.options['ACC'][1]
                 opts[1] = self.options['ISEED'][1]
@@ -402,20 +402,20 @@ class MIDACO(Optimizer):
                 opts[7] = self.options['KERNEL'][1]
                 opts[8] = self.options['CHARACTER'][1]
                 param = numpy.array([opts], float)
-                maxeval = numpy.array([self.options['MAXEVAL'][1]], numpy.int)
-                maxtime = numpy.array([self.options['MAXTIME'][1]], numpy.int)
+                maxeval = numpy.array([self.options['MAXEVAL'][1]], int)
+                maxtime = numpy.array([self.options['MAXTIME'][1]], int)
                 if (myrank == 0):
-                        iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
+                        iprint = numpy.array([self.options['IPRINT'][1]], int)
                 else:
-                        iprint = numpy.array([-1], numpy.int)
-                ifail = numpy.array([0], numpy.int)
-                neval = numpy.array([0], numpy.int)
+                        iprint = numpy.array([-1], int)
+                ifail = numpy.array([0], int)
+                neval = numpy.array([0], int)
                 if (self.options['PRINTEVAL'][1] > 0):
-                        printeval = numpy.array([self.options['PRINTEVAL'][1]], numpy.int)
+                        printeval = numpy.array([self.options['PRINTEVAL'][1]], int)
                 else:
                         raise OSError('Incorrect PRINTEVAL Setting')
-                iout1 = numpy.array([self.options['IOUT1'][1]], numpy.int)
-                iout2 = numpy.array([self.options['IOUT2'][1]], numpy.int)
+                iout1 = numpy.array([self.options['IOUT1'][1]], int)
+                iout2 = numpy.array([self.options['IOUT2'][1]], int)
                 ifile1 = self.options['IFILE1'][1]
                 ifile2 = self.options['IFILE2'][1]
                 if (iprint > 0):
@@ -425,10 +425,10 @@ class MIDACO(Optimizer):
                                 os.remove(ifile2)
                 lkey = self.options['LKEY'][1]
                 liw0 = 2*nn + ll + 1000
-                liw = numpy.array(liw0, numpy.int)
-                iw = numpy.zeros(liw, numpy.int)
+                liw = numpy.array(liw0, int)
+                iw = numpy.zeros(liw, int)
                 lrw0 = 200*nn + 2*mm + 1000
-                lrw = numpy.array(lrw0, numpy.int)
+                lrw = numpy.array(lrw0, int)
                 rw = numpy.zeros(lrw, float)
 
 

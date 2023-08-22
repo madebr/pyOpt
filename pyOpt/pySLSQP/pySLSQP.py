@@ -356,24 +356,24 @@ class SLSQP(Optimizer):
         # Setup argument list values
         la = max(m, 1)
         gg = numpy.zeros([la], float)
-        n1 = numpy.array([n + 1], numpy.int)
+        n1 = numpy.array([n + 1], int)
         df = numpy.zeros([n + 1], float)
         dg = numpy.zeros([la, n + 1], float)
         acc = numpy.array([self.options['ACC'][1]], float)
-        maxit = numpy.array([self.options['MAXIT'][1]], numpy.int)
-        iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
+        maxit = numpy.array([self.options['MAXIT'][1]], int)
+        iprint = numpy.array([self.options['IPRINT'][1]], int)
         if (myrank != 0):
             iprint = -1
         else:
             iprint = self.options['IPRINT'][1]
 
-        iout = numpy.array([self.options['IOUT'][1]], numpy.int)
+        iout = numpy.array([self.options['IOUT'][1]], int)
         ifile = self.options['IFILE'][1]
         if (iprint >= 0):
             if os.path.isfile(ifile):
                 os.remove(ifile)
 
-        mode = numpy.array([0], numpy.int)
+        mode = numpy.array([0], int)
         mineq = m - meq + 2 * (n + 1)
         lsq = (n + 1) * ((n + 1) + 1) + meq * ((n + 1) + 1) + mineq * (
             (n + 1) + 1)
@@ -381,13 +381,13 @@ class SLSQP(Optimizer):
         lsei = ((n + 1) + mineq) * ((n + 1) - meq) + 2 * meq + (n + 1)
         slsqpb = (n + 1) * (n / 2) + 2 * m + 3 * n + 3 * (n + 1) + 1
         lwM = lsq + lsi + lsei + slsqpb + n + m
-        lw = numpy.array([lwM], numpy.int)
+        lw = numpy.array([lwM], int)
         w = numpy.zeros(lw, float)
         ljwM = max(mineq, (n + 1) - meq)
-        ljw = numpy.array([ljwM], numpy.int)
+        ljw = numpy.array([ljwM], int)
         jw = numpy.zeros(ljw, numpy.intc)
-        nfunc = numpy.array([0], numpy.int)
-        ngrad = numpy.array([0], numpy.int)
+        nfunc = numpy.array([0], int)
+        ngrad = numpy.array([0], int)
 
         # Run SLSQP
         t0 = time.time()

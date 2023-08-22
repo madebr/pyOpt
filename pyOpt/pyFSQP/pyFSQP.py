@@ -417,36 +417,36 @@ class FSQP(Optimizer):
 
 
 		# Setup argument list values
-		nparam = numpy.array([nvar], numpy.int)
-		nf = numpy.array([nobj], numpy.int)
-		nineqn = numpy.array([ncon-neqc], numpy.int)
+		nparam = numpy.array([nvar], int)
+		nf = numpy.array([nobj], int)
+		nineqn = numpy.array([ncon-neqc], int)
 		nineq = nineqn
-		neqn = numpy.array([neqc], numpy.int)
+		neqn = numpy.array([neqc], int)
 		neq = neqn
-		mode = numpy.array([self.options['mode'][1]], numpy.int)
+		mode = numpy.array([self.options['mode'][1]], int)
 		if (myrank == 0):
 			if (self.options['iprint'][1]>=0):
-				iprint = numpy.array([self.options['iprint'][1]], numpy.int)
+				iprint = numpy.array([self.options['iprint'][1]], int)
 			else:
 				raise OSError('Incorrect Output Level Setting')
 		else:
-			iprint = numpy.array([0], numpy.int)
-		iout = numpy.array([self.options['iout'][1]], numpy.int)
+			iprint = numpy.array([0], int)
+		iout = numpy.array([self.options['iout'][1]], int)
 		ifile = self.options['ifile'][1]
 		if (iprint > 0):
 			if os.path.isfile(ifile):
 				os.remove(ifile)
-		miter = numpy.array([self.options['miter'][1]], numpy.int)
-		inform = numpy.array([0], numpy.int)
+		miter = numpy.array([self.options['miter'][1]], int)
+		inform = numpy.array([0], int)
 		bigbnd = numpy.array([self.options['bigbnd'][1]], float)
 		epstol = numpy.array([self.options['epstol'][1]], float)
 		epsneq = numpy.array([self.options['epseqn'][1]], float)
 		udelta = numpy.array([0], float)
 		iwsizeM = 6*nvar + 8*max([1,ncon]) + 7*max([1,nobj]) + 30
-		iwsize = numpy.array([iwsizeM], numpy.int)
+		iwsize = numpy.array([iwsizeM], int)
 		iw = numpy.zeros([iwsize], float)
 		nwsizeM = 4*nvar**2 + 5*max([1,ncon])*nvar + 3*max([1,nobj])*nvar + 26*(nvar+max([1,nobj])) + 45*max([1,ncon]) + 100
-		nwsize = numpy.array([nwsizeM], numpy.int)
+		nwsize = numpy.array([nwsizeM], int)
 		w = numpy.zeros([nwsize], float)
 
 

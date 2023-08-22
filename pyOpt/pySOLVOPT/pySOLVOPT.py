@@ -450,7 +450,7 @@ class SOLVOPT(Optimizer):
 
 
 		# Setup argument list values
-		n = numpy.array([nvar], numpy.int)
+		n = numpy.array([nvar], int)
 		flg = numpy.array([True], numpy.bool)
 		iprint = self.options['iprint'][1]
 		if (myrank != 0):
@@ -468,7 +468,7 @@ class SOLVOPT(Optimizer):
 		options[7] = 1e-11						# LB FD Stepsize (NA as we provide our own sensitivities)
 		flfc = numpy.array([True], numpy.bool)
 		flgc = numpy.array([True], numpy.bool)
-		iout = numpy.array([self.options['iout'][1]], numpy.int)
+		iout = numpy.array([self.options['iout'][1]], int)
 		ifile = self.options['ifile'][1]
 
 		if (iprint >= 0):
@@ -487,7 +487,7 @@ class SOLVOPT(Optimizer):
 		wgrec = numpy.zeros([nvar], float)
 		wxx = numpy.zeros([nvar], float)
 		wdeltax = numpy.zeros([nvar], float)
-		widx = numpy.zeros([nvar], numpy.int)
+		widx = numpy.zeros([nvar], int)
 
 
 		# Storage Arrays

@@ -328,35 +328,35 @@ class KSOPT(Optimizer):
 
 
 		# Setup argument list values
-		ndv = numpy.array([nvar], numpy.int)
-		nob = numpy.array([nobj], numpy.int)
-		ncn = numpy.array([ncon], numpy.int)
+		ndv = numpy.array([nvar], int)
+		nob = numpy.array([nobj], int)
+		ncn = numpy.array([ncon], int)
 		nwork0 = 63
 		nwork1 = 3*nobj + ncon + 12*nvar + nvar*(nvar+1)
 		nwork2 = nobj*nvar + ncon*nvar
 		nwork3 = 2*max(2*nvar,nobj+ncon)
 		nworkS = nwork0 + nwork1 + nwork2 + nwork3
-		nwork = numpy.array([nworkS], numpy.int)
+		nwork = numpy.array([nworkS], int)
 		work = numpy.zeros(nwork, float)
-		itmax = numpy.array([self.options['ITMAX'][1]], numpy.int)
+		itmax = numpy.array([self.options['ITMAX'][1]], int)
 		rdfun = numpy.array([self.options['RDFUN'][1]], float)
 		rhomin = numpy.array([self.options['RHOMIN'][1]], float)
 		rhomax = numpy.array([self.options['RHOMAX'][1]], float)
-		iout = numpy.array([self.options['IOUT'][1]], numpy.int)
+		iout = numpy.array([self.options['IOUT'][1]], int)
 		if (myrank == 0):
 			if (self.options['IPRINT'][1]>=0 and self.options['IPRINT'][1]<=3):
-				iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
+				iprint = numpy.array([self.options['IPRINT'][1]], int)
 			else:
 				raise OSError('Incorrect Output Level Setting')
 		else:
-			iprint = numpy.array([0], numpy.int)
+			iprint = numpy.array([0], int)
 		ifile = self.options['IFILE'][1]
 		if (iprint > 0):
 			if os.path.isfile(ifile):
 				os.remove(ifile)
 
-		nfun = numpy.array([0], numpy.int)
-		ngrd = numpy.array([0], numpy.int)
+		nfun = numpy.array([0], int)
+		ngrd = numpy.array([0], int)
 
 
 		# Run KSOPT

@@ -332,43 +332,43 @@ class CONMIN(Optimizer):
         ff = numpy.array(ff, float)
 
         # Setup argument list values
-        ndv = numpy.array([nvar], numpy.int)
-        ncn = numpy.array([ncon], numpy.int)
-        nn1 = numpy.array([ndv[0] + 2], numpy.int)
-        nn2 = numpy.array([ncn[0] + 2 * ndv[0]], numpy.int)
-        # nn3 = numpy.array([numpy.min(100,ndv[0]+1)], numpy.int)
-        nn3 = numpy.array([numpy.max([nn2[0], ndv[0]])], numpy.int)
-        # nn4 = numpy.array([numpy.max(nn3[0],ndv[0])], numpy.int)
-        nn4 = numpy.array([numpy.max([nn2[0], ndv[0]])], numpy.int)
-        nn5 = numpy.array([2 * nn4[0]], numpy.int)
+        ndv = numpy.array([nvar], int)
+        ncn = numpy.array([ncon], int)
+        nn1 = numpy.array([ndv[0] + 2], int)
+        nn2 = numpy.array([ncn[0] + 2 * ndv[0]], int)
+        # nn3 = numpy.array([numpy.min(100,ndv[0]+1)], int)
+        nn3 = numpy.array([numpy.max([nn2[0], ndv[0]])], int)
+        # nn4 = numpy.array([numpy.max(nn3[0],ndv[0])], int)
+        nn4 = numpy.array([numpy.max([nn2[0], ndv[0]])], int)
+        nn5 = numpy.array([2 * nn4[0]], int)
         if ncon > 0:
             gg = numpy.zeros(ncn, float)
         else:
             gg = numpy.array([0], float)
         if (myrank == 0):
             if (self.options['IPRINT'][1] >= 0 and self.options['IPRINT'][1] <= 4):
-                iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
+                iprint = numpy.array([self.options['IPRINT'][1]], int)
             else:
                 raise OSError('Incorrect Output Level Setting')
         else:
-            iprint = numpy.array([0], numpy.int)
-        iout = numpy.array([self.options['IOUT'][1]], numpy.int)
+            iprint = numpy.array([0], int)
+        iout = numpy.array([self.options['IOUT'][1]], int)
         ifile = self.options['IFILE'][1]
         if (iprint > 0):
             if os.path.isfile(ifile):
                 os.remove(ifile)
-        itmax = numpy.array([self.options['ITMAX'][1]], numpy.int)
+        itmax = numpy.array([self.options['ITMAX'][1]], int)
         delfun = numpy.array([self.options['DELFUN'][1]], float)
 
         finit, ginit = cnmnfun([], [], xx, ff, gg)
         dabfun = numpy.array([self.options['DABFUN'][1] * finit], float)
 
-        itrm = numpy.array([self.options['ITRM'][1]], numpy.int)
-        nfeasct = numpy.array([self.options['NFEASCT'][1]], numpy.int)
-        nfdg = numpy.array(1, numpy.int)
+        itrm = numpy.array([self.options['ITRM'][1]], int)
+        nfeasct = numpy.array([self.options['NFEASCT'][1]], int)
+        nfdg = numpy.array(1, int)
 
-        nfun = numpy.array([0], numpy.int)
-        ngrd = numpy.array([0], numpy.int)
+        nfun = numpy.array([0], int)
+        ngrd = numpy.array([0], int)
 
         # Run CONMIN
         t0 = time.time()

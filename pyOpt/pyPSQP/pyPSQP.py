@@ -390,12 +390,12 @@ class PSQP(Optimizer):
 
 
                 # Setup argument list values
-                nf = numpy.array([nvar], numpy.int)
-                nc = numpy.array([ncon], numpy.int)
-                mit = numpy.array([self.options['MIT'][1]], numpy.int)
-                mfv = numpy.array([self.options['MFV'][1]], numpy.int)
-                met = numpy.array([self.options['MET'][1]], numpy.int)
-                mec = numpy.array([self.options['MEC'][1]], numpy.int)
+                nf = numpy.array([nvar], int)
+                nc = numpy.array([ncon], int)
+                mit = numpy.array([self.options['MIT'][1]], int)
+                mfv = numpy.array([self.options['MFV'][1]], int)
+                met = numpy.array([self.options['MET'][1]], int)
+                mec = numpy.array([self.options['MEC'][1]], int)
                 xmax = numpy.array([self.options['XMAX'][1]], float)
                 tolx = numpy.array([self.options['TOLX'][1]], float)
                 tolc = numpy.array([self.options['TOLC'][1]], float)
@@ -405,18 +405,18 @@ class PSQP(Optimizer):
                 cmax = numpy.array([0], float)
                 if (myrank == 0):
                         if (self.options['IPRINT'][1] <= 2):
-                                iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
+                                iprint = numpy.array([self.options['IPRINT'][1]], int)
                         else:
                                 raise OSError('Incorrect Output Level Setting')
                 else:
-                        iprint = numpy.array([0], numpy.int)
-                iout = numpy.array([self.options['IOUT'][1]], numpy.int)
+                        iprint = numpy.array([0], int)
+                iout = numpy.array([self.options['IOUT'][1]], int)
                 ifile = self.options['IFILE'][1]
                 if (myrank == 0):
                         if (iprint != 0):
                                 if os.path.isfile(ifile):
                                         os.remove(ifile)
-                iterm = numpy.array([0], numpy.int)
+                iterm = numpy.array([0], int)
 
 
                 # Storage Arrays

@@ -316,25 +316,25 @@ class COBYLA(Optimizer):
         ff = numpy.array(ff, float)
 
         # Setup argument list values
-        n = numpy.array([nvar], numpy.int)
-        m = numpy.array([ncon + nadd], numpy.int)
+        n = numpy.array([nvar], int)
+        m = numpy.array([ncon + nadd], int)
         rhobeg = numpy.array([self.options['RHOBEG'][1]], float)
         rhoend = numpy.array([self.options['RHOEND'][1]], float)
         if (myrank == 0):
             if (self.options['IPRINT'][1] >= 0):
-                iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
+                iprint = numpy.array([self.options['IPRINT'][1]], int)
             else:
                 raise OSError('Incorrect Output Level Setting')
 
         else:
-            iprint = numpy.array([0], numpy.int)
+            iprint = numpy.array([0], int)
 
-        maxfun = numpy.array([self.options['MAXFUN'][1]], numpy.int)
+        maxfun = numpy.array([self.options['MAXFUN'][1]], int)
         w = numpy.zeros(n * (3 * n + 2 * m + 11) + 4 * m + 6, float)
         iact = numpy.zeros(m + 1, numpy.intc)
-        ifail = numpy.array([0], numpy.int)
-        nfvals = numpy.array([0], numpy.int)
-        iout = numpy.array([self.options['IOUT'][1]], numpy.int)
+        ifail = numpy.array([0], int)
+        nfvals = numpy.array([0], int)
+        iout = numpy.array([self.options['IOUT'][1]], int)
         ifile = self.options['IFILE'][1]
         if (iprint > 0):
             if os.path.isfile(ifile):

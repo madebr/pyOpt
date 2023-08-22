@@ -390,13 +390,13 @@ class NLPQLP(Optimizer):
 
 
 		# Setup argument list values
-		ll = numpy.array([nproc], numpy.int)
-		mm = numpy.array([ncon], numpy.int)
-		me = numpy.array([neqc], numpy.int)
-		mmax = numpy.array([max(1,mm)], numpy.int)
-		nn = numpy.array([nvar], numpy.int)
-		nmax = numpy.array([max(2,nn+1)], numpy.int)
-		mnn2 = numpy.array([mmax+nmax+nmax+2], numpy.int)
+		ll = numpy.array([nproc], int)
+		mm = numpy.array([ncon], int)
+		me = numpy.array([neqc], int)
+		mmax = numpy.array([max(1,mm)], int)
+		nn = numpy.array([nvar], int)
+		nmax = numpy.array([max(2,nn+1)], int)
+		mnn2 = numpy.array([mmax+nmax+nmax+2], int)
 		gg = numpy.zeros([mmax,ll], float)
 		df = numpy.zeros([nmax], float)
 		dg = numpy.zeros([mmax,nmax], float)
@@ -406,39 +406,39 @@ class NLPQLP(Optimizer):
 		acc = numpy.array([self.options['ACC'][1]], float)
 		accqp = numpy.array([self.options['ACCQP'][1]], float)
 		stpmin = numpy.array([self.options['STPMIN'][1]], float)
-		maxfun = numpy.array([self.options['MAXFUN'][1]], numpy.int)
-		maxit = numpy.array([self.options['MAXIT'][1]], numpy.int)
+		maxfun = numpy.array([self.options['MAXFUN'][1]], int)
+		maxit = numpy.array([self.options['MAXIT'][1]], int)
 		if (nproc != 1):
-			maxnm = numpy.array([max(1,min(50,nproc))], numpy.int)
+			maxnm = numpy.array([max(1,min(50,nproc))], int)
 		else:
-			maxnm = numpy.array([0], numpy.int)
+			maxnm = numpy.array([0], int)
 		rhob = self.options['RHOB'][1]
 		if (self.options['MODE'][1]>=0 and self.options['MODE'][1]<=18):
 			mode = self.options['MODE'][1]
 		else:
 			raise OSError('Incorrect Mode Setting')
-		ifail = numpy.array([0], numpy.int)
+		ifail = numpy.array([0], int)
 		if (myrank == 0):
 			if (self.options['IPRINT'][1]>=0 and self.options['IPRINT'][1]<=4):
-				iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
+				iprint = numpy.array([self.options['IPRINT'][1]], int)
 			else:
 				raise OSError('Incorrect Output Level Setting')
 		else:
-			iprint = numpy.array([0], numpy.int)
+			iprint = numpy.array([0], int)
 		iout = self.options['IOUT'][1]
 		ifile = self.options['IFILE'][1]
 		if (iprint > 0):
 			if os.path.isfile(ifile):
 				os.remove(ifile)
-		lwa = numpy.array([23*nmax+4*mmax+3*mmax+150+3*nmax*nmax/2+10*nmax+nmax+mmax+1], numpy.int)
+		lwa = numpy.array([23*nmax+4*mmax+3*mmax+150+3*nmax*nmax/2+10*nmax+nmax+mmax+1], int)
 		wa = numpy.zeros([lwa], float)
-		lkwa = numpy.array([25+nmax], numpy.int)
+		lkwa = numpy.array([25+nmax], int)
 		kwa = numpy.zeros([lkwa], numpy.intc)
-		lactiv = numpy.array([2*mmax+10], numpy.int)
+		lactiv = numpy.array([2*mmax+10], int)
 		active = numpy.zeros([lactiv], numpy.bool)
 		lql = numpy.array([self.options['LQL'][1]], numpy.bool)
-		nfun = numpy.array([0], numpy.int)
-		ngrd = numpy.array([0], numpy.int)
+		nfun = numpy.array([0], int)
+		ngrd = numpy.array([0], int)
 
 		# Run NLPQLP
 		t0 = time.time()

@@ -354,18 +354,18 @@ class NLPQL(Optimizer):
 
 
 		# Setup argument list values
-		mm = numpy.array([ncon], numpy.int)
-		me = numpy.array([neqc], numpy.int)
+		mm = numpy.array([ncon], int)
+		me = numpy.array([neqc], int)
 		mmx = 200
 		if (ncon >= mmx):
 			mmx = ncon + 1
-		mmax = numpy.array([mmx], numpy.int)
-		nn = numpy.array([nvar], numpy.int)
+		mmax = numpy.array([mmx], int)
+		nn = numpy.array([nvar], int)
 		nmx = 200
 		if (nvar >= nmx):
 			nmx = nvar + 1
-		nmax = numpy.array([nmx], numpy.int)
-		mnn2 = numpy.array([mm[0]+nn[0]+nn[0]+2], numpy.int)
+		nmax = numpy.array([nmx], int)
+		mnn2 = numpy.array([mm[0]+nn[0]+nn[0]+2], int)
 		#xx = _ConcatenateVector(self.variables, 'value')
 		#ff = self.objective.value
 		gg = numpy.zeros([mmax], float)
@@ -378,15 +378,15 @@ class NLPQL(Optimizer):
 		dd = numpy.zeros([nmax], float)
 		acc = numpy.array([self.options['Accurancy'][1]], float)
 		scbou = numpy.array([self.options['ScaleBound'][1]], float)
-		maxfun = numpy.array([self.options['maxFun'][1]], numpy.int)
-		maxit = numpy.array([self.options['maxIt'][1]], numpy.int)
+		maxfun = numpy.array([self.options['maxFun'][1]], int)
+		maxit = numpy.array([self.options['maxIt'][1]], int)
 		if (myrank == 0):
 			if (self.options['iPrint'][1]>=0 and self.options['iPrint'][1]<=4):
-				iprint = numpy.array([self.options['iPrint'][1]], numpy.int)
+				iprint = numpy.array([self.options['iPrint'][1]], int)
 			else:
 				raise OSError('Incorrect Output Level Setting')
 		else:
-			iprint = numpy.array([0], numpy.int)
+			iprint = numpy.array([0], int)
 		if (self.options['mode'][1]>=0 and self.options['mode'][1]<=18):
 			mode = self.options['mode'][1]
 		else:
@@ -396,17 +396,17 @@ class NLPQL(Optimizer):
 		if (iprint > 0):
 			if os.path.isfile(ifile):
 				os.remove(ifile)
-		ifail = numpy.array([0], numpy.int)
+		ifail = numpy.array([0], int)
 		lwa0 = 100000
 		lwa1 = 4*mmax + 4*ncon + 19*nvar + 55
 		lwa2 = mmax*nvar + 4*mmax + 4*ncon + 18*nvar + 55
 		lwa3 = 3/2*(nvar + 1)*(nvar + 1) + 10*nvar + 2*ncon + 10
 		lwaM = max([lwa0,lwa1,lwa2,lwa3]) + lwa3
-		lwa = numpy.array([lwaM], numpy.int)
+		lwa = numpy.array([lwaM], int)
 		wa = numpy.zeros([lwa], float)
-		lkwa = numpy.array([mmx+2*nmx+20], numpy.int)
+		lkwa = numpy.array([mmx+2*nmx+20], int)
 		kwa = numpy.zeros([lkwa], numpy.intc)
-		lactiv = numpy.array([2*mmx+15], numpy.int)
+		lactiv = numpy.array([2*mmx+15], int)
 		active = numpy.zeros([lactiv], numpy.bool)
 		lmerit = numpy.array([self.options['lmerit'][1]], numpy.bool)
 		lql = numpy.array([self.options['lql'][1]], numpy.bool)

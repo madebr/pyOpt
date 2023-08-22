@@ -370,8 +370,8 @@ class ALGENCAN(Optimizer):
 
 
 		# Setup argument list values
-		nn = numpy.array([n], numpy.int)
-		mm = numpy.array([m], numpy.int)
+		nn = numpy.array([n], int)
+		mm = numpy.array([m], int)
 		lm = numpy.zeros([m], float)
 		coded = numpy.array([False,False,False,False,False,False,True,True,False,False], numpy.bool)
 		epsfeas = numpy.array([self.options['epsfeas'][1]], float)
@@ -379,12 +379,12 @@ class ALGENCAN(Optimizer):
 		efacc = numpy.array([self.options['efacc'][1]], float)
 		eoacc = numpy.array([self.options['eoacc'][1]], float)
 		checkder = numpy.array([self.options['checkder'][1]], numpy.bool)
-		iprint = numpy.array([self.options['iprint'][1]], numpy.int)
+		iprint = numpy.array([self.options['iprint'][1]], int)
 		if (myrank != 0):
 			iprint = 0
 		else:
 			iprint = self.options['iprint'][1]
-		ncomp = numpy.array([self.options['ncomp'][1]], numpy.int)
+		ncomp = numpy.array([self.options['ncomp'][1]], int)
 
 		ifile = self.options['ifile'][1]
 		if (iprint >= 0):
@@ -393,7 +393,7 @@ class ALGENCAN(Optimizer):
 		cnormu = numpy.array([0], float)
 		snorm = numpy.array([0], float)
 		nlpsupn = numpy.array([0], float)
-		inform = numpy.array([0], numpy.int)
+		inform = numpy.array([0], int)
 
 		# Run ALGENCAN
 		t0 = time.time()
