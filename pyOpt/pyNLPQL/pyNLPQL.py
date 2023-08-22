@@ -407,9 +407,9 @@ class NLPQL(Optimizer):
 		lkwa = numpy.array([mmx+2*nmx+20], int)
 		kwa = numpy.zeros([lkwa], numpy.intc)
 		lactiv = numpy.array([2*mmx+15], int)
-		active = numpy.zeros([lactiv], numpy.bool)
-		lmerit = numpy.array([self.options['lmerit'][1]], numpy.bool)
-		lql = numpy.array([self.options['lql'][1]], numpy.bool)
+		active = numpy.zeros([lactiv], bool)
+		lmerit = numpy.array([self.options['lmerit'][1]], bool)
+		lql = numpy.array([self.options['lql'][1]], bool)
 		fmp = numpy.array([eps], float)
 
 

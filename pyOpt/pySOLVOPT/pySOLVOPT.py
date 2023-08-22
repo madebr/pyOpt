@@ -451,7 +451,7 @@ class SOLVOPT(Optimizer):
 
 		# Setup argument list values
 		n = numpy.array([nvar], int)
-		flg = numpy.array([True], numpy.bool)
+		flg = numpy.array([True], bool)
 		iprint = self.options['iprint'][1]
 		if (myrank != 0):
 			iprint = -1
@@ -466,8 +466,8 @@ class SOLVOPT(Optimizer):
 		options[5] = self.options['gtol'][1]	# Constraints Tolerance
 		options[6] = self.options['spcdil'][1]	# Space Dilation
 		options[7] = 1e-11						# LB FD Stepsize (NA as we provide our own sensitivities)
-		flfc = numpy.array([True], numpy.bool)
-		flgc = numpy.array([True], numpy.bool)
+		flfc = numpy.array([True], bool)
+		flgc = numpy.array([True], bool)
 		iout = numpy.array([self.options['iout'][1]], int)
 		ifile = self.options['ifile'][1]
 

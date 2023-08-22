@@ -435,8 +435,8 @@ class NLPQLP(Optimizer):
 		lkwa = numpy.array([25+nmax], int)
 		kwa = numpy.zeros([lkwa], numpy.intc)
 		lactiv = numpy.array([2*mmax+10], int)
-		active = numpy.zeros([lactiv], numpy.bool)
-		lql = numpy.array([self.options['LQL'][1]], numpy.bool)
+		active = numpy.zeros([lactiv], bool)
+		lql = numpy.array([self.options['LQL'][1]], bool)
 		nfun = numpy.array([0], int)
 		ngrd = numpy.array([0], int)
 
