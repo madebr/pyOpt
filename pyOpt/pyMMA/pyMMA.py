@@ -338,41 +338,41 @@ class MMA(Optimizer):
 
 		# Setup argument list values
 
-		xmma = numpy.zeros([n], numpy.float)
+		xmma = numpy.zeros([n], float)
 
 		# Space used internally by the program
 		# for the asymptotes (xlow and xupp) and
 		# computed bounds on x (alpha and beta)
-		xlow = numpy.zeros([n], numpy.float)
-		xupp = numpy.zeros([n], numpy.float)
-		alfa = numpy.zeros([n], numpy.float)
-		beta = numpy.zeros([n], numpy.float)
+		xlow = numpy.zeros([n], float)
+		xupp = numpy.zeros([n], float)
+		alfa = numpy.zeros([n], float)
+		beta = numpy.zeros([n], float)
 
 		# The objective and constraint function
 		# values and space for the gradients
-		fval = numpy.zeros([m], numpy.float)
-		df0dx = numpy.zeros([n], numpy.float)
-		dfdx = numpy.zeros([m*n], numpy.float)
+		fval = numpy.zeros([m], float)
+		df0dx = numpy.zeros([n], float)
+		dfdx = numpy.zeros([m*n], float)
 
 		# Space for the coefficients and artificial
 		# variables to be computed (set to default values)
-		p = numpy.zeros([m*n], numpy.float)
-		q = numpy.zeros([m*n], numpy.float)
-		p0 = numpy.zeros([n], numpy.float)
-		q0 = numpy.zeros([n], numpy.float)
-		b = numpy.zeros([m], numpy.float)
-		y = numpy.zeros([m], numpy.float)
-		z = numpy.array([0.], numpy.float)
-		a = numpy.zeros([m], numpy.float)
-		c = 10000*numpy.ones([m], numpy.float)
+		p = numpy.zeros([m*n], float)
+		q = numpy.zeros([m*n], float)
+		p0 = numpy.zeros([n], float)
+		q0 = numpy.zeros([n], float)
+		b = numpy.zeros([m], float)
+		y = numpy.zeros([m], float)
+		z = numpy.array([0.], float)
+		a = numpy.zeros([m], float)
+		c = 10000*numpy.ones([m], float)
 
 		# Space for the Lagrange multipliers (ulam)
 		# the gradient of the dual objective function,
 		# search direction, and Hessian of the dual objective
-		ulam = numpy.ones([m], numpy.float)
-		gradf = numpy.zeros([m], numpy.float)
-		dsrch = numpy.zeros([m], numpy.float)
-		hessf = numpy.zeros([m*(m+1)/2], numpy.float)
+		ulam = numpy.ones([m], float)
+		gradf = numpy.zeros([m], float)
+		dsrch = numpy.zeros([m], float)
+		hessf = numpy.zeros([m*(m+1)/2], float)
 
 		# Specify that all variables are free to move
 		iyfree = numpy.ones([m], numpy.int)
@@ -380,9 +380,9 @@ class MMA(Optimizer):
 		#
 		iter = numpy.array([0], numpy.int)
 		maxit = numpy.array([self.options['MAXIT'][1]], numpy.int)
-		geps = numpy.array([self.options['GEPS'][1]], numpy.float)
-		dabobj = numpy.array([self.options['DABOBJ'][1]], numpy.float)
-		delobj = numpy.array([self.options['DELOBJ'][1]], numpy.float)
+		geps = numpy.array([self.options['GEPS'][1]], float)
+		dabobj = numpy.array([self.options['DABOBJ'][1]], float)
+		delobj = numpy.array([self.options['DELOBJ'][1]], float)
 		itrm = numpy.array([self.options['ITRM'][1]], numpy.int)
 		inform = numpy.array([0], numpy.int)
 		if (myrank == 0):

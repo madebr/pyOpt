@@ -313,10 +313,10 @@ class KSOPT(Optimizer):
 				if opt_problem._constraints[key].type == 'e':
 					raise OSError('KSOPT cannot handle equality constraints')
 				gg.append(opt_problem._constraints[key].value)
-			gg = numpy.array(gg, numpy.float)
+			gg = numpy.array(gg, float)
 		else:
 			ncon = 1
-			gg = numpy.array([0], numpy.float)
+			gg = numpy.array([0], float)
 
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
@@ -324,7 +324,7 @@ class KSOPT(Optimizer):
 		ff = []
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
-		ff = numpy.array(ff, numpy.float)
+		ff = numpy.array(ff, float)
 
 
 		# Setup argument list values
@@ -337,11 +337,11 @@ class KSOPT(Optimizer):
 		nwork3 = 2*max(2*nvar,nobj+ncon)
 		nworkS = nwork0 + nwork1 + nwork2 + nwork3
 		nwork = numpy.array([nworkS], numpy.int)
-		work = numpy.zeros(nwork, numpy.float)
+		work = numpy.zeros(nwork, float)
 		itmax = numpy.array([self.options['ITMAX'][1]], numpy.int)
-		rdfun = numpy.array([self.options['RDFUN'][1]], numpy.float)
-		rhomin = numpy.array([self.options['RHOMIN'][1]], numpy.float)
-		rhomax = numpy.array([self.options['RHOMAX'][1]], numpy.float)
+		rdfun = numpy.array([self.options['RDFUN'][1]], float)
+		rhomin = numpy.array([self.options['RHOMIN'][1]], float)
+		rhomax = numpy.array([self.options['RHOMAX'][1]], float)
 		iout = numpy.array([self.options['IOUT'][1]], numpy.int)
 		if (myrank == 0):
 			if (self.options['IPRINT'][1]>=0 and self.options['IPRINT'][1]<=3):

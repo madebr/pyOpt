@@ -403,9 +403,9 @@ class FSQP(Optimizer):
 				if opt_problem._constraints[key].type == 'e':
 					neqc += 1
 				gg.append(opt_problem._constraints[key].value)
-			gg = numpy.array(gg, numpy.float)
+			gg = numpy.array(gg, float)
 		else:
-			gg = numpy.array([0] ,numpy.float)
+			gg = numpy.array([0] ,float)
 
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
@@ -413,7 +413,7 @@ class FSQP(Optimizer):
 		ff = []
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
-		ff = numpy.array(ff, numpy.float)
+		ff = numpy.array(ff, float)
 
 
 		# Setup argument list values
@@ -438,16 +438,16 @@ class FSQP(Optimizer):
 				os.remove(ifile)
 		miter = numpy.array([self.options['miter'][1]], numpy.int)
 		inform = numpy.array([0], numpy.int)
-		bigbnd = numpy.array([self.options['bigbnd'][1]], numpy.float)
-		epstol = numpy.array([self.options['epstol'][1]], numpy.float)
-		epsneq = numpy.array([self.options['epseqn'][1]], numpy.float)
-		udelta = numpy.array([0], numpy.float)
+		bigbnd = numpy.array([self.options['bigbnd'][1]], float)
+		epstol = numpy.array([self.options['epstol'][1]], float)
+		epsneq = numpy.array([self.options['epseqn'][1]], float)
+		udelta = numpy.array([0], float)
 		iwsizeM = 6*nvar + 8*max([1,ncon]) + 7*max([1,nobj]) + 30
 		iwsize = numpy.array([iwsizeM], numpy.int)
-		iw = numpy.zeros([iwsize], numpy.float)
+		iw = numpy.zeros([iwsize], float)
 		nwsizeM = 4*nvar**2 + 5*max([1,ncon])*nvar + 3*max([1,nobj])*nvar + 26*(nvar+max([1,nobj])) + 45*max([1,ncon]) + 100
 		nwsize = numpy.array([nwsizeM], numpy.int)
-		w = numpy.zeros([nwsize], numpy.float)
+		w = numpy.zeros([nwsize], float)
 
 
 		# Storage Arrays

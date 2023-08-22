@@ -304,7 +304,7 @@ class COBYLA(Optimizer):
                 gg.append(0)
                 nadd += 1
 
-        gg = numpy.array(gg, numpy.float)
+        gg = numpy.array(gg, float)
 
         # Objective Handling
         objfunc = opt_problem.obj_fun
@@ -313,13 +313,13 @@ class COBYLA(Optimizer):
         for key in opt_problem._objectives.keys():
             ff.append(opt_problem._objectives[key].value)
 
-        ff = numpy.array(ff, numpy.float)
+        ff = numpy.array(ff, float)
 
         # Setup argument list values
         n = numpy.array([nvar], numpy.int)
         m = numpy.array([ncon + nadd], numpy.int)
-        rhobeg = numpy.array([self.options['RHOBEG'][1]], numpy.float)
-        rhoend = numpy.array([self.options['RHOEND'][1]], numpy.float)
+        rhobeg = numpy.array([self.options['RHOBEG'][1]], float)
+        rhoend = numpy.array([self.options['RHOEND'][1]], float)
         if (myrank == 0):
             if (self.options['IPRINT'][1] >= 0):
                 iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
@@ -330,7 +330,7 @@ class COBYLA(Optimizer):
             iprint = numpy.array([0], numpy.int)
 
         maxfun = numpy.array([self.options['MAXFUN'][1]], numpy.int)
-        w = numpy.zeros(n * (3 * n + 2 * m + 11) + 4 * m + 6, numpy.float)
+        w = numpy.zeros(n * (3 * n + 2 * m + 11) + 4 * m + 6, float)
         iact = numpy.zeros(m + 1, numpy.intc)
         ifail = numpy.array([0], numpy.int)
         nfvals = numpy.array([0], numpy.int)

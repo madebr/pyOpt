@@ -342,7 +342,7 @@ class SLSQP(Optimizer):
 
                 #gg.append(opt_problem._constraints[key].value)
 
-                #gg = numpy.array(gg,numpy.float)
+                #gg = numpy.array(gg,float)
 
                 # Objective Handling
         objfunc = opt_problem.obj_fun
@@ -351,15 +351,15 @@ class SLSQP(Optimizer):
         for key in opt_problem._objectives.keys():
             ff.append(opt_problem._objectives[key].value)
 
-        ff = numpy.array(ff, numpy.float)
+        ff = numpy.array(ff, float)
 
         # Setup argument list values
         la = max(m, 1)
-        gg = numpy.zeros([la], numpy.float)
+        gg = numpy.zeros([la], float)
         n1 = numpy.array([n + 1], numpy.int)
-        df = numpy.zeros([n + 1], numpy.float)
-        dg = numpy.zeros([la, n + 1], numpy.float)
-        acc = numpy.array([self.options['ACC'][1]], numpy.float)
+        df = numpy.zeros([n + 1], float)
+        dg = numpy.zeros([la, n + 1], float)
+        acc = numpy.array([self.options['ACC'][1]], float)
         maxit = numpy.array([self.options['MAXIT'][1]], numpy.int)
         iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
         if (myrank != 0):
@@ -382,7 +382,7 @@ class SLSQP(Optimizer):
         slsqpb = (n + 1) * (n / 2) + 2 * m + 3 * n + 3 * (n + 1) + 1
         lwM = lsq + lsi + lsei + slsqpb + n + m
         lw = numpy.array([lwM], numpy.int)
-        w = numpy.zeros(lw, numpy.float)
+        w = numpy.zeros(lw, float)
         ljwM = max(mineq, (n + 1) - meq)
         ljw = numpy.array([ljwM], numpy.int)
         jw = numpy.zeros(ljw, numpy.intc)

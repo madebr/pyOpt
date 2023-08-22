@@ -330,10 +330,10 @@ class FILTERSD(Optimizer):
                 if opt_problem._constraints[key].type == 'e':
                     raise OSError('FILTERSD cannot handle equality constraints')
                 gg.append(opt_problem._constraints[key].value)
-            gg = numpy.array(gg, numpy.float)
+            gg = numpy.array(gg, float)
         else:
             ncon = 1
-            gg = numpy.array([0], numpy.float)
+            gg = numpy.array([0], float)
 
         # Objective Handling
         objfunc = opt_problem.obj_fun
@@ -341,21 +341,21 @@ class FILTERSD(Optimizer):
         ff = []
         for key in opt_problem._objectives.keys():
             ff.append(opt_problem._objectives[key].value)
-        ff = numpy.array(ff, numpy.float)
+        ff = numpy.array(ff, float)
 
 
         # Setup argument list values
         nn = numpy.array([nvar], numpy.int)
         mm = numpy.array([ncon], numpy.int)
-        al = numpy.zeros(mm, numpy.float)
-        ubd = numpy.array([self.options['ubd'][1]], numpy.float)
-        rho = numpy.array([self.options['rho'][1]], numpy.float)
-        htol = numpy.array([self.options['htol'][1]], numpy.float)
-        rgtol = numpy.array([self.options['rgtol'][1]], numpy.float)
+        al = numpy.zeros(mm, float)
+        ubd = numpy.array([self.options['ubd'][1]], float)
+        rho = numpy.array([self.options['rho'][1]], float)
+        htol = numpy.array([self.options['htol'][1]], float)
+        rgtol = numpy.array([self.options['rgtol'][1]], float)
         maxit = numpy.array([self.options['maxit'][1]], numpy.int)
         maxgr = numpy.array([self.options['maxgr'][1]], numpy.int)
         dchk = numpy.array([self.options['dchk'][1]], numpy.int)
-        dtol = numpy.array([self.options['dtol'][1]], numpy.float)
+        dtol = numpy.array([self.options['dtol'][1]], float)
         if (myrank == 0):
             if (self.options['iprint'][1]>=0):
                 iprint = numpy.array([self.options['iprint'][1]], numpy.int)

@@ -370,15 +370,15 @@ class PSQP(Optimizer):
                                         gi.append(2)
                                 gg.append(opt_problem._constraints[key].value)
                         gg.append(0.0)
-                        gl = numpy.zeros([ncon], numpy.float)
-                        gu = numpy.zeros([ncon], numpy.float)
-                        gi = numpy.array(gi, numpy.float)
-                        gg = numpy.array(gg, numpy.float)
+                        gl = numpy.zeros([ncon], float)
+                        gu = numpy.zeros([ncon], float)
+                        gi = numpy.array(gi, float)
+                        gg = numpy.array(gg, float)
                 else:
-                        gl = numpy.array([0], numpy.float)
-                        gu = numpy.array([0], numpy.float)
-                        gi = numpy.array([0], numpy.float)
-                        gg = numpy.array([0], numpy.float)
+                        gl = numpy.array([0], float)
+                        gu = numpy.array([0], float)
+                        gi = numpy.array([0], float)
+                        gg = numpy.array([0], float)
 
                 # Objective Handling
                 objfunc = opt_problem.obj_fun
@@ -386,7 +386,7 @@ class PSQP(Optimizer):
                 ff = []
                 for key in opt_problem._objectives.keys():
                         ff.append(opt_problem._objectives[key].value)
-                ff = numpy.array(ff, numpy.float)
+                ff = numpy.array(ff, float)
 
 
                 # Setup argument list values
@@ -396,13 +396,13 @@ class PSQP(Optimizer):
                 mfv = numpy.array([self.options['MFV'][1]], numpy.int)
                 met = numpy.array([self.options['MET'][1]], numpy.int)
                 mec = numpy.array([self.options['MEC'][1]], numpy.int)
-                xmax = numpy.array([self.options['XMAX'][1]], numpy.float)
-                tolx = numpy.array([self.options['TOLX'][1]], numpy.float)
-                tolc = numpy.array([self.options['TOLC'][1]], numpy.float)
-                tolg = numpy.array([self.options['TOLG'][1]], numpy.float)
-                rpf = numpy.array([self.options['RPF'][1]], numpy.float)
-                gmax = numpy.array([0], numpy.float)
-                cmax = numpy.array([0], numpy.float)
+                xmax = numpy.array([self.options['XMAX'][1]], float)
+                tolx = numpy.array([self.options['TOLX'][1]], float)
+                tolc = numpy.array([self.options['TOLC'][1]], float)
+                tolg = numpy.array([self.options['TOLG'][1]], float)
+                rpf = numpy.array([self.options['RPF'][1]], float)
+                gmax = numpy.array([0], float)
+                cmax = numpy.array([0], float)
                 if (myrank == 0):
                         if (self.options['IPRINT'][1] <= 2):
                                 iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)

@@ -354,15 +354,15 @@ class MMFD(Optimizer):
 		if (iprint > 0):
 			if os.path.isfile(ifile):
 				os.remove(ifile)
-		ct = numpy.array([self.options['CT'][1]], numpy.float)
-		ctmin = numpy.array([self.options['CTMIN'][1]], numpy.float)
+		ct = numpy.array([self.options['CT'][1]], float)
+		ctmin = numpy.array([self.options['CTMIN'][1]], float)
 
 		finit,ginit = mmfdfun([],[],xx,ff,gg)
-		dabobj = numpy.array([self.options['DABOBJ'][1]*finit], numpy.float)
+		dabobj = numpy.array([self.options['DABOBJ'][1]*finit], float)
 
-		delobj = numpy.array([self.options['DELOBJ'][1]], numpy.float)
-		thetaz = numpy.array([self.options['THETAZ'][1]], numpy.float)
-		pmlt = numpy.array([self.options['PMLT'][1]], numpy.float)
+		delobj = numpy.array([self.options['DELOBJ'][1]], float)
+		thetaz = numpy.array([self.options['THETAZ'][1]], float)
+		pmlt = numpy.array([self.options['PMLT'][1]], float)
 		itmax = numpy.array([self.options['ITMAX'][1]], numpy.int)
 		itrmop = numpy.array([self.options['ITRMOP'][1]], numpy.int)
 		nrwk0 = 500
@@ -371,7 +371,7 @@ class MMFD(Optimizer):
 		nrwk3 = (ncon+2*nvar)*((ncon+2*nvar)/2+1)
 		nrwkS = nrwk0 + nrwk1 + nrwk2 + nrwk3
 		nrwk = numpy.array([nrwkS], numpy.int)
-		wk = numpy.zeros([nrwk], numpy.float)
+		wk = numpy.zeros([nrwk], float)
 		nriwk = numpy.array([nrwkS], numpy.int)
 		iwk = numpy.zeros([nriwk], numpy.int)
 

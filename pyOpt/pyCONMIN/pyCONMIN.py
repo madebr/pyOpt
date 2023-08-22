@@ -329,7 +329,7 @@ class CONMIN(Optimizer):
         ff = []
         for key in opt_problem._objectives.keys():
             ff.append(opt_problem._objectives[key].value)
-        ff = numpy.array(ff, numpy.float)
+        ff = numpy.array(ff, float)
 
         # Setup argument list values
         ndv = numpy.array([nvar], numpy.int)
@@ -342,9 +342,9 @@ class CONMIN(Optimizer):
         nn4 = numpy.array([numpy.max([nn2[0], ndv[0]])], numpy.int)
         nn5 = numpy.array([2 * nn4[0]], numpy.int)
         if ncon > 0:
-            gg = numpy.zeros(ncn, numpy.float)
+            gg = numpy.zeros(ncn, float)
         else:
-            gg = numpy.array([0], numpy.float)
+            gg = numpy.array([0], float)
         if (myrank == 0):
             if (self.options['IPRINT'][1] >= 0 and self.options['IPRINT'][1] <= 4):
                 iprint = numpy.array([self.options['IPRINT'][1]], numpy.int)
@@ -358,10 +358,10 @@ class CONMIN(Optimizer):
             if os.path.isfile(ifile):
                 os.remove(ifile)
         itmax = numpy.array([self.options['ITMAX'][1]], numpy.int)
-        delfun = numpy.array([self.options['DELFUN'][1]], numpy.float)
+        delfun = numpy.array([self.options['DELFUN'][1]], float)
 
         finit, ginit = cnmnfun([], [], xx, ff, gg)
-        dabfun = numpy.array([self.options['DABFUN'][1] * finit], numpy.float)
+        dabfun = numpy.array([self.options['DABFUN'][1] * finit], float)
 
         itrm = numpy.array([self.options['ITRM'][1]], numpy.int)
         nfeasct = numpy.array([self.options['NFEASCT'][1]], numpy.int)

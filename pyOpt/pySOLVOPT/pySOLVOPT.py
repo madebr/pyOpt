@@ -438,7 +438,7 @@ class SOLVOPT(Optimizer):
 			if (opt_problem._variables[key].upper != inf):
 				gg.append(0)
 				nadd += 1
-		gg = numpy.array(gg,numpy.float)
+		gg = numpy.array(gg,float)
 
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
@@ -446,7 +446,7 @@ class SOLVOPT(Optimizer):
 		ff = []
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
-		ff = numpy.array(ff,numpy.float)
+		ff = numpy.array(ff,float)
 
 
 		# Setup argument list values
@@ -457,7 +457,7 @@ class SOLVOPT(Optimizer):
 			iprint = -1
 		else:
 			iprint = self.options['iprint'][1]
-		options = numpy.zeros([13], numpy.float)
+		options = numpy.zeros([13], float)
 		options[0] = -1  						# Minimize
 		options[1] = self.options['xtol'][1]	# Variables Tolerance
 		options[2] = self.options['ftol'][1]	# Objective Tolerance
@@ -474,19 +474,19 @@ class SOLVOPT(Optimizer):
 		if (iprint >= 0):
 			if os.path.isfile(ifile):
 				os.remove(ifile)
-		wb = numpy.zeros([nvar,nvar], numpy.float)
-		wg = numpy.zeros([nvar], numpy.float)
-		wg0 = numpy.zeros([nvar], numpy.float)
-		wg1 = numpy.zeros([nvar], numpy.float)
-		wgt = numpy.zeros([nvar], numpy.float)
-		wgc = numpy.zeros([nvar], numpy.float)
-		wz = numpy.zeros([nvar], numpy.float)
-		wx1 = numpy.zeros([nvar], numpy.float)
-		wxopt = numpy.zeros([nvar], numpy.float)
-		wxrec = numpy.zeros([nvar], numpy.float)
-		wgrec = numpy.zeros([nvar], numpy.float)
-		wxx = numpy.zeros([nvar], numpy.float)
-		wdeltax = numpy.zeros([nvar], numpy.float)
+		wb = numpy.zeros([nvar,nvar], float)
+		wg = numpy.zeros([nvar], float)
+		wg0 = numpy.zeros([nvar], float)
+		wg1 = numpy.zeros([nvar], float)
+		wgt = numpy.zeros([nvar], float)
+		wgc = numpy.zeros([nvar], float)
+		wz = numpy.zeros([nvar], float)
+		wx1 = numpy.zeros([nvar], float)
+		wxopt = numpy.zeros([nvar], float)
+		wxrec = numpy.zeros([nvar], float)
+		wgrec = numpy.zeros([nvar], float)
+		wxx = numpy.zeros([nvar], float)
+		wdeltax = numpy.zeros([nvar], float)
 		widx = numpy.zeros([nvar], numpy.int)
 
 

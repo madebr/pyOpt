@@ -499,7 +499,7 @@ class SNOPT(Optimizer):
 		ff = []
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
-		ff = numpy.array(ff, numpy.float)
+		ff = numpy.array(ff, float)
 
 
 		# Initialize SNOPT
@@ -536,7 +536,7 @@ class SNOPT(Optimizer):
 			string.append('        ')
 		cw = numpy.array(string,'c')
 		iw = numpy.zeros(leniw, 'i')
-		rw = numpy.zeros(lenrw, numpy.float)
+		rw = numpy.zeros(lenrw, float)
 		snopt.sninit(iPrint, iSumm, cw, iw, rw)
 
 		# Memory allocation
@@ -560,7 +560,7 @@ class SNOPT(Optimizer):
 				iw = numpy.zeros(leniw, 'i')
 			if (minrw > lenrw):
 				lenrw = minrw
-				rw = numpy.zeros(lenrw, numpy.float)
+				rw = numpy.zeros(lenrw, float)
 			snopt.sninit(iPrint, iSumm, cw, iw, rw)
 
 
@@ -608,9 +608,9 @@ class SNOPT(Optimizer):
 		nnObj = numpy.array(nvar, numpy.int)
 		nnJac = numpy.array(nvar, numpy.int)
 		iObj   = numpy.array([0], numpy.int)
-		ObjAdd = numpy.array([0.], numpy.float)
+		ObjAdd = numpy.array([0.], float)
 		ProbNm = numpy.array(self.name)
-		a = numpy.zeros(ne, numpy.float)
+		a = numpy.zeros(ne, float)
 		ha = numpy.zeros(ne, 'i')
 		ine = 0
 		for j in range(nvar):
@@ -621,7 +621,7 @@ class SNOPT(Optimizer):
 		ka[0] = 1
 		for i in range(1,nvar+1):
 			ka[i] = ka[i-1] + ncon
-		xs = numpy.concatenate((xs, numpy.zeros(ncon,numpy.float)))
+		xs = numpy.concatenate((xs, numpy.zeros(ncon,float)))
 		bl = numpy.concatenate((blx, blc))
 		bu = numpy.concatenate((bux, buc))
 		lencu = numpy.array([1], numpy.int)
@@ -629,18 +629,18 @@ class SNOPT(Optimizer):
 		lenru = numpy.array([1], numpy.int)
 		cu = numpy.array(["        "],'c')
 		iu = numpy.zeros([leniu[0]], numpy.int)
-		ru = numpy.zeros([lenru[0]], numpy.float)
+		ru = numpy.zeros([lenru[0]], float)
 		hs = numpy.zeros(nvar+ncon, 'i')
 		Names = numpy.array(["        "],'c')
-		pi = numpy.zeros(ncon, numpy.float)
-		rc = numpy.zeros(nvar+ncon, numpy.float)
+		pi = numpy.zeros(ncon, float)
+		rc = numpy.zeros(nvar+ncon, float)
 		#inform = numpy.array([-1], numpy.int)
 		mincw = numpy.array([0], numpy.int)
 		miniw = numpy.array([0], numpy.int)
 		minrw = numpy.array([0], numpy.int)
 		nS = numpy.array([0], numpy.int)
 		ninf = numpy.array([0], numpy.int)
-		sinf = numpy.array([0.], numpy.float)
+		sinf = numpy.array([0.], float)
 
 
 		# Run SNOPT

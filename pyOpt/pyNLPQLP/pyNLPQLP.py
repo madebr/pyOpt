@@ -338,9 +338,9 @@ class NLPQLP(Optimizer):
 
 		# Variables Handling
 		nvar = len(opt_problem._variables.keys())
-		xl = numpy.zeros([max(2,nvar+1)], numpy.float)
-		xu = numpy.zeros([max(2,nvar+1)], numpy.float)
-		xx = numpy.zeros([max(2,nvar+1),nproc], numpy.float)
+		xl = numpy.zeros([max(2,nvar+1)], float)
+		xu = numpy.zeros([max(2,nvar+1)], float)
+		xx = numpy.zeros([max(2,nvar+1),nproc], float)
 		i = 0
 		for key in opt_problem._variables.keys():
 			if (opt_problem._variables[key].type == 'c'):
@@ -366,7 +366,7 @@ class NLPQLP(Optimizer):
 		# Constraints Handling
 		ncon = len(opt_problem._constraints.keys())
 		neqc = 0
-		gg = numpy.zeros([ncon,nproc], numpy.float)
+		gg = numpy.zeros([ncon,nproc], float)
 		if ncon > 0:
 			i = 0
 			for key in opt_problem._constraints.keys():
@@ -386,7 +386,7 @@ class NLPQLP(Optimizer):
 		ff = []
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
-		ff = numpy.array(ff*nproc,numpy.float)
+		ff = numpy.array(ff*nproc,float)
 
 
 		# Setup argument list values
@@ -397,15 +397,15 @@ class NLPQLP(Optimizer):
 		nn = numpy.array([nvar], numpy.int)
 		nmax = numpy.array([max(2,nn+1)], numpy.int)
 		mnn2 = numpy.array([mmax+nmax+nmax+2], numpy.int)
-		gg = numpy.zeros([mmax,ll], numpy.float)
-		df = numpy.zeros([nmax], numpy.float)
-		dg = numpy.zeros([mmax,nmax], numpy.float)
-		uu = numpy.zeros([mnn2], numpy.float)
-		cc = numpy.zeros([nmax,nmax], numpy.float)
-		dd = numpy.zeros([nmax], numpy.float)
-		acc = numpy.array([self.options['ACC'][1]], numpy.float)
-		accqp = numpy.array([self.options['ACCQP'][1]], numpy.float)
-		stpmin = numpy.array([self.options['STPMIN'][1]], numpy.float)
+		gg = numpy.zeros([mmax,ll], float)
+		df = numpy.zeros([nmax], float)
+		dg = numpy.zeros([mmax,nmax], float)
+		uu = numpy.zeros([mnn2], float)
+		cc = numpy.zeros([nmax,nmax], float)
+		dd = numpy.zeros([nmax], float)
+		acc = numpy.array([self.options['ACC'][1]], float)
+		accqp = numpy.array([self.options['ACCQP'][1]], float)
+		stpmin = numpy.array([self.options['STPMIN'][1]], float)
 		maxfun = numpy.array([self.options['MAXFUN'][1]], numpy.int)
 		maxit = numpy.array([self.options['MAXIT'][1]], numpy.int)
 		if (nproc != 1):
@@ -431,7 +431,7 @@ class NLPQLP(Optimizer):
 			if os.path.isfile(ifile):
 				os.remove(ifile)
 		lwa = numpy.array([23*nmax+4*mmax+3*mmax+150+3*nmax*nmax/2+10*nmax+nmax+mmax+1], numpy.int)
-		wa = numpy.zeros([lwa], numpy.float)
+		wa = numpy.zeros([lwa], float)
 		lkwa = numpy.array([25+nmax], numpy.int)
 		kwa = numpy.zeros([lkwa], numpy.intc)
 		lactiv = numpy.array([2*mmax+10], numpy.int)

@@ -342,7 +342,7 @@ class NLPQL(Optimizer):
 				if opt_problem._constraints[key].type == 'e':
 					neqc += 1
 				#gg.append(opt_problem._constraints[key].value)
-		#gg = numpy.array(gg, numpy.float)
+		#gg = numpy.array(gg, float)
 
 		# Objective Handling
 		objfunc = opt_problem.obj_fun
@@ -350,7 +350,7 @@ class NLPQL(Optimizer):
 		ff = []
 		for key in opt_problem._objectives.keys():
 			ff.append(opt_problem._objectives[key].value)
-		ff = numpy.array(ff, numpy.float)
+		ff = numpy.array(ff, float)
 
 
 		# Setup argument list values
@@ -368,16 +368,16 @@ class NLPQL(Optimizer):
 		mnn2 = numpy.array([mm[0]+nn[0]+nn[0]+2], numpy.int)
 		#xx = _ConcatenateVector(self.variables, 'value')
 		#ff = self.objective.value
-		gg = numpy.zeros([mmax], numpy.float)
-		df = numpy.zeros([nmax], numpy.float)
-		dg = numpy.zeros([mmax,nmax], numpy.float)
-		uu = numpy.zeros([mnn2], numpy.float)
+		gg = numpy.zeros([mmax], float)
+		df = numpy.zeros([nmax], float)
+		dg = numpy.zeros([mmax,nmax], float)
+		uu = numpy.zeros([mnn2], float)
 		#xl = _ConcatenateVector(self.variables, 'lower')
 		#xu = _ConcatenateVector(self.variables, 'upper')
-		cc = numpy.zeros([nmax,nmax], numpy.float)
-		dd = numpy.zeros([nmax], numpy.float)
-		acc = numpy.array([self.options['Accurancy'][1]], numpy.float)
-		scbou = numpy.array([self.options['ScaleBound'][1]], numpy.float)
+		cc = numpy.zeros([nmax,nmax], float)
+		dd = numpy.zeros([nmax], float)
+		acc = numpy.array([self.options['Accurancy'][1]], float)
+		scbou = numpy.array([self.options['ScaleBound'][1]], float)
 		maxfun = numpy.array([self.options['maxFun'][1]], numpy.int)
 		maxit = numpy.array([self.options['maxIt'][1]], numpy.int)
 		if (myrank == 0):
@@ -403,14 +403,14 @@ class NLPQL(Optimizer):
 		lwa3 = 3/2*(nvar + 1)*(nvar + 1) + 10*nvar + 2*ncon + 10
 		lwaM = max([lwa0,lwa1,lwa2,lwa3]) + lwa3
 		lwa = numpy.array([lwaM], numpy.int)
-		wa = numpy.zeros([lwa], numpy.float)
+		wa = numpy.zeros([lwa], float)
 		lkwa = numpy.array([mmx+2*nmx+20], numpy.int)
 		kwa = numpy.zeros([lkwa], numpy.intc)
 		lactiv = numpy.array([2*mmx+15], numpy.int)
 		active = numpy.zeros([lactiv], numpy.bool)
 		lmerit = numpy.array([self.options['lmerit'][1]], numpy.bool)
 		lql = numpy.array([self.options['lql'][1]], numpy.bool)
-		fmp = numpy.array([eps], numpy.float)
+		fmp = numpy.array([eps], float)
 
 
 		# Run NLPQL

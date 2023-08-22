@@ -401,7 +401,7 @@ class MIDACO(Optimizer):
                 opts[6] = self.options['ANTS'][1]
                 opts[7] = self.options['KERNEL'][1]
                 opts[8] = self.options['CHARACTER'][1]
-                param = numpy.array([opts], numpy.float)
+                param = numpy.array([opts], float)
                 maxeval = numpy.array([self.options['MAXEVAL'][1]], numpy.int)
                 maxtime = numpy.array([self.options['MAXTIME'][1]], numpy.int)
                 if (myrank == 0):
@@ -429,7 +429,7 @@ class MIDACO(Optimizer):
                 iw = numpy.zeros(liw, numpy.int)
                 lrw0 = 200*nn + 2*mm + 1000
                 lrw = numpy.array(lrw0, numpy.int)
-                rw = numpy.zeros(lrw, numpy.float)
+                rw = numpy.zeros(lrw, float)
 
 
                 # Run MIDACO

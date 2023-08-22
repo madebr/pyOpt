@@ -276,8 +276,8 @@ class SDPEN(Optimizer):
 		# Setup argument list values
 		n = numpy.array([nvar], numpy.int)
 		m = numpy.array([ncon], numpy.int)
-		alfa_stop = numpy.array([self.options['alfa_stop'][1]], numpy.float)
-		nf_max = numpy.array([self.options['nf_max'][1]], numpy.float)
+		alfa_stop = numpy.array([self.options['alfa_stop'][1]], float)
+		nf_max = numpy.array([self.options['nf_max'][1]], float)
 		if (myrank == 0):
 			if (self.options['iprint'][1]<=2):
 				iprint = numpy.array([self.options['iprint'][1]], numpy.int)
