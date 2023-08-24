@@ -213,6 +213,7 @@ class ALGENCAN(Optimizer):
         # ALGENCAN - Objective/Constraint Values Function
         #======================================================================
         def evalfc(n,x,f,m,g,flag):
+            fail = 1
 
             # Variables Groups Handling
             if opt_problem.use_groups:
@@ -250,10 +251,11 @@ class ALGENCAN(Optimizer):
             # Store History
             if (myrank == 0):
                 if self.sto_hst:
-                    log_file.write(x,'x')
-                    log_file.write(ff,'obj')
-                    log_file.write(gg,'con')
-                    log_file.write(fail,'fail')
+                    if not any(e is None for e in (x, ff, gg, fail)):
+                        log_file.write(x,'x')
+                        log_file.write(ff,'obj')
+                        log_file.write(gg,'con')
+                        log_file.write(fail,'fail')
 
             # Objective Assigment
             if isinstance(ff,complex):
@@ -275,6 +277,7 @@ class ALGENCAN(Optimizer):
         # ALGENCAN - Objective/Constraint Gradients Function
         #======================================================================
         def evalgjac(n,x,jfval,m,jcfun,jcvar,jcval,jcnnz,flag):
+            fail = 1
 
             if self.hot_start:
                 if (myrank == 0):

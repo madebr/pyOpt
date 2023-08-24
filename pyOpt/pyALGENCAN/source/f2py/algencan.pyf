@@ -94,7 +94,7 @@ python module algencan__user__routines
             integer intent(in) :: m
             double precision dimension(m),intent(in,out),depend(m) :: p
             double precision dimension(n),intent(in,out),depend(n) :: q
-            character intent(in) :: work
+            char intent(in) :: work
             logical intent(in,out) :: gotj
             integer intent(in,out) :: flag
         end subroutine evalgjacp
