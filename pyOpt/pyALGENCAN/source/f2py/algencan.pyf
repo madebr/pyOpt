@@ -94,7 +94,7 @@ python module algencan__user__routines
             integer intent(in) :: m
             double precision dimension(m),intent(in,out),depend(m) :: p
             double precision dimension(n),intent(in,out),depend(n) :: q
-            char intent(in) :: work
+            character intent(in) :: work
             logical intent(in,out) :: gotj
             integer intent(in,out) :: flag
         end subroutine evalgjacp
@@ -154,7 +154,7 @@ python module algencan ! in
             double precision intent(inout) :: snorm
             double precision intent(inout) :: nlpsupn
             integer intent(inout) :: inform
-            char*(*) intent(in) :: ifile
+            character*(*) intent(in) :: ifile
             logical dimension(7) :: iprintctl
             integer :: iprintinn
             integer :: iprintout
@@ -190,8 +190,8 @@ python module algencan ! in
             logical :: sclsys
             logical :: innercall
             logical :: useustp
-            char :: innslvr
-            char :: hptype
+            character :: innslvr
+            character :: hptype
             logical :: safemode
             double precision dimension(5000) :: sc
             double precision dimension(5000) :: usc
@@ -267,8 +267,8 @@ python module algencan ! in
             logical :: sclsys
             logical :: innercall
             logical :: useustp
-            char*2 :: innslvr
-            char*6 :: hptype
+            character*2 :: innslvr
+            character*6 :: hptype
             logical :: safemode
             integer dimension(5000) :: eccnt
             integer dimension(5000) :: ehccnt
@@ -315,8 +315,8 @@ python module algencan ! in
             logical :: sclsys
             logical :: innercall
             logical :: useustp
-            char*2 :: innslvr
-            char*6 :: hptype
+            character*2 :: innslvr
+            character*6 :: hptype
             logical :: safemode
             integer dimension(5000) :: eccnt
             integer dimension(5000) :: ehccnt
@@ -381,8 +381,8 @@ python module algencan ! in
             logical :: sclsys
             logical :: innercall
             logical :: useustp
-            char*2 :: innslvr
-            char*6 :: hptype
+            character*2 :: innslvr
+            character*6 :: hptype
             logical :: safemode
             integer dimension(5000) :: eccnt
             integer dimension(5000) :: ehccnt
@@ -430,8 +430,8 @@ python module algencan ! in
             logical :: sclsys
             logical :: innercall
             logical :: useustp
-            char*2 :: innslvr
-            char*6 :: hptype
+            character*2 :: innslvr
+            character*6 :: hptype
             logical :: safemode
             integer dimension(5000) :: eccnt
             integer dimension(5000) :: ehccnt
@@ -481,8 +481,8 @@ python module algencan ! in
             logical :: sclsys
             logical :: innercall
             logical :: useustp
-            char*2 :: innslvr
-            char*6 :: hptype
+            character*2 :: innslvr
+            character*6 :: hptype
             logical :: safemode
             integer dimension(5000) :: eccnt
             integer dimension(5000) :: ehccnt
@@ -551,8 +551,8 @@ python module algencan ! in
             logical :: sclsys
             logical :: innercall
             logical :: useustp
-            char*2 :: innslvr
-            char*6 :: hptype
+            character*2 :: innslvr
+            character*6 :: hptype
             logical :: safemode
             integer dimension(5000) :: eccnt
             integer dimension(5000) :: ehccnt
@@ -606,8 +606,8 @@ python module algencan ! in
             logical :: sclsys
             logical :: innercall
             logical :: useustp
-            char*2 :: innslvr
-            char*6 :: hptype
+            character*2 :: innslvr
+            character*6 :: hptype
             logical :: safemode
             integer dimension(5000) :: eccnt
             integer dimension(5000) :: ehccnt
@@ -656,8 +656,8 @@ python module algencan ! in
             logical :: sclsys
             logical :: innercall
             logical :: useustp
-            char*2 :: innslvr
-            char*6 :: hptype
+            character*2 :: innslvr
+            character*6 :: hptype
             logical :: safemode
             intent(callback) evalhl
             external evalhl
@@ -697,8 +697,8 @@ python module algencan ! in
             logical :: sclsys
             logical :: innercall
             logical :: useustp
-            char*2 :: innslvr
-            char*6 :: hptype
+            character*2 :: innslvr
+            character*6 :: hptype
             logical :: safemode
             integer dimension(5000) :: eccnt
             integer dimension(5000) :: ehccnt
@@ -767,8 +767,8 @@ python module algencan ! in
             logical :: sclsys
             logical :: innercall
             logical :: useustp
-            char*2 :: innslvr
-            char*6 :: hptype
+            character*2 :: innslvr
+            character*6 :: hptype
             logical :: safemode
             integer dimension(5000) :: eccnt
             integer dimension(5000) :: ehccnt
@@ -820,8 +820,8 @@ python module algencan ! in
             logical :: sclsys
             logical :: innercall
             logical :: useustp
-            char*2 :: innslvr
-            char*6 :: hptype
+            character*2 :: innslvr
+            character*6 :: hptype
             logical :: safemode
             integer dimension(5000) :: eccnt
             integer dimension(5000) :: ehccnt
@@ -862,9 +862,9 @@ python module algencan ! in
         end subroutine ivevalgjac
         subroutine openunit(unitnum,filename,filestatus,fileaction,ierror)
             integer intent(in) :: unitnum
-            char*(*) intent(in) :: filename
-            char*(*) intent(in) :: filestatus
-            char*(*) intent(in) :: fileaction
+            character*(*) intent(in) :: filename
+            character*(*) intent(in) :: filestatus
+            character*(*) intent(in) :: fileaction
             integer intent(out) :: ierror
         end subroutine openunit
         subroutine pyflush(unitnum)
