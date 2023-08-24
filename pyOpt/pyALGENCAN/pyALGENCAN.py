@@ -53,7 +53,8 @@ import numpy
 # =============================================================================
 # Extension modules
 # =============================================================================
-from pyOpt import Gradient, Optimizer
+from pyOpt.pyOpt_gradient import Gradient
+from pyOpt.pyOpt_optimizer import Optimizer
 
 # =============================================================================
 # Misc Definitions
